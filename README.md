@@ -6,7 +6,7 @@ It enables a new endpoint `/wp-htmx/v1/` from where you can load any HTMX templa
 
 ## Why?
 
-Because HTMX is awesome and WordPress is awesome (when used properly). So, why not?
+Because HTMX is awesome and WordPress is awesome (sometimes). So, why not?
 
 I'm using this in production in a few projects and it's working great, stable and ready to use. So I decided to share it with the world.
 
