@@ -10,6 +10,12 @@ Because HTMX is awesome and WordPress is awesome (sometimes). So, why not?
 
 I'm using this in production in a few projects and it's working great, stable and ready to use. So I decided to share it with the world.
 
+I just took this idea-thing off from the tangled mess that this was inside a project, and made it into an standalone plugin that should work for everyone.
+
+It might have some bugs. But the idea is to open it up and improve it over time.
+
+So, if you find any bug, please, report it.
+
 ## How to use
 
 After installation, you can use HTMX templates in your theme. Any theme.
@@ -73,6 +79,16 @@ The params and their values passed to the endpoint, vía GET or POST, will be sa
 Filters `hxwp/sanitize_param_key` and `hxwp/sanitize_param_value` are available to modify the sanitization process if needed.
 
 Do your homework and make sure you are returning non sanitized data back to the user or using it in a way that could be a security issue for your site. HTMX requires that you validate and sanitize any data you receive from the user. Don't forget that.
+
+## Examples?
+
+Don't have one right now for you to look, but... i will try to make a simple theme to showcase HTMX usage within WordPress.
+
+When time permits. I will try.
+
+For now, someone that has no issues understanding how HTMX works, shouldn't have any inconvenience using this plugin as their "glue" to load HTMX templates on their theme.
+
+For everyone else, you should really check out HTMX official documentation. It's good.
 
 ## Suggestions, Support
 
