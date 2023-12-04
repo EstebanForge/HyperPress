@@ -270,7 +270,9 @@ class HXWP_Render
 				$template_path = $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
 			}
 		} else {
-			// Void template
+			// Void template, remove void/ from the template name
+			$template_name = str_replace('void/', '', $template_name);
+
 			$template_path = $this->get_theme_path() . HXWP_TEMPLATE_VOID_DIR . '/' . $template_name . HXWP_EXT;
 		}
 
