@@ -4,7 +4,7 @@
  * Handles rendering the HTMX template
  *
  * @package HXWP
- * @since   2023
+ * @since   2023-11-22
  */
 
 namespace HXWP;

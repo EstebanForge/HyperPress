@@ -4,7 +4,7 @@
  * Load plugin assets
  *
  * @package HXWP
- * @since   2023
+ * @since   2023-11-22
  */
 
 namespace HXWP;
@@ -84,6 +84,10 @@ class HXWP_Assets
 
 		// Also, let use X-WP-Nonce header, to automate nonce integration with HTMX
 		$hxwp_script = "document.body.addEventListener('htmx:configRequest', function(evt) {evt.detail.headers['X-WP-Nonce'] = '" . $hxwp_nonce . "';});";
+
+		// Filter
+		$hxwp_script = apply_filters('hxwp/htmx_configrequest_nonce', $hxwp_script);
+
 		wp_add_inline_script('hxwp-htmx', $hxwp_script);
 
 		do_action('hxwp/init_enqueue_scripts_end');

@@ -64,6 +64,10 @@ Every call to the `wp-htmx` endpoint, will automatically check for a valid nonce
 
 The nonce itself is auto-generated and added to all HTMX requests automatically, using HTMX own htmx:configRequest event.
 
+If you are new to HTMX, please read the [security section](https://htmx.org/docs/#security) of the official documentation. Don't forget that HTMX requires that you validate and sanitize any data you receive from the user. Something us, devs, used to do all the time, but now it seems to have been forgotten in newer generations of software developers.
+
+If you don't know about how WordPress recommends to do data Sanitization and Escaping, please read the [official documentation](https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/), for [Sanitizing Data](https://developer.wordpress.org/apis/security/sanitizing/) and [Escaping Data](https://developer.wordpress.org/apis/security/escaping/).
+
 ### REST Endpoint
 
 The plugin will perform basic sanitization of calls to the new REST endpoint, `wp-htmx`, to avoid security issues, like a directory traversal attack. Also it will limit you so you can't use it to access any file outside the `templates-htmx` folder inside your own theme.

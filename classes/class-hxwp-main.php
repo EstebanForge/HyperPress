@@ -23,6 +23,7 @@ class HXWP_Main
 	protected $router;
 	protected $render;
 	protected $assets;
+	protected $config;
 
 	/**
 	 * Constructor
@@ -52,11 +53,13 @@ class HXWP_Main
 		$router = new HXWP_Router();
 		$render = new HXWP_Render();
 		$assets = new HXWP_Assets();
+		$config = new HXWP_Config();
 
 		// Hook into actions and filters
 		add_action('init', [$router, 'register_main_route']);
 		add_action('template_redirect', [$render, 'load_template']);
 		add_action('wp_enqueue_scripts', [$assets, 'enqueue_scripts']);
+		add_action('wp_head', [$config, 'insert_config_meta_tag']);
 
 		if (is_admin()) {
 			$options = new HXWP_Options();
@@ -74,6 +77,7 @@ class HXWP_Main
 	 */
 	private function includes()
 	{
+		include_once HXWP_ABSPATH . 'classes/class-hxwp-config.php';
 		include_once HXWP_ABSPATH . 'classes/class-hxwp-assets.php';
 		include_once HXWP_ABSPATH . 'classes/class-hxwp-router.php';
 		include_once HXWP_ABSPATH . 'classes/class-hxwp-render.php';

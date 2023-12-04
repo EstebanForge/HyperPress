@@ -4,7 +4,7 @@
  * Handles the API endpoint HXWP_ENDPOINT
  *
  * @package HXWP
- * @since   2023
+ * @since   2023-11-22
  */
 
 namespace HXWP;
