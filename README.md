@@ -20,29 +20,29 @@ So, if you find any bug, please, report it.
 
 After installation, you can use HTMX templates in your theme. Any theme.
 
-Create a `templates-htmx` folder in your theme's root directory. This plugin has a demo folder that you can copy to your theme. Don't put your templates inside the demo folder located in the plugin's directory, because it will be deleted when you update the plugin.
+Create a `htmx-templates` folder in your theme's root directory. This plugin has a demo folder that you can copy to your theme. Don't put your templates inside the demo folder located in the plugin's directory, because it will be deleted when you update the plugin.
 
-Inside your `templates-htmx`, create as many templates as you want. All files must end with `.htmx.php`.
+Inside your `htmx-templates`, create as many templates as you want. All files must end with `.htmx.php`.
 
 For example:
 
 ```
-templates-htmx/live-search.htmx.php
-templates-htmx/related-posts.htmx.php
-templates-htmx/private/author.htmx.php
-templates-htmx/private/author-posts.htmx.php
+htmx-templates/live-search.htmx.php
+htmx-templates/related-posts.htmx.php
+htmx-templates/private/author.htmx.php
+htmx-templates/private/author-posts.htmx.php
 ```
 
-Check the demo template at `templates-htmx/demo.htmx.php` to see how to use it.
+Check the demo template at `htmx-templates/demo.htmx.php` to see how to use it.
 
 
 Then, in your theme, use HTMX to GET/POST to the endpoint corresponding to the template you want to load, without the `.htmx.php` extension:
 
 ```
-/wp-htmx/v1/live-search
-/wp-htmx/v1/related-posts
-/wp-htmx/v1/private/author
-/wp-htmx/v1/private/author-posts
+/wp-htmx/v1/template/live-search
+/wp-htmx/v1/template/related-posts
+/wp-htmx/v1/template/private/author
+/wp-htmx/v1/template/private/author-posts
 ```
 
 ### How to pass data to the template
@@ -50,11 +50,33 @@ Then, in your theme, use HTMX to GET/POST to the endpoint corresponding to the t
 You can pass data to the template using URL parameters (GET/POST). For example:
 
 ```
-/wp-htmx/v1/live-search?search=hello
-/wp-htmx/v1/related-posts?category_id=5
+/wp-htmx/v1/template/live-search?search=hello
+/wp-htmx/v1/template/related-posts?category_id=5
 ```
 
 All of those parameters (with their values) will be available inside the template as an array named: `$hxparams`
+
+### Non visual response templates
+
+Or background process-only templates, if you prefer.
+
+HTMX allows you to use templates that don't return any HTML, and only do some processing in the background, on you server. Check [Swapping](https://htmx.org/docs/#swapping) for more info.
+
+For this, you can use the `void` endpoint. For example:
+
+```
+/wp-htmx/v1/void/save-user?user_id=5&name=John&last_name=Doe
+/wp-htmx/v1/void/delete-user?user_id=5
+```
+
+In this examples, the `save-user` and `delete-user` templates will not return any HTML, but will do some processing in the background. They will be loaded from the `htmx-templates-void` folder.
+
+```
+htmx-templates-void/save-user.htmx.php
+htmx-templates-void/delete-user.htmx.php
+```
+
+You can pass data to this templates, in the exact same way as you do with the regular templates.
 
 ### HTMX extensions and Hyperscrypt
 
@@ -76,7 +98,7 @@ If you don't know about how WordPress recommends to do data Sanitization and Esc
 
 ### REST Endpoint
 
-The plugin will perform basic sanitization of calls to the new REST endpoint, `wp-htmx`, to avoid security issues, like a directory traversal attack. Also it will limit you so you can't use it to access any file outside the `templates-htmx` folder inside your own theme.
+The plugin will perform basic sanitization of calls to the new REST endpoint, `wp-htmx`, to avoid security issues, like a directory traversal attack. Also it will limit you so you can't use it to access any file outside the `htmx-templates` folder inside your own theme.
 
 The params and their values passed to the endpoint, vía GET or POST, will be sanitized with `sanitize_key()` and `sanitize_text_field()` respectively.
 

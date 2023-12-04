@@ -80,7 +80,7 @@ class HXWP_Render
 		}
 
 		// Get our template file and vars
-		$template_path = $this->get_template($template_name);
+		$template_path = $this->get_template_file($template_name);
 
 		if (!$template_path) {
 			status_header(404);
@@ -251,21 +251,56 @@ class HXWP_Render
 	 *
 	 * @return array | bool
 	 */
-	protected function get_template($template_name = '')
+	protected function get_template_file($template_name = '')
 	{
 		if (empty($template_name)) {
 			return false;
 		}
 
-		// If template is htmx-demo, load it from the plugin folder
-		if ($template_name == 'htmx-demo') {
-			// Add plugin path and extension to the template name
-			$template_path = HXWP_ABSPATH . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
+		// If template name is a template, load it from the theme folder
+		if ($this->is_template($template_name)) {
+			// Remove template/ from the template name
+			$template_name = str_replace('template/', '', $template_name);
+
+			if ($template_name == 'htmx-demo') {
+				// Demo template lives in the plugin folder
+				$template_path = HXWP_ABSPATH . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
+			} else {
+				// Add full path and extension to the template name
+				$template_path = $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
+			}
 		} else {
-			// Add full path and extension to the template name
-			$template_path = $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
+			// Add plugin path and extension to the template name
+			$template_path = HXWP_ABSPATH . HXWP_TEMPLATE_VOID_DIR . '/' . $template_name . HXWP_EXT;
 		}
 
 		return $template_path;
+	}
+
+	/**
+	 * Determine if template_name is a template or a non-template response (void)
+	 *
+	 * @since 2023-12-04
+	 * @param string $template_name
+	 *
+	 * @return bool
+	 */
+	protected function is_template($template_name = '')
+	{
+		if (empty($template_name)) {
+			return false;
+		}
+
+		// If string begins with template/, it's a template
+		if (str_starts_with($template_name, 'template/')) {
+			return true;
+		}
+
+		// If string begins with void/, it's a non-template response
+		if (str_starts_with($template_name, 'void/')) {
+			return false;
+		}
+
+		return false;
 	}
 }

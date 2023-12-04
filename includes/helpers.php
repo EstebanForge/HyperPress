@@ -10,7 +10,9 @@ if (!defined('ABSPATH')) {
  * @since 2023-12-04
  * @return string
  */
-function hxwp_api_url()
-{
-	return home_url(HXWP_ENDPOINT . '/' . HXWP_ENDPOINT_VERSION . '/');
+if (!function_exists('hxwp_api_url')) {
+	function hxwp_api_url()
+	{
+		return home_url(HXWP_ENDPOINT . '/' . HXWP_ENDPOINT_VERSION);
+	}
 }
