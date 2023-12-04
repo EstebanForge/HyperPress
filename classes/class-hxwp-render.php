@@ -270,8 +270,8 @@ class HXWP_Render
 				$template_path = $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
 			}
 		} else {
-			// Add plugin path and extension to the template name
-			$template_path = HXWP_ABSPATH . HXWP_TEMPLATE_VOID_DIR . '/' . $template_name . HXWP_EXT;
+			// Void template
+			$template_path = $this->get_theme_path() . HXWP_TEMPLATE_VOID_DIR . '/' . $template_name . HXWP_EXT;
 		}
 
 		return $template_path;
