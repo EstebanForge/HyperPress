@@ -1,8 +1,6 @@
 <?php
-// Exit if accessed directly.
-if (!defined('ABSPATH')) {
-	exit;
-}
+// No direct access.
+defined('ABSPATH') || exit('Direct access not allowed.');
 ?>
 <h3>Hello HTMX!</h3>
 
