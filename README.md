@@ -36,7 +36,7 @@ htmx-templates/private/author-posts.htmx.php
 Check the demo template at `htmx-templates/demo.htmx.php` to see how to use it.
 
 
-Then, in your theme, use HTMX to GET/POST to the endpoint corresponding to the template you want to load, without the `.htmx.php` extension:
+Then, in your theme, use HTMX to GET/POST to the `template/` endpoint corresponding to the template you want to load, without the `.htmx.php` extension:
 
 ```
 /wp-htmx/v1/template/live-search
@@ -56,13 +56,13 @@ You can pass data to the template using URL parameters (GET/POST). For example:
 
 All of those parameters (with their values) will be available inside the template as an array named: `$hxparams`
 
-### Non visual response templates
+### Non visual (void) response templates
 
-Or background process-only templates, if you prefer.
+Or void templates, if you prefer.
 
 HTMX allows you to use templates that don't return any HTML, and only do some processing in the background, on you server. Check [Swapping](https://htmx.org/docs/#swapping) for more info.
 
-For this, you can use the `void` endpoint. For example:
+For this, you can use the `void/` endpoint. For example:
 
 ```
 /wp-htmx/v1/void/save-user?user_id=5&name=John&last_name=Doe
