@@ -8,8 +8,8 @@ if (!defined('ABSPATH')) {
 
 <p>Demo template loaded from <code>plugins/htmx-api-wp/templates-htmx/demo.php</code></p>
 
-<p>Received params:</p>
+<p>Received params ($hxparams):</p>
 
 <pre>
-<?php var_dump($params); ?>
+<?php var_dump($hxparams); ?>
 </pre>
