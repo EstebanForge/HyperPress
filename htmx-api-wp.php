@@ -37,6 +37,9 @@ define('HXWP_EXT', '.htmx.php');
 // Main Class
 require_once HXWP_ABSPATH . 'classes/class-hxwp-main.php';
 
+// Includes
+require_once HXWP_ABSPATH . 'includes/helpers.php';
+
 // Activation and deactivation hooks
 register_activation_hook(__FILE__, ['HXWP\HXWP_Activate_Deactivate', 'activate']);
 register_deactivation_hook(__FILE__, ['HXWP\HXWP_Activate_Deactivate', 'deactivate']);
