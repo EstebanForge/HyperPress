@@ -80,21 +80,12 @@ class HXWP_Render
 		}
 
 		// Get our template file and vars
-		$template = $this->get_template($template_name);
+		$template_path = $this->get_template($template_name);
 
-		if (!$template) {
+		if (!$template_path) {
 			status_header(404);
 
 			wp_die(__('Invalid route', 'hxwp'), __('Error', 'hxwp'), ['response' => 404]);
-		}
-
-		// If template is htmx-demo, load it from the plugin folder
-		if ($template == 'htmx-demo') {
-			// Add plugin path and extension to the template name
-			$template_path = HXWP_ABSPATH . HXWP_TEMPLATE_DIR . '/' . $template . HXWP_EXT;
-		} else {
-			// Add full path and extension to the template name
-			$template_path = $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/' . $template . HXWP_EXT;
 		}
 
 		// Check if the template exists
@@ -266,6 +257,15 @@ class HXWP_Render
 			return false;
 		}
 
-		return $template_name;
+		// If template is htmx-demo, load it from the plugin folder
+		if ($template_name == 'htmx-demo') {
+			// Add plugin path and extension to the template name
+			$template_path = HXWP_ABSPATH . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
+		} else {
+			// Add full path and extension to the template name
+			$template_path = $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
+		}
+
+		return $template_path;
 	}
 }
