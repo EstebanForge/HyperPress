@@ -69,11 +69,11 @@ For this, you can use the `void/` endpoint. For example:
 /wp-htmx/v1/void/delete-user?user_id=5
 ```
 
-In this examples, the `save-user` and `delete-user` templates will not return any HTML, but will do some processing in the background. They will be loaded from the `htmx-templates-void` folder.
+In this examples, the `save-user` and `delete-user` templates will not return any HTML, but will do some processing in the background. They will be loaded from the `htmx-void` folder.
 
 ```
-htmx-templates-void/save-user.htmx.php
-htmx-templates-void/delete-user.htmx.php
+htmx-void/save-user.htmx.php
+htmx-void/delete-user.htmx.php
 ```
 
 You can pass data to this templates, in the exact same way as you do with the regular templates.

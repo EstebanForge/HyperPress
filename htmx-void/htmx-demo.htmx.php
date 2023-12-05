@@ -11,13 +11,6 @@ if (!wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'hxwp_nonce')) {
 if (!isset($hxparams['action']) || $hxparams['action'] != 'htmx_do_something') {
 	wp_die('Invalid action.');
 }
-?>
-<h3>Hello HTMX!</h3>
 
-<p>Demo template loaded from <code>plugins/htmx-api-wp/htmx-templates/htmx-demo.htmx.php</code></p>
-
-<p>Received params ($hxparams):</p>
-
-<pre>
-<?php var_dump($hxparams); ?>
-</pre>
+// Do some server-side processing with the received $hxparams
+sleep(5);

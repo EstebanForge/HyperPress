@@ -32,7 +32,7 @@ define('HXWP_VERSION', '0.1.3');
 define('HXWP_ENDPOINT', 'wp-htmx');
 define('HXWP_ENDPOINT_VERSION', 'v1');
 define('HXWP_TEMPLATE_DIR', 'htmx-templates');
-define('HXWP_TEMPLATE_VOID_DIR', 'htmx-templates-void');
+define('HXWP_VOID_DIR', 'htmx-void');
 define('HXWP_EXT', '.htmx.php');
 
 // Main Class
