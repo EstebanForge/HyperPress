@@ -9,9 +9,10 @@
 
 ## Reporting a Vulnerability
 
-Please, contact me at:
+Please, contact me at any of the following email addresses:
 
 esteban at attitude.cl
+
 esteban at actitud.xyz
 
 Thanks!

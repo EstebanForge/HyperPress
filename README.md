@@ -108,11 +108,11 @@ Do your homework and make sure you are returning non sanitized data back to the 
 
 ## Examples?
 
-Don't have one right now for you to look, but... i will try to make a simple theme to showcase HTMX usage within WordPress.
+Don't have one right now for you to look (that i can made public), but... i will try to make a simple theme to showcase HTMX usage within WordPress.
 
-When time permits. I will try.
+When time permits.
 
-For now, someone that has no issues understanding how HTMX works, shouldn't have any inconvenience using this plugin as their "glue" to load HTMX templates on their theme.
+For now, someone that has no issues understanding how HTMX works, shouldn't have any inconvenience using this plugin as their "glue" to make HTMX calls to load templates or execute some logic on their theme.
 
 For everyone else, you should really check out HTMX official documentation. It's good.
 
