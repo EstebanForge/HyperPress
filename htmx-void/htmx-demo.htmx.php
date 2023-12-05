@@ -3,7 +3,7 @@
 defined('ABSPATH') || exit('Direct access not allowed.');
 
 // Check if nonce is valid.
-if (!wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'hxwp_nonce')) {
+if (!isset($_SERVER['HTTP_X_WP_NONCE']) && !wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'hxwp_nonce')) {
 	wp_die('Nonce verification failed.');
 }
 
