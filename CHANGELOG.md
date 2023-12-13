@@ -1,8 +1,9 @@
 # Changelog
 
 # 0.1.4 / 2023-12-13
-- Renamed void/ endpoint to noswap/ to match HTMX terminology, better showing the purpose of this endpoint.
+- Renamed `void/` endpoint to `noswap/` to match HTMX terminology, better showing the purpose of this endpoint.
 - Better path sanitization for template files.
+- Added `hxwp_send_header_response` function to send a Response Header back to the client, to allow for non-visual responses (`noswap/`) to execute some logic on the client side. Refer to the [Response Headers](https://htmx.org/docs/#response-headers) and [HX-Trigger](https://htmx.org/headers/hx-trigger/) sections to know more about this.
 
 # 0.1.3 / 2023-12-04
 - Added filters and actions to inject HTMX meta tag configuration. Refer to the [documentation](https://htmx.org/docs/#config) for more information.
