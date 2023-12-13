@@ -21,13 +21,12 @@ function hxwp_api_url()
  * @since 2023-12-13
  *
  * @param string $status (success|error)
- * @param string $message (message)
  * @param array $data (extra data, optional)
  * @param array $action (WP action, optional, default value: default)
  *
  * @return void
  */
-function hxwp_send_header_response($status = 'success', $message = '', $data = [], $action = null)
+function hxwp_send_header_response($status = 'success', $data = [], $action = null)
 {
 	if ($action === null) {
 		// Check if action is set inside $_POST['hxparams']['action']
@@ -47,7 +46,6 @@ function hxwp_send_header_response($status = 'success', $message = '', $data = [
 		'hxwpResponse:' . $action => [
 			'action'  => $action,
 			'status'  => $status,
-			'message' => $message,
 			'data'    => $data,
 		],
 	];
@@ -58,7 +56,7 @@ function hxwp_send_header_response($status = 'success', $message = '', $data = [
 	}
 
 	// Filter our response
-	$response = apply_filters('hxwp/header_response', $response, $action, $status, $message, $data);
+	$response = apply_filters('hxwp/header_response', $response, $action, $status, $data);
 
 	// Send our response
 	status_header($code);
