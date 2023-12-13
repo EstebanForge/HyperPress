@@ -56,24 +56,22 @@ You can pass data to the template using URL parameters (GET/POST). For example:
 
 All of those parameters (with their values) will be available inside the template as an array named: `$hxparams`
 
-### Non visual (void) response templates
+### No Swap response templates
 
-Or void templates, if you prefer.
+HTMX allows you to use templates that don't return any HTML, and only do some processing in the background, on you server. Those templates still send a response back (using headers or json) to be used if desired. Check [Swapping](https://htmx.org/docs/#swapping) for more info.
 
-HTMX allows you to use templates that don't return any HTML, and only do some processing in the background, on you server. Check [Swapping](https://htmx.org/docs/#swapping) for more info.
-
-For this, you can use the `void/` endpoint. For example:
+For this, you can use the `noswap/` endpoint. For example:
 
 ```
-/wp-htmx/v1/void/save-user?user_id=5&name=John&last_name=Doe
-/wp-htmx/v1/void/delete-user?user_id=5
+/wp-htmx/v1/noswap/save-user?user_id=5&name=John&last_name=Doe
+/wp-htmx/v1/noswap/delete-user?user_id=5
 ```
 
-In this examples, the `save-user` and `delete-user` templates will not return any HTML, but will do some processing in the background. They will be loaded from the `htmx-void` folder.
+In this examples, the `save-user` and `delete-user` templates will not return any HTML, but will do some processing in the background. They will be loaded from the `htmx-noswap` folder.
 
 ```
-htmx-void/save-user.htmx.php
-htmx-void/delete-user.htmx.php
+htmx-noswap/save-user.htmx.php
+htmx-noswap/delete-user.htmx.php
 ```
 
 You can pass data to this templates, in the exact same way as you do with the regular templates.
@@ -98,7 +96,7 @@ If you don't know about how WordPress recommends to do data Sanitization and Esc
 
 ### REST Endpoint
 
-The plugin will perform basic sanitization of calls to the new REST endpoint, `wp-htmx`, to avoid security issues, like a directory traversal attack. Also it will limit you so you can't use it to access any file outside the `htmx-templates` folder inside your own theme.
+The plugin will perform basic sanitization of calls to the new REST endpoint, `wp-htmx`, to avoid security issues, like a directory traversal attack. Also it will limit you so you can't use it to access any file outside the `htmx-templates` and `htmx-noswap` folders inside your own theme.
 
 The params and their values passed to the endpoint, vía GET or POST, will be sanitized with `sanitize_key()` and `sanitize_text_field()` respectively.
 

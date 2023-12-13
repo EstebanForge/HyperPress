@@ -146,6 +146,9 @@ class HXWP_Render
 			return false;
 		}
 
+		// Ensure path is always a string
+		$path = (string) $path;
+
 		// Replace spaces with hyphens (standard behavior)
 		$path = str_replace(' ', '-', $path);
 
@@ -262,25 +265,47 @@ class HXWP_Render
 			// Remove template/ from the template name
 			$template_name = str_replace('template/', '', $template_name);
 
-			if ($template_name == 'htmx-demo') {
-				// Demo template lives in the plugin folder
-				$template_path = HXWP_ABSPATH . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
-			} else {
-				// Add full path and extension to the template name
-				$template_path = $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
-			}
+			// Add full path and extension to the template name
+			$template_path = $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
 		} else {
-			// Void template, remove void/ from the template name
-			$template_name = str_replace('void/', '', $template_name);
+			// No-swap template, remove noswap/ from the template name
+			$template_name = str_replace('noswap/', '', $template_name);
 
-			$template_path = $this->get_theme_path() . HXWP_VOID_DIR . '/' . $template_name . HXWP_EXT;
+			$template_path = $this->get_theme_path() . HXWP_NOSWAP_DIR . '/' . $template_name . HXWP_EXT;
 		}
+
+		// Sanitize full path
+		$template_path = $this->sanitize_full_path($template_path);
 
 		return $template_path;
 	}
 
 	/**
-	 * Determine if template_name is a template or a non-template response (void)
+	 * Sanitize full path
+	 *
+	 * @since 2023-12-13
+	 *
+	 * @param string $full_path
+	 *
+	 * @return string | bool
+	 */
+	protected function sanitize_full_path($full_path = '')
+	{
+		if (empty($full_path)) {
+			return false;
+		}
+
+		// Ensure full path is always a string
+		$full_path = (string) $full_path;
+
+		// Realpath
+		$full_path = realpath($full_path);
+
+		return $full_path;
+	}
+
+	/**
+	 * Determine if template_name is a template or a non-template response (no-swap)
 	 *
 	 * @since 2023-12-04
 	 * @param string $template_name
@@ -298,8 +323,8 @@ class HXWP_Render
 			return true;
 		}
 
-		// If string begins with void/, it's a non-template response
-		if (str_starts_with($template_name, 'void/')) {
+		// If string begins with noswap/, it's a non-template response
+		if (str_starts_with($template_name, 'noswap/')) {
 			return false;
 		}
 

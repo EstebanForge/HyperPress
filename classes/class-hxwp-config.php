@@ -30,9 +30,18 @@ class HXWP_Config
 		$meta_config = '';
 		$meta_config = apply_filters('hxwp/meta_config', $meta_config);
 
-		$meta_tag = '<meta name="htmx-config" content="' . $meta_config . '">';
+		if (empty($meta_config)) {
+			return;
+		}
 
-		do_action('hxwp/insert_config_meta_tag', $meta_tag);
+		$meta_tag = '<meta name="htmx-config" content="' . $meta_config . '">';
+		$meta_tag = apply_filters('hxwp/insert_config_meta_tag', $meta_tag);
+
+		do_action('hxwp/insert_config_meta_tag_end', $meta_tag);
+
+		if (empty($meta_tag)) {
+			return;
+		}
 
 		echo $meta_tag;
 	}

@@ -31,6 +31,27 @@ class HXWP_Assets
 
 		$hxwp_options = get_option('hxwp_options');
 
+		// If $hxwp_options false, set some defaults
+		if ($hxwp_options == false) {
+			$hxwp_options = [
+				'load_from_cdn' => 1,
+				'load_hyperscript' => 1,
+				'load_extension_animations' => 0,
+				'load_extension_autosave' => 0,
+				'load_extension_debug' => 0,
+				'load_extension_externals' => 0,
+				'load_extension_fileinput' => 0,
+				'load_extension_immediate' => 0,
+				'load_extension_intervalpoll' => 0,
+				'load_extension_node' => 0,
+				'load_extension_select' => 0,
+				'load_extension_sse' => 0,
+				'load_extension_swap' => 0,
+				'load_extension_websocket' => 0,
+				'load_extension_zen' => 0,
+			];
+		}
+
 		// Load HTMX
 		$load_from_cdn = $hxwp_options['load_from_cdn'];
 
