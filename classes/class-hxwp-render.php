@@ -22,7 +22,7 @@ class HXWP_Render
 	// Properties
 	protected $template_name;
 	protected $nonce;
-	protected $hxparams = false;
+	protected $hxvals = false;
 
 	/**
 	 * Render the template
@@ -47,17 +47,17 @@ class HXWP_Render
 		// Sanitize template name
 		$template_name = $this->sanitize_path($wp_query->query_vars[HXWP_ENDPOINT]);
 
-		// Get hxparams from $_REQUEST
-		$hxparams = $_REQUEST;
+		// Get hxvals from $_REQUEST
+		$hxvals = $_REQUEST;
 
-		if (!isset($hxparams) || empty($hxparams)) {
-			$hxparams = false;
+		if (!isset($hxvals) || empty($hxvals)) {
+			$hxvals = false;
 		} else {
-			$hxparams = $this->sanitize_params($hxparams);
+			$hxvals = $this->sanitize_params($hxvals);
 		}
 
 		// Load the requested template or fail with a 404
-		$this->render_or_fail($template_name, $hxparams);
+		$this->render_or_fail($template_name, $hxvals);
 		die(); // No wp_die() here, we don't want to show the complete WP error page
 	}
 
@@ -67,11 +67,11 @@ class HXWP_Render
 	 *
 	 * @since 2023-11-30
 	 * @param string $template_name
-	 * @param array|bool $hxparams
+	 * @param array|bool $hxvals
 	 *
 	 * @return void
 	 */
-	protected function render_or_fail($template_name = '', $hxparams = false)
+	protected function render_or_fail($template_name = '', $hxvals = false)
 	{
 		if (empty($template_name)) {
 			status_header(404);
@@ -194,21 +194,21 @@ class HXWP_Render
 	}
 
 	/**
-	 * Sanitize hxparams
+	 * Sanitize hxvals
 	 *
 	 * @since 2023-11-30
-	 * @param array $hxparams
+	 * @param array $hxvals
 	 *
 	 * @return array | bool
 	 */
-	private function sanitize_params($hxparams = [])
+	private function sanitize_params($hxvals = [])
 	{
-		if (empty($hxparams)) {
+		if (empty($hxvals)) {
 			return false;
 		}
 
 		// Sanitize each param
-		foreach ($hxparams as $key => $value) {
+		foreach ($hxvals as $key => $value) {
 			// Sanitize key and apply filter in one line
 			$key = apply_filters('hxwp/sanitize_param_key', sanitize_key($key), $key);
 
@@ -216,15 +216,15 @@ class HXWP_Render
 			$value = apply_filters('hxwp/sanitize_param_value', sanitize_text_field($value), $value);
 
 			// Update param
-			$hxparams[$key] = $value;
+			$hxvals[$key] = $value;
 		}
 
 		// Remove nonce if exists
-		if (isset($hxparams['hxwp_nonce'])) {
-			unset($hxparams['hxwp_nonce']);
+		if (isset($hxvals['hxwp_nonce'])) {
+			unset($hxvals['hxwp_nonce']);
 		}
 
-		return $hxparams;
+		return $hxvals;
 	}
 
 	/**

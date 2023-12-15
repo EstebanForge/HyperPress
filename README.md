@@ -54,7 +54,7 @@ You can pass data to the template using URL parameters (GET/POST). For example:
 /wp-htmx/v1/template/related-posts?category_id=5
 ```
 
-All of those parameters (with their values) will be available inside the template as an array named: `$hxparams`
+All of those parameters (with their values) will be available inside the template as an array named: `$hxvals`
 
 ### No Swap response templates
 

@@ -29,8 +29,8 @@ function hxwp_api_url()
 function hxwp_send_header_response($status = 'success', $data = [], $action = null)
 {
 	if ($action === null) {
-		// Check if action is set inside $_POST['hxparams']['action']
-		$action = isset($_POST['hxparams']['action']) ? sanitize_text_field($_POST['hxparams']['action']) : '';
+		// Check if action is set inside $_POST['hxvals']['action']
+		$action = isset($_POST['hxvals']['action']) ? sanitize_text_field($_POST['hxvals']['action']) : '';
 	}
 
 	// Action still empty, null or not set?
@@ -64,4 +64,38 @@ function hxwp_send_header_response($status = 'success', $data = [], $action = nu
 	header('HX-Trigger: ' . json_encode($response));
 
 	die(); // Don't need wp_die() here
+}
+
+/**
+ * HTMX die helper
+ * To be used inside templates
+ * die, but with a 200 status code, so HTMX can show and display the error message
+ * Also sends a custom header with the error message, to be used by HTMX if needed
+ *
+ * @since 2023-12-15
+ *
+ * @param string $message
+ *
+ * @return void
+ */
+function hxwp_die($message = '', $display_error = false)
+{
+	// Send our response
+	if (!headers_sent()) {
+		status_header(200);
+		nocache_headers();
+		header('HX-Error: ' . json_encode([
+			'status'  => 'error',
+			'data'    => [
+				'message' => $message,
+			],
+		]));
+	}
+
+	// Don't display error message
+	if ($display_error === false) {
+		$message = '';
+	}
+
+	die($message);
 }
