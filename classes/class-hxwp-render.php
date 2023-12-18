@@ -260,19 +260,8 @@ class HXWP_Render
 			return false;
 		}
 
-		// If template name is a template, load it from the theme folder
-		if ($this->is_template($template_name)) {
-			// Remove template/ from the template name
-			$template_name = str_replace('template/', '', $template_name);
-
-			// Add full path and extension to the template name
-			$template_path = $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
-		} else {
-			// No-swap template, remove noswap/ from the template name
-			$template_name = str_replace('noswap/', '', $template_name);
-
-			$template_path = $this->get_theme_path() . HXWP_NOSWAP_DIR . '/' . $template_name . HXWP_EXT;
-		}
+		// Add full path and extension to the template name
+		$template_path = $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
 
 		// Sanitize full path
 		$template_path = $this->sanitize_full_path($template_path);
@@ -302,32 +291,5 @@ class HXWP_Render
 		$full_path = realpath($full_path);
 
 		return $full_path;
-	}
-
-	/**
-	 * Determine if template_name is a template or a non-template response (no-swap)
-	 *
-	 * @since 2023-12-04
-	 * @param string $template_name
-	 *
-	 * @return bool
-	 */
-	protected function is_template($template_name = '')
-	{
-		if (empty($template_name)) {
-			return false;
-		}
-
-		// If string begins with template/, it's a template
-		if (str_starts_with($template_name, 'template/')) {
-			return true;
-		}
-
-		// If string begins with noswap/, it's a non-template response
-		if (str_starts_with($template_name, 'noswap/')) {
-			return false;
-		}
-
-		return false;
 	}
 }
