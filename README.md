@@ -60,7 +60,7 @@ All of those parameters (with their values) will be available inside the templat
 
 HTMX allows you to use templates that don't return any HTML, but do some processing in the background, on you server. Those templates can still send a response back (using HTTP headers) to be used if desired. Check [Swapping](https://htmx.org/docs/#swapping) for more info.
 
-For this, and for convenience, you can use the `noswap/` endpoint. For example:
+For this, and for convenience, you can use the `noswap/` folder/endpoint. For example:
 
 ```
 /wp-htmx/v1/noswap/save-user?user_id=5&name=John&last_name=Doe
@@ -76,7 +76,7 @@ htmx-templates/noswap/delete-user.htmx.php
 
 You can pass data to this templates, in the exact same way as you do with the regular templates.
 
-Nothing stops you from using the regular templates to do the same thing, but this is just a convenience feature. For mantaining your code organized.
+Nothing stops you from using regular templates to do the same thing, or another folder all together. And mix and match or order your templates in any way you want. This is mentioned here, just as a convenience feature for those that want to use it.
 
 ### HTMX extensions and Hyperscrypt
 
