@@ -14,3 +14,11 @@ if (!isset($hxvals['action']) || $hxvals['action'] != 'htmx_do_something') {
 
 // Do some server-side processing with the received $hxvals
 sleep(5);
+
+hxwp_send_header_response(
+	'success',
+	[
+		'message' => 'Server-side processing done.',
+		'params'  => $hxvals,
+	]
+);
