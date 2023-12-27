@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.1.7 / 2023-12-27
+- Bugfixes.
+
 # 0.1.6 / 2023-12-18
 - Merged `noswap/` folder into `htmx-templates/` folder. Now, all templates are inside `htmx-templates/` folder.
 

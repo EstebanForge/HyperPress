@@ -4,7 +4,7 @@
  * Plugin Name: HTMX API for WP
  * Plugin URI: https://github.com/TCattd/htmx-api-wp
  * Description: Add an API endpoint to support HTMX powered themes on your site.
- * Version: 0.1.6
+ * Version: 0.1.7
  * Author: Esteban Cuevas
  * Author URI: https://actitud.xyz
  * License: GPLv2 or later
@@ -26,7 +26,6 @@ if (defined('DOING_CRON') && DOING_CRON || defined('DOING_AJAX') && DOING_AJAX |
 }
 
 // Constants
-define('HXWP_VERSION', '0.1.6');
 define('HXWP_ABSPATH', plugin_dir_path(__FILE__));
 define('HXWP_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('HXWP_ENDPOINT', 'wp-htmx');
