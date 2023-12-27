@@ -17,12 +17,14 @@ function hxwp_api_url()
 
 /**
  * HTMX send header response and die()
+ * To be used inside noswap templates
+ * Sends HX-Trigger header with our response inside hxwpResponse
  *
  * @since 2023-12-13
  *
  * @param string $status (success|error)
  * @param array $data (extra data, optional)
- * @param array $action (WP action, optional, default value: default)
+ * @param array $action (WP action, optional, default value: none)
  *
  * @return void
  */
