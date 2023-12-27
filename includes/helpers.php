@@ -16,7 +16,7 @@ function hxwp_api_url()
 }
 
 /**
- * HTMX send header response
+ * HTMX send header response and die()
  *
  * @since 2023-12-13
  *
@@ -35,7 +35,7 @@ function hxwp_send_header_response($status = 'success', $data = [], $action = nu
 
 	// Action still empty, null or not set?
 	if (empty($action)) {
-		$action = 'default';
+		$action = 'none';
 	}
 
 	// If success, set code to 200
@@ -43,7 +43,7 @@ function hxwp_send_header_response($status = 'success', $data = [], $action = nu
 
 	// Response array
 	$response = [
-		'hxwpResponse:' . $action => [
+		'hxwpResponse' => [
 			'action'  => $action,
 			'status'  => $status,
 			'data'    => $data,

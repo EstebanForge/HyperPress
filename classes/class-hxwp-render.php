@@ -96,6 +96,9 @@ class HXWP_Render
 			wp_die(__('Template not found', 'hxwp'), __('Error', 'hxwp'), ['response' => 404]);
 		}
 
+		// To help developers know when template files were loaded via our plugin
+		define('HXWP_REQUEST', true);
+
 		// Load the template
 		require_once $template_path;
 	}

@@ -23,8 +23,8 @@ class HXWP_Options
 
 	public function __construct()
 	{
-		add_action('admin_menu', array($this, 'add_plugin_page'));
-		add_action('admin_init', array($this, 'page_init'));
+		add_action('admin_menu', [$this, 'add_plugin_page']);
+		add_action('admin_init', [$this, 'page_init']);
 	}
 
 	public function add_plugin_page()
@@ -34,7 +34,7 @@ class HXWP_Options
 			__('HTMX Options', 'hxwp'),
 			'manage_options',
 			'htmx-options',
-			array($this, 'create_admin_page')
+			[$this, 'create_admin_page']
 		);
 	}
 
@@ -57,49 +57,49 @@ class HXWP_Options
 	public function page_init()
 	{
 		// Default values
-		$default_values = array(
+		$default_values = [
 			'load_from_cdn'    => 1, // Set to 1 for checked, 0 for unchecked
 			'load_hyperscript' => 0,
-		);
+		];
 
 		// Retrieve current options
-		$options = wp_parse_args(get_option($this->option_name, array()), $default_values);
+		$options = wp_parse_args(get_option($this->option_name, []), $default_values);
 
 		register_setting(
 			'hxwp_options_group',
 			$this->option_name,
-			array($this, 'sanitize')
+			[$this, 'sanitize']
 		);
 
 		add_settings_section(
 			'hxwp_setting_section',
 			__('Settings', 'hxwp'),
-			array($this, 'print_section_info'),
+			[$this, 'print_section_info'],
 			'htmx-options'
 		);
 
 		add_settings_field(
 			'load_from_cdn',
 			__('Load HTMX and Hypertext from CDN', 'hxwp'),
-			array($this, 'load_from_cdn_callback'),
+			[$this, 'load_from_cdn_callback'],
 			'htmx-options',
 			'hxwp_setting_section',
-			array('label_for' => 'load_from_cdn', 'options' => $options)
+			['label_for' => 'load_from_cdn', 'options' => $options]
 		);
 
 		add_settings_field(
 			'load_hyperscript',
 			__('Load Hyperscript', 'hxwp'),
-			array($this, 'load_hyperscript_callback'),
+			[$this, 'load_hyperscript_callback'],
 			'htmx-options',
 			'hxwp_setting_section',
-			array('label_for' => 'load_hyperscript', 'options' => $options)
+			['label_for' => 'load_hyperscript', 'options' => $options]
 		);
 
 		add_settings_section(
 			'hxwp_setting_section_extensions',
 			__('Extensions', 'hxwp'),
-			array($this, 'print_section_info_extensions'),
+			[$this, 'print_section_info_extensions'],
 			'htmx-options'
 		);
 
@@ -132,10 +132,10 @@ class HXWP_Options
 			add_settings_field(
 				'load_extension_' . $extension,
 				__('Load', 'hxwp') . ' ' . $extension,
-				array($this, 'setting_extensions_callback'),
+				[$this, 'setting_extensions_callback'],
 				'htmx-options',
 				'hxwp_setting_section_extensions',
-				array('label_for' => 'load_extension_' . $extension, 'extension' => $extension, 'options' => $options)
+				['label_for' => 'load_extension_' . $extension, 'extension' => $extension, 'options' => $options]
 			);
 		}
 	}
