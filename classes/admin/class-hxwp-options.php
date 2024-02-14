@@ -173,6 +173,7 @@ class HXWP_Options
 
 	public function print_section_info()
 	{
+		echo __('<p>HTMX API for WordPress. <a href="https://github.com/TCattd/HTMX-API-WP/" target="_blank">Learn more</a>.</p>', 'hxwp');
 		echo __('General Options.', 'hxwp');
 	}
 
