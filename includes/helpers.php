@@ -22,7 +22,7 @@ function hxwp_api_url()
  *
  * @since 2023-12-13
  *
- * @param string $status (success|error)
+ * @param string $status (success|error|silent-sucess)
  * @param array $data (extra data, optional)
  * @param array $action (WP action, optional, default value: none)
  *
@@ -40,8 +40,8 @@ function hxwp_send_header_response($status = 'success', $data = [], $action = nu
 		$action = 'none';
 	}
 
-	// If success, set code to 200
-	$code = $status === 'success' ? 200 : 400;
+	// If success or silent-sucess, set code to 200
+	$code = $status == 'error' ? 400 : 200;
 
 	// Response array
 	$response = [

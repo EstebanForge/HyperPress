@@ -34,60 +34,88 @@ class HXWP_Assets
 		// If $hxwp_options false, set some defaults
 		if ($hxwp_options == false) {
 			$hxwp_options = [
-				'load_from_cdn' => 1,
-				'load_hyperscript' => 1,
-				'load_extension_animations' => 0,
-				'load_extension_autosave' => 0,
-				'load_extension_debug' => 0,
-				'load_extension_externals' => 0,
-				'load_extension_fileinput' => 0,
-				'load_extension_immediate' => 0,
-				'load_extension_intervalpoll' => 0,
-				'load_extension_node' => 0,
-				'load_extension_select' => 0,
-				'load_extension_sse' => 0,
-				'load_extension_swap' => 0,
-				'load_extension_websocket' => 0,
-				'load_extension_zen' => 0,
+				'load_from_cdn'                        => 1,
+				'load_hyperscript'                     => 1,
+				'load_extension_ajax-header'           => 0,
+				'load_extension_alpine-morph'          => 0,
+				'load_extension_class-tools'           => 0,
+				'load_extension_client-side-templates' => 0,
+				'load_extension_debug'                 => 0,
+				'load_extension_event-header'          => 0,
+				'load_extension_head-support'          => 0,
+				'load_extension_include-vals'          => 0,
+				'load_extension_json-enc'              => 0,
+				'load_extension_loading-states'        => 0,
+				'load_extension_method-override'       => 0,
+				'load_extension_morphdom-swap'         => 0,
+				'load_extension_multi-swap'            => 0,
+				'load_extension_path-deps'             => 0,
+				'load_extension_preload'               => 0,
+				'load_extension_remove-me'             => 0,
+				'load_extension_response-targets'      => 0,
+				'load_extension_restored'              => 0,
+				'load_extension_sse'                   => 0,
+				'load_extension_ws'                    => 0,
+				'load_extension_path-params'           => 0,
 			];
 		}
 
-		// Load HTMX
+		// CDN?
 		$load_from_cdn = $hxwp_options['load_from_cdn'];
 
+		// Load HTMX
 		if ($load_from_cdn == 0) {
 			$src_htmx = HXWP_PLUGIN_URL . 'assets/js/htmx.min.js';
+			$src_ver  = filemtime(HXWP_ABSPATH . 'assets/js/htmx.min.js');
 		} else {
 			$src_htmx = 'https://unpkg.com/htmx.org';
+			$src_ver  = 'latest';
 		}
 
-		wp_enqueue_script('hxwp-htmx', $src_htmx, [], '1.9.9', true);
+		wp_enqueue_script(
+			'hxwp-htmx',
+			$src_htmx,
+			[],
+			$src_ver,
+			true
+		);
 
 		// Load Hyperscript
 		$load_hyperscript = $hxwp_options['load_hyperscript'];
 
-		if ($load_hyperscript == 0) {
-			$src_hyperscript = HXWP_PLUGIN_URL . 'assets/js/_hyperscript.min.js';
-		} else {
-			$src_hyperscript = 'https://unpkg.com/hyperscript.org';
+		if ($load_hyperscript == 1) {
+			if ($load_from_cdn == 0) {
+				$src_hyperscript = HXWP_PLUGIN_URL . 'assets/js/_hyperscript.min.js';
+				$sec_hs_ver      = filemtime(HXWP_ABSPATH . 'assets/js/_hyperscript.min.js');
+			} else {
+				$src_hyperscript = 'https://unpkg.com/hyperscript.org';
+				$sec_hs_ver      = 'latest';
+			}
+
+			wp_enqueue_script('hxwp-hyperscript', $src_hyperscript, ['hxwp-htmx'], $sec_hs_ver, true);
 		}
 
-		wp_enqueue_script('hxwp-hyperscript', $src_hyperscript, ['hxwp-htmx'], '0.9.12', true);
 
 		// Load HTMX extensions
 		// get all options that start with "load_extension_"
 		foreach ($hxwp_options as $key => $value) {
 			if (strpos($key, 'load_extension_') === 0) {
-				$extension_name = str_replace('load_extension_', '', $key);
-				$extension_name = str_replace('_', '-', $extension_name);
+				$ext_script_name = str_replace('load_extension_', '', $key);
+				$ext_script_name = str_replace('_', '-', $ext_script_name);
 
 				if ($value == 1) {
-					$src_extension = 'https://unpkg.com/htmx.org/dist/ext/' . $extension_name . '.js';
+					if ($load_from_cdn == 1) {
+						$src_extension = 'https://unpkg.com/htmx.org/dist/ext/' . $ext_script_name . '.js';
+						$src_ext_ver   = 'latest';
+					} else {
+						$src_extension = HXWP_PLUGIN_URL . 'assets/js/ext/' . $ext_script_name . '.js';
+						$src_ext_ver   = filemtime(HXWP_ABSPATH . 'assets/js/ext/' . $ext_script_name . '.js');
+					}
 				} else {
-					$src_extension = HXWP_PLUGIN_URL . 'assets/js/extensions/' . $extension_name . '.js';
+					continue;
 				}
 
-				wp_enqueue_script('hxwp-htmx-' . $extension_name, $src_extension, ['hxwp-htmx'], '1.9.9', true);
+				wp_enqueue_script('hxwp-htmx-' . $ext_script_name, $src_extension, ['hxwp-htmx'], $src_ext_ver, true);
 			}
 		}
 

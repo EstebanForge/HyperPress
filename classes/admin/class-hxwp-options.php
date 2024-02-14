@@ -58,7 +58,7 @@ class HXWP_Options
 	{
 		// Default values
 		$default_values = [
-			'load_from_cdn'    => 1, // Set to 1 for checked, 0 for unchecked
+			'load_from_cdn'    => 0, // Set to 1 for checked, 0 for unchecked
 			'load_hyperscript' => 0,
 		];
 
@@ -80,7 +80,7 @@ class HXWP_Options
 
 		add_settings_field(
 			'load_from_cdn',
-			__('Load HTMX and Hypertext from CDN', 'hxwp'),
+			__('Load scripts from CDN', 'hxwp'),
 			[$this, 'load_from_cdn_callback'],
 			'htmx-options',
 			'hxwp_setting_section',
@@ -105,37 +105,42 @@ class HXWP_Options
 
 		// HTMX extensions to load
 		$extensions = [
-			'ajax-header',
-			'alpine-morph',
-			'class-tools',
-			'client-side-templates',
-			'debug',
-			'event-header',
-			'head-support',
-			'include-vars',
-			'json-enc',
-			'idiomorph',
-			'loading-states',
-			'method-override',
-			'morphdom-swap',
-			'multi-swap',
-			'path-deps',
-			'preload',
-			'remove-me',
-			'response-targets',
-			'restored',
-			'server-sent-events',
-			'web-sockets',
+			'ajax-header'           => 'includes the commonly-used X-Requested-With header that identifies ajax requests in many backend frameworks',
+			'alpine-morph'          => '	an extension for using the Alpine.js morph plugin as the swapping mechanism in htmx.',
+			'class-tools'           => 'an extension for manipulating timed addition and removal of classes on HTML elements',
+			'client-side-templates' => 'support for client side template processing of JSON/XML responses',
+			'debug'                 => 'an extension for debugging of a particular element using htmx',
+			'event-header'          => 'includes a JSON serialized version of the triggering event, if any',
+			'head-support'          => 'support for merging the head tag from responses into the existing documents head',
+			'include-vars'          => 'allows you to include additional values in a request',
+			'json-enc'              => 'use JSON encoding in the body of requests, rather than the default x-www-form-urlencoded',
+			'loading-states'        => 'allows you to disable inputs, add and remove CSS classes to any element while a request is in-flight.',
+			'method-override'       => 'use the X-HTTP-Method-Override header for non-GET and POST requests',
+			'morphdom-swap'         => 'an extension for using the morphdom library as the swapping mechanism in htmx.',
+			'multi-swap'            => 'allows to swap multiple elements with different swap methods',
+			'path-deps'             => '	an extension for expressing path-based dependencies similar to intercoolerjs',
+			'preload'               => 'preloads selected href and hx-get targets based on rules you control.',
+			'remove-me'             => 'allows you to remove an element after a given amount of time',
+			'response-targets'      => 'allows to specify different target elements to be swapped when different HTTP response codes are received',
+			'restored'              => 'allows you to trigger events when the back button has been pressed',
+			'sse'                   => 'Server send events. Uni-directional server push messaging via EventSource',
+			'ws'                    => 'WebSockets. Bi-directional connection to WebSocket servers',
+			'path-params'           => 'allows to use parameters for path variables instead of sending them in query or body',
 		];
 
-		foreach ($extensions as $extension) {
+		foreach ($extensions as $key => $extension) {
 			add_settings_field(
-				'load_extension_' . $extension,
-				__('Load', 'hxwp') . ' ' . $extension,
+				'load_extension_' . $key,
+				__('Load', 'hxwp') . ' ' . $key,
 				[$this, 'setting_extensions_callback'],
 				'htmx-options',
 				'hxwp_setting_section_extensions',
-				['label_for' => 'load_extension_' . $extension, 'extension' => $extension, 'options' => $options]
+				[
+					'label_for' => 'load_extension_' . $key,
+					'key'       => $key,
+					'extension' => $extension,
+					'options'   => $options
+				]
 			);
 		}
 	}
@@ -196,11 +201,13 @@ class HXWP_Options
 
 	public function setting_extensions_callback($args)
 	{
-		$options = $args['options'];
+		$options   = $args['options'];
 		$extension = $args['extension'];
-		$checked = isset($options['load_extension_' . $extension]) ? checked(1, $options['load_extension_' . $extension], false) : '';
+		$key       = $args['key'];
 
-		echo '<input type="checkbox" id="load_extension_' . $extension . '" name="' . $this->option_name . '[load_extension_' . $extension . ']" value="1" ' . $checked . ' />';
+		$checked   = isset($options['load_extension_' . $key]) ? checked(1, $options['load_extension_' . $key], false) : '';
+
+		echo '<input type="checkbox" id="load_extension_' . $key . '" name="' . $this->option_name . '[load_extension_' . $key . ']" value="1" ' . $checked . ' />';
 		echo '<p class="description">' . __('Load', 'hxwp') . ' ' . $extension . __(' extension.', 'hxwp') . '</p>';
 	}
 }
