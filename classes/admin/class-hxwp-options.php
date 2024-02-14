@@ -178,7 +178,7 @@ class HXWP_Options
 
 	public function print_section_info_extensions()
 	{
-		echo __('Choose which HTMX extensions to load.', 'hxwp');
+		echo __('Choose which <a href="https://htmx.org/extensions/" target="_blank">HTMX extensions</a> to load.', 'hxwp');
 	}
 
 	public function load_from_cdn_callback($args)
