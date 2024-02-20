@@ -4,9 +4,10 @@ An un-official WordPress plugin that adds [HTMX](https://htmx.org) to your WordP
 
 It enables a new endpoint `/wp-htmx/v1/` from where you can load any HTMX template.
 
-<div align="center">
-[![HTMX API for WordPress](https://img.youtube.com/vi/pDfg-pzhmyE/0.jpg)](https://www.youtube.com/watch?v=pDfg-pzhmyE)
-</div>
+<p align="center">
+[![HTMX API for WordPress Demo](https://img.youtube.com/vi/pDfg-pzhmyE/0.jpg)](https://www.youtube.com/watch?v=pDfg-pzhmyE "HTMX API for WordPress Demo")
+Click to check the video
+</p>
 
 ## Why?
 
