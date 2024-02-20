@@ -10,7 +10,7 @@ It enables a new endpoint `/wp-htmx/v1/` from where you can load any HTMX templa
 
 <small>
 
-[Click to check the video](https://www.youtube.com/watch?v=pDfg-pzhmyE)
+[Check the video](https://www.youtube.com/watch?v=pDfg-pzhmyE)
 
 </small>
 
