@@ -3,6 +3,7 @@
 # 0.1.8 / 2024-02-14
 - HTMX and Hyperscript are now retrieved using NPM.
 - Fixes loading extensions from local/CDN and their paths. Thanks @agencyhub!
+- Keeps line breaks on sanitization of hxvals. Thanks @texorama!
 
 # 0.1.7 / 2023-12-27
 - Bugfixes.

@@ -216,7 +216,7 @@ class HXWP_Render
 			$key = apply_filters('hxwp/sanitize_param_key', sanitize_key($key), $key);
 
 			// Sanitize value and apply filter in one line
-			$value = apply_filters('hxwp/sanitize_param_value', sanitize_text_field($value), $value);
+			$value = apply_filters('hxwp/sanitize_param_value', sanitize_textarea_field($value), $value);
 
 			// Update param
 			$hxvals[$key] = $value;
