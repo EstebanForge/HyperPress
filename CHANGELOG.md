@@ -1,9 +1,12 @@
 # Changelog
 
+# 0.1.9 / 2024-02-20
+- Keeps line breaks on sanitization of hxvals. Thanks @texorama!
+- Added option to enable HTMX to load at the WordPress backend (wp-admin). Thanks @texorama for the suggestion.
+
 # 0.1.8 / 2024-02-14
 - HTMX and Hyperscript are now retrieved using NPM.
 - Fixes loading extensions from local/CDN and their paths. Thanks @agencyhub!
-- Keeps line breaks on sanitization of hxvals. Thanks @texorama!
 
 # 0.1.7 / 2023-12-27
 - Bugfixes.

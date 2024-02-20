@@ -34,8 +34,9 @@ class HXWP_Assets
 		// If $hxwp_options false, set some defaults
 		if ($hxwp_options == false) {
 			$hxwp_options = [
-				'load_from_cdn'                        => 1,
-				'load_hyperscript'                     => 1,
+				'load_from_cdn'                        => 0,
+				'load_hyperscript'                     => 0,
+				'load_htmx_backend'                    => 0,
 				'load_extension_ajax-header'           => 0,
 				'load_extension_alpine-morph'          => 0,
 				'load_extension_class-tools'           => 0,

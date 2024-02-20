@@ -61,8 +61,15 @@ class HXWP_Main
 		add_action('wp_enqueue_scripts', [$assets, 'enqueue_scripts']);
 		add_action('wp_head', [$config, 'insert_config_meta_tag']);
 
+		// HTMX at WP backend?
+		$hxwp_options = get_option('hxwp_options');
+
+		if (isset($hxwp_options['load_htmx_backend']) && $hxwp_options['load_htmx_backend'] == 1) {
+			add_action('admin_enqueue_scripts', [$assets, 'enqueue_scripts']);
+		}
+
 		if (is_admin()) {
-			$options = new HXWP_Options();
+			$options             = new HXWP_Options();
 			$activate_deactivate = new HXWP_Activate_Deactivate();
 		}
 

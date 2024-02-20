@@ -1,6 +1,6 @@
 {
 	"name": "HTMX-API-WP",
-	"version": "0.1.8",
+	"version": "0.1.9",
 	"description": "An un-official WordPress plugin that adds HTMX to your WordPress site.",
 	"main": "index.js",
 	"scripts": {

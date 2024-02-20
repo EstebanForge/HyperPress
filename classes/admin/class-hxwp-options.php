@@ -58,8 +58,9 @@ class HXWP_Options
 	{
 		// Default values
 		$default_values = [
-			'load_from_cdn'    => 0, // Set to 1 for checked, 0 for unchecked
-			'load_hyperscript' => 0,
+			'load_from_cdn'     => 0, // Set to 1 for checked, 0 for unchecked
+			'load_hyperscript'  => 0,
+			'load_htmx_backend' => 0,
 		];
 
 		// Retrieve current options
@@ -94,6 +95,15 @@ class HXWP_Options
 			'htmx-options',
 			'hxwp_setting_section',
 			['label_for' => 'load_hyperscript', 'options' => $options]
+		);
+
+		add_settings_field(
+			'load_htmx_backend',
+			__('Load HTMX/Hyperscript at WP backend', 'hxwp'),
+			[$this, 'load_htmx_backend_callback'],
+			'htmx-options',
+			'hxwp_setting_section',
+			['label_for' => 'load_htmx_backend', 'options' => $options]
 		);
 
 		add_settings_section(
@@ -161,6 +171,13 @@ class HXWP_Options
 			$input['load_hyperscript'] = 0;
 		}
 
+		// load_htmx_backend
+		if (isset($input['load_htmx_backend'])) {
+			$input['load_htmx_backend'] = isset($input['load_htmx_backend']) ? 1 : 0;
+		} else {
+			$input['load_htmx_backend'] = 0;
+		}
+
 		// If load extensions, options begins with load_extension_
 		foreach ($input as $key => $value) {
 			if (strpos($key, 'load_extension_') === 0) {
@@ -198,6 +215,15 @@ class HXWP_Options
 
 		echo '<input type="checkbox" id="load_hyperscript" name="' . $this->option_name . '[load_hyperscript]" value="1" ' . $checked . ' />';
 		echo '<p class="description">' . __('Choose whether to load Hyperscript or not. Keep it enabled to load Hyperscript. HTMX is always loaded.', 'hxwp') . '</p>';
+	}
+
+	public function load_htmx_backend_callback($args)
+	{
+		$options = $args['options'];
+		$checked = isset($options['load_htmx_backend']) && $options['load_htmx_backend'] ? 'checked' : '';
+
+		echo '<input type="checkbox" id="load_htmx_backend" name="' . $this->option_name . '[load_htmx_backend]" value="1" ' . $checked . ' />';
+		echo '<p class="description">' . __('Choose whether to load HTMX (and Hyperscript if activated) at WP backend (wp-admin) or not. HTMX is always loaded at the site\'s frontend.', 'hxwp') . '</p>';
 	}
 
 	public function setting_extensions_callback($args)
