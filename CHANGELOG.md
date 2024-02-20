@@ -1,6 +1,7 @@
 # Changelog
 
-# 0.1.9 / 2024-02-20
+# 0.1.10 / 2024-02-20
+- hxwp_api_url() helper now accepts a path to be appended to the API URL. Just like WP's home_url().
 - Keeps line breaks on sanitization of hxvals. Thanks @texorama!
 - Added option to enable HTMX to load at the WordPress backend (wp-admin). Thanks @texorama for the suggestion.
 

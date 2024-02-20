@@ -6,13 +6,24 @@ if (!defined('ABSPATH')) {
 
 /**
  * HTMX API URL
+ * Returns the HTMX API URL, with a template path if provided
  *
  * @since 2023-12-04
+ *
+ * @param string $template_path (optional)
+ *
  * @return string
  */
-function hxwp_api_url()
+function hxwp_api_url($template_path = '')
 {
-	return apply_filters('hxwp/api_url', home_url(HXWP_ENDPOINT . '/' . HXWP_ENDPOINT_VERSION));
+	$htmx_api_url = home_url(HXWP_ENDPOINT . '/' . HXWP_ENDPOINT_VERSION);
+
+	// Path provided?
+	if (!empty($template_path)) {
+		$htmx_api_url .= '/' . ltrim($template_path, '/');
+	}
+
+	return apply_filters('hxwp/api_url', $htmx_api_url);
 }
 
 /**
