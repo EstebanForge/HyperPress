@@ -1,6 +1,7 @@
 # Changelog
 
 # 0.1.10 / 2024-02-20
+- Added a showcase/demo theme to demonstrate how to use HTMX with WordPress. The theme is available at [TCattd/HTMX-WordPress-Theme](https://github.com/TCattd/HTMX-WordPress-Theme).
 - hxwp_api_url() helper now accepts a path to be appended to the API URL. Just like WP's home_url().
 - Keeps line breaks on sanitization of hxvals. Thanks @texorama!
 - Added option to enable HTMX to load at the WordPress backend (wp-admin). Thanks @texorama for the suggestion.
