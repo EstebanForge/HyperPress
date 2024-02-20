@@ -8,7 +8,11 @@ It enables a new endpoint `/wp-htmx/v1/` from where you can load any HTMX templa
 
 [![HTMX API for WordPress Demo](https://img.youtube.com/vi/pDfg-pzhmyE/0.jpg)](https://www.youtube.com/watch?v=pDfg-pzhmyE "HTMX API for WordPress Demo")
 
-<small>Click to check the video</small>
+<small>
+
+[Click to check the video](https://www.youtube.com/watch?v=pDfg-pzhmyE)
+
+</small>
 
 </div>
 
