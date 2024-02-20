@@ -106,15 +106,9 @@ Filters `hxwp/sanitize_param_key` and `hxwp/sanitize_param_value` are available 
 
 Do your homework and make sure you are returning non sanitized data back to the user or using it in a way that could be a security issue for your site. HTMX requires that you validate and sanitize any data you receive from the user. Don't forget that.
 
-## Examples?
+## Examples
 
-Don't have one right now for you to look (that i can made public), but... i will try to make a simple theme to showcase HTMX usage within WordPress.
-
-When time permits.
-
-For now, someone that has no issues understanding how HTMX works, shouldn't have any inconvenience using this plugin as their "glue" to make HTMX calls to load templates or execute some logic on their theme.
-
-For everyone else, you should really check out HTMX official documentation. It's good.
+Check out the showcase/demo theme at [TCattd/HTMX-WordPress-Theme](https://github.com/TCattd/HTMX-WordPress-Theme).
 
 ## Suggestions, Support
 
