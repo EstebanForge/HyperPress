@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.1.11 / 2024-02-21
+- Added WooCommerce compatibility. Thanks @carlosromanxyz for the suggestion.
+
 # 0.1.10 / 2024-02-20
 - Added a showcase/demo theme to demonstrate how to use HTMX with WordPress. The theme is available at [TCattd/HTMX-WordPress-Theme](https://github.com/TCattd/HTMX-WordPress-Theme).
 - hxwp_api_url() helper now accepts a path to be appended to the API URL. Just like WP's home_url().

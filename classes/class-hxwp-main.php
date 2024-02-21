@@ -54,12 +54,16 @@ class HXWP_Main
 		$render = new HXWP_Render();
 		$assets = new HXWP_Assets();
 		$config = new HXWP_Config();
+		$compat = new HXWP_Compatibility();
 
 		// Hook into actions and filters
 		add_action('init', [$router, 'register_main_route']);
 		add_action('template_redirect', [$render, 'load_template']);
 		add_action('wp_enqueue_scripts', [$assets, 'enqueue_scripts']);
 		add_action('wp_head', [$config, 'insert_config_meta_tag']);
+
+		// Compatibility
+		$compat->run();
 
 		// HTMX at WP backend?
 		$hxwp_options = get_option('hxwp_options');
@@ -88,6 +92,9 @@ class HXWP_Main
 		include_once HXWP_ABSPATH . 'classes/class-hxwp-assets.php';
 		include_once HXWP_ABSPATH . 'classes/class-hxwp-router.php';
 		include_once HXWP_ABSPATH . 'classes/class-hxwp-render.php';
+
+		// Compatibility fixes for 3rd party plugins
+		include_once HXWP_ABSPATH . 'classes/class-hxwp-compatibility.php';
 
 		if (is_admin()) {
 			include_once HXWP_ABSPATH . 'classes/admin/class-hxwp-activation.php';

@@ -2,7 +2,7 @@
 	"name": "HTMX-API-WP",
 	"author": "Esteban Cuevas",
 	"license": "GPL-2.0-only",
-	"version": "0.1.10",
+	"version": "0.1.11",
 	"description": "An un-official WordPress plugin that adds HTMX to your WordPress site.",
 	"keywords": [],
 	"main": "index.js",
