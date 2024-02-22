@@ -263,13 +263,16 @@ class HXWP_Render
 			return false;
 		}
 
-		// Add full path and extension to the template name
-		$template_path = $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/' . $template_name . HXWP_EXT;
+		// Let users filter the templates path, so they can place HTMX templates in a different location if they want
+		$templates_path = apply_filters('hxwp/get_template_file/templates_path', $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/');
+
+		// Full path and extension to the template name
+		$template_file_path = $templates_path . $template_name . HXWP_EXT;
 
 		// Sanitize full path
-		$template_path = $this->sanitize_full_path($template_path);
+		$template_file_path = $this->sanitize_full_path($template_file_path);
 
-		return $template_path;
+		return $template_file_path;
 	}
 
 	/**
