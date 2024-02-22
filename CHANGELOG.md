@@ -3,6 +3,7 @@
 # 0.1.12 / 2024-02-22
 - Added Composer support. Thanks @mwender!
 - Fixed a bug on how the plugin obtains the active theme path. Thanks again @mwender for the report and fix :)
+- Added a filter to allow the user to change the default path for the HTMX templates. Thanks @mwender for the suggestion.
 
 # 0.1.11 / 2024-02-21
 - Added WooCommerce compatibility. Thanks @carlosromanxyz for the suggestion.
