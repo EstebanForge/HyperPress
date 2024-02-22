@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.1.12 / 2024-02-22
+- Added Composer support. Thanks @mwender!
+- Fixed a bug on how the plugin obtains the active theme path. Thanks again @mwender for the report and fix :)
+
 # 0.1.11 / 2024-02-21
 - Added WooCommerce compatibility. Thanks @carlosromanxyz for the suggestion.
 
