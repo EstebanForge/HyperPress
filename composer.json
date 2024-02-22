@@ -1,5 +1,5 @@
 {
-  "name": "mwender/htmx-api-wp",
+  "name": "tcattd/htmx-api-wp",
   "description": "An un-official HTMX API for WordPress",
   "keywords": ["wordpress", "plugin", "htmx", "api"],
   "homepage": "https://github.com/TCattd/HTMX-API-WP",
