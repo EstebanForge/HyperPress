@@ -1,16 +1,23 @@
 {
-  "name": "tcattd/htmx-api-wp",
-  "description": "An un-official HTMX API for WordPress",
-  "keywords": ["wordpress", "plugin", "htmx", "api"],
-  "homepage": "https://github.com/TCattd/HTMX-API-WP",
-  "authors": [
-    {
-      "name": "Esteban Cuevas",
-      "homepage": "https://actitud.xyz/"
-    }
-  ],
-  "type": "wordpress-plugin",
-  "require": {
-    "php": ">=8.0"
-  }
+	"name": "tcattd/htmx-api-wp",
+	"description": "An un-official HTMX API for WordPress",
+	"version": "0.1.12",
+	"keywords": [
+		"wordpress",
+		"plugin",
+		"htmx",
+		"api"
+	],
+	"homepage": "https://github.com/TCattd/HTMX-API-WP",
+	"authors": [
+		{
+			"name": "Esteban Cuevas",
+			"homepage": "https://actitud.xyz/"
+		}
+	],
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=8.0"
+	}
 }
