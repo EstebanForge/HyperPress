@@ -100,7 +100,7 @@ class HXWP_Options
 
 		add_settings_field(
 			'set_htmx_hxboost',
-			__('Auto add hx-boost="true" attribute to body tag', 'hxwp'),
+			__('Auto hx-boost="true"', 'hxwp'),
 			[$this, 'load_htmx_hxboost_callback'],
 			'htmx-options',
 			'hxwp_setting_section',
@@ -240,7 +240,7 @@ class HXWP_Options
 		$checked = isset($options['set_htmx_hxboost']) && $options['set_htmx_hxboost'] ? 'checked' : '';
 
 		echo '<input type="checkbox" id="set_htmx_hxboost" name="' . $this->option_name . '[set_htmx_hxboost]" value="1" ' . $checked . ' />';
-		echo '<p class="description">' . __('Choose whether to auto add hx-boost="true" attribute to body tag or not. HTMX is always loaded.', 'hxwp') . '</p>';
+		echo '<p class="description">' . __('Enable auto-adding of hx-boost="true" into your active theme, dinamically. Learn more about <a href="https://htmx.org/attributes/hx-boost/" target="_blank">hx-boost</a>.', 'hxwp') . '</p>';
 	}
 
 	public function load_htmx_backend_callback($args)
