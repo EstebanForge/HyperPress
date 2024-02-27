@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.1.13 / 2024-02-27
+- Added option to add the `hx-boost` (true) attribute to any enabled theme, automatically. This enables HTMX's boost feature, globally. Learn more [here](https://htmx.org/attributes/hx-boost/).
+
 # 0.1.12 / 2024-02-22
 - Added Composer support. Thanks @mwender!
 - Fixed a bug on how the plugin obtains the active theme path. Thanks again @mwender for the report and fix :)

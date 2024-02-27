@@ -60,6 +60,7 @@ class HXWP_Options
 		$default_values = [
 			'load_from_cdn'     => 0, // Set to 1 for checked, 0 for unchecked
 			'load_hyperscript'  => 0,
+			'set_htmx_hxboost'  => 0,
 			'load_htmx_backend' => 0,
 		];
 
@@ -95,6 +96,15 @@ class HXWP_Options
 			'htmx-options',
 			'hxwp_setting_section',
 			['label_for' => 'load_hyperscript', 'options' => $options]
+		);
+
+		add_settings_field(
+			'set_htmx_hxboost',
+			__('Auto add hx-boost="true" attribute to body tag', 'hxwp'),
+			[$this, 'load_htmx_hxboost_callback'],
+			'htmx-options',
+			'hxwp_setting_section',
+			['label_for' => 'set_htmx_hxboost', 'options' => $options]
 		);
 
 		add_settings_field(
@@ -171,6 +181,13 @@ class HXWP_Options
 			$input['load_hyperscript'] = 0;
 		}
 
+		// set_htmx_hxboost
+		if (isset($input['set_htmx_hxboost'])) {
+			$input['set_htmx_hxboost'] = isset($input['set_htmx_hxboost']) ? 1 : 0;
+		} else {
+			$input['set_htmx_hxboost'] = 0;
+		}
+
 		// load_htmx_backend
 		if (isset($input['load_htmx_backend'])) {
 			$input['load_htmx_backend'] = isset($input['load_htmx_backend']) ? 1 : 0;
@@ -215,6 +232,15 @@ class HXWP_Options
 
 		echo '<input type="checkbox" id="load_hyperscript" name="' . $this->option_name . '[load_hyperscript]" value="1" ' . $checked . ' />';
 		echo '<p class="description">' . __('Choose whether to load Hyperscript or not. Keep it enabled to load Hyperscript. HTMX is always loaded.', 'hxwp') . '</p>';
+	}
+
+	public function load_htmx_hxboost_callback($args)
+	{
+		$options = $args['options'];
+		$checked = isset($options['set_htmx_hxboost']) && $options['set_htmx_hxboost'] ? 'checked' : '';
+
+		echo '<input type="checkbox" id="set_htmx_hxboost" name="' . $this->option_name . '[set_htmx_hxboost]" value="1" ' . $checked . ' />';
+		echo '<p class="description">' . __('Choose whether to auto add hx-boost="true" attribute to body tag or not. HTMX is always loaded.', 'hxwp') . '</p>';
 	}
 
 	public function load_htmx_backend_callback($args)

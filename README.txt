@@ -1,7 +1,7 @@
 === HTMX-API-WP ===
 Contributors: tcattd
 Tags: htmx, ajax, hypermedia
-Stable tag: 0.1.12
+Stable tag: 0.1.13
 Requires at least: 6.3
 Tested up to: 6.4
 Requires PHP: 8.0

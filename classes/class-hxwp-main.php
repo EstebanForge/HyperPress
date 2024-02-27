@@ -55,6 +55,7 @@ class HXWP_Main
 		$assets = new HXWP_Assets();
 		$config = new HXWP_Config();
 		$compat = new HXWP_Compatibility();
+		$theme  = new HXWP_Theme();
 
 		// Hook into actions and filters
 		add_action('init', [$router, 'register_main_route']);
@@ -64,6 +65,9 @@ class HXWP_Main
 
 		// Compatibility
 		$compat->run();
+
+		// Theme support
+		$theme->run();
 
 		// HTMX at WP backend?
 		$hxwp_options = get_option('hxwp_options');
@@ -95,6 +99,9 @@ class HXWP_Main
 
 		// Compatibility fixes for 3rd party plugins
 		include_once HXWP_ABSPATH . 'classes/class-hxwp-compatibility.php';
+
+		// Theme support
+		include_once HXWP_ABSPATH . 'classes/class-hxwp-theme.php';
 
 		if (is_admin()) {
 			include_once HXWP_ABSPATH . 'classes/admin/class-hxwp-activation.php';

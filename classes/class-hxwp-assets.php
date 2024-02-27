@@ -36,6 +36,7 @@ class HXWP_Assets
 			$hxwp_options = [
 				'load_from_cdn'                        => 0,
 				'load_hyperscript'                     => 0,
+				'set_htmx_hxboost'                     => 0,
 				'load_htmx_backend'                    => 0,
 				'load_extension_ajax-header'           => 0,
 				'load_extension_alpine-morph'          => 0,
