@@ -41,7 +41,15 @@ class HXWP_Theme
 		if ($set_htmx_hxboost == 0) {
 			return;
 		}
-
-		echo '<script>document.body.setAttribute("hx-boost", "true");</script>';
+?>
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				document.body.setAttribute("hx-boost", "true");
+				if (document.getElementById("wpadminbar")) {
+					document.getElementById("wpadminbar").setAttribute("hx-boost", "false");
+				}
+			});
+		</script>
+<?php
 	}
 }

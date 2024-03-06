@@ -1,6 +1,6 @@
 # Changelog
 
-# 0.1.13 / 2024-02-27
+# 0.1.14 / 2024-03-06
 - Added option to add the `hx-boost` (true) attribute to any enabled theme, automatically. This enables HTMX's boost feature, globally. Learn more [here](https://htmx.org/attributes/hx-boost/).
 
 # 0.1.12 / 2024-02-22
