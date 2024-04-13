@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.1.15 / 2024-04-13
+- Fixes sanitization for form elements that allows multiple values. Thanks @mwender for the report. [Discussion #8](https://github.com/TCattd/HTMX-API-WP/discussions/8).
+
 # 0.1.14 / 2024-03-06
 - Added option to add the `hx-boost` (true) attribute to any enabled theme, automatically. This enables HTMX's boost feature, globally. Learn more [here](https://htmx.org/attributes/hx-boost/).
 

@@ -212,11 +212,18 @@ class HXWP_Render
 
 		// Sanitize each param
 		foreach ($hxvals as $key => $value) {
-			// Sanitize key and apply filter in one line
+			// Sanitize key
 			$key = apply_filters('hxwp/sanitize_param_key', sanitize_key($key), $key);
 
-			// Sanitize value and apply filter in one line
-			$value = apply_filters('hxwp/sanitize_param_value', sanitize_textarea_field($value), $value);
+			// For form elements with multiple values
+			// https://github.com/TCattd/HTMX-API-WP/discussions/8
+			if (is_array($value)) {
+				// Sanitize each value
+				$value = apply_filters('hxwp/sanitize_param_array_value', array_map('sanitize_text_field', $value), $key);
+			} else {
+				// Sanitize single value
+				$value = apply_filters('hxwp/sanitize_param_value', sanitize_text_field($value), $key);
+			}
 
 			// Update param
 			$hxvals[$key] = $value;
