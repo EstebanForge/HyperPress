@@ -15,8 +15,8 @@
 		"postinstall": "npm run update-all"
 	},
 	"devDependencies": {
-		"alpinejs": "^3.13.10",
-		"htmx.org": "^1.9.10",
-		"hyperscript.org": "^0.9.12"
+		"alpinejs": "latest",
+		"htmx.org": "latest",
+		"hyperscript.org": "latest"
 	}
 }
