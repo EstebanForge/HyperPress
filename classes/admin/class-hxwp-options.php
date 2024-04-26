@@ -60,6 +60,7 @@ class HXWP_Options
 		$default_values = [
 			'load_from_cdn'     => 0, // Set to 1 for checked, 0 for unchecked
 			'load_hyperscript'  => 0,
+			'load_alpinejs'     => 0,
 			'set_htmx_hxboost'  => 0,
 			'load_htmx_backend' => 0,
 		];
@@ -99,6 +100,15 @@ class HXWP_Options
 		);
 
 		add_settings_field(
+			'load_alpinejs',
+			__('Load Alpine.js', 'hxwp'),
+			[$this, 'load_alpinejs_callback'],
+			'htmx-options',
+			'hxwp_setting_section',
+			['label_for' => 'load_alpinejs', 'options' => $options]
+		);
+
+		add_settings_field(
 			'set_htmx_hxboost',
 			__('Auto hx-boost="true"', 'hxwp'),
 			[$this, 'load_htmx_hxboost_callback'],
@@ -114,6 +124,15 @@ class HXWP_Options
 			'htmx-options',
 			'hxwp_setting_section',
 			['label_for' => 'load_htmx_backend', 'options' => $options]
+		);
+
+		add_settings_field(
+			'load_alpinejs_backend',
+			__('Load Alpine.js at WP backend', 'hxwp'),
+			[$this, 'load_alpinejs_backend_callback'],
+			'htmx-options',
+			'hxwp_setting_section',
+			['label_for' => 'load_alpinejs_backend', 'options' => $options]
 		);
 
 		add_settings_section(
@@ -181,6 +200,13 @@ class HXWP_Options
 			$input['load_hyperscript'] = 0;
 		}
 
+		// load_alpinejs
+		if (isset($input['load_alpinejs'])) {
+			$input['load_alpinejs'] = isset($input['load_alpinejs']) ? 1 : 0;
+		} else {
+			$input['load_alpinejs'] = 0;
+		}
+
 		// set_htmx_hxboost
 		if (isset($input['set_htmx_hxboost'])) {
 			$input['set_htmx_hxboost'] = isset($input['set_htmx_hxboost']) ? 1 : 0;
@@ -234,6 +260,15 @@ class HXWP_Options
 		echo '<p class="description">' . __('Choose whether to load Hyperscript or not. Keep it enabled to load Hyperscript. HTMX is always loaded.', 'hxwp') . '</p>';
 	}
 
+	public function load_alpinejs_callback($args)
+	{
+		$options = $args['options'];
+		$checked = isset($options['load_alpinejs']) && $options['load_alpinejs'] ? 'checked' : '';
+
+		echo '<input type="checkbox" id="load_alpinejs" name="' . $this->option_name . '[load_alpinejs]" value="1" ' . $checked . ' />';
+		echo '<p class="description">' . __('Choose whether to load Alpine.js or not. Keep it enabled to load Alpine.js.', 'hxwp') . '</p>';
+	}
+
 	public function load_htmx_hxboost_callback($args)
 	{
 		$options = $args['options'];
@@ -250,6 +285,15 @@ class HXWP_Options
 
 		echo '<input type="checkbox" id="load_htmx_backend" name="' . $this->option_name . '[load_htmx_backend]" value="1" ' . $checked . ' />';
 		echo '<p class="description">' . __('Choose whether to load HTMX (and Hyperscript if activated) at WP backend (wp-admin) or not. HTMX is always loaded at the site\'s frontend.', 'hxwp') . '</p>';
+	}
+
+	public function load_alpinejs_backend_callback($args)
+	{
+		$options = $args['options'];
+		$checked = isset($options['load_alpinejs_backend']) && $options['load_alpinejs_backend'] ? 'checked' : '';
+
+		echo '<input type="checkbox" id="load_alpinejs_backend" name="' . $this->option_name . '[load_alpinejs_backend]" value="1" ' . $checked . ' />';
+		echo '<p class="description">' . __('Choose whether to load Alpine.js at WP backend (wp-admin) or not. Alpine.js is always loaded at the site\'s frontend.', 'hxwp') . '</p>';
 	}
 
 	public function setting_extensions_callback($args)

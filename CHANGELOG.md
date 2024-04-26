@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.2.0 / 2024-04-26
+- Added [Alpine.js](https://alpinejs.dev/) support. Now you can use HTMX with Alpine.js, Hyperscript, or both.
+
 # 0.1.15 / 2024-04-13
 - Fixes sanitization for form elements that allows multiple values. Thanks @mwender for the report. [Discussion #8](https://github.com/TCattd/HTMX-API-WP/discussions/8).
 

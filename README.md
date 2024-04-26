@@ -96,7 +96,7 @@ This plugin comes with [HTMX](https://htmx.org) already integrated and enabled.
 
 You can enable any HTMX extension in the plugin's options page: Settings > HTMX Options.
 
-You can also enable [Hyperscript](https://hyperscript.org) in the same options page.
+You can also enable [Hyperscript](https://hyperscript.org) and/or [Alpine.js](https://alpinejs.dev) in the same options page.
 
 ## Security
 

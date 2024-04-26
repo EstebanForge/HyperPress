@@ -36,6 +36,7 @@ class HXWP_Assets
 			$hxwp_options = [
 				'load_from_cdn'                        => 0,
 				'load_hyperscript'                     => 0,
+				'load_alpinejs'                        => 0,
 				'set_htmx_hxboost'                     => 0,
 				'load_htmx_backend'                    => 0,
 				'load_extension_ajax-header'           => 0,
@@ -95,6 +96,21 @@ class HXWP_Assets
 			}
 
 			wp_enqueue_script('hxwp-hyperscript', $src_hyperscript, ['hxwp-htmx'], $sec_hs_ver, true);
+		}
+
+		// Load Alpine.js
+		$load_alpinejs = $hxwp_options['load_alpinejs'];
+
+		if ($load_alpinejs == 1) {
+			if ($load_from_cdn == 0) {
+				$src_alpinejs = HXWP_PLUGIN_URL . 'assets/js/alpinejs.min.js';
+				$sec_al_ver   = filemtime(HXWP_ABSPATH . 'assets/js/alpinejs.min.js');
+			} else {
+				$src_alpinejs = 'https://unpkg.com/alpinejs';
+				$sec_al_ver   = 'latest';
+			}
+
+			wp_enqueue_script('hxwp-alpinejs', $src_alpinejs, [], $sec_al_ver, true);
 		}
 
 
