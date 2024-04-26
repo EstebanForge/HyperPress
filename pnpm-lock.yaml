@@ -9,13 +9,13 @@ importers:
   .:
     devDependencies:
       alpinejs:
-        specifier: latest
+        specifier: 3.13.10
         version: 3.13.10
       htmx.org:
-        specifier: latest
+        specifier: 1.9.12
         version: 1.9.12
       hyperscript.org:
-        specifier: latest
+        specifier: 0.9.12
         version: 0.9.12
 
 packages:
