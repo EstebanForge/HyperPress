@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.3.0 / 2024-05-07
+- WP.org plugin guidelines compliance.
+- Changed hxwp_send_header_response() behavior to include a nonce by default. First argument is the nonce. Second argument, an array with the data. Check the htmx-demo.htmx.php template for an updated example.
+
 # 0.2.0 / 2024-04-26
 - Added [Alpine.js](https://alpinejs.dev/) support. Now you can use HTMX with Alpine.js, Hyperscript, or both.
 

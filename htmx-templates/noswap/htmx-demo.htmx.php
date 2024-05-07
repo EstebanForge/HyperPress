@@ -16,8 +16,10 @@ if (!isset($hxvals['action']) || $hxvals['action'] != 'htmx_do_something') {
 sleep(5);
 
 hxwp_send_header_response(
-	'success',
+	wp_create_nonce('hxwp_nonce'),
 	[
+		'status'  => 'success',
+		'nonce'   => wp_create_nonce('hxwp_nonce'),
 		'message' => 'Server-side processing done.',
 		'params'  => $hxvals,
 	]

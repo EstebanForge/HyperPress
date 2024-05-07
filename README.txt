@@ -1,14 +1,20 @@
 === HTMX-API-WP ===
 Contributors: tcattd
-Tags: htmx, ajax, hypermedia
-Stable tag: 0.2.0
+Tags: htmx, ajax, hypermedia, alpine, alpinejs
+Stable tag: 0.3.0
 Requires at least: 6.3
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
+An un-official WordPress plugin that adds HTMX to your WordPress site.
+
 == Description ==
+An un-official WordPress plugin that adds HTMX to your WordPress site.
+
+It enables a new endpoint /wp-htmx/v1/ from where you can load any HTMX template.
+
 Check the [full feature set at here](https://github.com/TCattd/HTMX-API-WP).
 
 == Installation ==
@@ -28,6 +34,9 @@ Please, open [an issue](https://github.com/TCattd/HTMX-API-WP/issues).
 
 == Screenshots ==
 1. Main options page.
+
+== Upgrade Notice ==
+Nothing to see here.
 
 == Changelog ==
 [Check the changelog at GitHub](https://github.com/TCattd/HTMX-API-WP/blob/master/CHANGELOG.md).

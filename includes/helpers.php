@@ -33,16 +33,24 @@ function hxwp_api_url($template_path = '')
  *
  * @since 2023-12-13
  *
- * @param string $status (success|error|silent-sucess)
- * @param array $data (extra data, optional)
- * @param array $action (WP action, optional, default value: none)
+ * @param string $nonce
+ * @param array $data status (success|error|silent-sucess), message, params => $hxvals, etc.
+ * @param array $action WP action, optional, default value: none
  *
  * @return void
  */
-function hxwp_send_header_response($status = 'success', $data = [], $action = null)
+function hxwp_send_header_response($nonce = null, $data = [], $action = null)
 {
+	if (!isset($nonce)) {
+		hxwp_die('Nonce not provided.');
+	}
+
+	if (isset($nonce) && !wp_verify_nonce($nonce, 'hxwp_nonce')) {
+		hxwp_die('Nonce verification failed.');
+	}
+
 	if ($action === null) {
-		// Check if action is set inside $_POST['hxvals']['action']
+		// Legacy: check if action is set inside $_POST['hxvals']['action']
 		$action = isset($_POST['hxvals']['action']) ? sanitize_text_field($_POST['hxvals']['action']) : '';
 	}
 
@@ -52,13 +60,13 @@ function hxwp_send_header_response($status = 'success', $data = [], $action = nu
 	}
 
 	// If success or silent-sucess, set code to 200
-	$code = $status == 'error' ? 400 : 200;
+	$code = $data['status'] == 'error' ? 400 : 200;
 
 	// Response array
 	$response = [
 		'hxwpResponse' => [
 			'action'  => $action,
-			'status'  => $status,
+			'status'  => $data['status'],
 			'data'    => $data,
 		],
 	];
@@ -69,12 +77,12 @@ function hxwp_send_header_response($status = 'success', $data = [], $action = nu
 	}
 
 	// Filter our response
-	$response = apply_filters('hxwp/header_response', $response, $action, $status, $data);
+	$response = apply_filters('hxwp/header_response', $response, $action, $data['status'], $data);
 
 	// Send our response
 	status_header($code);
 	nocache_headers();
-	header('HX-Trigger: ' . json_encode($response));
+	header('HX-Trigger: ' . wp_json_encode($response));
 
 	die(); // Don't need wp_die() here
 }
@@ -97,7 +105,7 @@ function hxwp_die($message = '', $display_error = false)
 	if (!headers_sent()) {
 		status_header(200);
 		nocache_headers();
-		header('HX-Error: ' . json_encode([
+		header('HX-Error: ' . wp_json_encode([
 			'status'  => 'error',
 			'data'    => [
 				'message' => $message,
