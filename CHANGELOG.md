@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.3.1 / 2024-05-15
+- Fixed a bug in the wp_localize_script() call. Thanks @mwender for the report.
+
 # 0.3.0 / 2024-05-07
 - WP.org plugin guidelines compliance.
 - Changed hxwp_send_header_response() behavior to include a nonce by default. First argument is the nonce. Second argument, an array with the data. Check the htmx-demo.htmx.php template for an updated example.

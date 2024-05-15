@@ -1,7 +1,7 @@
 === HTMX-API-WP ===
 Contributors: tcattd
 Tags: htmx, ajax, hypermedia, alpine, alpinejs
-Stable tag: 0.3.0
+Stable tag: 0.3.1
 Requires at least: 6.3
 Tested up to: 6.5
 Requires PHP: 8.0

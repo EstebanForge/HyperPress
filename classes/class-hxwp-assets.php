@@ -144,7 +144,7 @@ class HXWP_Assets
 		$hxwp_api_url = home_url(HXWP_ENDPOINT . '/' . HXWP_ENDPOINT_VERSION . '/');
 
 		// Localize script
-		wp_localize_script('hxwp-htmx', 'htmx-api-wp', [
+		wp_localize_script('hxwp-htmx', 'htmx_api_wp', [
 			'htmx_api' => $hxwp_api_url,
 			'nonce'    => $hxwp_nonce,
 		]);
