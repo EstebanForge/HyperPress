@@ -1,6 +1,6 @@
 === HTMX-API-WP ===
 Contributors: tcattd
-Tags: htmx, ajax, hypermedia, alpine, alpinejs
+Tags: htmx, ajax, hypermedia, hyperscript, alpine, alpinejs
 Stable tag: 0.3.1
 Requires at least: 6.3
 Tested up to: 6.5
@@ -8,12 +8,13 @@ Requires PHP: 8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
-An un-official WordPress plugin that adds HTMX to your WordPress site.
+An un-official WordPress plugin that adds HTMX to your WordPress site. Intended for software developers.
 
 == Description ==
-An un-official WordPress plugin that adds HTMX to your WordPress site.
+An un-official WordPress plugin that adds HTMX to your WordPress site. It enables a new endpoint /wp-htmx/v1/ from where you can load any HTMX template.
 
-It enables a new endpoint /wp-htmx/v1/ from where you can load any HTMX template.
+HTMX is a javascript library that allows you to access AJAX, WebSockets and Server Sent Events directly in HTML, using attributes, without writing any javascript.
+It re-uses an "old" concept, [Hypermedia](https://hypermedia.systems/), to deal the modern web in a more HTML like and natural way.
 
 Check the [full feature set at here](https://github.com/TCattd/HTMX-API-WP).
 

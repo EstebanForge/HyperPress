@@ -16,9 +16,26 @@ It enables a new endpoint `/wp-htmx/v1/` from where you can load any HTMX templa
 
 </div>
 
-## Why?
+## HTMX what?
 
-Because HTMX is awesome and WordPress is awesome (sometimes). So, why not?
+HTMX is a javascript library that allows you to access AJAX, WebSockets and Server Sent Events directly in HTML, using attributes, without writing any javascript.
+It re-uses an "old" concept, [Hypermedia](https://hypermedia.systems/), to deal the modern web in a more HTML like and natural way.
+
+Unless you're trying to build a Google Docs clone a competitor, HTMX allows to build modern web applications, even SPA, without the need to write a single line of javascript.
+
+For a better explanation, and demos, check the following video:
+
+<div align="center">
+
+[![You don't need a frontend framework by Andrew Schmelyun](https://img.youtube.com/vi/Fuz-jLIo2g8/0.jpg)](https://www.youtube.com/watch?v=Fuz-jLIo2g8)
+
+</div>
+
+## Why mix it with WordPress?
+
+Beacause I share the same sentiment as Carson Gross, the creator of HTMX, that the web has become too complex without a good reason (most of the times). And, just as him, I also want to see the world burn.
+
+And (seriously) because HTMX is awesome and WordPress is awesome (sometimes). So, why not?
 
 I'm using this in production in a few projects and it's working great, stable and ready to use. So I decided to share it with the world.
 
