@@ -107,7 +107,7 @@ You can pass data to this templates, in the exact same way as you do with the re
 
 Nothing stops you from using regular templates to do the same thing, or another folder all together. And mix and match or order your templates in any way you want. This is mentioned here, just as a convenience feature for those that want to use it.
 
-### HTMX extensions and Hyperscrypt
+### HTMX extensions (and Hyperscrypt / Alpine.js)
 
 This plugin comes with [HTMX](https://htmx.org) already integrated and enabled.
 
