@@ -14,7 +14,7 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 
 // Nonce?: https://core.trac.wordpress.org/ticket/38661
 
-if (isset($_REQUEST['plugin']) && $_REQUEST['plugin'] != 'htmx-api-wp/htmx-api-wp.php' && $_REQUEST['action'] != 'delete-plugin') {
+if (isset($_REQUEST['plugin']) && $_REQUEST['plugin'] != 'api-for-htmx/api-for-htmx.php' && $_REQUEST['action'] != 'delete-plugin') {
 	wp_die('Error uninstalling: wrong plugin.');
 }
 

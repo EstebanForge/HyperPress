@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.3.2 / 2024-05-26
+- More WP.org plugin guidelines compliance.
+
 # 0.3.1 / 2024-05-15
 - Fixed a bug in the wp_localize_script() call. Thanks @mwender for the report.
 

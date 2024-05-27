@@ -30,8 +30,8 @@ class HXWP_Options
 	public function add_plugin_page()
 	{
 		add_options_page(
-			__('HTMX Options', 'htmx-api-wp'),
-			__('HTMX Options', 'htmx-api-wp'),
+			__('HTMX Options', 'htmx-api'),
+			__('HTMX Options', 'htmx-api'),
 			'manage_options',
 			'htmx-options',
 			[$this, 'create_admin_page']
@@ -42,12 +42,12 @@ class HXWP_Options
 	{
 ?>
 		<div class="wrap">
-			<h2><?php _e('HTMX Options', 'htmx-api-wp'); ?></h2>
+			<h2><?php _e('HTMX Options', 'htmx-api'); ?></h2>
 			<form method="post" action="options.php">
 				<?php
 				settings_fields('hxwp_options_group');
 				do_settings_sections('htmx-options');
-				submit_button(__('Save Changes', 'htmx-api-wp'));
+				submit_button(__('Save Changes', 'htmx-api'));
 				?>
 			</form>
 		</div>
@@ -76,14 +76,14 @@ class HXWP_Options
 
 		add_settings_section(
 			'hxwp_setting_section',
-			__('Settings', 'htmx-api-wp'),
+			__('Settings', 'htmx-api'),
 			[$this, 'print_section_info'],
 			'htmx-options'
 		);
 
 		add_settings_field(
 			'load_from_cdn',
-			__('Load scripts from CDN', 'htmx-api-wp'),
+			__('Load scripts from CDN', 'htmx-api'),
 			[$this, 'load_from_cdn_callback'],
 			'htmx-options',
 			'hxwp_setting_section',
@@ -92,7 +92,7 @@ class HXWP_Options
 
 		add_settings_field(
 			'load_hyperscript',
-			__('Load Hyperscript', 'htmx-api-wp'),
+			__('Load Hyperscript', 'htmx-api'),
 			[$this, 'load_hyperscript_callback'],
 			'htmx-options',
 			'hxwp_setting_section',
@@ -101,7 +101,7 @@ class HXWP_Options
 
 		add_settings_field(
 			'load_alpinejs',
-			__('Load Alpine.js', 'htmx-api-wp'),
+			__('Load Alpine.js', 'htmx-api'),
 			[$this, 'load_alpinejs_callback'],
 			'htmx-options',
 			'hxwp_setting_section',
@@ -110,7 +110,7 @@ class HXWP_Options
 
 		add_settings_field(
 			'set_htmx_hxboost',
-			__('Auto hx-boost="true"', 'htmx-api-wp'),
+			__('Auto hx-boost="true"', 'htmx-api'),
 			[$this, 'load_htmx_hxboost_callback'],
 			'htmx-options',
 			'hxwp_setting_section',
@@ -119,7 +119,7 @@ class HXWP_Options
 
 		add_settings_field(
 			'load_htmx_backend',
-			__('Load HTMX/Hyperscript at WP backend', 'htmx-api-wp'),
+			__('Load HTMX/Hyperscript at WP backend', 'htmx-api'),
 			[$this, 'load_htmx_backend_callback'],
 			'htmx-options',
 			'hxwp_setting_section',
@@ -128,7 +128,7 @@ class HXWP_Options
 
 		add_settings_field(
 			'load_alpinejs_backend',
-			__('Load Alpine.js at WP backend', 'htmx-api-wp'),
+			__('Load Alpine.js at WP backend', 'htmx-api'),
 			[$this, 'load_alpinejs_backend_callback'],
 			'htmx-options',
 			'hxwp_setting_section',
@@ -137,7 +137,7 @@ class HXWP_Options
 
 		add_settings_section(
 			'hxwp_setting_section_extensions',
-			__('Extensions', 'htmx-api-wp'),
+			__('Extensions', 'htmx-api'),
 			[$this, 'print_section_info_extensions'],
 			'htmx-options'
 		);
@@ -170,7 +170,7 @@ class HXWP_Options
 		foreach ($extensions as $key => $extension) {
 			add_settings_field(
 				'load_extension_' . $key,
-				__('Load', 'htmx-api-wp') . ' ' . $key,
+				__('Load', 'htmx-api') . ' ' . $key,
 				[$this, 'setting_extensions_callback'],
 				'htmx-options',
 				'hxwp_setting_section_extensions',
@@ -233,13 +233,13 @@ class HXWP_Options
 
 	public function print_section_info()
 	{
-		echo __('<p>HTMX API for WordPress. <a href="https://github.com/TCattd/HTMX-API-WP/" target="_blank">Learn more</a>.</p>', 'htmx-api-wp');
-		echo __('General Options.', 'htmx-api-wp');
+		echo __('<p>HTMX API for WordPress. <a href="https://github.com/TCattd/HTMX-API-WP/" target="_blank">Learn more</a>.</p>', 'htmx-api');
+		echo __('General Options.', 'htmx-api');
 	}
 
 	public function print_section_info_extensions()
 	{
-		echo __('Choose which <a href="https://htmx.org/extensions/" target="_blank">HTMX extensions</a> to load.', 'htmx-api-wp');
+		echo __('Choose which <a href="https://htmx.org/extensions/" target="_blank">HTMX extensions</a> to load.', 'htmx-api');
 	}
 
 	public function load_from_cdn_callback($args)
@@ -248,7 +248,7 @@ class HXWP_Options
 		$checked = isset($options['load_from_cdn']) && $options['load_from_cdn'] ? 'checked' : '';
 
 		echo '<input type="checkbox" id="load_from_cdn" name="' . $this->option_name . '[load_from_cdn]" value="1" ' . $checked . ' />';
-		echo '<p class="description">' . __('Choose whether to load HTMX and Hypertext from a CDN or locally. Keep it disabled to load HTMX and Hypertext locally.', 'htmx-api-wp') . '</p>';
+		echo '<p class="description">' . __('Choose whether to load HTMX and Hypertext from a CDN or locally. Keep it disabled to load HTMX and Hypertext locally.', 'htmx-api') . '</p>';
 	}
 
 	public function load_hyperscript_callback($args)
@@ -257,7 +257,7 @@ class HXWP_Options
 		$checked = isset($options['load_hyperscript']) && $options['load_hyperscript'] ? 'checked' : '';
 
 		echo '<input type="checkbox" id="load_hyperscript" name="' . $this->option_name . '[load_hyperscript]" value="1" ' . $checked . ' />';
-		echo '<p class="description">' . __('Choose whether to load Hyperscript or not. Keep it enabled to load Hyperscript. HTMX is always loaded.', 'htmx-api-wp') . '</p>';
+		echo '<p class="description">' . __('Choose whether to load Hyperscript or not. Keep it enabled to load Hyperscript. HTMX is always loaded.', 'htmx-api') . '</p>';
 	}
 
 	public function load_alpinejs_callback($args)
@@ -266,7 +266,7 @@ class HXWP_Options
 		$checked = isset($options['load_alpinejs']) && $options['load_alpinejs'] ? 'checked' : '';
 
 		echo '<input type="checkbox" id="load_alpinejs" name="' . $this->option_name . '[load_alpinejs]" value="1" ' . $checked . ' />';
-		echo '<p class="description">' . __('Choose whether to load Alpine.js or not. Keep it enabled to load Alpine.js.', 'htmx-api-wp') . '</p>';
+		echo '<p class="description">' . __('Choose whether to load Alpine.js or not. Keep it enabled to load Alpine.js.', 'htmx-api') . '</p>';
 	}
 
 	public function load_htmx_hxboost_callback($args)
@@ -275,7 +275,7 @@ class HXWP_Options
 		$checked = isset($options['set_htmx_hxboost']) && $options['set_htmx_hxboost'] ? 'checked' : '';
 
 		echo '<input type="checkbox" id="set_htmx_hxboost" name="' . $this->option_name . '[set_htmx_hxboost]" value="1" ' . $checked . ' />';
-		echo '<p class="description">' . __('Enable auto-adding of hx-boost="true" into your active theme, dinamically. Learn more about <a href="https://htmx.org/attributes/hx-boost/" target="_blank">hx-boost</a>.', 'htmx-api-wp') . '</p>';
+		echo '<p class="description">' . __('Enable auto-adding of hx-boost="true" into your active theme, dinamically. Learn more about <a href="https://htmx.org/attributes/hx-boost/" target="_blank">hx-boost</a>.', 'htmx-api') . '</p>';
 	}
 
 	public function load_htmx_backend_callback($args)
@@ -284,7 +284,7 @@ class HXWP_Options
 		$checked = isset($options['load_htmx_backend']) && $options['load_htmx_backend'] ? 'checked' : '';
 
 		echo '<input type="checkbox" id="load_htmx_backend" name="' . $this->option_name . '[load_htmx_backend]" value="1" ' . $checked . ' />';
-		echo '<p class="description">' . __('Choose whether to load HTMX (and Hyperscript if activated) at WP backend (wp-admin) or not. HTMX is always loaded at the site\'s frontend.', 'htmx-api-wp') . '</p>';
+		echo '<p class="description">' . __('Choose whether to load HTMX (and Hyperscript if activated) at WP backend (wp-admin) or not. HTMX is always loaded at the site\'s frontend.', 'htmx-api') . '</p>';
 	}
 
 	public function load_alpinejs_backend_callback($args)
@@ -293,7 +293,7 @@ class HXWP_Options
 		$checked = isset($options['load_alpinejs_backend']) && $options['load_alpinejs_backend'] ? 'checked' : '';
 
 		echo '<input type="checkbox" id="load_alpinejs_backend" name="' . $this->option_name . '[load_alpinejs_backend]" value="1" ' . $checked . ' />';
-		echo '<p class="description">' . __('Choose whether to load Alpine.js at WP backend (wp-admin) or not. Alpine.js is always loaded at the site\'s frontend.', 'htmx-api-wp') . '</p>';
+		echo '<p class="description">' . __('Choose whether to load Alpine.js at WP backend (wp-admin) or not. Alpine.js is always loaded at the site\'s frontend.', 'htmx-api') . '</p>';
 	}
 
 	public function setting_extensions_callback($args)
@@ -305,6 +305,6 @@ class HXWP_Options
 		$checked   = isset($options['load_extension_' . $key]) ? checked(1, $options['load_extension_' . $key], false) : '';
 
 		echo '<input type="checkbox" id="load_extension_' . $key . '" name="' . $this->option_name . '[load_extension_' . $key . ']" value="1" ' . $checked . ' />';
-		echo '<p class="description">' . __('Load', 'htmx-api-wp') . ' ' . $extension . __(' extension.', 'htmx-api-wp') . '</p>';
+		echo '<p class="description">' . __('Load', 'htmx-api') . ' ' . $extension . __(' extension.', 'htmx-api') . '</p>';
 	}
 }

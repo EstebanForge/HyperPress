@@ -1,7 +1,7 @@
-=== HTMX-API-WP ===
+=== API for HTMX ===
 Contributors: tcattd
 Tags: htmx, ajax, hypermedia, hyperscript, alpine, alpinejs
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 Requires at least: 6.3
 Tested up to: 6.5
 Requires PHP: 8.0
@@ -19,8 +19,8 @@ It re-uses an "old" concept, [Hypermedia](https://hypermedia.systems/), to deal 
 Check the [full feature set at here](https://github.com/TCattd/HTMX-API-WP).
 
 == Installation ==
-1. Install HTMX-API-WP from WordPress repository. Plugins > Add New > Search for: HTMX-API-WP. Activate it.
-2. Configure HTMX-API-WP at Settings > HTMX-API-WP.
+1. Install API-for-HTMX from WordPress repository. Plugins > Add New > Search for: API-for-HTMX. Activate it.
+2. Configure API-for-HTMX at Settings > HTMX Options.
 3. Enjoy.
 
 == Frequently Asked Questions ==

@@ -41,7 +41,7 @@ class HXWP_Render
 
 		// Check if nonce exists and is valid, only on POST requests
 		if (!$this->valid_nonce() && $_SERVER['REQUEST_METHOD'] === 'POST') {
-			wp_die(__('Invalid nonce', 'htmx-api-wp'), __('Error', 'htmx-api-wp'), ['response' => 403]);
+			wp_die(__('Invalid nonce', 'htmx-api'), __('Error', 'htmx-api'), ['response' => 403]);
 		}
 
 		// Sanitize template name
@@ -76,7 +76,7 @@ class HXWP_Render
 		if (empty($template_name)) {
 			status_header(404);
 
-			wp_die(__('Invalid template name', 'htmx-api-wp'), __('Error', 'htmx-api-wp'), ['response' => 404]);
+			wp_die(__('Invalid template name', 'htmx-api'), __('Error', 'htmx-api'), ['response' => 404]);
 		}
 
 		// Get our template file and vars
@@ -85,7 +85,7 @@ class HXWP_Render
 		if (!$template_path) {
 			status_header(404);
 
-			wp_die(__('Invalid route', 'htmx-api-wp'), __('Error', 'htmx-api-wp'), ['response' => 404]);
+			wp_die(__('Invalid route', 'htmx-api'), __('Error', 'htmx-api'), ['response' => 404]);
 		}
 
 		// Check if the template exists
@@ -93,7 +93,7 @@ class HXWP_Render
 			// Set 404 status
 			status_header(404);
 
-			wp_die(__('Template not found', 'htmx-api-wp'), __('Error', 'htmx-api-wp'), ['response' => 404]);
+			wp_die(__('Template not found', 'htmx-api'), __('Error', 'htmx-api'), ['response' => 404]);
 		}
 
 		// To help developers know when template files were loaded via our plugin

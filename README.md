@@ -33,9 +33,9 @@ For a better explanation, and demos, check the following video:
 
 ## Why mix it with WordPress?
 
-Beacause I share the same sentiment as Carson Gross, the creator of HTMX, that the web has become too complex without a good reason (most of the times). And, just as him, I also want to see the world burn.
+Beacause I share the same sentiment as Carson Gross, the creator of HTMX, that the software stack used to build the web today, has become too complex without a good reason (most of the times). And, just as him, I also want to see the world burn.
 
-And (seriously) because HTMX is awesome and WordPress is awesome (sometimes). So, why not?
+(Seriously) Because HTMX is awesome and WordPress is awesome (sometimes). So, why not?
 
 I'm using this in production in a few projects and it's working great, stable and ready to use. So I decided to share it with the world.
 

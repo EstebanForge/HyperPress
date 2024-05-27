@@ -14,7 +14,7 @@ if (!isset($hxvals['action']) || $hxvals['action'] != 'htmx_do_something') {
 ?>
 <h3>Hello HTMX!</h3>
 
-<p>Demo template loaded from <code>plugins/htmx-api-wp/htmx-templates/htmx-demo.htmx.php</code></p>
+<p>Demo template loaded from <code>plugins/api-for-htmx/htmx-templates/htmx-demo.htmx.php</code></p>
 
 <p>Received params ($hxvals):</p>
 

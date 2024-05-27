@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Plugin Name: HTMX API for WP
- * Plugin URI: https://github.com/TCattd/htmx-api-wp
+ * Plugin Name: API for HTMX
+ * Plugin URI: https://github.com/TCattd/HTMX-API-WP
  * Description: Add an API endpoint to support HTMX powered themes on your site.
- * Version: 0.3.1
+ * Version: 0.3.2
  * Author: Esteban Cuevas
  * Author URI: https://actitud.xyz
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: htmx-api-wp
+ * Text Domain: htmx-api
  * Domain Path: /languages
  * Requires at least: 6.4
  * Requires PHP: 8.0
