@@ -1,7 +1,7 @@
 === API for HTMX ===
 Contributors: tcattd
 Tags: htmx, ajax, hypermedia, hyperscript, alpine, alpinejs
-Stable tag: 0.3.2
+Stable tag: 0.9.0
 Requires at least: 6.3
 Tested up to: 6.5
 Requires PHP: 8.0
@@ -17,6 +17,10 @@ HTMX is a javascript library that allows you to access AJAX, WebSockets and Serv
 It re-uses an "old" concept, [Hypermedia](https://hypermedia.systems/), to deal the modern web in a more HTML like and natural way.
 
 Check the [full feature set at here](https://github.com/TCattd/HTMX-API-WP).
+
+This plugin will include HTMX library by default, locally from the plugin folder. If you enable Alpine.js and/or Hyperscript, it will include them too, also locally.
+
+The plugin has the option, opt-in and not enforced, to include this 3rd party libraries from CDN (using unpkg.com service). You must explicitly enable it to use it, for privacy and security reasons.
 
 == Installation ==
 1. Install API-for-HTMX from WordPress repository. Plugins > Add New > Search for: API-for-HTMX. Activate it.

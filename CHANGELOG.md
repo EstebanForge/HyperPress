@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.9.0 / 2024-06-30
+- Updated to HTMX 2.0.0
+- More WP.org plugin guidelines compliance.
+
 # 0.3.2 / 2024-05-26
 - More WP.org plugin guidelines compliance.
 

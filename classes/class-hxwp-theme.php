@@ -24,7 +24,7 @@ class HXWP_Theme
 	 */
 	public function run()
 	{
-		add_action('wp_footer', [$this, 'hx_boost'], 1);
+		add_action('wp_enqueue_scripts', [$this, 'hx_boost'], 1);
 
 		do_action('hxwp/theme/run');
 	}
@@ -41,15 +41,8 @@ class HXWP_Theme
 		if ($set_htmx_hxboost == 0) {
 			return;
 		}
-?>
-		<script>
-			document.addEventListener("DOMContentLoaded", function() {
-				document.body.setAttribute("hx-boost", "true");
-				if (document.getElementById("wpadminbar")) {
-					document.getElementById("wpadminbar").setAttribute("hx-boost", "false");
-				}
-			});
-		</script>
-<?php
+
+		// Enqueue ./assets/js/htmx-hxboost.js
+		wp_enqueue_script('hxwp-hxboost', HXWP_PLUGIN_URL . 'assets/js/hxwp-hxboost.js', [], HXWP_VERSION, true);
 	}
 }

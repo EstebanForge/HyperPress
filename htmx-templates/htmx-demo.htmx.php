@@ -2,8 +2,11 @@
 // No direct access.
 defined('ABSPATH') || exit('Direct access not allowed.');
 
+// Secure it.
+$hxwp_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE']);
+
 // Check if nonce is valid.
-if (!isset($_SERVER['HTTP_X_WP_NONCE']) || !wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'hxwp_nonce')) {
+if (!isset($hxwp_nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($hxwp_nonce)), 'hxwp_nonce')) {
 	hxwp_die('Nonce verification failed.');
 }
 

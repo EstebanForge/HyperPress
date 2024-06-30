@@ -41,7 +41,7 @@ class HXWP_Render
 
 		// Check if nonce exists and is valid, only on POST requests
 		if (!$this->valid_nonce() && $_SERVER['REQUEST_METHOD'] === 'POST') {
-			wp_die(__('Invalid nonce', 'htmx-api'), __('Error', 'htmx-api'), ['response' => 403]);
+			wp_die(esc_html__('Invalid nonce', 'api-for-htmx'), esc_html__('Error', 'api-for-htmx'), ['response' => 403]);
 		}
 
 		// Sanitize template name
@@ -76,7 +76,7 @@ class HXWP_Render
 		if (empty($template_name)) {
 			status_header(404);
 
-			wp_die(__('Invalid template name', 'htmx-api'), __('Error', 'htmx-api'), ['response' => 404]);
+			wp_die(esc_html__('Invalid template name', 'api-for-htmx'), esc_html__('Error', 'api-for-htmx'), ['response' => 404]);
 		}
 
 		// Get our template file and vars
@@ -85,7 +85,7 @@ class HXWP_Render
 		if (!$template_path) {
 			status_header(404);
 
-			wp_die(__('Invalid route', 'htmx-api'), __('Error', 'htmx-api'), ['response' => 404]);
+			wp_die(esc_html__('Invalid route', 'api-for-htmx'), esc_html__('Error', 'api-for-htmx'), ['response' => 404]);
 		}
 
 		// Check if the template exists
@@ -93,7 +93,7 @@ class HXWP_Render
 			// Set 404 status
 			status_header(404);
 
-			wp_die(__('Template not found', 'htmx-api'), __('Error', 'htmx-api'), ['response' => 404]);
+			wp_die(esc_html__('Template not found', 'api-for-htmx'), esc_html__('Error', 'api-for-htmx'), ['response' => 404]);
 		}
 
 		// To help developers know when template files were loaded via our plugin
@@ -117,9 +117,9 @@ class HXWP_Render
 		$nonce = null;
 
 		if (isset($_REQUEST['_wpnonce'])) {
-			$nonce = $_REQUEST['_wpnonce'];
+			$nonce = sanitize_key($_REQUEST['_wpnonce']);
 		} elseif (isset($_SERVER['HTTP_X_WP_NONCE'])) {
-			$nonce = $_SERVER['HTTP_X_WP_NONCE'];
+			$nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE']);
 		}
 
 		if (null === $nonce) {
@@ -128,7 +128,10 @@ class HXWP_Render
 			return false;
 		}
 
-		if (!wp_verify_nonce($nonce, 'hxwp_nonce')) {
+		if (!wp_verify_nonce(
+			sanitize_text_field(wp_unslash($nonce)),
+			'hxwp_nonce'
+		)) {
 			return false;
 		}
 

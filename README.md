@@ -49,6 +49,10 @@ So, if you find any bug, please, report it.
 
 After installation, you can use HTMX templates in your theme. Any theme.
 
+This plugin will include HTMX library by default, locally from the plugin folder. If you enable Alpine.js and/or Hyperscript, it will include them too, also locally.
+
+The plugin has the option, opt-in and not enforced, to include this 3rd party libraries from CDN (using unpkg.com service). You must explicitly enable it to use it, for privacy and security reasons.
+
 Create a `htmx-templates` folder in your theme's root directory. This plugin has a demo folder that you can copy to your theme. Don't put your templates inside the demo folder located in the plugin's directory, because it will be deleted when you update the plugin.
 
 Inside your `htmx-templates`, create as many templates as you want. All files must end with `.htmx.php`.

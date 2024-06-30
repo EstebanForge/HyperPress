@@ -39,27 +39,30 @@ class HXWP_Assets
 				'load_alpinejs'                        => 0,
 				'set_htmx_hxboost'                     => 0,
 				'load_htmx_backend'                    => 0,
+				// Official
+				'load_extension_sse'                   => 0,
+				'load_extension_ws'                    => 0,
+				'load_extension_htmx-1-compatible'     => 0,
+				'load_extension_preload'               => 0,
+				'load_extension_response-targets'      => 0,
+				// Community
 				'load_extension_ajax-header'           => 0,
 				'load_extension_alpine-morph'          => 0,
 				'load_extension_class-tools'           => 0,
 				'load_extension_client-side-templates' => 0,
 				'load_extension_debug'                 => 0,
+				//'load_extension_disable-element'       => 0,
 				'load_extension_event-header'          => 0,
-				'load_extension_head-support'          => 0,
 				'load_extension_include-vals'          => 0,
 				'load_extension_json-enc'              => 0,
 				'load_extension_loading-states'        => 0,
-				'load_extension_method-override'       => 0,
 				'load_extension_morphdom-swap'         => 0,
 				'load_extension_multi-swap'            => 0,
+				'load_extension_no-cache'              => 0,
 				'load_extension_path-deps'             => 0,
-				'load_extension_preload'               => 0,
-				'load_extension_remove-me'             => 0,
-				'load_extension_response-targets'      => 0,
-				'load_extension_restored'              => 0,
-				'load_extension_sse'                   => 0,
-				'load_extension_ws'                    => 0,
 				'load_extension_path-params'           => 0,
+				'load_extension_remove-me'             => 0,
+				'load_extension_restored'              => 0,
 			];
 		}
 
@@ -68,8 +71,8 @@ class HXWP_Assets
 
 		// Load HTMX
 		if ($load_from_cdn == 0) {
-			$src_htmx = HXWP_PLUGIN_URL . 'assets/js/htmx.min.js';
-			$src_ver  = filemtime(HXWP_ABSPATH . 'assets/js/htmx.min.js');
+			$src_htmx = HXWP_PLUGIN_URL . 'assets/js/libs/htmx.min.js';
+			$src_ver  = filemtime(HXWP_ABSPATH . 'assets/js/libs/htmx.min.js');
 		} else {
 			$src_htmx = 'https://unpkg.com/htmx.org';
 			$src_ver  = 'latest';
@@ -88,8 +91,8 @@ class HXWP_Assets
 
 		if ($load_hyperscript == 1) {
 			if ($load_from_cdn == 0) {
-				$src_hyperscript = HXWP_PLUGIN_URL . 'assets/js/_hyperscript.min.js';
-				$sec_hs_ver      = filemtime(HXWP_ABSPATH . 'assets/js/_hyperscript.min.js');
+				$src_hyperscript = HXWP_PLUGIN_URL . 'assets/js/libs/_hyperscript.min.js';
+				$sec_hs_ver      = filemtime(HXWP_ABSPATH . 'assets/js/libs/_hyperscript.min.js');
 			} else {
 				$src_hyperscript = 'https://unpkg.com/hyperscript.org';
 				$sec_hs_ver      = 'latest';
@@ -103,8 +106,8 @@ class HXWP_Assets
 
 		if ($load_alpinejs == 1) {
 			if ($load_from_cdn == 0) {
-				$src_alpinejs = HXWP_PLUGIN_URL . 'assets/js/alpinejs.min.js';
-				$sec_al_ver   = filemtime(HXWP_ABSPATH . 'assets/js/alpinejs.min.js');
+				$src_alpinejs = HXWP_PLUGIN_URL . 'assets/js/libs/alpinejs.min.js';
+				$sec_al_ver   = filemtime(HXWP_ABSPATH . 'assets/js/libs/alpinejs.min.js');
 			} else {
 				$src_alpinejs = 'https://unpkg.com/alpinejs';
 				$sec_al_ver   = 'latest';
@@ -123,17 +126,17 @@ class HXWP_Assets
 
 				if ($value == 1) {
 					if ($load_from_cdn == 1) {
-						$src_extension = 'https://unpkg.com/htmx.org/dist/ext/' . $ext_script_name . '.js';
+						$src_extension = 'https://unpkg.com/htmx-ext-' . $ext_script_name . '/' . $ext_script_name . '.js';
 						$src_ext_ver   = 'latest';
 					} else {
-						$src_extension = HXWP_PLUGIN_URL . 'assets/js/ext/' . $ext_script_name . '.js';
-						$src_ext_ver   = filemtime(HXWP_ABSPATH . 'assets/js/ext/' . $ext_script_name . '.js');
+						$src_extension = HXWP_PLUGIN_URL . 'assets/js/libs/htmx-extensions/' . $ext_script_name . '/' . $ext_script_name . '.js';
+						$src_ext_ver   = filemtime(HXWP_ABSPATH . 'assets/js/libs/htmx-extensions/' . $ext_script_name . '/' . $ext_script_name . '.js');
 					}
 				} else {
 					continue;
 				}
 
-				wp_enqueue_script('hxwp-htmx-' . $ext_script_name, $src_extension, ['hxwp-htmx'], $src_ext_ver, true);
+				wp_enqueue_script('hxwp-htmx-ext-' . $ext_script_name, $src_extension, ['hxwp-htmx'], $src_ext_ver, true);
 			}
 		}
 
