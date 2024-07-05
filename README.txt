@@ -28,7 +28,7 @@ The plugin has an opt-in option, not enforced, to include these third-party libr
 
 == Frequently Asked Questions ==
 = Where is the FAQ? =
-You can [read the full FAQ at GitHub](https://github.com/TCattd/HTMX-API-WP/blob/master/FAQ.md).
+You can [read the full FAQ at GitHub](https://github.com/TCattd/HTMX-API-WP/blob/main/FAQ.md).
 
 = Suggestions, Support? =
 Please, open [a discussion](https://github.com/TCattd/HTMX-API-WP/discussions).
