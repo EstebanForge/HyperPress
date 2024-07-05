@@ -1,8 +1,8 @@
 # HTMX API for WordPress
 
-An un-official WordPress plugin that adds [HTMX](https://htmx.org) to your WordPress site.
+An unofficial WordPress plugin that enables the use of [HTMX](https://htmx.org) on your WordPress site, theme, and/or plugins. Intended for software developers.
 
-It enables a new endpoint `/wp-htmx/v1/` from where you can load any HTMX template.
+Adds a new endpoint `/wp-htmx/v1/` from which you can load any HTMX template.
 
 <div align="center">
 
@@ -18,12 +18,11 @@ It enables a new endpoint `/wp-htmx/v1/` from where you can load any HTMX templa
 
 ## HTMX what?
 
-HTMX is a javascript library that allows you to access AJAX, WebSockets and Server Sent Events directly in HTML, using attributes, without writing any javascript.
-It re-uses an "old" concept, [Hypermedia](https://hypermedia.systems/), to deal the modern web in a more HTML like and natural way.
+HTMX is a JavaScript library that allows you to access AJAX, WebSockets, and Server-Sent Events directly in HTML using attributes, without writing any JavaScript. It reuses an "old" concept, [Hypermedia](https://hypermedia.systems/), to handle the modern web in a more HTML-like and natural way.
 
-Unless you're trying to build a Google Docs clone a competitor, HTMX allows to build modern web applications, even SPA, without the need to write a single line of javascript.
+Unless you're trying to build a Google Docs clone or a competitor, HTMX allows you to build modern web applications, even SPAs, without the need to write a single line of JavaScript.
 
-For a better explanation, and demos, check the following video:
+For a better explanation and demos, check the following video:
 
 <div align="center">
 
@@ -33,29 +32,29 @@ For a better explanation, and demos, check the following video:
 
 ## Why mix it with WordPress?
 
-Beacause I share the same sentiment as Carson Gross, the creator of HTMX, that the software stack used to build the web today, has become too complex without a good reason (most of the times). And, just as him, I also want to see the world burn.
+Because I share the same sentiment as Carson Gross, the creator of HTMX, that the software stack used to build the web today has become too complex without good reason (most of the time). And, just like him, I also want to see the world burn.
 
-(Seriously) Because HTMX is awesome and WordPress is awesome (sometimes). So, why not?
+(Seriously) Because HTMX is awesome, and WordPress is awesome (sometimes). So, why not?
 
-I'm using this in production in a few projects and it's working great, stable and ready to use. So I decided to share it with the world.
+I'm using this in production for a few projects, and it's working great, stable, and ready to use. So, I decided to share it with the world.
 
-I just took this idea-thing off from the tangled mess that this was inside a project, and made it into an standalone plugin that should work for everyone.
+I took this idea out of the tangled mess it was inside a project and made it into a standalone plugin that should work for everyone.
 
-It might have some bugs. But the idea is to open it up and improve it over time.
+It might have some bugs, but the idea is to open it up and improve it over time.
 
-So, if you find any bug, please, report it.
+So, if you find any bugs, please report them.
 
 ## How to use
 
-After installation, you can use HTMX templates in your theme. Any theme.
+After installation, you can use HTMX templates in any theme.
 
-This plugin will include HTMX library by default, locally from the plugin folder. If you enable Alpine.js and/or Hyperscript, it will include them too, also locally.
+This plugin will include the HTMX library by default, locally from the plugin folder. If you enable Alpine.js and/or Hyperscript, they will also be included locally.
 
-The plugin has the option, opt-in and not enforced, to include this 3rd party libraries from CDN (using unpkg.com service). You must explicitly enable it to use it, for privacy and security reasons.
+The plugin has an opt-in option, not enforced, to include these third-party libraries from a CDN (using the unpkg.com service). You must explicitly enable this option for privacy and security reasons.
 
-Create a `htmx-templates` folder in your theme's root directory. This plugin has a demo folder that you can copy to your theme. Don't put your templates inside the demo folder located in the plugin's directory, because it will be deleted when you update the plugin.
+Create an `htmx-templates` folder in your theme's root directory. This plugin includes a demo folder that you can copy to your theme. Don't put your templates inside the demo folder located in the plugin's directory, because it will be deleted when you update the plugin.
 
-Inside your `htmx-templates`, create as many templates as you want. All files must end with `.htmx.php`.
+Inside your `htmx-templates` folder, create as many templates as you want. All files must end with `.htmx.php`.
 
 For example:
 
@@ -91,9 +90,9 @@ All of those parameters (with their values) will be available inside the templat
 
 ### No Swap response templates
 
-HTMX allows you to use templates that don't return any HTML, but do some processing in the background, on you server. Those templates can still send a response back (using HTTP headers) to be used if desired. Check [Swapping](https://htmx.org/docs/#swapping) for more info.
+HTMX allows you to use templates that don't return any HTML but perform some processing in the background on your server. These templates can still send a response back (using HTTP headers) if desired. Check [Swapping](https://htmx.org/docs/#swapping) for more info.
 
-For this, and for convenience, you can use the `noswap/` folder/endpoint. For example:
+For this purpose, and for convenience, you can use the `noswap/` folder/endpoint. For example:
 
 ```
 /wp-htmx/v1/noswap/save-user?user_id=5&name=John&last_name=Doe
@@ -107,9 +106,9 @@ htmx-templates/noswap/save-user.htmx.php
 htmx-templates/noswap/delete-user.htmx.php
 ```
 
-You can pass data to this templates, in the exact same way as you do with the regular templates.
+You can pass data to these templates in the exact same way as you do with regular templates.
 
-Nothing stops you from using regular templates to do the same thing, or another folder all together. And mix and match or order your templates in any way you want. This is mentioned here, just as a convenience feature for those that want to use it.
+Nothing stops you from using regular templates to do the same thing or using another folder altogether. You can mix and match or organize your templates in any way you want. This is mentioned here just as a convenience feature for those who want to use it.
 
 ### HTMX extensions (and Hyperscrypt / Alpine.js)
 
@@ -121,23 +120,23 @@ You can also enable [Hyperscript](https://hyperscript.org) and/or [Alpine.js](ht
 
 ## Security
 
-Every call to the `wp-htmx` endpoint, will automatically check for a valid nonce. If the nonce is not valid, the call will be rejected.
+Every call to the `wp-htmx` endpoint will automatically check for a valid nonce. If the nonce is not valid, the call will be rejected.
 
-The nonce itself is auto-generated and added to all HTMX requests automatically, using HTMX own htmx:configRequest event.
+The nonce itself is auto-generated and added to all HTMX requests automatically, using HTMX's own `htmx:configRequest` event.
 
-If you are new to HTMX, please read the [security section](https://htmx.org/docs/#security) of the official documentation. Don't forget that HTMX requires that you validate and sanitize any data you receive from the user. Something us, devs, used to do all the time, but now it seems to have been forgotten in newer generations of software developers.
+If you are new to HTMX, please read the [security section](https://htmx.org/docs/#security) of the official documentation. Remember that HTMX requires you to validate and sanitize any data you receive from the user. This is something developers used to do all the time, but it seems to have been forgotten by newer generations of software developers.
 
-If you don't know about how WordPress recommends to do data Sanitization and Escaping, please read the [official documentation](https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/), for [Sanitizing Data](https://developer.wordpress.org/apis/security/sanitizing/) and [Escaping Data](https://developer.wordpress.org/apis/security/escaping/).
+If you are not familiar with how WordPress recommends handling data sanitization and escaping, please read the [official documentation](https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/) on [Sanitizing Data](https://developer.wordpress.org/apis/security/sanitizing/) and [Escaping Data](https://developer.wordpress.org/apis/security/escaping/).
 
 ### REST Endpoint
 
-The plugin will perform basic sanitization of calls to the new REST endpoint, `wp-htmx`, to avoid security issues, like a directory traversal attack. Also it will limit you so you can't use it to access any file outside the `htmx-templates` folder inside your own theme.
+The plugin will perform basic sanitization of calls to the new REST endpoint, `wp-htmx`, to avoid security issues like directory traversal attacks. It will also limit access so you can't use it to access any file outside the `htmx-templates` folder within your own theme.
 
-The params and their values passed to the endpoint, vía GET or POST, will be sanitized with `sanitize_key()` and `sanitize_text_field()` respectively.
+The parameters and their values passed to the endpoint via GET or POST will be sanitized with `sanitize_key()` and `sanitize_text_field()`, respectively.
 
 Filters `hxwp/sanitize_param_key` and `hxwp/sanitize_param_value` are available to modify the sanitization process if needed.
 
-Do your homework and make sure you are returning non sanitized data back to the user or using it in a way that could be a security issue for your site. HTMX requires that you validate and sanitize any data you receive from the user. Don't forget that.
+Do your due diligence and ensure you are not returning unsanitized data back to the user or using it in a way that could pose a security issue for your site. HTMX requires that you validate and sanitize any data you receive from the user. Don't forget that.
 
 ## Examples
 

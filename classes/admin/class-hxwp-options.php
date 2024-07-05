@@ -25,6 +25,7 @@ class HXWP_Options
 	{
 		add_action('admin_menu', [$this, 'add_plugin_page']);
 		add_action('admin_init', [$this, 'page_init']);
+		add_filter('plugin_action_links_' . HXWP_BASENAME, [$this, 'plugin_action_links']);
 	}
 
 	public function add_plugin_page()
@@ -50,6 +51,16 @@ class HXWP_Options
 				submit_button(esc_html__('Save Changes', 'api-for-htmx'));
 				?>
 			</form>
+
+			<p class="description">
+				<?php
+				// Translators: %s = Actitud Studio URL
+				printf(
+					esc_html__('Proudly brought to you by %s.', 'api-for-htmx'),
+					'<a href="https://actitud.xyz" target="_blank">' . esc_html__('Actitud Studio', 'api-for-htmx') . '</a>'
+				);
+				?>
+			</p>
 		</div>
 <?php
 	}
@@ -236,13 +247,13 @@ class HXWP_Options
 
 	public function print_section_info()
 	{
-		esc_html_e('<p>HTMX API for WordPress. <a href="https://github.com/TCattd/HTMX-API-WP/" target="_blank">Learn more</a>.</p>', 'api-for-htmx');
-		esc_html_e('General Options.', 'api-for-htmx');
+		echo '<p>' . esc_html__('HTMX API for WordPress. ', 'api-for-htmx') . '<a href="https://github.com/TCattd/HTMX-API-WP/" target="_blank">' . esc_html__('Learn more', 'api-for-htmx') . '</a>.</p>';
+		echo '<p>' . esc_html__('HTMX is always loaded at the frontend while the plugin is active.', 'api-for-htmx') . '</p>';
 	}
 
 	public function print_section_info_extensions()
 	{
-		esc_html_e('Choose which <a href="https://htmx.org/extensions/" target="_blank">HTMX extensions</a> to load.', 'api-for-htmx');
+		echo '<p>' . esc_html__('Choose which ', 'api-for-htmx') . '<a href="' . esc_url('https://extensions.htmx.org/') . '" target="_blank">' . esc_html__('HTMX extensions', 'api-for-htmx') . '</a>' . esc_html__(' to load.', 'api-for-htmx') . '</p>';
 	}
 
 	public function load_from_cdn_callback($args)
@@ -269,7 +280,7 @@ class HXWP_Options
 		$checked = isset($options['load_alpinejs']) && $options['load_alpinejs'] ? 'checked' : '';
 
 		echo '<input type="checkbox" id="load_alpinejs" name="' . $this->option_name . '[load_alpinejs]" value="1" ' . $checked . ' />';
-		echo '<p class="description">' . esc_html__('Choose whether to load Alpine.js or not. Keep it enabled to load Alpine.js.', 'api-for-htmx') . '</p>';
+		echo '<p class="description">' . esc_html__('Choose whether to load Alpine.js or not. Keep it enabled to load Alpine.js. HTMX is always loaded.', 'api-for-htmx') . '</p>';
 	}
 
 	public function load_htmx_hxboost_callback($args)
@@ -278,7 +289,8 @@ class HXWP_Options
 		$checked = isset($options['set_htmx_hxboost']) && $options['set_htmx_hxboost'] ? 'checked' : '';
 
 		echo '<input type="checkbox" id="set_htmx_hxboost" name="' . $this->option_name . '[set_htmx_hxboost]" value="1" ' . $checked . ' />';
-		echo '<p class="description">' . esc_html__('Enable auto-adding of hx-boost="true" into your active theme, dinamically. Learn more about <a href="https://htmx.org/attributes/hx-boost/" target="_blank">hx-boost</a>.', 'api-for-htmx') . '</p>';
+
+		echo '<p class="description">' . esc_html__('HTMX API for WordPress. ', 'api-for-htmx') . '<a href="' . esc_url('https://github.com/TCattd/HTMX-API-WP/') . '" target="_blank">' . esc_html__('Learn more', 'api-for-htmx') . '</a>.</p>';
 	}
 
 	public function load_htmx_backend_callback($args)
@@ -309,5 +321,19 @@ class HXWP_Options
 
 		echo '<input type="checkbox" id="load_extension_' . $key . '" name="' . $this->option_name . '[load_extension_' . $key . ']" value="1" ' . $checked . ' />';
 		echo '<p class="description">' . esc_html__('Load', 'api-for-htmx') . ' ' . $extension . esc_html__(' extension.', 'api-for-htmx') . '</p>';
+	}
+
+	/**
+	 * Add link to plugins settings page on plugins list page
+	 *
+	 * @param array $links
+	 *
+	 * @return array
+	 */
+	public function plugin_action_links($links)
+	{
+		$links[] = '<a href="' . esc_url(admin_url('options-general.php?page=htmx-options')) . '">' . esc_html__('Settings', 'api-for-htmx') . '</a>';
+
+		return $links;
 	}
 }

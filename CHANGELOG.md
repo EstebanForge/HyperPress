@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.9.1 / 2024-07-05
+- Released on WordPress.org official plugins repository.
+
 # 0.9.0 / 2024-06-30
 - Updated to HTMX 2.0.0
 - More WP.org plugin guidelines compliance.
