@@ -158,6 +158,9 @@ Please, open [a discussion](https://github.com/TCattd/HTMX-API-WP/discussions).
 
 Please, open [an issue](https://github.com/TCattd/HTMX-API-WP/issues).
 
+## FAQ
+[FAQ available here](https://github.com/TCattd/HTMX-API-WP/blob/main/FAQ.md).
+
 ## Changelog
 
-[Available here](https://github.com/TCattd/HTMX-API-WP/blob/master/CHANGELOG.md).
+[Changelog available here](https://github.com/TCattd/HTMX-API-WP/blob/main/CHANGELOG.md).
