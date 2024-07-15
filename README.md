@@ -44,6 +44,14 @@ It might have some bugs, but the idea is to open it up and improve it over time.
 
 So, if you find any bugs, please report them.
 
+## Installation
+
+Install it directly from the WordPress.org plugin repository. On the plugins install page, search for: HTMX API
+
+Or download the zip from the [official plugin repository](https://wordpress.org/plugins/api-for-htmx/) and install it from your WordPress plugins install page.
+
+Activate the plugin. Configure it to your liking on Settings > HTMX Options.
+
 ## How to use
 
 After installation, you can use HTMX templates in any theme.
