@@ -126,6 +126,24 @@ You can enable any HTMX extension in the plugin's options page: Settings > HTMX 
 
 You can also enable [Hyperscript](https://hyperscript.org) and/or [Alpine.js](https://alpinejs.dev) in the same options page.
 
+## Using HTMX in your plugin
+
+You can definitely use HTMX and this HTMX API for WordPress in your plugin. You are not limited to using it only in your theme.
+
+The plugin provides a filter: hxwp/get_template_file/templates_path.
+
+This filter allows you to change the path to the templates folder from the plugin's default location (your theme or child theme's folder).
+
+For example:
+
+```
+add_filter( 'hxwp/get_template_file/templates_path', function( $templates_path ) {
+    return YOUR_PLUGIN_PATH . 'htmx-templates/';
+});
+```
+
+Assuming YOUR_PLUGIN_PATH is already defined and points to your plugin's root directory, the above code will change the path of the HTMX templates folder to YOUR_PLUGIN_PATH/htmx-templates/.
+
 ## Security
 
 Every call to the `wp-htmx` endpoint will automatically check for a valid nonce. If the nonce is not valid, the call will be rejected.
