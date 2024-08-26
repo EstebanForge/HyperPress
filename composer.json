@@ -1,7 +1,7 @@
 {
 	"name": "tcattd/htmx-api-wp",
 	"description": "An un-official HTMX API for WordPress",
-	"version": "0.9.1",
+	"version": "1.0.0",
 	"keywords": [
 		"wordpress",
 		"plugin",

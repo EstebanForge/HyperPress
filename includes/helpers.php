@@ -120,3 +120,33 @@ function hxwp_die($message = '', $display_error = false)
 
 	die($message);
 }
+
+/**
+ * Validate HTMX request
+ * Checks if the nonce is valid and optionally validates the action
+ *
+ * @param array $hxvals The HTMX values array
+ * @param string|null $action The expected action (optional)
+ *
+ * @return bool
+ */
+function hxwp_validate_request($hxvals, $action = null)
+{
+	// Secure it.
+	$hxwp_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
+
+	// Check if nonce is valid.
+	if (!wp_verify_nonce(sanitize_text_field(wp_unslash($hxwp_nonce)), 'hxwp_nonce')) {
+		return false;
+	}
+
+	// Check if action is set and matches the expected action (if provided)
+	if ($action !== null) {
+		if (!isset($hxvals['action']) || $hxvals['action'] !== $action) {
+			return false;
+		}
+	}
+
+	// Return true if everything is ok
+	return true;
+}

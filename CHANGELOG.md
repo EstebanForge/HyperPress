@@ -1,5 +1,10 @@
 # Changelog
 
+# 1.0.0 / 2024-08-25
+- Promoted plugin to stable :)
+- Updated to HTMX and its extensions.
+- Added a helper to validate requests. Automatically handles nonce and action validation.
+
 # 0.9.1 / 2024-07-05
 - Released on WordPress.org official plugins repository.
 
