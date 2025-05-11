@@ -55,6 +55,12 @@ class Options
 
 	<p class="description">
 		<?php
+        if (defined('HXWP_INSTANCE_LOADED_PATH')) {
+            $is_plugin = str_contains(HXWP_INSTANCE_LOADED_PATH, 'wp-content/plugins/api-for-htmx');
+            echo '<strong>' . esc_html__('Active Instance:', 'api-for-htmx') . '</strong> ' .
+                 ($is_plugin ? esc_html__('Plugin', 'api-for-htmx') : esc_html__('Library', 'api-for-htmx')) .
+                 ' v' . esc_html(HXWP_LOADED_VERSION) . '<br/>';
+        }
         // Translators: %s = Actitud Studio URL
         printf(
             esc_html__('Proudly brought to you by %s.', 'api-for-htmx'),
