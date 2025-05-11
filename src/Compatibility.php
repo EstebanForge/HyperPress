@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Handles compatibility with other plugins that may not work well with HTMX
+ * Handles compatibility with other plugins that may not work well with HTMX.
  *
- * @package HXWP
  * @since   2024-02-21
  */
 
@@ -15,12 +14,12 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Compatibility Class
+ * Compatibility Class.
  */
 class Compatibility
 {
     /**
-     * Runner
+     * Runner.
      */
     public function run()
     {

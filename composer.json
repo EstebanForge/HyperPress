@@ -14,9 +14,18 @@
     "require": {
         "php": ">=8.1"
     },
+    "scripts": {
+        "cs-fix": "php-cs-fixer fix",
+        "post-install-cmd": [
+            "@cs-fix"
+        ],
+        "post-update-cmd": [
+            "@cs-fix"
+        ]
+    },
     "autoload": {
         "psr-4": {
-            "HXWP\\": "classes/"
+            "HXWP\\": "src/"
         },
         "files": [
             "includes/helpers.php"

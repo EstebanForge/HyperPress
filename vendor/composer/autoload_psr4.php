@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'HXWP\\' => array($baseDir . '/classes'),
+    'HXWP\\' => array($baseDir . '/src'),
 );

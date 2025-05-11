@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Load plugin assets
+ * Load plugin assets.
  *
- * @package HXWP
  * @since   2023-11-22
  */
 
@@ -15,7 +14,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Assets Class
+ * Assets Class.
  */
 class Assets
 {
@@ -72,10 +71,10 @@ class Assets
         // Load HTMX
         if ($load_from_cdn == 0) {
             $src_htmx = HXWP_PLUGIN_URL . 'assets/js/libs/htmx.min.js';
-            $src_ver  = filemtime(HXWP_ABSPATH . 'assets/js/libs/htmx.min.js');
+            $src_ver = filemtime(HXWP_ABSPATH . 'assets/js/libs/htmx.min.js');
         } else {
             $src_htmx = 'https://unpkg.com/htmx.org';
-            $src_ver  = 'latest';
+            $src_ver = 'latest';
         }
 
         wp_enqueue_script(
@@ -92,10 +91,10 @@ class Assets
         if ($load_hyperscript == 1) {
             if ($load_from_cdn == 0) {
                 $src_hyperscript = HXWP_PLUGIN_URL . 'assets/js/libs/_hyperscript.min.js';
-                $sec_hs_ver      = filemtime(HXWP_ABSPATH . 'assets/js/libs/_hyperscript.min.js');
+                $sec_hs_ver = filemtime(HXWP_ABSPATH . 'assets/js/libs/_hyperscript.min.js');
             } else {
                 $src_hyperscript = 'https://unpkg.com/hyperscript.org';
-                $sec_hs_ver      = 'latest';
+                $sec_hs_ver = 'latest';
             }
 
             wp_enqueue_script('hxwp-hyperscript', $src_hyperscript, ['hxwp-htmx'], $sec_hs_ver, true);
@@ -107,15 +106,14 @@ class Assets
         if ($load_alpinejs == 1) {
             if ($load_from_cdn == 0) {
                 $src_alpinejs = HXWP_PLUGIN_URL . 'assets/js/libs/alpinejs.min.js';
-                $sec_al_ver   = filemtime(HXWP_ABSPATH . 'assets/js/libs/alpinejs.min.js');
+                $sec_al_ver = filemtime(HXWP_ABSPATH . 'assets/js/libs/alpinejs.min.js');
             } else {
                 $src_alpinejs = 'https://unpkg.com/alpinejs';
-                $sec_al_ver   = 'latest';
+                $sec_al_ver = 'latest';
             }
 
             wp_enqueue_script('hxwp-alpinejs', $src_alpinejs, [], $sec_al_ver, true);
         }
-
 
         // Load HTMX extensions
         // get all options that start with "load_extension_"
@@ -127,10 +125,10 @@ class Assets
                 if ($value == 1) {
                     if ($load_from_cdn == 1) {
                         $src_extension = 'https://unpkg.com/htmx-ext-' . $ext_script_name . '/' . $ext_script_name . '.js';
-                        $src_ext_ver   = 'latest';
+                        $src_ext_ver = 'latest';
                     } else {
                         $src_extension = HXWP_PLUGIN_URL . 'assets/js/libs/htmx-extensions/' . $ext_script_name . '/' . $ext_script_name . '.js';
-                        $src_ext_ver   = filemtime(HXWP_ABSPATH . 'assets/js/libs/htmx-extensions/' . $ext_script_name . '/' . $ext_script_name . '.js');
+                        $src_ext_ver = filemtime(HXWP_ABSPATH . 'assets/js/libs/htmx-extensions/' . $ext_script_name . '/' . $ext_script_name . '.js');
                     }
                 } else {
                     continue;

@@ -1,12 +1,13 @@
 <?php
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
-	exit;
+    exit;
 }
 
 /**
  * HTMX API URL
- * Returns the HTMX API URL, with a template path if provided
+ * Returns the HTMX API URL, with a template path if provided.
  *
  * @since 2023-12-04
  *
@@ -16,20 +17,20 @@ if (!defined('ABSPATH')) {
  */
 function hxwp_api_url($template_path = '')
 {
-	$htmx_api_url = home_url(HXWP_ENDPOINT . '/' . HXWP_ENDPOINT_VERSION);
+    $htmx_api_url = home_url(HXWP_ENDPOINT . '/' . HXWP_ENDPOINT_VERSION);
 
-	// Path provided?
-	if (!empty($template_path)) {
-		$htmx_api_url .= '/' . ltrim($template_path, '/');
-	}
+    // Path provided?
+    if (!empty($template_path)) {
+        $htmx_api_url .= '/' . ltrim($template_path, '/');
+    }
 
-	return apply_filters('hxwp/api_url', $htmx_api_url);
+    return apply_filters('hxwp/api_url', $htmx_api_url);
 }
 
 /**
  * HTMX send header response and die()
  * To be used inside noswap templates
- * Sends HX-Trigger header with our response inside hxwpResponse
+ * Sends HX-Trigger header with our response inside hxwpResponse.
  *
  * @since 2023-12-13
  *
@@ -41,57 +42,57 @@ function hxwp_api_url($template_path = '')
  */
 function hxwp_send_header_response($nonce = null, $data = [], $action = null)
 {
-	if (!isset($nonce)) {
-		hxwp_die('Nonce not provided.');
-	}
+    if (!isset($nonce)) {
+        hxwp_die('Nonce not provided.');
+    }
 
-	if (isset($nonce) && !wp_verify_nonce($nonce, 'hxwp_nonce')) {
-		hxwp_die('Nonce verification failed.');
-	}
+    if (isset($nonce) && !wp_verify_nonce($nonce, 'hxwp_nonce')) {
+        hxwp_die('Nonce verification failed.');
+    }
 
-	if ($action === null) {
-		// Legacy: check if action is set inside $_POST['hxvals']['action']
-		$action = isset($_POST['hxvals']['action']) ? sanitize_text_field($_POST['hxvals']['action']) : '';
-	}
+    if ($action === null) {
+        // Legacy: check if action is set inside $_POST['hxvals']['action']
+        $action = isset($_POST['hxvals']['action']) ? sanitize_text_field($_POST['hxvals']['action']) : '';
+    }
 
-	// Action still empty, null or not set?
-	if (empty($action)) {
-		$action = 'none';
-	}
+    // Action still empty, null or not set?
+    if (empty($action)) {
+        $action = 'none';
+    }
 
-	// If success or silent-sucess, set code to 200
-	$code = $data['status'] == 'error' ? 400 : 200;
+    // If success or silent-sucess, set code to 200
+    $code = $data['status'] == 'error' ? 400 : 200;
 
-	// Response array
-	$response = [
-		'hxwpResponse' => [
-			'action'  => $action,
-			'status'  => $data['status'],
-			'data'    => $data,
-		],
-	];
+    // Response array
+    $response = [
+        'hxwpResponse' => [
+            'action'  => $action,
+            'status'  => $data['status'],
+            'data'    => $data,
+        ],
+    ];
 
-	// Headers already sent?
-	if (headers_sent()) {
-		wp_die('HWXP Error: Headers already sent.');
-	}
+    // Headers already sent?
+    if (headers_sent()) {
+        wp_die('HWXP Error: Headers already sent.');
+    }
 
-	// Filter our response
-	$response = apply_filters('hxwp/header_response', $response, $action, $data['status'], $data);
+    // Filter our response
+    $response = apply_filters('hxwp/header_response', $response, $action, $data['status'], $data);
 
-	// Send our response
-	status_header($code);
-	nocache_headers();
-	header('HX-Trigger: ' . wp_json_encode($response));
+    // Send our response
+    status_header($code);
+    nocache_headers();
+    header('HX-Trigger: ' . wp_json_encode($response));
 
-	die(); // Don't need wp_die() here
+    die(); // Don't need wp_die() here
 }
 
 /**
  * HTMX die helper
  * To be used inside templates
  * die, but with a 200 status code, so HTMX can show and display the error message
- * Also sends a custom header with the error message, to be used by HTMX if needed
+ * Also sends a custom header with the error message, to be used by HTMX if needed.
  *
  * @since 2023-12-15
  *
@@ -101,29 +102,29 @@ function hxwp_send_header_response($nonce = null, $data = [], $action = null)
  */
 function hxwp_die($message = '', $display_error = false)
 {
-	// Send our response
-	if (!headers_sent()) {
-		status_header(200);
-		nocache_headers();
-		header('HX-Error: ' . wp_json_encode([
-			'status'  => 'error',
-			'data'    => [
-				'message' => $message,
-			],
-		]));
-	}
+    // Send our response
+    if (!headers_sent()) {
+        status_header(200);
+        nocache_headers();
+        header('HX-Error: ' . wp_json_encode([
+            'status'  => 'error',
+            'data'    => [
+                'message' => $message,
+            ],
+        ]));
+    }
 
-	// Don't display error message
-	if ($display_error === false) {
-		$message = '';
-	}
+    // Don't display error message
+    if ($display_error === false) {
+        $message = '';
+    }
 
-	die($message);
+    die($message);
 }
 
 /**
  * Validate HTMX request
- * Checks if the nonce is valid and optionally validates the action
+ * Checks if the nonce is valid and optionally validates the action.
  *
  * @param array $hxvals The HTMX values array
  * @param string|null $action The expected action (optional)
@@ -132,21 +133,21 @@ function hxwp_die($message = '', $display_error = false)
  */
 function hxwp_validate_request($hxvals, $action = null)
 {
-	// Secure it.
-	$hxwp_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
+    // Secure it.
+    $hxwp_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
 
-	// Check if nonce is valid.
-	if (!wp_verify_nonce(sanitize_text_field(wp_unslash($hxwp_nonce)), 'hxwp_nonce')) {
-		return false;
-	}
+    // Check if nonce is valid.
+    if (!wp_verify_nonce(sanitize_text_field(wp_unslash($hxwp_nonce)), 'hxwp_nonce')) {
+        return false;
+    }
 
-	// Check if action is set and matches the expected action (if provided)
-	if ($action !== null) {
-		if (!isset($hxvals['action']) || $hxvals['action'] !== $action) {
-			return false;
-		}
-	}
+    // Check if action is set and matches the expected action (if provided)
+    if ($action !== null) {
+        if (!isset($hxvals['action']) || $hxvals['action'] !== $action) {
+            return false;
+        }
+    }
 
-	// Return true if everything is ok
-	return true;
+    // Return true if everything is ok
+    return true;
 }

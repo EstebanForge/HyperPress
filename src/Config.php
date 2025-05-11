@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Load plugin Config on frontend
+ * Load plugin Config on frontend.
  *
- * @package HXWP
  * @since   2023-12-04
  */
 
@@ -15,12 +14,12 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Config Class
+ * Config Class.
  */
 class Config
 {
     /**
-     * Insert HTMX config meta tag into <head>
+     * Insert HTMX config meta tag into <head>.
      *
      * @since 2023-12-04
      * @return void
