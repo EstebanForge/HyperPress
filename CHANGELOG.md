@@ -26,7 +26,7 @@
 - Added [Alpine.js](https://alpinejs.dev/) support. Now you can use HTMX with Alpine.js, Hyperscript, or both.
 
 # 0.1.15 / 2024-04-13
-- Fixes sanitization for form elements that allows multiple values. Thanks @mwender for the report. [Discussion #8](https://github.com/TCattd/HTMX-API-WP/discussions/8).
+- Fixes sanitization for form elements that allows multiple values. Thanks @mwender for the report. [Discussion #8](https://github.com/EstebanForge/HTMX-API-WP/discussions/8).
 
 # 0.1.14 / 2024-03-06
 - Added option to add the `hx-boost` (true) attribute to any enabled theme, automatically. This enables HTMX's boost feature, globally. Learn more [here](https://htmx.org/attributes/hx-boost/).
@@ -40,7 +40,7 @@
 - Added WooCommerce compatibility. Thanks @carlosromanxyz for the suggestion.
 
 # 0.1.10 / 2024-02-20
-- Added a showcase/demo theme to demonstrate how to use HTMX with WordPress. The theme is available at [TCattd/HTMX-WordPress-Theme](https://github.com/TCattd/HTMX-WordPress-Theme).
+- Added a showcase/demo theme to demonstrate how to use HTMX with WordPress. The theme is available at [EstebanForge/HTMX-WordPress-Theme](https://github.com/EstebanForge/HTMX-WordPress-Theme).
 - hxwp_api_url() helper now accepts a path to be appended to the API URL. Just like WP's home_url().
 - Keeps line breaks on sanitization of hxvals. Thanks @texorama!
 - Added option to enable HTMX to load at the WordPress backend (wp-admin). Thanks @texorama for the suggestion.

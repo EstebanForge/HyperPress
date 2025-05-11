@@ -1,23 +1,25 @@
 {
-	"name": "tcattd/htmx-api-wp",
-	"description": "An un-official HTMX API for WordPress",
-	"version": "1.0.0",
-	"keywords": [
-		"wordpress",
-		"plugin",
-		"htmx",
-		"api"
-	],
-	"homepage": "https://github.com/TCattd/HTMX-API-WP",
-	"authors": [
-		{
-			"name": "Esteban Cuevas",
-			"homepage": "https://actitud.xyz/"
-		}
-	],
-	"type": "wordpress-plugin",
-	"license": "GPL-2.0-or-later",
-	"require": {
-		"php": ">=8.0"
-	}
+    "name": "estebanforge/api-for-htmx",
+    "description": "Add an API endpoint to support HTMX powered themes on your site.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Esteban Cuevas",
+            "email": "esteban@actitud.xyz"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "HXWP\\": "classes/"
+        },
+        "files": [
+            "includes/helpers.php"
+        ]
+    }
 }
