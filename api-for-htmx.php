@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Plugin Name: API for HTMX
  * Plugin URI: https://github.com/EstebanForge/HTMX-API-WP
  * Description: Add an API endpoint to support HTMX powered themes or plugins on your site.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Esteban Cuevas
  * Author URI: https://actitud.xyz
  * License: GPLv2 or later

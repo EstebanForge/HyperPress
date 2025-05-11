@@ -1,7 +1,7 @@
 === API for HTMX ===
 Contributors: tcattd
 Tags: htmx, ajax, hypermedia, hyperscript, alpinejs
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 Requires at least: 6.4
 Tested up to: 6.6
 Requires PHP: 8.1

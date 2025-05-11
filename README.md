@@ -75,7 +75,6 @@ htmx-templates/private/author-posts.htmx.php
 
 Check the demo template at `htmx-templates/demo.htmx.php` to see how to use it.
 
-
 Then, in your theme, use HTMX to GET/POST to the `/wp-htmx/v1/` endpoint corresponding to the template you want to load, without the `.htmx.php` extension:
 
 ```
@@ -83,6 +82,33 @@ Then, in your theme, use HTMX to GET/POST to the `/wp-htmx/v1/` endpoint corresp
 /wp-htmx/v1/related-posts
 /wp-htmx/v1/private/author
 /wp-htmx/v1/private/author-posts
+```
+
+### Helper
+
+You can use the `hxwp_api_url()` helper function to generate the URL for your HTMX templates. This function will automatically add the `/wp-htmx/v1/` prefix and remove the `.htmx.php` extension that files must have to be loaded by the API.
+
+For example:
+
+```php
+echo hxwp_api_url( 'live-search' );
+```
+
+Will call the template located at:
+
+```
+/htmx-templates/live-search.htmx.php
+```
+And will load it from the URL:
+
+```
+http://your-site.com/wp-htmx/v1/live-search
+```
+
+This will output:
+
+```
+http://your-site.com/wp-htmx/v1/live-search
 ```
 
 ### How to pass data to the template
@@ -130,19 +156,32 @@ You can also enable [Hyperscript](https://hyperscript.org) and/or [Alpine.js](ht
 
 You can definitely use HTMX and this HTMX API for WordPress in your plugin. You are not limited to using it only in your theme.
 
-The plugin provides the filter: `hxwp/get_template_file/templates_path`.
+The plugin provides the filter: `hxwp/register_namespaced_template_path`
 
-This filter allows you to change the path to the templates folder from the plugin's default location (your theme or child theme's folder).
+This filter allows you to register a new template path for your plugin or theme. Without overriding the default template path.
 
-For example:
+For example, if your plugin slug is `my-plugin`, you can register a new template path like this:
 
-```
-add_filter( 'hxwp/get_template_file/templates_path', function( $templates_path ) {
-    return YOUR_PLUGIN_PATH . 'htmx-templates/';
+```php
+add_filter( 'hxwp/register_namespaced_template_path', function( $paths ) {
+    // define('YOUR_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+
+    // 'my-plugin' is the namespace.
+    $paths['my-plugin'] = YOUR_PLUGIN_PATH . 'htmx-templates/';
+
+    return $paths;
 });
 ```
 
 Assuming `YOUR_PLUGIN_PATH` is already defined and points to your plugin's root directory, the above code will change the path of the HTMX templates folder to `YOUR_PLUGIN_PATH/htmx-templates/`.
+
+Then, you can use the new template path in your plugin like this:
+
+```php
+echo hxwp_api_url( 'my-plugin/template-name' );
+```
+
+This will load the template from `YOUR_PLUGIN_PATH/htmx-templates/template-name.htmx.php`.
 
 ## Security
 
