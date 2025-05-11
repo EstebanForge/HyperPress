@@ -260,12 +260,16 @@ class Render
     }
 
     /**
-     * Determine our template file, and it's vars if any.
+     * Determine our template file.
+     * It first checks for templates in paths registered via 'hxwp/register_namespaced_template_path'.
+     * If a namespaced template is requested (e.g., "namespace/template-name") and found, it's used.
+     * Otherwise, it falls back to the default theme's htmx-templates directory,
+     * which is filterable by 'hxwp/get_template_file/templates_path'.
      *
      * @since 2023-11-30
-     * @param string $template_name
+     * @param string $template_name The sanitized template name, possibly including a namespace (e.g., "namespace/template-file").
      *
-     * @return array | bool
+     * @return string|false The full, sanitized path to the template file, or false if not found.
      */
     protected function get_template_file($template_name = '')
     {
@@ -273,16 +277,67 @@ class Render
             return false;
         }
 
-        // Let users filter the templates path, so they can place HTMX templates in a different location if they want
-        $templates_path = apply_filters('hxwp/get_template_file/templates_path', $this->get_theme_path() . HXWP_TEMPLATE_DIR . '/');
+        // Allow plugins/themes to register their own namespaced template paths.
+        // Expected format: ['namespace' => '/path/to/templates/', ...]
+        // Example: add_filter('hxwp/register_namespaced_template_path', function($paths) { $paths['myplugin'] = plugin_dir_path(__FILE__) . 'htmx-tpl/'; return $paths; });
+        // A request to 'myplugin/my-template' would then resolve to 'wp-content/plugins/myplugin/htmx-tpl/my-template.htmx.php'.
+        $namespaced_paths = apply_filters('hxwp/register_namespaced_template_path', []);
+        $parsed_template = $this->parse_namespaced_template($template_name);
 
-        // Full path and extension to the template name
-        $template_file_path = $templates_path . $template_name . HXWP_EXT;
+        if ($parsed_template && !empty($parsed_template['namespace']) && isset($namespaced_paths[$parsed_template['namespace']])) {
+            $base_path = trailingslashit((string) $namespaced_paths[$parsed_template['namespace']]);
+            $potential_path = $base_path . $parsed_template['template'] . HXWP_EXT;
+            $sanitized_path = $this->sanitize_full_path($potential_path);
 
-        // Sanitize full path
-        $template_file_path = $this->sanitize_full_path($template_file_path);
+            if ($sanitized_path) { // realpath succeeded, so file exists and path is canonical.
+                return $sanitized_path;
+            }
+        }
 
-        return $template_file_path;
+        // Fallback: Let users filter the default templates path (theme-based).
+        // This is the original behavior for non-namespaced templates or if namespaced lookup fails.
+        // If $template_name was "namespace/template" but 'namespace' wasn't registered,
+        // it will be treated as "namespace/template.htmx.php" within the default path.
+        $default_templates_path = apply_filters_deprecated(
+            'hxwp/get_template_file/templates_path',
+            [$this->get_theme_path() . HXWP_TEMPLATE_DIR . '/'],
+            '1.2.0',
+            'hxwp/register_namespaced_template_path',
+            esc_html__('Use namespaced template paths for better organization and to avoid conflicts.', 'api-for-htmx')
+        );
+        $template_file_path = trailingslashit((string) $default_templates_path) . $template_name . HXWP_EXT;
+
+        // Sanitize full path for the default location.
+        $sanitized_default_path = $this->sanitize_full_path($template_file_path);
+
+        if ($sanitized_default_path) { // realpath succeeded
+            return $sanitized_default_path;
+        }
+
+        return false; // No valid template found
+    }
+
+    /**
+     * Parses a template name that might contain a namespace.
+     * e.g., "myplugin/template-name" -> ['namespace' => 'myplugin', 'template' => 'template-name'].
+     *
+     * @since 1.1.1
+     * @param string $template_name The template name to parse.
+     * @return array{'namespace': string, 'template': string}|false Array with 'namespace' and 'template' keys, or false if no '/' is found or parts are empty.
+     */
+    protected function parse_namespaced_template($template_name)
+    {
+        if (str_contains((string) $template_name, '/')) {
+            $parts = explode('/', (string) $template_name, 2);
+            if (count($parts) === 2 && !empty($parts[0]) && !empty($parts[1])) {
+                return [
+                    'namespace' => $parts[0],
+                    'template'  => $parts[1],
+                ];
+            }
+        }
+
+        return false;
     }
 
     /**
