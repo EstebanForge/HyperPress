@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Main Class
+ * Main Class.
  *
- * @package    HXWP
  * @since      2023
  */
 
@@ -15,7 +14,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Main Class for initialize the plugin
+ * Main Class for initialize the plugin.
  */
 class Main
 {
@@ -26,7 +25,7 @@ class Main
     protected $config;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @since 2023-11-22
      */
@@ -55,7 +54,7 @@ class Main
         $assets = new Assets();
         $config = new Config();
         $compat = new Compatibility();
-        $theme  = new Theme();
+        $theme = new Theme();
 
         // Hook into actions and filters
         add_action('init', [$router, 'register_main_route']);

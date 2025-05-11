@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Handles the API endpoint HXWP_ENDPOINT
+ * Handles the API endpoint HXWP_ENDPOINT.
  *
- * @package HXWP
  * @since   2023-11-22
  */
 
@@ -15,13 +14,13 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Routes Class
+ * Routes Class.
  */
 class Router
 {
     /**
      * Register route
-     * Outside wp-json, use WP rewrite API instead
+     * Outside wp-json, use WP rewrite API instead.
      *
      * @since 2023-11-22
      * @return void
@@ -33,7 +32,7 @@ class Router
     }
 
     /**
-     * Register query var
+     * Register query var.
      *
      * @since 2023-11-22
      * @param array $vars

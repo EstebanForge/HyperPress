@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Activation and Deactivation methods
+ * Activation and Deactivation methods.
  *
- * @package HXWP
  * @since   2023
  */
 
@@ -15,12 +14,12 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Activation and Deactivation Class
+ * Activation and Deactivation Class.
  */
 class Activation
 {
     /**
-     * Activation
+     * Activation.
      *
      * @since 2023-11-22
      * @return void
@@ -32,7 +31,7 @@ class Activation
     }
 
     /**
-     * Deactivation
+     * Deactivation.
      *
      * @since 2023-11-22
      * @return void

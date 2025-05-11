@@ -20,21 +20,21 @@ class ComposerStaticInita313c11744e7bb00222a21571d0c39da
     public static $prefixDirsPsr4 = array (
         'HXWP\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/classes',
+            0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'HXWP\\Admin\\Activation' => __DIR__ . '/../..' . '/classes/Admin/Activation.php',
-        'HXWP\\Admin\\Options' => __DIR__ . '/../..' . '/classes/Admin/Options.php',
-        'HXWP\\Assets' => __DIR__ . '/../..' . '/classes/Assets.php',
-        'HXWP\\Compatibility' => __DIR__ . '/../..' . '/classes/Compatibility.php',
-        'HXWP\\Config' => __DIR__ . '/../..' . '/classes/Config.php',
-        'HXWP\\Main' => __DIR__ . '/../..' . '/classes/Main.php',
-        'HXWP\\Render' => __DIR__ . '/../..' . '/classes/Render.php',
-        'HXWP\\Router' => __DIR__ . '/../..' . '/classes/Router.php',
-        'HXWP\\Theme' => __DIR__ . '/../..' . '/classes/Theme.php',
+        'HXWP\\Admin\\Activation' => __DIR__ . '/../..' . '/src/Admin/Activation.php',
+        'HXWP\\Admin\\Options' => __DIR__ . '/../..' . '/src/Admin/Options.php',
+        'HXWP\\Assets' => __DIR__ . '/../..' . '/src/Assets.php',
+        'HXWP\\Compatibility' => __DIR__ . '/../..' . '/src/Compatibility.php',
+        'HXWP\\Config' => __DIR__ . '/../..' . '/src/Config.php',
+        'HXWP\\Main' => __DIR__ . '/../..' . '/src/Main.php',
+        'HXWP\\Render' => __DIR__ . '/../..' . '/src/Render.php',
+        'HXWP\\Router' => __DIR__ . '/../..' . '/src/Router.php',
+        'HXWP\\Theme' => __DIR__ . '/../..' . '/src/Theme.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

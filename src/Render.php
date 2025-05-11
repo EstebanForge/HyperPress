@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Handles rendering the HTMX template
+ * Handles rendering the HTMX template.
  *
- * @package HXWP
  * @since   2023-11-22
  */
 
@@ -15,7 +14,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Render Class
+ * Render Class.
  */
 class Render
 {
@@ -25,7 +24,7 @@ class Render
     protected $hxvals = false;
 
     /**
-     * Render the template
+     * Render the template.
      *
      * @since 2023-11-22
      * @return void
@@ -63,7 +62,7 @@ class Render
 
     /**
      * Render or fail
-     * Load the requested template or fail with a 404
+     * Load the requested template or fail with a 404.
      *
      * @since 2023-11-30
      * @param string $template_name
@@ -105,7 +104,7 @@ class Render
 
     /**
      * Check if nonce exists and is valid
-     * nonce: hxwp_nonce
+     * nonce: hxwp_nonce.
      *
      * @since 2023-11-30
      *
@@ -125,6 +124,7 @@ class Render
         if (null === $nonce) {
             // No nonce at all, so act as if it's an unauthenticated request.
             wp_set_current_user(0);
+
             return false;
         }
 
@@ -139,7 +139,7 @@ class Render
     }
 
     /**
-     * Sanitize path
+     * Sanitize path.
      *
      * @since 2023-11-30
      * @param string $path
@@ -180,7 +180,7 @@ class Render
     }
 
     /**
-     * Sanitize file name
+     * Sanitize file name.
      *
      * @since 2023-11-30
      * @param string $file_name
@@ -200,7 +200,7 @@ class Render
     }
 
     /**
-     * Sanitize hxvals
+     * Sanitize hxvals.
      *
      * @since 2023-11-30
      * @param array $hxvals
@@ -242,7 +242,7 @@ class Render
 
     /**
      * Get active theme or child theme path
-     * If a child theme is active, use it instead of the parent theme
+     * If a child theme is active, use it instead of the parent theme.
      *
      * @since 2023-11-30
      *
@@ -260,7 +260,7 @@ class Render
     }
 
     /**
-     * Determine our template file, and it's vars if any
+     * Determine our template file, and it's vars if any.
      *
      * @since 2023-11-30
      * @param string $template_name
@@ -286,7 +286,7 @@ class Render
     }
 
     /**
-     * Sanitize full path
+     * Sanitize full path.
      *
      * @since 2023-12-13
      *

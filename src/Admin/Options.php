@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Load plugin Options
+ * Load plugin Options.
  *
- * @package HXWP
  * @since   2023
  */
 
@@ -15,7 +14,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Options Class
+ * Options Class.
  */
 class Options
 {
@@ -58,8 +57,8 @@ class Options
         if (defined('HXWP_INSTANCE_LOADED_PATH')) {
             $is_plugin = str_contains(HXWP_INSTANCE_LOADED_PATH, 'wp-content/plugins/api-for-htmx');
             echo '<strong>' . esc_html__('Active Instance:', 'api-for-htmx') . '</strong> ' .
-                 ($is_plugin ? esc_html__('Plugin', 'api-for-htmx') : esc_html__('Library', 'api-for-htmx')) .
-                 ' v' . esc_html(HXWP_LOADED_VERSION) . '<br/>';
+                ($is_plugin ? esc_html__('Plugin', 'api-for-htmx') : esc_html__('Library', 'api-for-htmx')) .
+                ' v' . esc_html(HXWP_LOADED_VERSION) . '<br/>';
         }
         // Translators: %s = Actitud Studio URL
         printf(
@@ -199,7 +198,7 @@ class Options
                     'label_for' => 'load_extension_' . $key,
                     'key'       => $key,
                     'extension' => $extension,
-                    'options'   => $options
+                    'options'   => $options,
                 ]
             );
         }
@@ -320,18 +319,18 @@ class Options
 
     public function setting_extensions_callback($args)
     {
-        $options   = $args['options'];
+        $options = $args['options'];
         $extension = $args['extension'];
-        $key       = $args['key'];
+        $key = $args['key'];
 
-        $checked   = isset($options['load_extension_' . $key]) ? checked(1, $options['load_extension_' . $key], false) : '';
+        $checked = isset($options['load_extension_' . $key]) ? checked(1, $options['load_extension_' . $key], false) : '';
 
         echo '<input type="checkbox" id="load_extension_' . $key . '" name="' . $this->option_name . '[load_extension_' . $key . ']" value="1" ' . $checked . ' />';
         echo '<p class="description">' . esc_html__('Load', 'api-for-htmx') . ' ' . $extension . esc_html__(' extension.', 'api-for-htmx') . '</p>';
     }
 
     /**
-     * Add link to plugins settings page on plugins list page
+     * Add link to plugins settings page on plugins list page.
      *
      * @param array $links
      *

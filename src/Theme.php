@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Handles compatibility with WordPress themes
+ * Handles compatibility with WordPress themes.
  *
- * @package HXWP
  * @since   2024-02-27
  */
 
@@ -15,12 +14,12 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Theme support Class
+ * Theme support Class.
  */
 class Theme
 {
     /**
-     * Runner
+     * Runner.
      */
     public function run()
     {
@@ -35,7 +34,7 @@ class Theme
     public function hx_boost()
     {
         // Check if set_htmx_hxboost is enabled
-        $hxwp_options     = get_option('hxwp_options');
+        $hxwp_options = get_option('hxwp_options');
         $set_htmx_hxboost = $hxwp_options['set_htmx_hxboost'] ?? 0;
 
         if ($set_htmx_hxboost == 0) {

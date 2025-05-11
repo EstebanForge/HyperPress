@@ -7,13 +7,13 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'HXWP\\Admin\\Activation' => $baseDir . '/classes/Admin/Activation.php',
-    'HXWP\\Admin\\Options' => $baseDir . '/classes/Admin/Options.php',
-    'HXWP\\Assets' => $baseDir . '/classes/Assets.php',
-    'HXWP\\Compatibility' => $baseDir . '/classes/Compatibility.php',
-    'HXWP\\Config' => $baseDir . '/classes/Config.php',
-    'HXWP\\Main' => $baseDir . '/classes/Main.php',
-    'HXWP\\Render' => $baseDir . '/classes/Render.php',
-    'HXWP\\Router' => $baseDir . '/classes/Router.php',
-    'HXWP\\Theme' => $baseDir . '/classes/Theme.php',
+    'HXWP\\Admin\\Activation' => $baseDir . '/src/Admin/Activation.php',
+    'HXWP\\Admin\\Options' => $baseDir . '/src/Admin/Options.php',
+    'HXWP\\Assets' => $baseDir . '/src/Assets.php',
+    'HXWP\\Compatibility' => $baseDir . '/src/Compatibility.php',
+    'HXWP\\Config' => $baseDir . '/src/Config.php',
+    'HXWP\\Main' => $baseDir . '/src/Main.php',
+    'HXWP\\Render' => $baseDir . '/src/Render.php',
+    'HXWP\\Router' => $baseDir . '/src/Router.php',
+    'HXWP\\Theme' => $baseDir . '/src/Theme.php',
 );
