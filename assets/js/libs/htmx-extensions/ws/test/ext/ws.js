@@ -25,7 +25,9 @@ describe('web-sockets extension', function() {
       close: function() {
         if (this._open) {
           this._open = false
-          this._fireEvent('close', { type: 'close', code: 0 })
+          setTimeout(function () {
+            this._fireEvent('close', { type: 'close', code: 1006 })
+          }.bind(this), 2)
         }
       },
       _listeners: {},
@@ -130,7 +132,7 @@ describe('web-sockets extension', function() {
     div.click()
     this.server.respond()
 
-    this.tickMock()
+    this.clock.tick(7000) // give socket opportunity to erroneously reconnect
 
     this.socketServer.clients().length.should.equal(0)
   })
@@ -616,6 +618,43 @@ describe('web-sockets extension', function() {
     this.messages.length.should.equal(2)
     this.messages[1].should.contains('"foo":"bar"')
     this.messages[1].should.contains('"action":"B"')
+  })
+
+  it('maybeClose does not raise when there is no socket', function() {
+    var div = make('<div hx-ext="ws" ws-connect="ws://localhost:8080"><div id="d1">div1</div></div>')
+    this.tickMock()
+    var internalData = div['htmx-internal-data']
+    should.exist(internalData.webSocket)
+    delete internalData.webSocket
+    should.not.exist(internalData.webSocket)
+    div.parentNode.removeChild(div)
+    this.tickMock()
+  })
+
+  it('re-establishes closed connections using reconnect()', function() {
+    var handledEventTypes = []
+    var handler = function(evt) { handledEventTypes.push(evt.detail.event.type) }
+    var reconnect = function(evt) { setTimeout(() => evt.detail.socketWrapper.reconnect()) }
+
+    htmx.on('htmx:wsConnecting', handler)
+
+    var div = make('<div hx-get="/test" hx-swap="outerHTML" hx-ext="ws" ws-connect="ws://localhost:8080">')
+
+    htmx.on(div, 'htmx:wsClose', handler)
+    htmx.on(div, 'htmx:wsClose', reconnect)
+
+    this.tickMock()
+    this.socketServer.close()
+
+    this.tickMock()
+    handledEventTypes.should.eql(['connecting', 'close', 'connecting'])
+
+    this.tickMock()
+    this.socketServer.close()
+
+    htmx.off('htmx:wsConnecting', handler)
+    htmx.off(div, 'htmx:wsClose', handler)
+    htmx.off(div, 'htmx:wsClose', reconnect)
   })
 
   describe('Send immediately', function() {

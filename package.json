@@ -2,26 +2,26 @@
   "name": "HTMX-API-WP",
   "author": "Esteban Cuevas",
   "license": "GPL-2.0-or-later",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An un-official WordPress plugin that adds an HTMX API to your WordPress site.",
   "keywords": [],
   "main": "index.js",
   "scripts": {
     "version-bump": "node -e \"const pkg = require('./package.json'); const currentVersion = pkg.version; console.log('Current version ' + currentVersion); const readline = require('readline').createInterface({ input: process.stdin, output: process.stdout }); readline.question('Enter new version (semver): ', (newVersion) => { pkg.version = newVersion; require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2)); const fs = require('fs'); const files = ['composer.json', 'README.txt', 'api-for-htmx.php', 'SECURITY.md']; const regex = new RegExp(currentVersion + '(?!\\d)', 'gm'); for (const file of files) { let data = fs.readFileSync(file, 'utf8'); data = data.replace(regex, newVersion); fs.writeFileSync(file, data, 'utf8'); } readline.close(); console.log('Bumped from ' + currentVersion + ' to ' + newVersion); console.log('Version updated successfully!'); });\"",
     "update-htmx": "cp -r node_modules/htmx.org/dist/htmx.min.js assets/js/libs/ && cp -r node_modules/htmx.org/dist/htmx.js assets/js/libs/",
-    "update-htmx-extensions": "wget https://github.com/bigskysoftware/htmx-extensions/archive/refs/heads/main.zip -O htmx-extensions.zip && unzip ./htmx-extensions.zip && mkdir -p ./assets/js/libs/ && mv ./htmx-extensions-main/src ./assets/js/libs/htmx-extensions/ && rm -rf ./htmx-extensions.zip && rm -rf ./htmx-extensions-main",
+    "update-htmx-extensions": "wget https://github.com/bigskysoftware/htmx-extensions/archive/refs/heads/main.zip -O htmx-extensions.zip && rm -rf ./htmx-extensions-main && unzip -o -q ./htmx-extensions.zip && rm -rf ./assets/js/libs/htmx-extensions && mkdir -p ./assets/js/libs && mv ./htmx-extensions-main/src ./assets/js/libs/htmx-extensions && rm -rf ./htmx-extensions.zip && rm -rf ./htmx-extensions-main",
     "update-hyperscript": "cp -r node_modules/hyperscript.org/dist/_hyperscript.min.js assets/js/libs/ && cp -r node_modules/hyperscript.org/dist/_hyperscript.js assets/js/libs/",
     "update-alpinejs": "cp -r node_modules/alpinejs/dist/cdn.min.js assets/js/libs/alpinejs.min.js && cp -r node_modules/alpinejs/dist/cdn.js assets/js/libs/alpinejs.js",
     "update-all": "npm run update-htmx && npm run update-hyperscript && npm run update-alpinejs && npm run update-htmx-extensions",
     "postinstall": "npm run update-all"
   },
   "devDependencies": {
-    "alpinejs": "^3.*.*",
-    "htmx.org": "^2.0.0",
-    "hyperscript.org": "^0.*.*"
+    "alpinejs": "3.*",
+    "htmx.org": "2.*",
+    "hyperscript.org": "*"
   },
   "volta": {
-    "node": "22.7.0",
+    "node": "22.15.0",
     "npm": "10.8.2"
   }
 }

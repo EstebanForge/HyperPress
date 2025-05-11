@@ -1,7 +1,7 @@
 === API for HTMX ===
 Contributors: tcattd
 Tags: htmx, ajax, hypermedia, hyperscript, alpinejs
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 Requires at least: 6.4
 Tested up to: 6.6
 Requires PHP: 8.1
@@ -15,7 +15,7 @@ An unofficial WordPress plugin that enables the use of HTMX on WordPress. Adds a
 
 HTMX is a JavaScript library that allows you to access AJAX, WebSockets, and Server-Sent Events directly in HTML using attributes, without writing any JavaScript. It reuses an "old" concept, [Hypermedia](https://hypermedia.systems/), to handle the modern web in a more HTML-like and natural way.
 
-Check the [full feature set at here](https://github.com/TCattd/HTMX-API-WP).
+Check the [full feature set at here](https://github.com/EstebanForge/HTMX-API-WP).
 
 This plugin will include the HTMX library by default, locally from the plugin folder. If you enable Alpine.js and/or Hyperscript, they will also be included locally.
 
@@ -28,13 +28,13 @@ The plugin has an opt-in option, not enforced, to include these third-party libr
 
 == Frequently Asked Questions ==
 = Where is the FAQ? =
-You can [read the full FAQ at GitHub](https://github.com/TCattd/HTMX-API-WP/blob/main/FAQ.md).
+You can [read the full FAQ at GitHub](https://github.com/EstebanForge/HTMX-API-WP/blob/main/FAQ.md).
 
 = Suggestions, Support? =
-Please, open [a discussion](https://github.com/TCattd/HTMX-API-WP/discussions).
+Please, open [a discussion](https://github.com/EstebanForge/HTMX-API-WP/discussions).
 
 = Found a Bug or Error? =
-Please, open [an issue](https://github.com/TCattd/HTMX-API-WP/issues).
+Please, open [an issue](https://github.com/EstebanForge/HTMX-API-WP/issues).
 
 == Screenshots ==
 1. Main options page.
@@ -43,4 +43,4 @@ Please, open [an issue](https://github.com/TCattd/HTMX-API-WP/issues).
 Nothing to see here.
 
 == Changelog ==
-[Check the changelog at GitHub](https://github.com/TCattd/HTMX-API-WP/blob/master/CHANGELOG.md).
+[Check the changelog at GitHub](https://github.com/EstebanForge/HTMX-API-WP/blob/master/CHANGELOG.md).

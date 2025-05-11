@@ -166,19 +166,19 @@ Do your due diligence and ensure you are not returning unsanitized data back to 
 
 ## Examples
 
-Check out the showcase/demo theme at [TCattd/HTMX-WordPress-Theme](https://github.com/TCattd/HTMX-WordPress-Theme).
+Check out the showcase/demo theme at [EstebanForge/HTMX-WordPress-Theme](https://github.com/EstebanForge/HTMX-WordPress-Theme).
 
 ## Suggestions, Support
 
-Please, open [a discussion](https://github.com/TCattd/HTMX-API-WP/discussions).
+Please, open [a discussion](https://github.com/EstebanForge/HTMX-API-WP/discussions).
 
 ## Bugs and Error reporting
 
-Please, open [an issue](https://github.com/TCattd/HTMX-API-WP/issues).
+Please, open [an issue](https://github.com/EstebanForge/HTMX-API-WP/issues).
 
 ## FAQ
-[FAQ available here](https://github.com/TCattd/HTMX-API-WP/blob/main/FAQ.md).
+[FAQ available here](https://github.com/EstebanForge/HTMX-API-WP/blob/main/FAQ.md).
 
 ## Changelog
 
-[Changelog available here](https://github.com/TCattd/HTMX-API-WP/blob/main/CHANGELOG.md).
+[Changelog available here](https://github.com/EstebanForge/HTMX-API-WP/blob/main/CHANGELOG.md).
