@@ -1,5 +1,11 @@
 # Changelog
 
+# 1.2.0 / 2025-05-11
+- Updated HTMX, HTMX extensions, Hyperscript and Alpine.js to their latest versions.
+- Added the ability to use this plugin as a library, using composer. This allows you to use HTMX in your own plugins or themes, without the need to install this plugin. The plugin/library will determine if a greater instance of itself is already loaded. If so, it will use that instance. Otherwise, it will load a new one. So, no issues with multiple instances of the same library on different plugins or themes.
+- Added a new way to load different HTMX templates path, using the filter `hxwp/register_template_path`. This allows you to register a new template path for your plugin or theme, without overriding the default template path, or stepping on the toes of other plugins or themes that may be using the same template path. This is useful if you want to use HTMX in your own plugin or theme, without having to worry about conflicts with other plugins or themes.
+- Now using PSR-4 autoloading for the plugin's code.
+
 # 1.0.0 / 2024-08-25
 - Promoted plugin to stable :)
 - Updated to HTMX and its extensions.
