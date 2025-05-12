@@ -167,14 +167,13 @@ You can definitely use HTMX and this HTMX API for WordPress in your plugin. You 
 
 The plugin provides the filter: `hxwp/register_template_path`
 
-This filter allows you to register a new template path for your plugin or theme. Without overriding the default template path.
+This filter allows you to register a new template path for your plugin or theme. It expects an associative array where keys are your chosen namespaces and values are the absolute paths to your template directories.
 
 For example, if your plugin slug is `my-plugin`, you can register a new template path like this:
 
 ```php
 add_filter( 'hxwp/register_template_path', function( $paths ) {
-    // define('YOUR_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
-
+    // Ensure YOUR_PLUGIN_PATH is correctly defined, e.g., plugin_dir_path( __FILE__ )
     // 'my-plugin' is the namespace.
     $paths['my-plugin'] = YOUR_PLUGIN_PATH . 'htmx-templates/';
 
@@ -182,15 +181,29 @@ add_filter( 'hxwp/register_template_path', function( $paths ) {
 });
 ```
 
-Assuming `YOUR_PLUGIN_PATH` is already defined and points to your plugin's root directory, the above code will change the path of the HTMX templates folder to `YOUR_PLUGIN_PATH/htmx-templates/`.
+Assuming `YOUR_PLUGIN_PATH` is already defined and points to your plugin's root directory, the above code registers the `my-plugin` namespace to point to `YOUR_PLUGIN_PATH/htmx-templates/`.
 
-Then, you can use the new template path in your plugin like this:
+Then, you can use the new template path in your plugin like this, using a colon `:` to separate the namespace from the template file path (which can include subdirectories):
 
 ```php
-echo hxwp_api_url( 'my-plugin/template-name' );
+// Loads the template from: YOUR_PLUGIN_PATH/htmx-templates/template-name.htmx.php
+echo hxwp_api_url( 'my-plugin:template-name' );
+
+// Loads the template from: YOUR_PLUGIN_PATH/htmx-templates/parts/header.htmx.php
+echo hxwp_api_url( 'my-plugin:parts/header' );
 ```
 
-This will load the template from `YOUR_PLUGIN_PATH/htmx-templates/template-name.htmx.php`.
+This will load the template from the path associated with the `my-plugin` namespace. If the namespace is not registered, or the template file does not exist within that registered path (or is not allowed due to sanitization rules), the request will result in a 404 error. Templates requested with an explicit namespace do not fall back to the theme's default `htmx-templates` directory.
+
+For templates located directly in your active theme's `htmx-templates` directory (or its subdirectories), you would call them without a namespace:
+
+```php
+// Loads: wp-content/themes/your-theme/htmx-templates/live-search.htmx.php
+echo hxwp_api_url( 'live-search' );
+
+// Loads: wp-content/themes/your-theme/htmx-templates/subfolder/my-listing.htmx.php
+echo hxwp_api_url( 'subfolder/my-listing' );
+```
 
 ## Security
 
