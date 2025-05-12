@@ -29,7 +29,8 @@
             "HXWP\\": "src/"
         },
         "files": [
-            "includes/helpers.php"
+            "includes/helpers.php",
+            "api-for-htmx.php"
         ]
     }
 }

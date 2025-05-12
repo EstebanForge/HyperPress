@@ -40,34 +40,43 @@ class Options
 
     public function create_admin_page()
     {
-        ?>
-<div class="wrap">
-	<h2><?php esc_html_e('HTMX Options', 'api-for-htmx'); ?>
-	</h2>
-	<form method="post" action="options.php">
-		<?php
-                        settings_fields('hxwp_options_group');
-        do_settings_sections('htmx-options');
-        submit_button(esc_html__('Save Changes', 'api-for-htmx'));
-        ?>
-	</form>
+?>
+        <div class="wrap">
+            <h2><?php esc_html_e('HTMX Options', 'api-for-htmx'); ?>
+            </h2>
+            <form method="post" action="options.php">
+                <?php
+                settings_fields('hxwp_options_group');
+                do_settings_sections('htmx-options');
+                submit_button(esc_html__('Save Changes', 'api-for-htmx'));
+                ?>
+            </form>
 
-	<p class="description">
-		<?php
-        if (defined('HXWP_INSTANCE_LOADED_PATH')) {
-            $is_plugin = str_contains(HXWP_INSTANCE_LOADED_PATH, 'wp-content/plugins/api-for-htmx');
-            echo '<strong>' . esc_html__('Active Instance:', 'api-for-htmx') . '</strong> ' .
-                ($is_plugin ? esc_html__('Plugin', 'api-for-htmx') : esc_html__('Library', 'api-for-htmx')) .
-                ' v' . esc_html(HXWP_LOADED_VERSION) . '<br/>';
-        }
-        // Translators: %s = Actitud Studio URL
-        printf(
-            esc_html__('Proudly brought to you by %s.', 'api-for-htmx'),
-            '<a href="https://actitud.xyz" target="_blank">' . esc_html__('Actitud Studio', 'api-for-htmx') . '</a>'
-        );
-        ?>
-	</p>
-</div>
+            <p class="description">
+                <?php
+                if (defined('HXWP_INSTANCE_LOADED_PATH')) {
+                    $real_instance_path = realpath(HXWP_INSTANCE_LOADED_PATH);
+                    $real_wp_plugin_path = realpath(WP_PLUGIN_DIR . '/api-for-htmx/api-for-htmx.php');
+
+                    if ($real_instance_path && $real_wp_plugin_path) {
+                        $instance_type = ($real_instance_path === $real_wp_plugin_path) ?
+                            esc_html__('Plugin', 'api-for-htmx') :
+                            esc_html__('Library', 'api-for-htmx');
+                    } else {
+                        $instance_type = esc_html__('Library', 'api-for-htmx');
+                    }
+
+                    echo '<strong>' . esc_html__('Active Instance:', 'api-for-htmx') . '</strong> ' .
+                        $instance_type . ' v' . esc_html(HXWP_LOADED_VERSION) . '<br/>';
+                }
+                // Translators: %s = Actitud Studio URL
+                printf(
+                    esc_html__('Proudly brought to you by %s.', 'api-for-htmx'),
+                    '<a href="https://actitud.xyz" target="_blank">' . esc_html__('Actitud Studio', 'api-for-htmx') . '</a>'
+                );
+                ?>
+            </p>
+        </div>
 <?php
     }
 

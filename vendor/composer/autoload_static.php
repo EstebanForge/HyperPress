@@ -8,6 +8,7 @@ class ComposerStaticInita313c11744e7bb00222a21571d0c39da
 {
     public static $files = array (
         '658a346e0bec96b94967ae860b7a7584' => __DIR__ . '/../..' . '/includes/helpers.php',
+        'aa9c2434c2082bc83ef742a0407c564e' => __DIR__ . '/../..' . '/api-for-htmx.php',
     );
 
     public static $prefixLengthsPsr4 = array (
