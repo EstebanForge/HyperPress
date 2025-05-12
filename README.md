@@ -52,6 +52,15 @@ Or download the zip from the [official plugin repository](https://wordpress.org/
 
 Activate the plugin. Configure it to your liking on Settings > HTMX Options.
 
+### Installation via Composer
+If you want to use this plugin as a library, you can install it via Composer. This allows you to use HTMX in your own plugins or themes, without the need to install this plugin.
+
+```bash
+composer require estebanforge/api-for-htmx
+```
+
+This plugin/library will determine which instance of itself is the newer one when WordPress is loading. Then, it will use the newer instance between all competing plugins or themes. This is to avoid conflicts with other plugins or themes that may be using the same library for their HTMX implementation.
+
 ## How to use
 
 After installation, you can use HTMX templates in any theme.
@@ -156,14 +165,14 @@ You can also enable [Hyperscript](https://hyperscript.org) and/or [Alpine.js](ht
 
 You can definitely use HTMX and this HTMX API for WordPress in your plugin. You are not limited to using it only in your theme.
 
-The plugin provides the filter: `hxwp/register_namespaced_template_path`
+The plugin provides the filter: `hxwp/register_template_path`
 
 This filter allows you to register a new template path for your plugin or theme. Without overriding the default template path.
 
 For example, if your plugin slug is `my-plugin`, you can register a new template path like this:
 
 ```php
-add_filter( 'hxwp/register_namespaced_template_path', function( $paths ) {
+add_filter( 'hxwp/register_template_path', function( $paths ) {
     // define('YOUR_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
     // 'my-plugin' is the namespace.
