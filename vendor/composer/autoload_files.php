@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     '658a346e0bec96b94967ae860b7a7584' => $baseDir . '/includes/helpers.php',
+    'aa9c2434c2082bc83ef742a0407c564e' => $baseDir . '/api-for-htmx.php',
 );
