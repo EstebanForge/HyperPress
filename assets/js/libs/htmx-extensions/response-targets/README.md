@@ -1,1 +1,0 @@
-See https://htmx.org/extensions/response-targets, or https://github.com/bigskysoftware/htmx/blob/master/www/content/extensions/response-targets.md

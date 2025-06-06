@@ -1,1 +1,0 @@
-See https://htmx.org/extensions/head-support/, or https://github.com/bigskysoftware/htmx/blob/master/www/content/extensions/head-support.md

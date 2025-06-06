@@ -1,1 +1,0 @@
-See https://htmx.org/extensions/sse, or https://github.com/bigskysoftware/htmx/blob/master/www/content/extensions/sse.md

@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    '658a346e0bec96b94967ae860b7a7584' => $baseDir . '/includes/helpers.php',
-    'aa9c2434c2082bc83ef742a0407c564e' => $baseDir . '/api-for-htmx.php',
+    'd767e4fc2dc52fe66584ab8c6684783e' => $vendorDir . '/adbario/php-dot-notation/src/helpers.php',
+    '53b3b608b18ef5b655166dcd8c512966' => $vendorDir . '/jeffreyvanrossum/wp-settings/src/helpers.php',
+    '60bb17a79c7758c8c553181dcced7422' => $baseDir . '/api-for-htmx.php',
 );

@@ -6,7 +6,7 @@
  * @since   2023
  */
 
-namespace HXWP\Admin;
+namespace HMApi\Admin;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

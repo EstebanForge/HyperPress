@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Handles compatibility with WordPress themes.
+ * Handles theme-related integrations for Hypermedia API for WordPress.
  *
  * @since   2024-02-27
  */
 
-namespace HXWP;
+namespace HMApi;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -15,33 +15,21 @@ if (!defined('ABSPATH')) {
 
 /**
  * Theme support Class.
+ * This class is a placeholder for any future theme-specific integrations.
+ * The hx-boost functionality previously here is now handled by HMApi\Assets.
  */
 class Theme
 {
     /**
-     * Runner.
+     * Runner - registers theme-related hooks or actions.
      */
-    public function run()
+    public function run(): void
     {
-        add_action('wp_enqueue_scripts', [$this, 'hx_boost'], 1);
-
-        do_action('hxwp/theme/run');
-    }
-
-    /**
-     * Add the `hx-boost` attribute to any theme <body> tag.
-     */
-    public function hx_boost()
-    {
-        // Check if set_htmx_hxboost is enabled
-        $hxwp_options = get_option('hxwp_options');
-        $set_htmx_hxboost = $hxwp_options['set_htmx_hxboost'] ?? 0;
-
-        if ($set_htmx_hxboost == 0) {
-            return;
-        }
-
-        // Enqueue ./assets/js/htmx-hxboost.js
-        wp_enqueue_script('hxwp-hxboost', HXWP_PLUGIN_URL . 'assets/js/hxwp-hxboost.js', [], HXWP_VERSION, true);
+        /*
+         * Action hook for theme-related integrations.
+         *
+         * @since 2.0.0
+         */
+        do_action('hmapi/theme/run');
     }
 }

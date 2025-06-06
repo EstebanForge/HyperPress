@@ -1,0 +1,8 @@
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/htmx-ext-class-tools@2.0.2/class-tools.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+!function(){function t(t){var e=t.split(/\s+/);if(e.length>1){var s,a,l=e[0],i=e[1].trim();if(i.indexOf(":")>0){var n=i.split(":");s=n[0],a=htmx.parseInterval(n[1])}else s=i,a=100;return{operation:l,cssClass:s,delay:a}}return null}function e(t,e,s,a){setTimeout((function(){t.classList[e.operation].call(t.classList,e.cssClass)}),a)}function s(t,e,s,a){setTimeout((function(){setInterval((function(){t.classList[e.operation].call(t.classList,e.cssClass)}),e.delay)}),a)}function a(a){if(a.getAttribute){var l=a.getAttribute("classes")||a.getAttribute("data-classes");l&&function(a,l){for(var i=l.split("&"),n=0;n<i.length;n++)for(var r=0,o=i[n].split(","),c=0;c<o.length;c++){var u=t(o[c].trim());u&&("toggle"===u.operation?(s(a,u,0,r),r+=u.delay):e(a,u,0,r+=u.delay))}}(a,l)}}htmx.defineExtension("class-tools",{onEvent:function(t,e){if("htmx:afterProcessNode"===t){var s=e.detail.elt;a(s);var l=s.getAttribute("apply-parent-classes")||s.getAttribute("data-apply-parent-classes");if(l){var i=s.parentElement;i.removeChild(s),i.setAttribute("classes",l),a(i)}else if(s.querySelectorAll)for(var n=s.querySelectorAll("[classes], [data-classes]"),r=0;r<n.length;r++)a(n[r])}}})}();
+//# sourceMappingURL=/sm/76c4c5fbe8c1c179a664180aff1341d689c14acdbc8ddc2f7d2aeb2101d16db9.map

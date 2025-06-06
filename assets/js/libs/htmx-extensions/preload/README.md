@@ -1,1 +1,0 @@
-See https://htmx.org/extensions/preload, or https://github.com/bigskysoftware/htmx/blob/master/www/content/extensions/preload.md

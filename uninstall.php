@@ -21,10 +21,10 @@ if (isset($_REQUEST['plugin']) && $_REQUEST['plugin'] != 'api-for-htmx/api-for-h
 // Clears HTMX API for WP options
 global $wpdb;
 
-$hxwp_options = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_hxwp_%' OR option_name LIKE 'hxwp_%'");
+$hmapi_options = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_hxwp_%' OR option_name LIKE 'hxwp_%' OR option_name LIKE '_hmapi_%' OR option_name LIKE 'hmapi_%'");
 
-if (is_array($hxwp_options) && !empty($hxwp_options)) {
-	foreach ($hxwp_options as $option) {
+if (is_array($hmapi_options) && !empty($hmapi_options)) {
+	foreach ($hmapi_options as $option) {
 		delete_option($option->option_name);
 	}
 }
