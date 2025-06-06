@@ -6,5 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'HXWP\\' => array($baseDir . '/src'),
+    'Jeffreyvr\\WPSettings\\' => array($vendorDir . '/jeffreyvanrossum/wp-settings/src'),
+    'HMApi\\' => array($baseDir . '/src'),
+    'Adbar\\' => array($vendorDir . '/adbario/php-dot-notation/src'),
 );

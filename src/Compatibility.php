@@ -6,7 +6,7 @@
  * @since   2024-02-21
  */
 
-namespace HXWP;
+namespace HMApi;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

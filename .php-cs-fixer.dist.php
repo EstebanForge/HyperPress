@@ -159,7 +159,7 @@ $finder = PhpCsFixer\Finder::create()
     ->in([
         __DIR__ . '/src',
         __DIR__ . '/includes',
-        __DIR__ . '/htmx-templates'
+        __DIR__ . '/hypermedia'
     ]);
 
 return (new PhpCsFixer\Config())

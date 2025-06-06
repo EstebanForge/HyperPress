@@ -1,5 +1,22 @@
 # Changelog
 
+# 2.0.0 / 2025-06-06
+- Renamed plugin to "Hypermedia API for WordPress" to reflect broader support for multiple hypermedia libraries.
+- **NEW:** Added support for Datastar.js hypermedia library.
+- **NEW:** Added support for Alpine Ajax hypermedia library.
+- **NEW:** Template engine now supports both `.hm.php` (primary) and `.htmx.php` (legacy) extensions.
+- **NEW:** Template engine now supports both `hypermedia` (primary) and `htmx-templates` (legacy) theme directories.
+- **NEW:** Added `hmapi_get_endpoint_url()` helper function to get the API endpoint URL.
+- **NEW:** Added `hmapi_enpoint_url()` helper function to echo the API endpoint URL in templates.
+- **IMPROVED:** Enhanced admin interface with a new informational card displaying the API endpoint URL.
+- **IMPROVED:** The `$hmvals` variable is now available in templates, containing the request parameters.
+- **BACKWARD COMPATIBILITY:** All `hxwp_*` functions are maintained as deprecated aliases for `hmapi_*` functions.
+- **BACKWARD COMPATIBILITY:** The legacy `$hxvals` variable is still available in templates for backward compatibility.
+- **BACKWARD COMPATIBILITY:** Dual nonce system supports both `hmapi_nonce` (new) and `hxwp_nonce` (legacy).
+- **BACKWARD COMPATIBILITY:** Legacy filter hooks (`hxwp/`) are preserved alongside new `hmapi/` prefixed filters.
+- **BACKWARD COMPATIBILITY:** The plugin now intelligently sends the correct nonce with the request header, ensuring compatibility with legacy themes.
+- **DOCUMENTATION:** Updated `README.md` and inline documentation to reflect the latest changes.
+
 # 1.3.0 / 2025-05-11
 - Updated HTMX, HTMX extensions, Hyperscript and Alpine.js to their latest versions.
 - Added the ability to use this plugin as a library, using composer. This allows you to use HTMX in your own plugins or themes, without the need to install this plugin. The plugin/library will determine if a greater instance of itself is already loaded. If so, it will use that instance. Otherwise, it will load a new one. So, no issues with multiple instances of the same library on different plugins or themes.

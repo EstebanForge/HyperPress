@@ -1,1 +1,0 @@
-See https://htmx.org/extensions/htmx-1-compat/, or https://github.com/bigskysoftware/htmx/blob/master/www/content/extensions/htmx-1-compat.md
