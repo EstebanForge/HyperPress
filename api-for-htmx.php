@@ -15,7 +15,7 @@ declare(strict_types=1);
  * Domain Path: /languages
  * Requires at least: 6.4
  * Tested up to: 6.9
- * Requires PHP: 8.1.
+ * Requires PHP: 8.2.
  */
 
 // Exit if accessed directly.
@@ -88,8 +88,8 @@ if (!function_exists('hmapi_run_initialization_logic')) {
         // --- End Backward Compatibility Aliases ---
 
         // Composer autoloader
-        if (file_exists(HMAPI_ABSPATH . 'vendor/autoload.php')) {
-            require_once HMAPI_ABSPATH . 'vendor/autoload.php';
+        if (file_exists(HMAPI_ABSPATH . 'vendor-dist/autoload.php')) {
+            require_once HMAPI_ABSPATH . 'vendor-dist/autoload.php';
             // Helpers
             require_once HMAPI_ABSPATH . 'includes/helpers.php';
         } else {

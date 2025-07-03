@@ -302,3 +302,23 @@ function hxwp_validate_request($hxvals = null, $action = null)
 
     return hmapi_validate_request($hxvals, $action);
 }
+
+/**
+ * Detect if the plugin is running as a library (not as an active plugin).
+ *
+ * @return bool
+ */
+function hmapi_is_library_mode(): bool
+{
+    // Check if plugin is in active_plugins
+    if (defined('HMAPI_BASENAME')) {
+        $active_plugins = apply_filters('active_plugins', get_option('active_plugins', []));
+        if (in_array(HMAPI_BASENAME, $active_plugins, true)) {
+            return false; // Plugin is active, not in library mode
+        }
+    }
+
+    // If we reach here, plugin is not in active plugins list
+    // This means it's loaded as a library
+    return true;
+}

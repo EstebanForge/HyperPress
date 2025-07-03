@@ -4,147 +4,160 @@ declare(strict_types=1);
 
 namespace HMApi\Admin;
 
-use Jeffreyvr\WPSettings\Options\OptionAbstract;
+// Exit if accessed directly.
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+use HMApi\Jeffreyvr\WPSettings\Options\OptionAbstract;
 
 /**
- * Unified Custom Options for WP Settings Library.
+ * WPSettingsOptions Class.
+ * Custom option type for displaying information in WPSettings.
  *
- * This class provides flexible display-only options for the WP Settings library,
- * supporting multiple content types:
- * - Info cards with styled display for API endpoints, status info, etc.
- * - Raw HTML content for custom layouts and information
- * - Debug tables for technical information
- *
- * The option type is determined by which arguments are provided.
- *
- * @since 1.3.0
+ * @since 2.0.0
  */
 class WPSettingsOptions extends OptionAbstract
 {
-    /**
-     * These options don't store data, so no sanitization needed.
-     *
-     * @param mixed $value The value to sanitize.
-     * @return string Empty string since display options don't store data.
-     */
-    public function sanitize($value): string
-    {
-        return '';
-    }
+    public $type = 'display';
 
     /**
-     * These options don't store data, so validation always passes.
+     * Render the option.
      *
-     * @param mixed $value The value to validate.
-     * @return bool Always returns true.
-     */
-    public function validate($value): bool
-    {
-        return true;
-    }
-
-    /**
-     * Renders the appropriate content based on the provided arguments.
-     *
-     * Supports multiple content types:
-     * - Info card: When 'api_url', 'title', and 'description' are provided
-     * - Raw HTML: When 'content' is provided
-     * - Debug table: When 'debug_data' is provided
-     *
-     * @return string The rendered HTML content.
+     * @return string
      */
     public function render(): string
     {
-        // Info Card rendering (for API endpoints, status info, etc.)
-        if ($this->get_arg('api_url') && $this->get_arg('title')) {
-            return $this->render_info_card();
+        $html = '';
+
+        // Check for specific content types to render
+        if (isset($this->arguments['content'])) {
+            $html .= $this->render_content();
+        } elseif (isset($this->arguments['api_url'])) {
+            $html .= $this->render_api_url_info();
+        } elseif (isset($this->arguments['debug_data'])) {
+            $html .= $this->render_debug_table();
         }
 
-        // Debug table rendering
-        if ($this->get_arg('debug_data')) {
-            return $this->render_debug_table();
-        }
-
-        // Raw HTML content rendering
-        return $this->get_arg('content', '');
+        return $html;
     }
 
     /**
-     * Renders an info card with styled display.
+     * Render general content.
      *
-     * @return string The rendered info card HTML.
+     * @return string
      */
-    private function render_info_card(): string
+    private function render_content(): string
     {
-        $api_url = $this->get_arg('api_url', '');
-        $title = $this->get_arg('title', '');
-        $description = $this->get_arg('description', '');
+        $content = $this->arguments['content'] ?? '';
+        $title = $this->arguments['title'] ?? '';
+        $description = $this->arguments['description'] ?? '';
+        $html = '';
 
-        return sprintf(
-            '<div class="hmapi-info-card" style="background: #f6f7f7; border: 1px solid #c3c4c7; border-left: 4px solid #00a32a; border-radius: 4px; padding: 12px; margin: 1rem 0; box-shadow: 0 1px 1px rgba(0,0,0,0.04);">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                    <span style="color: #00a32a; font-size: 16px;">🔗</span>
-                    <strong style="color: #1d2327; font-size: 14px;">%s</strong>
-                </div>
-                <code style="background: #fff; border: 1px solid #c3c4c7; border-radius: 3px; padding: 8px 10px; font-family: Consolas, Monaco, monospace; font-size: 13px; display: block; word-break: break-all; color: #2271b1; cursor: text; user-select: all;">%s</code>
-                <p style="margin: 10px 0 0 0; font-size: 13px; color: #646970; line-height: 1.4;">%s</p>
-            </div>',
-            esc_html($title),
-            esc_html($api_url),
-            esc_html($description)
-        );
+        if (!empty($title)) {
+            $html .= '<h3>' . esc_html($title) . '</h3>';
+        }
+        if (is_string($content) && !empty($content)) {
+            $html .= '<div>' . wp_kses_post($content) . '</div>'; // Allow HTML in content
+        }
+        if (!empty($description)) {
+            $html .= '<p class="description">' . esc_html($description) . '</p>';
+        }
+
+        return $html;
     }
 
     /**
-     * Renders a debug table with technical information.
+     * Render API URL information with a copy button.
      *
-     * @return string The rendered debug table HTML.
+     * @return string
+     */
+    private function render_api_url_info(): string
+    {
+        $api_url = $this->arguments['api_url'] ?? '';
+        $title = $this->arguments['title'] ?? esc_html__('API Endpoint URL', 'api-for-htmx');
+        $description = $this->arguments['description'] ?? '';
+
+        $html = '<h3>' . esc_html($title) . '</h3>';
+        $html .= '<div style="display: flex; align-items: center; gap: 10px;">';
+        $html .= '  <input type="text" readonly value="' . esc_attr($api_url) . '" class="large-text" id="hmapi-api-url-field">';
+        $html .= '  <button type="button" class="button" onclick="hmapiCopyText(\'hmapi-api-url-field\')">' . esc_html__('Copy', 'api-for-htmx') . '</button>';
+        $html .= '</div>';
+        if (!empty($description)) {
+            $html .= '<p class="description">' . esc_html($description) . '</p>';
+        }
+        // Add simple JS for copy functionality
+        $html .= "<script>
+            function hmapiCopyText(elementId) {
+                var copyText = document.getElementById(elementId);
+                copyText.select();
+                copyText.setSelectionRange(0, 99999); /* For mobile devices */
+                document.execCommand('copy');
+                // Optional: Add some visual feedback, like changing button text
+                var button = copyText.nextElementSibling;
+                var originalText = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(function() { button.textContent = originalText; }, 2000);
+            }
+        </script>";
+
+        return $html;
+    }
+
+    /**
+     * Render debug data as a table.
+     *
+     * @return string
      */
     private function render_debug_table(): string
     {
-        $debug_data = $this->get_arg('debug_data', []);
-        $table_title = $this->get_arg('table_title', esc_html__('Debug Information', 'api-for-htmx'));
+        $debug_data = $this->arguments['debug_data'] ?? [];
+        $table_title = $this->arguments['table_title'] ?? '';
+        $table_headers = $this->arguments['table_headers'] ?? []; // Expects array of ['text' => 'Header', 'style' => 'width: 100px;']
+        $html = '';
 
-        if (empty($debug_data)) {
-            return '<div class="notice notice-warning inline"><p>' . esc_html__('No debug data available.', 'api-for-htmx') . '</p></div>';
+        if (!empty($table_title)) {
+            $html .= '<h4>' . esc_html($table_title) . '</h4>';
         }
 
-        $html = '<h3>' . esc_html($table_title) . '</h3>';
-        $html .= '<table class="wp-list-table widefat fixed striped" style="max-width: 100%;">';
+        if (empty($debug_data)) {
+            return $html . '<p>' . esc_html__('No data available.', 'api-for-htmx') . '</p>';
+        }
 
-        // Add table headers if provided
-        if ($this->get_arg('table_headers')) {
-            $headers = $this->get_arg('table_headers');
+        $html .= '<table class="widefat striped" style="margin-bottom: 20px;">';
+
+        // Table Headers
+        if (!empty($table_headers)) {
             $html .= '<thead><tr>';
-            foreach ($headers as $header) {
+            foreach ($table_headers as $header) {
                 $style = isset($header['style']) ? ' style="' . esc_attr($header['style']) . '"' : '';
                 $html .= '<th' . $style . '>' . esc_html($header['text']) . '</th>';
             }
             $html .= '</tr></thead>';
-        }
-
-        $html .= '<tbody>';
-
-        foreach ($debug_data as $key => $value) {
-            if (is_array($value)) {
-                // Handle nested arrays (like CDN URLs with version info)
-                if (isset($value['version']) && isset($value['url'])) {
-                    $html .= '<tr>';
-                    $html .= '<td><strong>' . esc_html(ucfirst(str_replace('_', ' ', $key))) . '</strong></td>';
-                    $html .= '<td><code>' . esc_html($value['version']) . '</code></td>';
-                    $html .= '<td><code style="word-break: break-all; font-size: 11px;">' . esc_html($value['url']) . '</code></td>';
-                    $html .= '</tr>';
-                }
-            } else {
-                // Simple key-value pairs
-                $html .= '<tr>';
-                $html .= '<td><strong>' . esc_html($key) . '</strong></td>';
-                $html .= '<td>' . esc_html($value) . '</td>';
-                $html .= '</tr>';
+        } elseif (is_array(reset($debug_data))) { // If data is an array of arrays, try to infer headers
+            $html .= '<thead><tr>';
+            foreach (array_keys(reset($debug_data)) as $header_key) {
+                $html .= '<th>' . esc_html(ucwords(str_replace('_', ' ', $header_key))) . '</th>';
             }
+            $html .= '</tr></thead>';
         }
 
-        $html .= '</tbody></table>';
+        // Table Body
+        $html .= '<tbody>';
+        foreach ($debug_data as $key_or_row => $value_or_cells) {
+            $html .= '<tr>';
+            if (is_array($value_or_cells)) { // Data is structured for multiple columns
+                foreach ($value_or_cells as $cell_value) {
+                    $html .= '<td>' . esc_html((string) $cell_value) . '</td>';
+                }
+            } else { // Simple key-value pairs for two columns
+                $html .= '<td><strong>' . esc_html((string) $key_or_row) . '</strong></td>';
+                $html .= '<td>' . esc_html((string) $value_or_cells) . '</td>';
+            }
+            $html .= '</tr>';
+        }
+        $html .= '</tbody>';
+        $html .= '</table>';
 
         return $html;
     }

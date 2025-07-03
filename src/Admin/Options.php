@@ -8,7 +8,9 @@
 
 namespace HMApi\Admin;
 
-use Jeffreyvr\WPSettings\WPSettings;
+use HMApi\Jeffreyvr\WPSettings\WPSettings;
+use HMApi\Libraries\Datastar;
+use HMApi\Libraries\HTMX;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -47,6 +49,22 @@ class Options
     private $settings;
 
     /**
+     * Datastar SDK Manager instance.
+     *
+     * @since 2.0.2
+     * @var Datastar
+     */
+    private $datastar_manager;
+
+    /**
+     * HTMX Extensions Manager instance.
+     *
+     * @since 2.0.2
+     * @var HTMX
+     */
+    private $htmx_manager;
+
+    /**
      * Options constructor.
      * Initializes admin hooks and settings page functionality.
      *
@@ -57,12 +75,38 @@ class Options
     public function __construct($main)
     {
         $this->main = $main;
+        $this->datastar_manager = new Datastar();
+        $this->htmx_manager = new HTMX();
 
-        add_action('admin_init', [$this, 'page_init'], 100); // Low priority to ensure WP is fully initialized
-        add_action('admin_menu', [$this, 'ensure_admin_menu'], 50); // Ensure menu registration
-        add_filter('plugin_action_links_' . HMAPI_BASENAME, [$this, 'plugin_action_links']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
+        if (!hmapi_is_library_mode()) {
+            // Register custom option type early, before WPSettings is initialized
+            add_filter('wp_settings_option_type_map', [$this, 'register_custom_option_types']);
+
+            add_action('admin_init', [$this, 'page_init'], 100); // Low priority to ensure WP is fully initialized
+            add_action('admin_menu', [$this, 'ensure_admin_menu'], 50); // Ensure menu registration
+            add_filter('plugin_action_links_' . HMAPI_BASENAME, [$this, 'plugin_action_links']);
+            add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
         }
+    }
+
+    /**
+     * Register custom option types for WPSettings.
+     *
+     * @since 2.0.0
+     *
+     * @param array $options Existing option types
+     * @return array Modified option types
+     */
+    public function register_custom_option_types($options)
+    {
+        // Ensure WPSettingsOptions class is loaded
+        if (!class_exists('HMApi\\Admin\\WPSettingsOptions')) {
+            require_once HMAPI_ABSPATH . 'src/Admin/WPSettingsOptions.php';
+        }
+        $options['display'] = 'HMApi\\Admin\\WPSettingsOptions';
+
+        return $options;
+    }
 
     /**
      * Ensure admin menu registration.
@@ -73,7 +117,7 @@ class Options
      *
      * @return void
      */
-        public function ensure_admin_menu()
+    public function ensure_admin_menu()
     {
         // Ensure settings are initialized
         if (!isset($this->settings)) {
@@ -165,6 +209,7 @@ class Options
      *
      * @since 2023-11-22
      * @since 1.3.0 Refactored to use centralized URL management for dynamic extension discovery
+     * @since 2.0.2 Moved to HTMX class
      *
      * @return array {
      *     Array of available HTMX extensions with descriptions.
@@ -187,46 +232,47 @@ class Options
      */
     private function get_htmx_extensions(): array
     {
-        $cdn_urls = $this->main->get_cdn_urls();
-        $available_extensions = $cdn_urls['htmx_extensions'] ?? [];
+        return $this->htmx_manager::get_extensions($this->main);
+    }
 
-        // Extension descriptions - these remain as fallbacks and for better UX
-        $extension_descriptions = [
-            // Official extensions
-            'sse'                   => esc_html__('Server send events. Uni-directional server push messaging via EventSource', 'api-for-htmx'),
-            'ws'                    => esc_html__('WebSockets. Bi-directional connection to WebSocket servers', 'api-for-htmx'),
-            'htmx-1-compat'         => esc_html__('HTMX 1.x compatibility mode. Rolls back most of the behavioral changes of htmx 2 to the htmx 1 defaults.', 'api-for-htmx'),
-            'preload'               => esc_html__('Preloads selected href and hx-get targets based on rules you control.', 'api-for-htmx'),
-            'response-targets'      => esc_html__('Allows to specify different target elements to be swapped when different HTTP response codes are received', 'api-for-htmx'),
-            'head-support'          => esc_html__('Support for head tag merging when using HTMX swapping', 'api-for-htmx'),
-            'loading-states'        => esc_html__('Allows you to disable inputs, add and remove CSS classes, etc. while a request is in-flight', 'api-for-htmx'),
-            // Community extensions
-            'ajax-header'           => esc_html__('Includes the commonly-used X-Requested-With header that identifies ajax requests in many backend frameworks', 'api-for-htmx'),
-            'alpine-morph'          => esc_html__('An extension for using the Alpine.js morph plugin as the swapping mechanism in htmx.', 'api-for-htmx'),
-            'class-tools'           => esc_html__('An extension for manipulating timed addition and removal of classes on HTML elements', 'api-for-htmx'),
-            'client-side-templates' => esc_html__('Support for client side template processing of JSON/XML responses', 'api-for-htmx'),
-            'debug'                 => esc_html__('An extension for debugging of a particular element using htmx', 'api-for-htmx'),
-            'event-header'          => esc_html__('Includes a JSON serialized version of the triggering event, if any', 'api-for-htmx'),
-            'include-vals'          => esc_html__('Allows you to include additional values in a request', 'api-for-htmx'),
-            'disable-element'       => esc_html__('Allows you to disable elements during requests', 'api-for-htmx'),
-            'method-override'       => esc_html__('Supports method override via hidden input or header', 'api-for-htmx'),
-            'multi-swap'            => esc_html__('Allows you to swap multiple elements with different swap strategies', 'api-for-htmx'),
-            'path-deps'             => esc_html__('Allows you to declare path dependencies for requests', 'api-for-htmx'),
-            'path-params'           => esc_html__('Allows you to use path parameters in your URLs', 'api-for-htmx'),
-            'restored'              => esc_html__('Allows you to trigger events when elements are restored from cache', 'api-for-htmx'),
-            'json-enc'              => esc_html__('Allows encoding request bodies as JSON', 'api-for-htmx'),
-            'morphdom-swap'         => esc_html__('Allows you to use morphdom as the swapping mechanism', 'api-for-htmx'),
-            'remove-me'             => esc_html__('Allows you to remove elements from the DOM after requests', 'api-for-htmx'),
-        ];
+    /**
+     * Get Datastar SDK status information.
+     *
+     * Checks if the Datastar PHP SDK is available and provides status information
+     * for display in the admin interface. Also handles automatic loading when
+     * Datastar is selected as the active library.
+     *
+     * @since 2.0.1
+     * @since 2.0.2 Moved to Datastar class
+     *
+     * @return array {
+     *     SDK status information array.
+     *
+     *     @type bool   $loaded  Whether the SDK is loaded and available.
+     *     @type string $version SDK version if available, empty if not.
+     *     @type string $html    HTML content for admin display.
+     *     @type string $message Status message for logging/debugging.
+     * }
+     */
+    private function get_datastar_sdk_status(): array
+    {
+        return $this->datastar_manager::get_sdk_status($this->option_name);
+    }
 
-        // Build the final array with only extensions that are available in CDN URLs
-        $result = [];
-        foreach (array_keys($available_extensions) as $extension_key) {
-            $result[$extension_key] = $extension_descriptions[$extension_key] ??
-                sprintf(esc_html__('HTMX %s extension', 'api-for-htmx'), $extension_key);
-        }
-
-        return $result;
+    /**
+     * Load Datastar PHP SDK if available.
+     *
+     * Attempts to load the Datastar PHP SDK through Composer autoloader.
+     * Only loads if not already available to prevent conflicts.
+     *
+     * @since 2.0.1
+     * @since 2.0.2 Moved to Datastar class
+     *
+     * @return bool True if SDK is loaded and available, false otherwise.
+     */
+    private function load_datastar_sdk(): bool
+    {
+        return $this->datastar_manager::load_sdk();
     }
 
     /**
@@ -237,7 +283,7 @@ class Options
      *
      * @return void
      */
-        public function page_init()
+    public function page_init()
     {
         $this->settings = new WPSettings(esc_html__('Hypermedia API Options', 'api-for-htmx'), 'hypermedia-api-options');
         $this->settings->set_option_name($this->option_name);
@@ -256,16 +302,7 @@ class Options
             'description' => esc_html__('Configure which hypermedia library to use and CDN loading preferences.', 'api-for-htmx'),
         ]);
 
-        // Add custom display option type
-        add_filter('wp_settings_option_type_map', function ($options) {
-            // Ensure WPSettingsOptions class is loaded
-            if (!class_exists('HMApi\\Admin\\WPSettingsOptions')) {
-                require_once HMAPI_ABSPATH . 'src/Admin/WPSettingsOptions.php';
-            }
-            $options['display'] = 'HMApi\\Admin\\WPSettingsOptions';
-
-            return $options;
-        });
+        // Custom option type is now registered in constructor
 
         $api_url = home_url('/' . HMAPI_ENDPOINT . '/' . HMAPI_ENDPOINT_VERSION . '/');
         $general_section->add_option('display', [
@@ -353,6 +390,15 @@ class Options
             'description' => esc_html__('Load Datastar.js in the WordPress admin area.', 'api-for-htmx'),
         ]);
 
+        // Add Datastar PHP SDK information
+        $datastar_sdk_status = $this->get_datastar_sdk_status();
+        $datastar_section->add_option('display', [
+            'name' => 'datastar_sdk_info',
+            'content' => $datastar_sdk_status['html'],
+            'title' => esc_html__('Datastar PHP SDK', 'api-for-htmx'),
+            'description' => esc_html__('Server-side SDK for generating Datastar responses and handling signals.', 'api-for-htmx'),
+        ]);
+
         $htmx_extensions = $this->get_htmx_extensions();
         foreach ($htmx_extensions as $key => $extension_desc) {
             $extensions_section->add_option('checkbox', [
@@ -410,7 +456,7 @@ class Options
         // Additional debug information
         $additional_debug = [
             esc_html__('Plugin Version:', 'api-for-htmx') => defined('HMAPI_VERSION') ? HMAPI_VERSION : 'Unknown',
-            esc_html__('Total Libraries:', 'api-for-htmx') => count($cdn_urls)-1, // -1 for the htmx extensions on the array
+            esc_html__('Total Libraries:', 'api-for-htmx') => count($cdn_urls) - 1, // -1 for the htmx extensions on the array
             esc_html__('Total Extensions:', 'api-for-htmx') => isset($cdn_urls['htmx_extensions']) ? count($cdn_urls['htmx_extensions']) : 0,
             esc_html__('Generated:', 'api-for-htmx') => current_time('mysql'),
         ];
@@ -470,7 +516,7 @@ class Options
                 $real_instance_path = wp_normalize_path($real_instance_path);
                 $real_plugin_dir = wp_normalize_path($real_plugin_dir);
 
-                                                // First, check if this looks like our main plugin file regardless of location
+                // First, check if this looks like our main plugin file regardless of location
                 $is_main_plugin_file = (
                     str_ends_with($real_instance_path, '/api-for-htmx.php') ||
                     str_ends_with($real_instance_path, '\\api-for-htmx.php') ||
