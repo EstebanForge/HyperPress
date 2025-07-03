@@ -32,7 +32,7 @@
                     "src/helpers.php"
                 ],
                 "psr-4": {
-                    "Adbar\\": "src"
+                    "HMApi\\Adbar\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -55,7 +55,7 @@
                 "issues": "https://github.com/adbario/php-dot-notation/issues",
                 "source": "https://github.com/adbario/php-dot-notation/tree/3.3.0"
             },
-            "install-path": "../adbario/php-dot-notation"
+            "install-path": "../../vendor-dist/adbario/php-dot-notation/"
         },
         {
             "name": "jeffreyvanrossum/wp-settings",
@@ -89,7 +89,7 @@
                     "src/helpers.php"
                 ],
                 "psr-4": {
-                    "Jeffreyvr\\WPSettings\\": "src"
+                    "HMApi\\Jeffreyvr\\WPSettings\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -117,7 +117,57 @@
                     "type": "github"
                 }
             ],
-            "install-path": "../jeffreyvanrossum/wp-settings"
+            "install-path": "../../vendor-dist/jeffreyvanrossum/wp-settings/"
+        },
+        {
+            "name": "starfederation/datastar-php",
+            "version": "1.0.0-beta.19",
+            "version_normalized": "1.0.0.0-beta19",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/starfederation/datastar-php.git",
+                "reference": "2b6923998d16ff272572be234b8730bf61f42742"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/starfederation/datastar-php/zipball/2b6923998d16ff272572be234b8730bf61f42742",
+                "reference": "2b6923998d16ff272572be234b8730bf61f42742",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "craftcms/ecs": "dev-main",
+                "craftcms/phpstan": "dev-main",
+                "pestphp/pest": "^3.5"
+            },
+            "time": "2025-05-06T22:31:23+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "HMApi\\starfederation\\datastar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "mit"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Croker",
+                    "homepage": "https://putyourlightson.com/",
+                    "role": "Author"
+                }
+            ],
+            "description": "A PHP SDK for working with Datastar.",
+            "support": {
+                "docs": "https://github.com/starfederation/datastar-php",
+                "issues": "https://github.com/starfederation/datastar-php/issues",
+                "source": "https://github.com/starfederation/datastar-php"
+            },
+            "install-path": "../../vendor-dist/starfederation/datastar-php/"
         }
     ],
     "dev": true,

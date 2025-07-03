@@ -64,6 +64,7 @@ class Render
         if (null === $actual_endpoint_key) {
             // Check if this might be a base endpoint access (without version)
             $this->handle_base_endpoint_access();
+
             return;
         }
 
@@ -105,6 +106,7 @@ class Render
     {
         if (empty($template_name)) {
             $this->show_developer_info_page('missing-template-name');
+
             return;
         }
 
@@ -113,12 +115,14 @@ class Render
 
         if (!$template_path) {
             $this->show_developer_info_page('invalid-route', $template_name);
+
             return;
         }
 
         // Check if the template exists
         if (!file_exists($template_path)) {
             $this->show_developer_info_page('template-not-found', $template_name, $template_path);
+
             return;
         }
 
@@ -133,7 +137,7 @@ class Render
     }
 
     /**
-     * Show developer-friendly information page for API endpoints
+     * Show developer-friendly information page for API endpoints.
      *
      * @since 2.0.0
      * @param string $error_type Type of error: 'missing-template-name', 'invalid-route', 'template-not-found', 'endpoint-info'
@@ -353,7 +357,7 @@ class Render
     }
 
     /**
-     * Handle access to base endpoints without version (e.g., /wp-html/ instead of /wp-html/v1/)
+     * Handle access to base endpoints without version (e.g., /wp-html/ instead of /wp-html/v1/).
      *
      * @since 2.0.0
      * @return void
@@ -377,6 +381,7 @@ class Render
             if (strpos($request_uri, $endpoint) !== false) {
                 // This is likely a base endpoint access, show helpful info
                 $this->show_developer_info_page('endpoint-info');
+
                 return;
             }
         }

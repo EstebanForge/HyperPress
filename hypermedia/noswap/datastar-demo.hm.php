@@ -59,7 +59,7 @@ if (!headers_sent()) {
     header('Content-Type: text/vnd.datastar');
 
     // Send a merge fragment that updates the store
-    echo "data: merge " . wp_json_encode($response_data) . "\n\n";
+    echo 'data: merge ' . wp_json_encode($response_data) . "\n\n";
 } else {
     // Fallback to standard response
     hmapi_send_header_response(

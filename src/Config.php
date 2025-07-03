@@ -20,6 +20,25 @@ if (!defined('ABSPATH')) {
 class Config
 {
     /**
+     * Get plugin options with programmatic configuration support.
+     *
+     * @since 2.0.0
+     * @return array
+     */
+    private function get_options(): array
+    {
+        $default_options = [
+            'active_hypermedia_library' => 'htmx',
+            'hmapi_meta_config_content' => '',
+        ];
+
+        // Apply filter to allow programmatic configuration
+        $default_options = apply_filters('hmapi/default_options', $default_options);
+
+        return get_option('hmapi_options', $default_options);
+    }
+
+    /**
      * Insert library-specific config meta tags into <head>.
      * Currently supports htmx-config meta tag.
      *
@@ -28,7 +47,7 @@ class Config
      */
     public function insert_config_meta_tag(): void
     {
-        $options = get_option('hmapi_options');
+        $options = $this->get_options();
         $active_library = $options['active_hypermedia_library'] ?? 'htmx'; // Default to htmx if not set
 
         // Only output htmx-config if HTMX is the active library

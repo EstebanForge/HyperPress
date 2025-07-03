@@ -14,15 +14,30 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.1",
-        "jeffreyvanrossum/wp-settings": "^1.2"
+        "jeffreyvanrossum/wp-settings": "^1.2",
+        "starfederation/datastar-php": "^1.0@beta"
     },
     "scripts": {
         "cs-fix": "php-cs-fixer fix",
+        "prod": [
+            "@cs-fix",
+            "@prefix-namespaces",
+            "@dump-autoload-prod"
+        ],
+        "dump-autoload-prod": "@php composer dump-autoload --optimize --no-dev",
+        "prefix-namespaces": "strauss",
         "post-install-cmd": [
-            "@cs-fix"
+            "@cs-fix",
+            "@prefix-namespaces",
+            "@dump-autoload-prod"
         ],
         "post-update-cmd": [
-            "@cs-fix"
+            "@cs-fix",
+            "@prefix-namespaces",
+            "@dump-autoload-prod"
+        ],
+        "post-autoload-dump": [
+            "strauss include-autoloader"
         ]
     },
     "autoload": {
@@ -36,13 +51,23 @@
     "extra": {
         "strauss": {
             "target_directory": "vendor-dist",
-            "namespace_prefix": "EstebanForgeHMApi\\",
+            "namespace_prefix": "HMApi\\",
             "classmap_prefix": "HMApi_",
             "constant_prefix": "HMApi_",
             "packages": [
-                "jeffreyvanrossum/wp-settings"
+                "jeffreyvanrossum/wp-settings",
+                "starfederation/datastar-php"
             ],
-            "override_autoload": [],
+            "override_autoload": {
+                "jeffreyvanrossum/wp-settings": {
+                    "psr-4": {
+                        "HMApi\\Jeffreyvr\\WPSettings\\": "src/"
+                    },
+                    "classmap": [
+                        "resources/"
+                    ]
+                }
+            },
             "delete_vendor_packages": true
         }
     }

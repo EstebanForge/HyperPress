@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita313c11744e7bb00222a21571d0c39da
+class ComposerStaticInitd5c8233ff79c1d96de55a511a11b627a
 {
     public static $files = array (
         'd767e4fc2dc52fe66584ab8c6684783e' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/helpers.php',
@@ -13,6 +13,10 @@ class ComposerStaticInita313c11744e7bb00222a21571d0c39da
     );
 
     public static $prefixLengthsPsr4 = array (
+        's' => 
+        array (
+            'starfederation\\datastar\\' => 24,
+        ),
         'J' => 
         array (
             'Jeffreyvr\\WPSettings\\' => 21,
@@ -28,6 +32,10 @@ class ComposerStaticInita313c11744e7bb00222a21571d0c39da
     );
 
     public static $prefixDirsPsr4 = array (
+        'starfederation\\datastar\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/starfederation/datastar-php/src',
+        ),
         'Jeffreyvr\\WPSettings\\' => 
         array (
             0 => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src',
@@ -43,48 +51,15 @@ class ComposerStaticInita313c11744e7bb00222a21571d0c39da
     );
 
     public static $classMap = array (
-        'Adbar\\Dot' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/Dot.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'HMApi\\Admin\\Activation' => __DIR__ . '/../..' . '/src/Admin/Activation.php',
-        'HMApi\\Admin\\Options' => __DIR__ . '/../..' . '/src/Admin/Options.php',
-        'HMApi\\Admin\\WPSettingsOptions' => __DIR__ . '/../..' . '/src/Admin/WPSettingsOptions.php',
-        'HMApi\\Assets' => __DIR__ . '/../..' . '/src/Assets.php',
-        'HMApi\\Compatibility' => __DIR__ . '/../..' . '/src/Compatibility.php',
-        'HMApi\\Config' => __DIR__ . '/../..' . '/src/Config.php',
-        'HMApi\\Main' => __DIR__ . '/../..' . '/src/Main.php',
-        'HMApi\\Render' => __DIR__ . '/../..' . '/src/Render.php',
-        'HMApi\\Router' => __DIR__ . '/../..' . '/src/Router.php',
-        'HMApi\\Theme' => __DIR__ . '/../..' . '/src/Theme.php',
-        'Jeffreyvr\\WPSettings\\EnqueueManager' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/EnqueueManager.php',
-        'Jeffreyvr\\WPSettings\\Enqueuer' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Enqueuer.php',
-        'Jeffreyvr\\WPSettings\\Error' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Error.php',
-        'Jeffreyvr\\WPSettings\\Flash' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Flash.php',
-        'Jeffreyvr\\WPSettings\\Option' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Option.php',
-        'Jeffreyvr\\WPSettings\\Options\\Checkbox' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Checkbox.php',
-        'Jeffreyvr\\WPSettings\\Options\\Choices' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Choices.php',
-        'Jeffreyvr\\WPSettings\\Options\\CodeEditor' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/CodeEditor.php',
-        'Jeffreyvr\\WPSettings\\Options\\Color' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Color.php',
-        'Jeffreyvr\\WPSettings\\Options\\Image' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Image.php',
-        'Jeffreyvr\\WPSettings\\Options\\Media' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Media.php',
-        'Jeffreyvr\\WPSettings\\Options\\OptionAbstract' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/OptionAbstract.php',
-        'Jeffreyvr\\WPSettings\\Options\\Select' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Select.php',
-        'Jeffreyvr\\WPSettings\\Options\\SelectMultiple' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/SelectMultiple.php',
-        'Jeffreyvr\\WPSettings\\Options\\Text' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Text.php',
-        'Jeffreyvr\\WPSettings\\Options\\Textarea' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Textarea.php',
-        'Jeffreyvr\\WPSettings\\Options\\Video' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Video.php',
-        'Jeffreyvr\\WPSettings\\Options\\WPEditor' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/WPEditor.php',
-        'Jeffreyvr\\WPSettings\\Section' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Section.php',
-        'Jeffreyvr\\WPSettings\\Tab' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Tab.php',
-        'Jeffreyvr\\WPSettings\\Traits\\HasOptionLevel' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Traits/HasOptionLevel.php',
-        'Jeffreyvr\\WPSettings\\WPSettings' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/WPSettings.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita313c11744e7bb00222a21571d0c39da::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita313c11744e7bb00222a21571d0c39da::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInita313c11744e7bb00222a21571d0c39da::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd5c8233ff79c1d96de55a511a11b627a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd5c8233ff79c1d96de55a511a11b627a::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitd5c8233ff79c1d96de55a511a11b627a::$classMap;
 
         }, null, ClassLoader::class);
     }

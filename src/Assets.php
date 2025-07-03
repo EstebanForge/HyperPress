@@ -63,8 +63,6 @@ class Assets
     private function get_options()
     {
         if ($this->options === null) {
-            // Rely on Admin\Options to save complete options with defaults.
-            // Fallback defaults here are minimal and mainly for key existence if needed.
             $default_options_fallback = [
                 'active_library'        => 'htmx',
                 'load_from_cdn'         => 0,
@@ -78,6 +76,10 @@ class Assets
                 'load_datastar'         => 0,
                 'load_datastar_backend' => 0,
             ];
+
+            // Apply filter to allow programmatic configuration
+            $default_options_fallback = apply_filters('hmapi/default_options', $default_options_fallback);
+
             $this->options = get_option('hmapi_options', $default_options_fallback);
         }
 
@@ -504,8 +506,8 @@ class Assets
         }
 
         // Close the IIFE
-        $inline_script_parts[] = "
-})();";
+        $inline_script_parts[] = '
+})();';
 
         // Combine all script parts
         $complete_inline_script = implode('', $inline_script_parts);

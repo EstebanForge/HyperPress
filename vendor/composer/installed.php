@@ -37,5 +37,14 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'starfederation/datastar-php' => array(
+            'pretty_version' => '1.0.0-beta.19',
+            'version' => '1.0.0.0-beta19',
+            'reference' => '2b6923998d16ff272572be234b8730bf61f42742',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../starfederation/datastar-php',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
     ),
 );
