@@ -8,14 +8,21 @@
 - **NEW:** Template engine now supports both `hypermedia` (primary) and `htmx-templates` (legacy) theme directories.
 - **NEW:** Added `hmapi_get_endpoint_url()` helper function to get the API endpoint URL.
 - **NEW:** Added `hmapi_enpoint_url()` helper function to echo the API endpoint URL in templates.
+- **NEW:** Added `hmapi_is_library_mode()` helper function to detect when plugin is running as a Composer library.
+- **NEW:** Comprehensive programmatic configuration via `hmapi/default_options` filter for all plugin settings.
+- **NEW:** Library mode automatically hides admin interface when plugin is used as a Composer dependency.
+- **NEW:** Enhanced Composer library integration with automatic version conflict resolution.
+- **NEW:** Fixed Strauss namespace prefixing to include WPSettings template files via `override_autoload` configuration.
 - **IMPROVED:** Enhanced admin interface with a new informational card displaying the API endpoint URL.
 - **IMPROVED:** The `$hmvals` variable is now available in templates, containing the request parameters.
+- **IMPROVED:** Better detection of library vs plugin mode based on WordPress active_plugins list.
+- **IMPROVED:** Complete documentation for programmatic configuration with real-world examples.
 - **BACKWARD COMPATIBILITY:** All `hxwp_*` functions are maintained as deprecated aliases for `hmapi_*` functions.
 - **BACKWARD COMPATIBILITY:** The legacy `$hxvals` variable is still available in templates for backward compatibility.
 - **BACKWARD COMPATIBILITY:** Dual nonce system supports both `hmapi_nonce` (new) and `hxwp_nonce` (legacy).
 - **BACKWARD COMPATIBILITY:** Legacy filter hooks (`hxwp/`) are preserved alongside new `hmapi/` prefixed filters.
 - **BACKWARD COMPATIBILITY:** The plugin now intelligently sends the correct nonce with the request header, ensuring compatibility with legacy themes.
-- **DOCUMENTATION:** Updated `README.md` and inline documentation to reflect the latest changes.
+- **DOCUMENTATION:** Updated `README.md` with comprehensive library usage guide and reorganized structure for better flow.
 
 # 1.3.0 / 2025-05-11
 - Updated HTMX, HTMX extensions, Hyperscript and Alpine.js to their latest versions.

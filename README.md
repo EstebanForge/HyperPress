@@ -247,6 +247,201 @@ echo hmapi_get_endpoint_url( 'live-search' );
 echo hmapi_get_endpoint_url( 'subfolder/my-listing' );
 ```
 
+## Using as a Composer Library (Programmatic Configuration)
+
+If you include this plugin as a Composer dependency in your own plugin or theme, it will automatically avoid loading multiple copies and only the latest version will be initialized.
+
+### Detecting Library Mode
+
+The plugin exposes a helper function `hmapi_is_library_mode()` to detect if it is running as a library (not as an active plugin). This is determined automatically based on whether the plugin is in the active plugins list and whether it is running in the admin area.
+
+When in library mode, the plugin will not register its admin options/settings page in wp-admin.
+
+### Programmatic Configuration via Filters
+
+You can configure the plugin programmatically using WordPress filters instead of using the admin interface. This is particularly useful when the plugin is used as a library or when you want to force specific configurations.
+
+All plugin settings can be controlled using the `hmapi/default_options` filter. This filter allows you to override any default option value:
+
+```php
+add_filter('hmapi/default_options', function($defaults) {
+    // Configure the active hypermedia library
+    $defaults['active_library'] = 'htmx'; // Options: 'htmx', 'alpinejs', 'datastar'
+
+    // Configure CDN loading
+    $defaults['load_from_cdn'] = false; // true = CDN, false = local files
+
+    // HTMX-specific settings
+    $defaults['load_hyperscript'] = true; // Load Hyperscript with HTMX
+    $defaults['load_alpinejs_with_htmx'] = false; // Load Alpine.js with HTMX
+    $defaults['set_htmx_hxboost'] = false; // Auto add hx-boost="true" to body
+    $defaults['load_htmx_backend'] = false; // Load HTMX in WP Admin
+
+    // Alpine.js settings
+    $defaults['load_alpinejs_backend'] = false; // Load Alpine.js in WP Admin
+
+    // Datastar settings
+    $defaults['load_datastar_backend'] = false; // Load Datastar in WP Admin
+
+    // HTMX Extensions (enable any extension by setting to true)
+    $defaults['load_extension_ajax-header'] = false;
+    $defaults['load_extension_alpine-morph'] = false;
+    $defaults['load_extension_class-tools'] = false;
+    $defaults['load_extension_client-side-templates'] = false;
+    $defaults['load_extension_debug'] = false;
+    $defaults['load_extension_disable'] = false;
+    $defaults['load_extension_head-support'] = false;
+    $defaults['load_extension_include-vals'] = false;
+    $defaults['load_extension_json-enc'] = false;
+    $defaults['load_extension_loading-states'] = false;
+    $defaults['load_extension_method-override'] = false;
+    $defaults['load_extension_morphdom-swap'] = false;
+    $defaults['load_extension_multi-swap'] = false;
+    $defaults['load_extension_path-deps'] = false;
+    $defaults['load_extension_preload'] = false;
+    $defaults['load_extension_remove-me'] = false;
+    $defaults['load_extension_response-targets'] = false;
+    $defaults['load_extension_restored'] = false;
+    $defaults['load_extension_sse'] = false;
+    $defaults['load_extension_web-sockets'] = false;
+    $defaults['load_extension_ws'] = false;
+
+    return $defaults;
+});
+```
+
+#### Common Configuration Examples
+
+**Complete HTMX Setup with Extensions:**
+```php
+add_filter('hmapi/default_options', function($defaults) {
+    $defaults['active_library'] = 'htmx';
+    $defaults['load_from_cdn'] = false; // Use local files
+    $defaults['load_hyperscript'] = true;
+    $defaults['set_htmx_hxboost'] = true; // Progressive enhancement
+    $defaults['load_htmx_backend'] = true; // Use in admin too
+
+    // Enable commonly used HTMX extensions
+    $defaults['load_extension_debug'] = true;
+    $defaults['load_extension_loading-states'] = true;
+    $defaults['load_extension_preload'] = true;
+    $defaults['load_extension_sse'] = true;
+
+    return $defaults;
+});
+```
+
+**Alpine Ajax Setup:**
+```php
+add_filter('hmapi/default_options', function($defaults) {
+    $defaults['active_library'] = 'alpinejs';
+    $defaults['load_from_cdn'] = true; // Use CDN for latest version
+    $defaults['load_alpinejs_backend'] = true;
+
+    return $defaults;
+});
+```
+
+**Datastar Configuration:**
+```php
+add_filter('hmapi/default_options', function($defaults) {
+    $defaults['active_library'] = 'datastar';
+    $defaults['load_from_cdn'] = false;
+    $defaults['load_datastar_backend'] = true;
+
+    return $defaults;
+});
+```
+
+**Production-Ready Configuration (CDN with specific extensions):**
+```php
+add_filter('hmapi/default_options', function($defaults) {
+    $defaults['active_library'] = 'htmx';
+    $defaults['load_from_cdn'] = true; // Better performance
+    $defaults['load_hyperscript'] = true;
+    $defaults['set_htmx_hxboost'] = true;
+
+    // Enable production-useful extensions
+    $defaults['load_extension_loading-states'] = true;
+    $defaults['load_extension_preload'] = true;
+    $defaults['load_extension_response-targets'] = true;
+
+    return $defaults;
+});
+```
+
+#### Register Custom Template Paths
+
+Register custom template paths for your plugin or theme:
+
+```php
+add_filter('hmapi/register_template_path', function($paths) {
+    $paths['my-plugin'] = plugin_dir_path(__FILE__) . 'hypermedia/';
+    $paths['my-theme'] = get_template_directory() . '/custom-hypermedia/';
+    return $paths;
+});
+```
+
+#### Customize Sanitization
+
+Modify the sanitization process for parameters:
+
+```php
+// Customize parameter key sanitization
+add_filter('hmapi/sanitize_param_key', function($sanitized_key, $original_key) {
+    // Custom sanitization logic
+    return $sanitized_key;
+}, 10, 2);
+
+// Customize parameter value sanitization
+add_filter('hmapi/sanitize_param_value', function($sanitized_value, $original_value) {
+    // Custom sanitization logic
+    return $sanitized_value;
+}, 10, 2);
+```
+
+#### Disable Admin Interface Completely
+
+If you want to configure everything programmatically and hide the admin interface:
+
+```php
+// Force library mode to hide admin interface
+add_filter('hmapi/default_options', function($defaults) {
+    // Your configuration here
+    return $defaults;
+});
+
+// Optional: Remove the admin menu entirely (if you have admin access)
+add_action('admin_menu', function() {
+    remove_submenu_page('options-general.php', 'hypermedia-api-options');
+}, 999);
+```
+
+#### Environment-Based Configuration
+
+Configure different settings based on environment:
+
+```php
+add_filter('hmapi/default_options', function($defaults) {
+    if (wp_get_environment_type() === 'production') {
+        // Production settings
+        $defaults['active_library'] = 'htmx';
+        $defaults['load_from_cdn'] = true;
+        $defaults['load_extension_debug'] = false;
+    } else {
+        // Development settings
+        $defaults['active_library'] = 'htmx';
+        $defaults['load_from_cdn'] = false; // Local files for offline dev
+        $defaults['load_extension_debug'] = true;
+        $defaults['load_htmx_backend'] = true; // Easier debugging
+    }
+
+    return $defaults;
+});
+```
+
+**Note:** All filters should be added before the `plugins_loaded` action fires, preferably in your plugin's main file or theme's `functions.php`.
+
 ## Security
 
 Every call to the `wp-html` endpoint will automatically check for a valid nonce. If the nonce is not valid, the call will be rejected.
