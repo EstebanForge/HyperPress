@@ -428,26 +428,18 @@ class Assets
         // Alpine Ajax Configuration
         if ($alpine_ajax_loaded) {
             $inline_script_parts[] = "
-    // Alpine Ajax: Auto-configure nonces for all requests
+    // Alpine Ajax: Auto-configure nonces using official method
     document.addEventListener('alpine:init', function() {
-        if (typeof Alpine !== 'undefined' && Alpine.magic) {
-            // Override the default \$ajax magic to include nonces
-            const originalAjax = Alpine.magic('ajax');
-            Alpine.magic('ajax', function() {
-                return function(url, options = {}) {
-                    // Ensure headers object exists
-                    options.headers = options.headers || {};
-
-                    // Add nonce if not already present
-                    const nonce = getHmapiNonce();
-                    if (nonce && !options.headers['X-WP-Nonce']) {
-                        options.headers['X-WP-Nonce'] = nonce;
+        if (typeof Alpine !== 'undefined' && Alpine.ajaxConfig) {
+            // Use Alpine Ajax's official global configuration
+            const nonce = getHmapiNonce();
+            if (nonce) {
+                Alpine.ajaxConfig({
+                    headers: {
+                        'X-WP-Nonce': nonce
                     }
-
-                    // Call the original \$ajax function
-                    return originalAjax.call(this, url, options);
-                };
-            });
+                });
+            }
         }
     });";
         }
@@ -455,54 +447,19 @@ class Assets
         // Datastar Configuration
         if ($datastar_loaded) {
             $inline_script_parts[] = "
-    // Datastar: Auto-configure nonces for all requests
-    if (typeof window.ds !== 'undefined') {
-        // Override Datastar's fetch functions to include nonces
-        const originalGet = window.ds.get || window.\$\$get;
-        const originalPost = window.ds.post || window.\$\$post;
-        const originalPut = window.ds.put || window.\$\$put;
-        const originalPatch = window.ds.patch || window.\$\$patch;
-        const originalDelete = window.ds.delete || window.\$\$delete;
-
-        function addNonceToHeaders(options = {}) {
-            options.headers = options.headers || {};
+    // Datastar: Auto-configure nonces using official method
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof window.ds !== 'undefined') {
+            // Set global fetch headers for all Datastar requests
             const nonce = getHmapiNonce();
-            if (nonce && !options.headers['X-WP-Nonce']) {
-                options.headers['X-WP-Nonce'] = nonce;
+            if (nonce) {
+                // Use Datastar's official method to set default headers
+                window.ds.store.upsertSignal('fetchHeaders', {
+                    'X-WP-Nonce': nonce
+                });
             }
-            return options;
         }
-
-        if (originalGet) {
-            window.\$\$get = function(url, options) {
-                return originalGet(url, addNonceToHeaders(options));
-            };
-        }
-
-        if (originalPost) {
-            window.\$\$post = function(url, data, options) {
-                return originalPost(url, data, addNonceToHeaders(options));
-            };
-        }
-
-        if (originalPut) {
-            window.\$\$put = function(url, data, options) {
-                return originalPut(url, data, addNonceToHeaders(options));
-            };
-        }
-
-        if (originalPatch) {
-            window.\$\$patch = function(url, data, options) {
-                return originalPatch(url, data, addNonceToHeaders(options));
-            };
-        }
-
-        if (originalDelete) {
-            window.\$\$delete = function(url, options) {
-                return originalDelete(url, addNonceToHeaders(options));
-            };
-        }
-    }";
+    });";
         }
 
         // Close the IIFE
