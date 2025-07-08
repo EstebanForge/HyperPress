@@ -1,6 +1,6 @@
-=== API for HTMX ===
+=== Hypermedia API for WordPress ===
 Contributors: tcattd
-Tags: htmx, ajax, hypermedia, hyperscript, alpinejs
+Tags: hypermedia, ajax, htmx, hyperscript, alpinejs, datastar
 Stable tag: 2.0.0
 Requires at least: 6.4
 Tested up to: 6.6
@@ -11,7 +11,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 An unofficial WordPress plugin that enables the use of Hypermedia on your WordPress site, theme, and/or plugins. Intended for software developers.
 
 == Description ==
-An unofficial WordPress plugin that enables the use of Hypermedia on WordPress. Adds a new endpoint `/wp-htmx/v1/` from which you can load any Hypermedia template.
+An unofficial WordPress plugin that enables the use of Hypermedia on WordPress. Adds a new endpoint `/wp-html/v1/` from which you can load any Hypermedia template.
 
 Hypermedia is a concept that extends the idea of hypertext by allowing for more complex interactions and data representations. It enables the use of AJAX, WebSockets, and Server-Sent Events directly in HTML using attributes, without writing any JavaScript. It reuses an "old" concept, [Hypermedia](https://hypermedia.systems/), to handle the modern web in a more HTML-like and natural way.
 
