@@ -19,27 +19,27 @@ use HMApi\Jeffreyvr\WPSettings\Options\OptionAbstract;
  */
 class WPSettingsOptions extends OptionAbstract
 {
-    public $type = 'display';
+    public $view = 'display';
 
     /**
-     * Render the option.
+     * Override the render method to handle our custom display logic.
      *
-     * @return string
+     * @return void
      */
-    public function render(): string
+    public function render()
     {
-        $html = '';
+        echo '<tr valign="top"><td colspan="2">';
 
         // Check for specific content types to render
-        if (isset($this->arguments['content'])) {
-            $html .= $this->render_content();
-        } elseif (isset($this->arguments['api_url'])) {
-            $html .= $this->render_api_url_info();
-        } elseif (isset($this->arguments['debug_data'])) {
-            $html .= $this->render_debug_table();
+        if (isset($this->args['content'])) {
+            echo $this->render_content();
+        } elseif (isset($this->args['api_url'])) {
+            echo $this->render_api_url_info();
+        } elseif (isset($this->args['debug_data'])) {
+            echo $this->render_debug_table();
         }
 
-        return $html;
+        echo '</td></tr>';
     }
 
     /**
@@ -49,9 +49,9 @@ class WPSettingsOptions extends OptionAbstract
      */
     private function render_content(): string
     {
-        $content = $this->arguments['content'] ?? '';
-        $title = $this->arguments['title'] ?? '';
-        $description = $this->arguments['description'] ?? '';
+        $content = $this->get_arg('content', '');
+        $title = $this->get_arg('title', '');
+        $description = $this->get_arg('description', '');
         $html = '';
 
         if (!empty($title)) {
@@ -74,30 +74,37 @@ class WPSettingsOptions extends OptionAbstract
      */
     private function render_api_url_info(): string
     {
-        $api_url = $this->arguments['api_url'] ?? '';
-        $title = $this->arguments['title'] ?? esc_html__('API Endpoint URL', 'api-for-htmx');
-        $description = $this->arguments['description'] ?? '';
+        $api_url = $this->args['api_url'] ?? '';
+        $title = $this->args['title'] ?? esc_html__('API Endpoint URL', 'api-for-htmx');
+        $description = $this->args['description'] ?? '';
 
-        $html = '<h3>' . esc_html($title) . '</h3>';
+        $html = '<div style="background: #f6f7f7; border-left: 4px solid #007cba; padding: 15px 20px; border-radius: 4px; margin-top: 10px;">';
+        $html .= '<h3 style="margin-top: 0; margin-bottom: 15px;">' . esc_html($title) . '</h3>';
         $html .= '<div style="display: flex; align-items: center; gap: 10px;">';
-        $html .= '  <input type="text" readonly value="' . esc_attr($api_url) . '" class="large-text" id="hmapi-api-url-field">';
-        $html .= '  <button type="button" class="button" onclick="hmapiCopyText(\'hmapi-api-url-field\')">' . esc_html__('Copy', 'api-for-htmx') . '</button>';
+        $html .= '  <input type="text" readonly value="' . esc_attr($api_url) . '" class="large-text" id="hmapi-api-url-field" style="background: #fff; font-family: monospace; font-size: 14px;">';
+        $html .= '  <button type="button" class="button button-secondary" onclick="hmapiCopyText(\'hmapi-api-url-field\', this)">';
+        $html .= '    <span class="dashicons dashicons-admin-page" style="vertical-align: text-bottom; margin-right: 3px;"></span>' . esc_html__('Copy', 'api-for-htmx');
+        $html .= '  </button>';
         $html .= '</div>';
         if (!empty($description)) {
-            $html .= '<p class="description">' . esc_html($description) . '</p>';
+            $html .= '<p class="description" style="margin-top: 10px; margin-bottom: 0;">' . esc_html($description) . '</p>';
         }
+        $html .= '</div>';
+
         // Add simple JS for copy functionality
         $html .= "<script>
-            function hmapiCopyText(elementId) {
+            function hmapiCopyText(elementId, button) {
                 var copyText = document.getElementById(elementId);
                 copyText.select();
                 copyText.setSelectionRange(0, 99999); /* For mobile devices */
                 document.execCommand('copy');
-                // Optional: Add some visual feedback, like changing button text
-                var button = copyText.nextElementSibling;
-                var originalText = button.textContent;
-                button.textContent = 'Copied!';
-                setTimeout(function() { button.textContent = originalText; }, 2000);
+
+                var originalHtml = button.innerHTML;
+                button.innerHTML = '<span class=\"dashicons dashicons-yes-alt\" style=\"vertical-align: text-bottom; margin-right: 3px;\"></span>' + 'Copied!';
+
+                setTimeout(function() {
+                    button.innerHTML = originalHtml;
+                }, 2000);
             }
         </script>";
 
@@ -111,9 +118,9 @@ class WPSettingsOptions extends OptionAbstract
      */
     private function render_debug_table(): string
     {
-        $debug_data = $this->arguments['debug_data'] ?? [];
-        $table_title = $this->arguments['table_title'] ?? '';
-        $table_headers = $this->arguments['table_headers'] ?? []; // Expects array of ['text' => 'Header', 'style' => 'width: 100px;']
+        $debug_data = $this->args['debug_data'] ?? [];
+        $table_title = $this->args['table_title'] ?? '';
+        $table_headers = $this->args['table_headers'] ?? [];
         $html = '';
 
         if (!empty($table_title)) {
@@ -130,14 +137,8 @@ class WPSettingsOptions extends OptionAbstract
         if (!empty($table_headers)) {
             $html .= '<thead><tr>';
             foreach ($table_headers as $header) {
-                $style = isset($header['style']) ? ' style="' . esc_attr($header['style']) . '"' : '';
+                $style = isset($header['style']) ? ' style="' . esc_attr($header['style']) . ' padding: 8px 10px;"' : ' style="padding: 8px 10px;"';
                 $html .= '<th' . $style . '>' . esc_html($header['text']) . '</th>';
-            }
-            $html .= '</tr></thead>';
-        } elseif (is_array(reset($debug_data))) { // If data is an array of arrays, try to infer headers
-            $html .= '<thead><tr>';
-            foreach (array_keys(reset($debug_data)) as $header_key) {
-                $html .= '<th>' . esc_html(ucwords(str_replace('_', ' ', $header_key))) . '</th>';
             }
             $html .= '</tr></thead>';
         }
@@ -146,13 +147,20 @@ class WPSettingsOptions extends OptionAbstract
         $html .= '<tbody>';
         foreach ($debug_data as $key_or_row => $value_or_cells) {
             $html .= '<tr>';
-            if (is_array($value_or_cells)) { // Data is structured for multiple columns
+            if (is_array($value_or_cells)) {
+                // Data is structured for multiple columns
                 foreach ($value_or_cells as $cell_value) {
-                    $html .= '<td>' . esc_html((string) $cell_value) . '</td>';
+                    // Allow HTML for links in CDN URLs but escape other content
+                    if (strpos($cell_value, '<a href=') === 0) {
+                        $html .= '<td style="padding: 8px 10px;">' . wp_kses($cell_value, ['a' => ['href' => [], 'target' => []]]) . '</td>';
+                    } else {
+                        $html .= '<td style="padding: 8px 10px;">' . esc_html((string) $cell_value) . '</td>';
+                    }
                 }
-            } else { // Simple key-value pairs for two columns
-                $html .= '<td><strong>' . esc_html((string) $key_or_row) . '</strong></td>';
-                $html .= '<td>' . esc_html((string) $value_or_cells) . '</td>';
+            } else {
+                // Simple key-value pairs for two columns
+                $html .= '<td style="padding: 8px 10px;"><strong>' . esc_html((string) $key_or_row) . '</strong></td>';
+                $html .= '<td style="padding: 8px 10px;">' . esc_html((string) $value_or_cells) . '</td>';
             }
             $html .= '</tr>';
         }

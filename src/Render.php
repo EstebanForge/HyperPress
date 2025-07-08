@@ -302,9 +302,9 @@ class Render
                 <div class="success-box">
                     <p><strong>Correct endpoint usage:</strong></p>
                     <ul>
-                        <li><code class="endpoint-url"><?php echo esc_url($base_url); ?>/my-template</code> - Loads template file <code>my-template.hm.php</code></li>
-                        <li><code class="endpoint-url"><?php echo esc_url($base_url); ?>/folder/template</code> - Loads <code>folder/template.hm.php</code></li>
-                        <li><code class="endpoint-url"><?php echo esc_url($base_url); ?>/noswap/header-update</code> - Loads <code>noswap/header-update.hm.php</code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hm_get_endpoint_url('my-template')); ?></code> - Loads template file <code>my-template.hm.php</code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hm_get_endpoint_url('folder/template')); ?></code> - Loads <code>folder/template.hm.php</code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hm_get_endpoint_url('noswap/header-update')); ?></code> - Loads <code>noswap/header-update.hm.php</code></li>
                     </ul>
                 </div>
 
@@ -321,10 +321,11 @@ class Render
                 <h2>Available Helper Functions</h2>
                 <div class="info-box">
                     <ul>
-                        <li><code>hmapi_validate_request()</code> - Validate nonce and request</li>
-                        <li><code>hmapi_send_header_response($data, $action)</code> - Send header-only response</li>
-                        <li><code>hmapi_die($message)</code> - Die gracefully with error message</li>
-                        <li><code>hmapi_get_endpoint_url($template)</code> - Get URL for template</li>
+                        <li><code>hm_validate_request()</code> - Validate nonce and request</li>
+                        <li><code>hm_send_header_response($data, $action)</code> - Send header-only response</li>
+                        <li><code>hm_die($message)</code> - Die gracefully with error message</li>
+                        <li><code>hm_get_endpoint_url($template)</code> - Get URL for template</li>
+                        <li><code>hm_endpoint_url($template)</code> - Echoes endpoint URL for template</li>
                     </ul>
                 </div>
 

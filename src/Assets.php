@@ -368,7 +368,7 @@ class Assets
         // Localize script with shared parameters for all libraries
         wp_localize_script($primary_script_handle, 'hmapi_params', [
             'ajax_url' => admin_url('admin-ajax.php'),
-            'api_url' => hmapi_get_endpoint_url(),
+            'api_url' => hm_get_endpoint_url(),
             'legacy_api_url' => @hxwp_api_url(),
             'nonce' => wp_create_nonce('hmapi_nonce'),
             'rest_url' => rest_url(),

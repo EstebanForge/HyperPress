@@ -5,7 +5,7 @@ defined('ABSPATH') || exit('Direct access not allowed.');
 // Basic security check - no specific action required for index
 $hmapi_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
 if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($hmapi_nonce)), 'hmapi_nonce'))) {
-    hmapi_die('Nonce verification failed.');
+    hm_die('Nonce verification failed.');
 }
 ?>
 
@@ -168,7 +168,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                 <div class="demo-examples">
                     <div class="example-item">
                         <h4>Simple GET Request</h4>
-                        <button hx-get="<?php echo hmapi_get_endpoint_url('htmx-demo'); ?>?action=hmapi_do_something&demo_type=simple_get"
+                        <button hx-get="<?php echo hm_get_endpoint_url('htmx-demo'); ?>?action=hmapi_do_something&demo_type=simple_get"
                                 hx-target="#htmx-response-1"
                                 hx-indicator="#htmx-loading-1"
                                 class="button">
@@ -180,7 +180,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
 
                     <div class="example-item">
                         <h4>POST with Form Data</h4>
-                        <form hx-post="<?php echo hmapi_get_endpoint_url('htmx-demo'); ?>"
+                        <form hx-post="<?php echo hm_get_endpoint_url('htmx-demo'); ?>"
                               hx-target="#htmx-response-2">
                             <input type="hidden" name="action" value="hmapi_do_something">
                             <input type="hidden" name="demo_type" value="form_post">
@@ -191,7 +191,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                     </div>
 
                     <div style="text-align: center; margin-top: 20px;">
-                        <a href="<?php echo hmapi_get_endpoint_url('htmx-demo'); ?>?action=hmapi_do_something&demo_type=full_demo"
+                        <a href="<?php echo hm_get_endpoint_url('htmx-demo'); ?>?action=hmapi_do_something&demo_type=full_demo"
                            class="button button-secondary" target="_blank">
                             View Full HTMX Demo
                         </a>
@@ -227,7 +227,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                     </div>
 
                     <div style="text-align: center; margin-top: 20px;">
-                        <a href="<?php echo hmapi_get_endpoint_url('alpine-ajax-demo'); ?>?action=alpine_ajax_do_something&demo_type=full_demo"
+                        <a href="<?php echo hm_get_endpoint_url('alpine-ajax-demo'); ?>?action=alpine_ajax_do_something&demo_type=full_demo"
                            class="button button-secondary" target="_blank">
                             View Full Alpine Ajax Demo
                         </a>
@@ -247,7 +247,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
 
                     <div class="example-item">
                         <h4>Simple GET Request</h4>
-                        <button data-on-click="$$get('<?php echo hmapi_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=simple_get')"
+                        <button data-on-click="$$get('<?php echo hm_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=simple_get')"
                                 data-header="X-WP-Nonce:<?php echo wp_create_nonce('hmapi_nonce'); ?>"
                                 data-on-load-start="loading = true"
                                 data-on-load-end="loading = false"
@@ -261,7 +261,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                     <div class="example-item">
                         <h4>POST with Data Binding</h4>
                         <input type="text" data-model="inputData" placeholder="Enter some text" class="input-field">
-                        <button data-on-click="$$post('<?php echo hmapi_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'post_data', user_data: inputData})"
+                        <button data-on-click="$$post('<?php echo hm_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'post_data', user_data: inputData})"
                                 data-header="X-WP-Nonce:<?php echo wp_create_nonce('hmapi_nonce'); ?>"
                                 data-on-load-start="loading = true"
                                 data-on-load-end="loading = false"
@@ -273,7 +273,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                     </div>
 
                     <div style="text-align: center; margin-top: 20px;">
-                        <a href="<?php echo hmapi_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=full_demo"
+                        <a href="<?php echo hm_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=full_demo"
                            class="button button-secondary" target="_blank">
                             View Full Datastar Demo
                         </a>
@@ -293,10 +293,10 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
             </ul>
 
             <h4>API Endpoints:</h4>
-            <pre><code>GET/POST <?php echo hmapi_get_endpoint_url('{template-name}'); ?>
-- HTMX Demo: <?php echo hmapi_get_endpoint_url('htmx-demo'); ?>
-- Alpine Ajax Demo: <?php echo hmapi_get_endpoint_url('alpine-ajax-demo'); ?>
-- Datastar Demo: <?php echo hmapi_get_endpoint_url('datastar-demo'); ?></code></pre>
+            <pre><code>GET/POST <?php echo hm_get_endpoint_url('{template-name}'); ?>
+- HTMX Demo: <?php echo hm_get_endpoint_url('htmx-demo'); ?>
+- Alpine Ajax Demo: <?php echo hm_get_endpoint_url('alpine-ajax-demo'); ?>
+- Datastar Demo: <?php echo hm_get_endpoint_url('datastar-demo'); ?></code></pre>
         </div>
     </div>
 
@@ -312,7 +312,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                 async simpleGet() {
                     this.loading = true;
                     try {
-                        const response = await this.$ajax('<?php echo hmapi_get_endpoint_url('alpine-ajax-demo'); ?>', {
+                        const response = await this.$ajax('<?php echo hm_get_endpoint_url('alpine-ajax-demo'); ?>', {
                             method: 'GET',
                             params: {
                                 action: 'alpine_ajax_do_something',
@@ -333,7 +333,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                 async postData() {
                     this.loading = true;
                     try {
-                        const response = await this.$ajax('<?php echo hmapi_get_endpoint_url('alpine-ajax-demo'); ?>', {
+                        const response = await this.$ajax('<?php echo hm_get_endpoint_url('alpine-ajax-demo'); ?>', {
                             method: 'POST',
                             body: {
                                 action: 'alpine_ajax_do_something',

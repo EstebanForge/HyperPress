@@ -3,8 +3,8 @@
 // No direct access.
 defined('ABSPATH') || exit('Direct access not allowed.');
 
-if (!hmapi_validate_request($hmvals, 'alpine_ajax_do_something')) {
-    hmapi_die('Invalid request.');
+if (!hm_validate_request($hmvals, 'alpine_ajax_do_something')) {
+    hm_die('Invalid request.');
 }
 
 // Do some server-side processing with the received $hmvals
@@ -32,7 +32,7 @@ switch ($demo_type) {
         $message = 'Alpine Ajax request processed via noswap template.';
 }
 
-hmapi_send_header_response(
+hm_send_header_response(
     wp_create_nonce('hmapi_nonce'),
     [
         'status'    => $status,

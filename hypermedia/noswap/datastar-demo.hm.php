@@ -3,8 +3,8 @@
 // No direct access.
 defined('ABSPATH') || exit('Direct access not allowed.');
 
-if (!hmapi_validate_request($hmvals, 'datastar_do_something')) {
-    hmapi_die('Invalid request.');
+if (!hm_validate_request($hmvals, 'datastar_do_something')) {
+    hm_die('Invalid request.');
 }
 
 // Do some server-side processing with the received $hmvals
@@ -62,7 +62,7 @@ if (!headers_sent()) {
     echo 'data: merge ' . wp_json_encode($response_data) . "\n\n";
 } else {
     // Fallback to standard response
-    hmapi_send_header_response(
+    hm_send_header_response(
         wp_create_nonce('hmapi_nonce'),
         $response_data
     );

@@ -7,12 +7,12 @@ $hmapi_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
 
 // Check if nonce is valid.
 if (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($hmapi_nonce)), 'hmapi_nonce')) {
-    hmapi_die('Nonce verification failed.');
+    hm_die('Nonce verification failed.');
 }
 
 // Action = datastar_do_something
 if (!isset($hmvals['action']) || $hmvals['action'] != 'datastar_do_something') {
-    hmapi_die('Invalid action.');
+    hm_die('Invalid action.');
 }
 ?>
 
@@ -36,7 +36,7 @@ if (!isset($hmvals['action']) || $hmvals['action'] != 'datastar_do_something') {
 		<div class="example-section">
 			<h5>Example 1: GET Request</h5>
 			<button
-				data-on-click="$$get('<?php echo hmapi_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=simple_get&timestamp=' + Date.now())"
+				data-on-click="$$get('<?php echo hm_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=simple_get&timestamp=' + Date.now())"
 				data-header="X-WP-Nonce:<?php echo wp_create_nonce('hmapi_nonce'); ?>"
 				data-on-load-start="loading = true"
 				data-on-load-end="loading = false"
@@ -55,7 +55,7 @@ if (!isset($hmvals['action']) || $hmvals['action'] != 'datastar_do_something') {
 				   placeholder="Enter some data"
 				   class="regular-text">
 			<button
-				data-on-click="$$post('<?php echo hmapi_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'post_with_data', user_data: postData, timestamp: Date.now()})"
+				data-on-click="$$post('<?php echo hm_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'post_with_data', user_data: postData, timestamp: Date.now()})"
 				data-header="X-WP-Nonce:<?php echo wp_create_nonce('hmapi_nonce'); ?>"
 				data-on-load-start="loading = true"
 				data-on-load-end="loading = false"
@@ -68,7 +68,7 @@ if (!isset($hmvals['action']) || $hmvals['action'] != 'datastar_do_something') {
 		<!-- Example 3: Form submission -->
 		<div class="example-section">
 			<h5>Example 3: Form Submission</h5>
-			<form data-on-submit="$$post('<?php echo hmapi_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'form_submission', name: formData.name, email: formData.email})"
+			<form data-on-submit="$$post('<?php echo hm_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'form_submission', name: formData.name, email: formData.email})"
 				  data-header="X-WP-Nonce:<?php echo wp_create_nonce('hmapi_nonce'); ?>"
 				  data-on-load-start="loading = true"
 				  data-on-load-end="loading = false">
@@ -111,7 +111,7 @@ if (!isset($hmvals['action']) || $hmvals['action'] != 'datastar_do_something') {
 		<div class="example-section">
 			<h5>Example 5: Fetch with Merge</h5>
 			<button
-				data-on-click="$$get('<?php echo hmapi_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=fetch_merge&timestamp=' + Date.now())"
+				data-on-click="$$get('<?php echo hm_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=fetch_merge&timestamp=' + Date.now())"
 				data-header="X-WP-Nonce:<?php echo wp_create_nonce('hmapi_nonce'); ?>"
 				data-merge-store
 				class="button button-primary">

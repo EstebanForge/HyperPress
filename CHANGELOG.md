@@ -6,9 +6,9 @@
 - **NEW:** Added support for Alpine Ajax hypermedia library.
 - **NEW:** Template engine now supports both `.hm.php` (primary) and `.htmx.php` (legacy) extensions.
 - **NEW:** Template engine now supports both `hypermedia` (primary) and `htmx-templates` (legacy) theme directories.
-- **NEW:** Added `hmapi_get_endpoint_url()` helper function to get the API endpoint URL.
+- **NEW:** Added `hm_get_endpoint_url()` helper function to get the API endpoint URL.
 - **NEW:** Added `hmapi_enpoint_url()` helper function to echo the API endpoint URL in templates.
-- **NEW:** Added `hmapi_is_library_mode()` helper function to detect when plugin is running as a Composer library.
+- **NEW:** Added `hm_is_library_mode()` helper function to detect when plugin is running as a Composer library.
 - **NEW:** Comprehensive programmatic configuration via `hmapi/default_options` filter for all plugin settings.
 - **NEW:** Library mode automatically hides admin interface when plugin is used as a Composer dependency.
 - **NEW:** Enhanced Composer library integration with automatic version conflict resolution.
