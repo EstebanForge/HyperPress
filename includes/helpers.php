@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  *
  * @return string
  */
-function hmapi_get_endpoint_url($template_path = '')
+function hm_get_endpoint_url($template_path = '')
 {
     $hmapi_api_url = home_url((defined('HMAPI_ENDPOINT') ? HMAPI_ENDPOINT : 'wp-html') . '/' . (defined('HMAPI_ENDPOINT_VERSION') ? HMAPI_ENDPOINT_VERSION : 'v1'));
 
@@ -37,9 +37,9 @@ function hmapi_get_endpoint_url($template_path = '')
  *
  * @return string
  */
-function hmapi_endpoint_url($template_path = '')
+function hm_endpoint_url($template_path = '')
 {
-    echo hmapi_get_endpoint_url($template_path);
+    echo hm_get_endpoint_url($template_path);
 }
 
 /**
@@ -54,11 +54,11 @@ function hmapi_endpoint_url($template_path = '')
  *
  * @return void
  */
-function hmapi_send_header_response($data = [], $action = null)
+function hm_send_header_response($data = [], $action = null)
 {
     // Use shared validation logic
-    if (!hmapi_validate_request()) {
-        hmapi_die('Nonce verification failed.');
+    if (!hm_validate_request()) {
+        hm_die('Nonce verification failed.');
     }
 
     if ($action === null) {
@@ -112,7 +112,7 @@ function hmapi_send_header_response($data = [], $action = null)
  *
  * @return void
  */
-function hmapi_die($message = '', $display_error = false)
+function hm_die($message = '', $display_error = false)
 {
     // Send our response
     if (!headers_sent()) {
@@ -145,7 +145,7 @@ function hmapi_die($message = '', $display_error = false)
  *
  * @return bool
  */
-function hmapi_validate_request($hmvals = null, $action = null)
+function hm_validate_request($hmvals = null, $action = null)
 {
     // If hmvals not provided, get from $_REQUEST for backwards compatibility
     if ($hmvals === null) {
@@ -179,6 +179,26 @@ function hmapi_validate_request($hmvals = null, $action = null)
     return true;
 }
 
+/**
+ * Detect if the plugin is running as a library (not as an active plugin).
+ *
+ * @return bool
+ */
+function hm_is_library_mode(): bool
+{
+    // Check if plugin is in active_plugins
+    if (defined('HMAPI_BASENAME')) {
+        $active_plugins = apply_filters('active_plugins', get_option('active_plugins', []));
+        if (in_array(HMAPI_BASENAME, $active_plugins, true)) {
+            return false; // Plugin is active, not in library mode
+        }
+    }
+
+    // If we reach here, plugin is not in active plugins list
+    // This means it's loaded as a library
+    return true;
+}
+
 // ===================================================================
 // BACKWARD COMPATIBILITY ALIASES
 // ===================================================================
@@ -187,7 +207,7 @@ function hmapi_validate_request($hmvals = null, $action = null)
  * Helper to get the API URL.
  *
  * @since 2023-12-04
- * @deprecated 2.0.0 Use hmapi_get_endpoint_url() instead
+ * @deprecated 2.0.0 Use hm_get_endpoint_url() instead
  *
  * @param string $template_path (optional)
  *
@@ -198,9 +218,9 @@ function hxwp_api_url($template_path = '')
     // Set a global flag to indicate that a legacy function has been used.
     $GLOBALS['hmapi_is_legacy_theme'] = true;
 
-    _deprecated_function(__FUNCTION__, '2.0.0', 'hmapi_get_endpoint_url');
+    _deprecated_function(__FUNCTION__, '2.0.0', 'hm_get_endpoint_url');
 
-    return hmapi_get_endpoint_url($template_path);
+    return hm_get_endpoint_url($template_path);
 }
 
 /**
@@ -209,7 +229,7 @@ function hxwp_api_url($template_path = '')
  * Sends HX-Trigger header with our response inside hxwpResponse.
  *
  * @since 2023-12-13
- * @deprecated 2.0.0 Use hmapi_send_header_response() instead
+ * @deprecated 2.0.0 Use hm_send_header_response() instead
  *
  * @param array $data status (success|error|silent-success), message, params => $hxvals, etc.
  * @param string $action WP action, optional, default value: none
@@ -218,10 +238,10 @@ function hxwp_api_url($template_path = '')
  */
 function hxwp_send_header_response($data = [], $action = null)
 {
-    _deprecated_function(__FUNCTION__, '2.0.0', 'hmapi_send_header_response');
+    _deprecated_function(__FUNCTION__, '2.0.0', 'hm_send_header_response');
 
     // Use shared validation logic
-    if (!hmapi_validate_request()) {
+    if (!hm_validate_request()) {
         hxwp_die('Nonce verification failed.');
     }
 
@@ -270,7 +290,7 @@ function hxwp_send_header_response($data = [], $action = null)
  * Also sends a custom header with the error message, to be used by HTMX if needed.
  *
  * @since 2023-12-15
- * @deprecated 2.0.0 Use hmapi_die() instead
+ * @deprecated 2.0.0 Use hm_die() instead
  *
  * @param string $message
  * @param bool $display_error
@@ -279,9 +299,9 @@ function hxwp_send_header_response($data = [], $action = null)
  */
 function hxwp_die($message = '', $display_error = false)
 {
-    _deprecated_function(__FUNCTION__, '2.0.0', 'hmapi_die');
+    _deprecated_function(__FUNCTION__, '2.0.0', 'hm_die');
 
-    hmapi_die($message, $display_error);
+    hm_die($message, $display_error);
 }
 
 /**
@@ -289,7 +309,7 @@ function hxwp_die($message = '', $display_error = false)
  * Checks if the nonce is valid and optionally validates the action.
  *
  * @since 2023-12-15
- * @deprecated 2.0.0 Use hmapi_validate_request() instead
+ * @deprecated 2.0.0 Use hm_validate_request() instead
  *
  * @param array|null $hxvals The HTMX values array (optional, will use $_REQUEST if not provided)
  * @param string|null $action The expected action (optional)
@@ -298,27 +318,7 @@ function hxwp_die($message = '', $display_error = false)
  */
 function hxwp_validate_request($hxvals = null, $action = null)
 {
-    _deprecated_function(__FUNCTION__, '2.0.0', 'hmapi_validate_request');
+    _deprecated_function(__FUNCTION__, '2.0.0', 'hm_validate_request');
 
-    return hmapi_validate_request($hxvals, $action);
-}
-
-/**
- * Detect if the plugin is running as a library (not as an active plugin).
- *
- * @return bool
- */
-function hmapi_is_library_mode(): bool
-{
-    // Check if plugin is in active_plugins
-    if (defined('HMAPI_BASENAME')) {
-        $active_plugins = apply_filters('active_plugins', get_option('active_plugins', []));
-        if (in_array(HMAPI_BASENAME, $active_plugins, true)) {
-            return false; // Plugin is active, not in library mode
-        }
-    }
-
-    // If we reach here, plugin is not in active plugins list
-    // This means it's loaded as a library
-    return true;
+    return hm_validate_request($hxvals, $action);
 }

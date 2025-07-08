@@ -7,12 +7,12 @@ $hmapi_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
 
 // Check if nonce is valid.
 if (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($hmapi_nonce)), 'hmapi_nonce')) {
-    hmapi_die('Nonce verification failed.');
+    hm_die('Nonce verification failed.');
 }
 
 // Action = hmapi_do_something
 if (!isset($hmvals['action']) || $hmvals['action'] != 'hmapi_do_something') {
-    hmapi_die('Invalid action.');
+    hm_die('Invalid action.');
 }
 ?>
 

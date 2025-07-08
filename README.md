@@ -97,18 +97,18 @@ Then, in your theme, use your Hypermedia library to GET/POST to the `/wp-html/v1
 
 ### Helper Functions
 
-You can use the `hmapi_get_endpoint_url()` helper function to generate the URL for your hypermedia templates. This function will automatically add the `/wp-html/v1/` prefix. The hypermedia file extension (`.hm.php`) is not needed, the API will resolve it automatically.
+You can use the `hm_get_endpoint_url()` helper function to generate the URL for your hypermedia templates. This function will automatically add the `/wp-html/v1/` prefix. The hypermedia file extension (`.hm.php`) is not needed, the API will resolve it automatically.
 
 For example:
 
 ```php
-echo hmapi_get_endpoint_url( 'live-search' );
+echo hm_get_endpoint_url( 'live-search' );
 ```
 
 Or,
 
 ```php
-hmapi_endpoint_url( 'live-search' );
+hm_endpoint_url( 'live-search' );
 ```
 
 Will call the template located at:
@@ -130,12 +130,12 @@ http://your-site.com/wp-html/v1/live-search
 
 #### Backward Compatibility
 
-For backward compatibility, the old `hxwp_api_url()` function is still available as an alias for `hmapi_get_endpoint_url()`. However, we recommend updating your code to use the new function names as the old ones are deprecated and may be removed in future versions.
+For backward compatibility, the old `hxwp_api_url()` function is still available as an alias for `hm_get_endpoint_url()`. However, we recommend updating your code to use the new function names as the old ones are deprecated and may be removed in future versions.
 
 Other helper functions available:
-- `hmapi_send_header_response()` / `hxwp_send_header_response()` (deprecated alias)
-- `hmapi_die()` / `hxwp_die()` (deprecated alias)
-- `hmapi_validate_request()` / `hxwp_validate_request()` (deprecated alias)
+- `hm_send_header_response()` / `hxwp_send_header_response()` (deprecated alias)
+- `hm_die()` / `hxwp_die()` (deprecated alias)
+- `hm_validate_request()` / `hxwp_validate_request()` (deprecated alias)
 
 ### How to pass data to the template
 
@@ -229,10 +229,10 @@ Then, you can use the new template path in your plugin like this, using a colon 
 
 ```php
 // Loads the template from: YOUR_PLUGIN_PATH/hypermedia/template-name.hm.php
-echo hmapi_get_endpoint_url( 'my-plugin:template-name' );
+echo hm_get_endpoint_url( 'my-plugin:template-name' );
 
 // Loads the template from: YOUR_PLUGIN_PATH/hypermedia/parts/header.hm.php
-echo hmapi_get_endpoint_url( 'my-plugin:parts/header' );
+echo hm_get_endpoint_url( 'my-plugin:parts/header' );
 ```
 
 This will output the URL for the template from the path associated with the `my-plugin` namespace. If the namespace is not registered, or the template file does not exist within that registered path (or is not allowed due to sanitization rules), the request will result in a 404 error. Templates requested with an explicit namespace do not fall back to the theme's default `hypermedia` directory.
@@ -241,10 +241,10 @@ For templates located directly in your active theme's `hypermedia` directory (or
 
 ```php
 // Loads: wp-content/themes/your-theme/hypermedia/live-search.hm.php
-echo hmapi_get_endpoint_url( 'live-search' );
+echo hm_get_endpoint_url( 'live-search' );
 
 // Loads: wp-content/themes/your-theme/hypermedia/subfolder/my-listing.hm.php
-echo hmapi_get_endpoint_url( 'subfolder/my-listing' );
+echo hm_get_endpoint_url( 'subfolder/my-listing' );
 ```
 
 ## Using as a Composer Library (Programmatic Configuration)
@@ -253,7 +253,7 @@ If you include this plugin as a Composer dependency in your own plugin or theme,
 
 ### Detecting Library Mode
 
-The plugin exposes a helper function `hmapi_is_library_mode()` to detect if it is running as a library (not as an active plugin). This is determined automatically based on whether the plugin is in the active plugins list and whether it is running in the admin area.
+The plugin exposes a helper function `hm_is_library_mode()` to detect if it is running as a library (not as an active plugin). This is determined automatically based on whether the plugin is in the active plugins list and whether it is running in the admin area.
 
 When in library mode, the plugin will not register its admin options/settings page in wp-admin.
 

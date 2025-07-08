@@ -78,7 +78,7 @@ class Options
         $this->datastar_manager = new Datastar();
         $this->htmx_manager = new HTMX();
 
-        if (!hmapi_is_library_mode()) {
+        if (!hm_is_library_mode()) {
             // Register custom option type early, before WPSettings is initialized
             add_filter('wp_settings_option_type_map', [$this, 'register_custom_option_types']);
 
@@ -103,7 +103,18 @@ class Options
         if (!class_exists('HMApi\\Admin\\WPSettingsOptions')) {
             require_once HMAPI_ABSPATH . 'src/Admin/WPSettingsOptions.php';
         }
+
+        // Debug: Check if class exists after loading
+        if (class_exists('HMApi\\Admin\\WPSettingsOptions')) {
+            error_log('HMAPI: WPSettingsOptions class loaded successfully');
+        } else {
+            error_log('HMAPI: Failed to load WPSettingsOptions class');
+        }
+
         $options['display'] = 'HMApi\\Admin\\WPSettingsOptions';
+
+        // Debug: Check what we're returning
+        error_log('HMAPI: Registered option types: ' . print_r($options, true));
 
         return $options;
     }
@@ -321,13 +332,13 @@ class Options
             'description' => esc_html__('Datastar automatically loads when selected as the active library. Configure backend loading below.', 'api-for-htmx'),
         ]);
         $about_section = $about_tab->add_section(esc_html__('About', 'api-for-htmx'), [
-            'description' => esc_html__('Information about the plugin and its configuration.', 'api-for-htmx'),
+            'description' => esc_html__('Hypermedia API for WordPress is an unofficial plugin that enables the use of HTMX, Alpine AJAX, Datastar, and other hypermedia libraries on your WordPress site, theme, and/or plugins. Intended for software developers.', 'api-for-htmx') . '<br>' .
+                esc_html__('Adds a new endpoint /wp-html/v1/ from which you can load any hypermedia template.', 'api-for-htmx') . '<br><br>' .
+                esc_html__('Hypermedia is a concept that allows you to build modern web applications, even SPAs, without writing JavaScript. HTMX, Alpine Ajax, and Datastar let you use AJAX, WebSockets, and Server-Sent Events directly in HTML using attributes.', 'api-for-htmx') . '<br><br>' .
+                esc_html__('Plugin repository and documentation:', 'api-for-htmx') . ' <a href="https://github.com/EstebanForge/Hypermedia-API-WordPress" target="_blank">https://github.com/EstebanForge/Hypermedia-API-WordPress</a>',
         ]);
-        $debug_section = $about_tab->add_section(esc_html__('Debug Information', 'api-for-htmx'), [
-            'description' => esc_html__('Debug information about CDN URLs and versions.', 'api-for-htmx'),
-        ]);
-        $info_section = $about_tab->add_section(esc_html__('Plugin Information', 'api-for-htmx'), [
-            'description' => esc_html__('Information about the active plugin instance.', 'api-for-htmx'),
+        $system_info_section = $about_tab->add_section(esc_html__('System Information', 'api-for-htmx'), [
+            'description' => esc_html__('General information about your WordPress installation and this plugin status.', 'api-for-htmx'),
         ]);
         $extensions_section = $htmx_tab->add_section(esc_html__('HTMX Extensions', 'api-for-htmx'), [
             'description' => esc_html__('Enable specific HTMX extensions for enhanced functionality.', 'api-for-htmx'),
@@ -407,47 +418,58 @@ class Options
             ]);
         }
 
-        // Add plugin information to About tab (detailed version)
-        $plugin_info_html = $this->get_plugin_info_html(true);
-        $info_section->add_option('display', [
-            'name' => 'plugin_info',
-            'content' => $plugin_info_html,
-        ]);
-
-        // Add debug information tables
+        // Add library information tables
         $cdn_urls = $this->main->get_cdn_urls();
 
-        // Core libraries debug table
+        // Core libraries table for end users
         $core_libraries = [];
         $core_lib_names = ['htmx', 'hyperscript', 'alpinejs', 'alpine_ajax', 'datastar'];
         foreach ($core_lib_names as $lib) {
             if (isset($cdn_urls[$lib])) {
-                $core_libraries[$lib] = $cdn_urls[$lib];
+                $lib_data = $cdn_urls[$lib];
+                $core_libraries[] = [
+                    ucfirst(str_replace('_', ' ', $lib)),
+                    $lib_data['version'] ?? 'N/A',
+                    '<a href="' . esc_url($lib_data['url'] ?? '') . '" target="_blank">' . esc_html($lib_data['url'] ?? 'N/A') . '</a>',
+                ];
             }
         }
 
         if (!empty($core_libraries)) {
-            $debug_section->add_option('display', [
+            $system_info_section->add_option('display', [
                 'name' => 'core_libraries_debug',
                 'debug_data' => $core_libraries,
                 'table_title' => esc_html__('Core Libraries', 'api-for-htmx'),
                 'table_headers' => [
                     ['text' => esc_html__('Library', 'api-for-htmx'), 'style' => 'width: 150px;'],
-                    ['text' => esc_html__('Version', 'api-for-htmx'), 'style' => 'width: 80px;'],
+                    ['text' => esc_html__('Version', 'api-for-htmx'), 'style' => 'width: 100px;'],
                     ['text' => esc_html__('CDN URL', 'api-for-htmx')],
                 ],
             ]);
         }
 
-        // HTMX Extensions debug table
-        if (isset($cdn_urls['htmx_extensions']) && !empty($cdn_urls['htmx_extensions'])) {
-            $debug_section->add_option('display', [
+        // HTMX Extensions table for end users
+        $options = get_option($this->option_name);
+        if (
+            isset($options['active_library']) && $options['active_library'] === 'htmx' &&
+            isset($cdn_urls['htmx_extensions']) && !empty($cdn_urls['htmx_extensions'])
+        ) {
+            $extensions_data = [];
+            foreach ($cdn_urls['htmx_extensions'] as $ext_name => $ext_data) {
+                $extensions_data[] = [
+                    esc_html($ext_name),
+                    $ext_data['version'] ?? 'N/A',
+                    '<a href="' . esc_url($ext_data['url'] ?? '') . '" target="_blank">' . esc_html($ext_data['url'] ?? 'N/A') . '</a>',
+                ];
+            }
+
+            $system_info_section->add_option('display', [
                 'name' => 'extensions_debug',
-                'debug_data' => $cdn_urls['htmx_extensions'],
-                'table_title' => sprintf(esc_html__('HTMX Extensions (%d total)', 'api-for-htmx'), count($cdn_urls['htmx_extensions'])),
+                'debug_data' => $extensions_data,
+                'table_title' => sprintf(esc_html__('HTMX Extensions (%d available)', 'api-for-htmx'), count($cdn_urls['htmx_extensions'])),
                 'table_headers' => [
                     ['text' => esc_html__('Extension', 'api-for-htmx'), 'style' => 'width: 200px;'],
-                    ['text' => esc_html__('Version', 'api-for-htmx'), 'style' => 'width: 80px;'],
+                    ['text' => esc_html__('Version', 'api-for-htmx'), 'style' => 'width: 100px;'],
                     ['text' => esc_html__('CDN URL', 'api-for-htmx')],
                 ],
             ]);
@@ -461,10 +483,17 @@ class Options
             esc_html__('Generated:', 'api-for-htmx') => current_time('mysql'),
         ];
 
-        $debug_section->add_option('display', [
+        $system_info_section->add_option('display', [
             'name' => 'additional_debug',
             'debug_data' => $additional_debug,
-            'table_title' => esc_html__('Additional Information', 'api-for-htmx'),
+            'table_title' => esc_html__('Plugin Status', 'api-for-htmx'),
+        ]);
+
+        // Add plugin information to System Information section
+        $plugin_info_html = $this->get_plugin_info_html(true);
+        $system_info_section->add_option('display', [
+            'name' => 'plugin_info',
+            'content' => $plugin_info_html,
         ]);
 
         $this->settings->make();
@@ -498,95 +527,90 @@ class Options
      */
     private function get_plugin_info_html(bool $detailed = false): string
     {
-        $plugin_info_html = '<div class="hmapi-plugin-info" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-left: 4px solid #555; border-radius: 4px;">';
+    $plugin_info_html = '<div class="hmapi-plugin-info" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-left: 4px solid #555; border-radius: 4px;">';
 
-        if ($detailed) {
-            $plugin_info_html .= '<h4 style="margin-top: 0;">' . esc_html__('Plugin Information', 'api-for-htmx') . '</h4>';
-        }
+    if ($detailed) {
+        $plugin_info_html .= '<h4 style="margin-top: 0;">' . esc_html__('Plugin Information', 'api-for-htmx') . '</h4>';
+    }
 
-        $plugin_info_html .= '<p class="description" style="margin: 0;">';
+    $plugin_info_html .= '<p class="description" style="margin: 0;">';
 
-        if (defined('HMAPI_INSTANCE_LOADED_PATH')) {
-            // Normalize paths to handle symlinks and path variations
-            $real_instance_path = realpath(HMAPI_INSTANCE_LOADED_PATH);
-            $real_plugin_dir = realpath(WP_PLUGIN_DIR);
+    if (defined('HMAPI_INSTANCE_LOADED_PATH')) {
+        // Normalize paths to handle symlinks and path variations
+        $real_instance_path = realpath(HMAPI_INSTANCE_LOADED_PATH);
+        $real_plugin_dir = realpath(WP_PLUGIN_DIR);
 
-            if ($real_instance_path && $real_plugin_dir) {
-                // Normalize path separators and ensure consistent comparison
-                $real_instance_path = wp_normalize_path($real_instance_path);
-                $real_plugin_dir = wp_normalize_path($real_plugin_dir);
+        if ($real_instance_path && $real_plugin_dir) {
+            // Normalize path separators and ensure consistent comparison
+            $real_instance_path = wp_normalize_path($real_instance_path);
+            $real_plugin_dir = wp_normalize_path($real_plugin_dir);
 
-                // First, check if this looks like our main plugin file regardless of location
-                $is_main_plugin_file = (
-                    str_ends_with($real_instance_path, '/api-for-htmx.php') ||
-                    str_ends_with($real_instance_path, '\\api-for-htmx.php') ||
-                    basename($real_instance_path) === 'api-for-htmx.php'
-                );
+            // First, check if this looks like our main plugin file regardless of location
+            $is_main_plugin_file = (
+                str_ends_with($real_instance_path, '/api-for-htmx.php') ||
+                str_ends_with($real_instance_path, '\\api-for-htmx.php') ||
+                basename($real_instance_path) === 'api-for-htmx.php'
+            );
 
-                if ($is_main_plugin_file) {
-                    // Check if instance is within the WordPress plugins directory
-                    if (str_starts_with($real_instance_path, $real_plugin_dir)) {
+            if ($is_main_plugin_file) {
+                // Check if instance is within the WordPress plugins directory
+                if (str_starts_with($real_instance_path, $real_plugin_dir)) {
+                    $instance_type = esc_html__('Plugin', 'api-for-htmx');
+                } else {
+                    // It's the main plugin file but loaded from outside plugins dir (development setup)
+                    $instance_type = esc_html__('Plugin (development)', 'api-for-htmx');
+                }
+            } else {
+                // Check if instance is within the WordPress plugins directory
+                if (str_starts_with($real_instance_path, $real_plugin_dir)) {
+                    // Additional check: see if the basename matches our expected plugin structure
+                    $instance_basename = plugin_basename($real_instance_path);
+                    if ($instance_basename === HMAPI_BASENAME ||
+                        str_starts_with($instance_basename, 'api-for-htmx/')) {
                         $instance_type = esc_html__('Plugin', 'api-for-htmx');
                     } else {
-                        // It's the main plugin file but loaded from outside plugins dir (development setup)
-                        $instance_type = esc_html__('Plugin (development)', 'api-for-htmx');
+                        $instance_type = esc_html__('Library (within plugins dir)', 'api-for-htmx');
                     }
                 } else {
-                    // Check if instance is within the WordPress plugins directory
-                    if (str_starts_with($real_instance_path, $real_plugin_dir)) {
-                        // Additional check: see if the basename matches our expected plugin structure
-                        $instance_basename = plugin_basename($real_instance_path);
-                        if ($instance_basename === HMAPI_BASENAME ||
-                            str_starts_with($instance_basename, 'api-for-htmx/')) {
-                            $instance_type = esc_html__('Plugin', 'api-for-htmx');
-                        } else {
-                            $instance_type = esc_html__('Library (within plugins dir)', 'api-for-htmx');
-                        }
-                    } else {
-                        $instance_type = esc_html__('Library (external)', 'api-for-htmx');
-                    }
+                    $instance_type = esc_html__('Library (external)', 'api-for-htmx');
                 }
-
-                // Set variables for debug output
-                $expected_plugin_path = wp_normalize_path($real_plugin_dir . '/' . HMAPI_BASENAME);
-                $instance_basename = str_starts_with($real_instance_path, $real_plugin_dir) ?
-                    plugin_basename($real_instance_path) :
-                    basename(dirname($real_instance_path)) . '/' . basename($real_instance_path);
-            } else {
-                $instance_type = esc_html__('Library (path error)', 'api-for-htmx');
             }
 
-            $plugin_info_html .= '<strong>' . esc_html__('Active Instance:', 'api-for-htmx') . '</strong> ' .
-                $instance_type . ' v' . esc_html(HMAPI_LOADED_VERSION) . '<br/>';
-
-            // Add debug information if in detailed mode and WP_DEBUG is enabled
-            if ($detailed && defined('WP_DEBUG') && WP_DEBUG) {
-                $plugin_info_html .= '<br/><small style="font-family: monospace; color: #666;">';
-                $plugin_info_html .= '<strong>Debug Info:</strong><br/>';
-                $plugin_info_html .= 'Instance Path: ' . esc_html($real_instance_path ?? 'N/A') . '<br/>';
-                $plugin_info_html .= 'Plugin Dir: ' . esc_html($real_plugin_dir ?? 'N/A') . '<br/>';
-                $plugin_info_html .= 'Expected Path: ' . esc_html($expected_plugin_path ?? 'N/A') . '<br/>';
-                $plugin_info_html .= 'Instance Basename: ' . esc_html($instance_basename ?? 'N/A') . '<br/>';
-                $plugin_info_html .= 'HMAPI_BASENAME: ' . esc_html(HMAPI_BASENAME) . '<br/>';
-                $plugin_info_html .= '</small>';
-            }
-
+            // Set variables for debug output
+            $expected_plugin_path = wp_normalize_path($real_plugin_dir . '/' . HMAPI_BASENAME);
+            $instance_basename = str_starts_with($real_instance_path, $real_plugin_dir) ?
+                plugin_basename($real_instance_path) :
+                basename(dirname($real_instance_path)) . '/' . basename($real_instance_path);
+        } else {
+            $instance_type = esc_html__('Library (path error)', 'api-for-htmx');
         }
 
+        $plugin_info_html .= '<strong>' . esc_html__('Active Instance:', 'api-for-htmx') . '</strong> ' .
+            $instance_type . ' v' . esc_html(HMAPI_LOADED_VERSION) . '<br/>';
+
+        // Add debug information if in detailed mode and WP_DEBUG is enabled
+        if ($detailed && defined('WP_DEBUG') && WP_DEBUG) {
+            $plugin_info_html .= '<br/><small style="font-family: monospace; color: #666;">';
+            $plugin_info_html .= '<strong>Debug Info:</strong><br/>';
+            $plugin_info_html .= 'Instance Path: ' . esc_html($real_instance_path ?? 'N/A') . '<br/>';
+            $plugin_info_html .= 'Plugin Dir: ' . esc_html($real_plugin_dir ?? 'N/A') . '<br/>';
+            $plugin_info_html .= 'Expected Path: ' . esc_html($expected_plugin_path ?? 'N/A') . '<br/>';
+            $plugin_info_html .= 'Instance Basename: ' . esc_html($instance_basename ?? 'N/A') . '<br/>';
+            $plugin_info_html .= 'HMAPI_BASENAME: ' . esc_html(HMAPI_BASENAME) . '<br/>';
+            $plugin_info_html .= '</small>';
+        }
+
+    }
+
+    if (!$detailed) {
         $plugin_info_html .= sprintf(
             esc_html__('Proudly brought to you by %s.', 'api-for-htmx'),
             '<a href="https://actitud.xyz" target="_blank">' . esc_html__('Actitud Studio', 'api-for-htmx') . '</a>'
         );
-
-        if ($detailed) {
-            $plugin_info_html .= '<br/><br/>';
-            $plugin_info_html .= '<small>';
-            $plugin_info_html .= esc_html__('For support, documentation, and updates, visit our website or check the WordPress plugin repository.', 'api-for-htmx');
-            $plugin_info_html .= '</small>';
-        }
-
-        $plugin_info_html .= '</p></div>';
-
-        return $plugin_info_html;
     }
+
+    $plugin_info_html .= '</p></div>';
+
+    return $plugin_info_html;
+}
 }
