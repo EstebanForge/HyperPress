@@ -2,7 +2,7 @@
     "name": "estebanforge/hypermedia-api-wordpress",
     "description": "Add an API endpoint to WordPress to support Hypermedia libraries like HTMX, Alpine Ajax, and Datastar.",
     "type": "wordpress-plugin",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
@@ -19,13 +19,17 @@
     },
     "scripts": {
         "cs-fix": "php-cs-fixer fix",
+        "ensure-vendor-dist": "mkdir -p vendor-dist",
         "prod": [
             "@cs-fix",
             "@prefix-namespaces",
             "@dump-autoload-prod"
         ],
         "dump-autoload-prod": "@php composer dump-autoload --optimize --no-dev",
-        "prefix-namespaces": "strauss",
+        "prefix-namespaces": [
+            "@ensure-vendor-dist",
+            "strauss"
+        ],
         "post-install-cmd": [
             "@cs-fix",
             "@prefix-namespaces",
@@ -37,6 +41,7 @@
             "@dump-autoload-prod"
         ],
         "post-autoload-dump": [
+            "@ensure-vendor-dist",
             "strauss include-autoloader"
         ]
     },
