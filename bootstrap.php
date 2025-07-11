@@ -9,7 +9,7 @@ declare(strict_types=1);
  * It is designed to be loaded only once, regardless of whether the project is used as a standalone
  * plugin or as a library embedded in another project.
  *
- * @since 2.0.1
+ * @since 2.0.0
  */
 
 // Exit if accessed directly.
@@ -33,6 +33,7 @@ if (file_exists(__DIR__ . '/vendor-dist/autoload.php')) {
     add_action('admin_notices', function () {
         echo '<div class="error"><p>' . esc_html__('Hypermedia API: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'api-for-htmx') . '</p></div>';
     });
+
     return;
 }
 
@@ -40,9 +41,31 @@ if (file_exists(__DIR__ . '/vendor-dist/autoload.php')) {
 // This ensures that no matter how the plugin is loaded, this code runs only once.
 
 // Get this instance's version and real path (resolving symlinks)
-$hmapi_plugin_data = get_file_data(__DIR__ . '/api-for-htmx.php', ['Version' => 'Version'], false);
-$current_hmapi_instance_version = $hmapi_plugin_data['Version'] ?? '0.0.0';
-$current_hmapi_instance_path = realpath(__DIR__ . '/api-for-htmx.php');
+$plugin_file_path = __DIR__ . '/api-for-htmx.php';
+$current_hmapi_instance_version = '0.0.0';
+$current_hmapi_instance_path = null;
+
+// Check if we're running as a plugin (api-for-htmx.php exists) or as a library
+if (file_exists($plugin_file_path)) {
+    // Plugin mode: read version from the main plugin file
+    $hmapi_plugin_data = get_file_data($plugin_file_path, ['Version' => 'Version'], false);
+    $current_hmapi_instance_version = $hmapi_plugin_data['Version'] ?? '0.0.0';
+    $current_hmapi_instance_path = realpath($plugin_file_path);
+} else {
+    // Library mode: try to get version from composer.json or use a fallback
+    $composer_json_path = __DIR__ . '/composer.json';
+    if (file_exists($composer_json_path)) {
+        $composer_data = json_decode(file_get_contents($composer_json_path), true);
+        $current_hmapi_instance_version = $composer_data['version'] ?? '0.0.0';
+    }
+    // Use bootstrap.php path as fallback for library mode
+    $current_hmapi_instance_path = realpath(__FILE__);
+}
+
+// Ensure we have a valid path
+if ($current_hmapi_instance_path === false) {
+    $current_hmapi_instance_path = __FILE__;
+}
 
 // Register this instance as a candidate
 if (!isset($GLOBALS['hmapi_api_candidates']) || !is_array($GLOBALS['hmapi_api_candidates'])) {
@@ -68,10 +91,25 @@ if (!function_exists('hmapi_run_initialization_logic')) {
         define('HMAPI_LOADED_VERSION', $plugin_version);
         define('HMAPI_INSTANCE_LOADED_PATH', $plugin_file_path);
         define('HMAPI_VERSION', $plugin_version);
-        define('HMAPI_ABSPATH', plugin_dir_path($plugin_file_path));
-        define('HMAPI_BASENAME', plugin_basename($plugin_file_path));
-        define('HMAPI_PLUGIN_URL', plugin_dir_url($plugin_file_path));
-        define('HMAPI_PLUGIN_FILE', $plugin_file_path);
+
+        // Determine if we're in library mode vs plugin mode
+        $is_library_mode = !str_ends_with($plugin_file_path, 'api-for-htmx.php');
+
+        if ($is_library_mode) {
+            // Library mode: use the directory containing the bootstrap/plugin file
+            $plugin_dir = dirname($plugin_file_path);
+            define('HMAPI_ABSPATH', trailingslashit($plugin_dir));
+            define('HMAPI_BASENAME', 'hypermedia-api-wordpress/bootstrap.php');
+            define('HMAPI_PLUGIN_URL', ''); // Not applicable in library mode
+            define('HMAPI_PLUGIN_FILE', $plugin_file_path);
+        } else {
+            // Plugin mode: use standard WordPress plugin functions
+            define('HMAPI_ABSPATH', plugin_dir_path($plugin_file_path));
+            define('HMAPI_BASENAME', plugin_basename($plugin_file_path));
+            define('HMAPI_PLUGIN_URL', plugin_dir_url($plugin_file_path));
+            define('HMAPI_PLUGIN_FILE', $plugin_file_path);
+        }
+
         define('HMAPI_ENDPOINT', 'wp-html');
         define('HMAPI_LEGACY_ENDPOINT', 'wp-htmx');
         define('HMAPI_TEMPLATE_DIR', 'hypermedia');
@@ -88,8 +126,11 @@ if (!function_exists('hmapi_run_initialization_logic')) {
             return;
         }
 
-        register_activation_hook($plugin_file_path, ['HMApi\Admin\Activation', 'activate']);
-        register_deactivation_hook($plugin_file_path, ['HMApi\Admin\Activation', 'deactivate']);
+        // Only register activation/deactivation hooks in plugin mode
+        if (!$is_library_mode) {
+            register_activation_hook($plugin_file_path, ['HMApi\Admin\Activation', 'activate']);
+            register_deactivation_hook($plugin_file_path, ['HMApi\Admin\Activation', 'deactivate']);
+        }
 
         if (class_exists('HMApi\Main')) {
             $router = new HMApi\Router();
