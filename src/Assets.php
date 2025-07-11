@@ -171,6 +171,14 @@ class Assets
         $plugin_path = defined('HMAPI_ABSPATH') ? HMAPI_ABSPATH : '';
         $plugin_version = defined('HMAPI_VERSION') ? HMAPI_VERSION : null;
 
+        // Detect library mode (when plugin URL is empty)
+        $is_library_mode = empty($plugin_url);
+
+                // In library mode, construct URLs using vendor directory detection
+        if ($is_library_mode) {
+            $plugin_url = $this->get_library_mode_url($plugin_path);
+        }
+
         // Asset definitions
         $assets_config = [
             'htmx' => [
@@ -195,6 +203,9 @@ class Assets
             ],
         ];
 
+        // Filter: Allow developers to completely override asset configuration
+        $assets_config = apply_filters('hmapi/assets_config', $assets_config, $plugin_url, $plugin_path, $is_library_mode, $load_from_cdn);
+
         // --- HTMX ---
         $should_load_htmx = false;
         if ($is_admin) {
@@ -216,6 +227,11 @@ class Assets
             $asset = $assets_config['htmx'];
             $url = $load_from_cdn ? $cdn_urls['htmx']['url'] : $asset['local_url'];
             $ver = $load_from_cdn ? $cdn_urls['htmx']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
+
+            // Filter: Allow developers to override HTMX library URL
+            $url = apply_filters('hmapi/assets/htmx_url', $url, $load_from_cdn, $asset, $is_library_mode);
+            $ver = apply_filters('hmapi/assets/htmx_version', $ver, $load_from_cdn, $asset, $is_library_mode);
+
             wp_enqueue_script('hmapi-htmx', $url, [], $ver, true);
             $htmx_loaded = true;
         }
@@ -226,6 +242,11 @@ class Assets
             $asset = $assets_config['hyperscript'];
             $url = $load_from_cdn ? $cdn_urls['hyperscript']['url'] : $asset['local_url'];
             $ver = $load_from_cdn ? $cdn_urls['hyperscript']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
+
+            // Filter: Allow developers to override Hyperscript library URL
+            $url = apply_filters('hmapi/assets/hyperscript_url', $url, $load_from_cdn, $asset, $is_library_mode);
+            $ver = apply_filters('hmapi/assets/hyperscript_version', $ver, $load_from_cdn, $asset, $is_library_mode);
+
             wp_enqueue_script('hmapi-hyperscript', $url, ($htmx_loaded ? ['hmapi-htmx'] : []), $ver, true);
         }
 
@@ -247,6 +268,11 @@ class Assets
             $asset = $assets_config['alpine_core'];
             $url = $load_from_cdn ? $cdn_urls['alpinejs']['url'] : $asset['local_url'];
             $ver = $load_from_cdn ? $cdn_urls['alpinejs']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
+
+            // Filter: Allow developers to override Alpine.js library URL
+            $url = apply_filters('hmapi/assets/alpinejs_url', $url, $load_from_cdn, $asset, $is_library_mode);
+            $ver = apply_filters('hmapi/assets/alpinejs_version', $ver, $load_from_cdn, $asset, $is_library_mode);
+
             wp_enqueue_script('hmapi-alpinejs-core', $url, [], $ver, true);
             $alpine_core_loaded = true;
         }
@@ -264,6 +290,10 @@ class Assets
                 $url = $asset['local_url'];
                 $ver = filemtime($asset['local_path']);
             } // If local not found and CDN not selected, it won't load.
+
+            // Filter: Allow developers to override Alpine Ajax library URL
+            $url = apply_filters('hmapi/assets/alpine_ajax_url', $url, $load_from_cdn, $asset, $is_library_mode);
+            $ver = apply_filters('hmapi/assets/alpine_ajax_version', $ver, $load_from_cdn, $asset, $is_library_mode);
 
             if ($url) {
                 wp_enqueue_script('hmapi-alpine-ajax', $url, ['hmapi-alpinejs-core'], $ver, true);
@@ -284,6 +314,11 @@ class Assets
             $asset = $assets_config['datastar'];
             $url = $load_from_cdn ? $cdn_urls['datastar']['url'] : $asset['local_url'];
             $ver = $load_from_cdn ? $cdn_urls['datastar']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
+
+            // Filter: Allow developers to override Datastar library URL
+            $url = apply_filters('hmapi/assets/datastar_url', $url, $load_from_cdn, $asset, $is_library_mode);
+            $ver = apply_filters('hmapi/assets/datastar_version', $ver, $load_from_cdn, $asset, $is_library_mode);
+
             wp_enqueue_script('hmapi-datastar', $url, [], $ver, true);
             $datastar_loaded = true;
         }
@@ -292,6 +327,10 @@ class Assets
         if ($htmx_loaded && ($is_admin ? !empty($options['load_htmx_backend']) : $active_library === 'htmx')) {
             $extensions_dir_local = $plugin_path . 'assets/js/libs/htmx-extensions/';
             $extensions_dir_url = $plugin_url . 'assets/js/libs/htmx-extensions/';
+
+            // Filter: Allow developers to override HTMX extensions directory
+            $extensions_dir_url = apply_filters('hmapi/htmx_extensions_url', $extensions_dir_url, $extensions_dir_local, $plugin_url, $plugin_path, $is_library_mode);
+
             $cdn_urls = $this->main->get_cdn_urls();
 
             foreach ($options as $option_key => $option_value) {
@@ -308,13 +347,17 @@ class Assets
                             $ext_ver = $cdn_urls['htmx_extensions'][$ext_slug]['version'];
                         }
                     } else {
-                        // Assumes extension file is $ext_slug.js inside a folder $ext_slug
+                        // Try local files (works for both plugin and library mode now)
                         $local_file_path = $extensions_dir_local . $ext_slug . '.js';
                         if (file_exists($local_file_path)) {
                             $ext_url = $extensions_dir_url . $ext_slug . '.js';
                             $ext_ver = filemtime($local_file_path);
                         }
                     }
+
+                    // Filter: Allow developers to override HTMX extension URLs
+                    $ext_url = apply_filters('hmapi/assets/htmx_extension_url', $ext_url, $ext_slug, $load_from_cdn, $is_library_mode);
+                    $ext_ver = apply_filters('hmapi/assets/htmx_extension_version', $ext_ver, $ext_slug, $load_from_cdn, $is_library_mode);
 
                     if ($ext_url) {
                         wp_enqueue_script('hmapi-htmx-ext-' . $ext_slug, $ext_url, ['hmapi-htmx'], $ext_ver, true);
@@ -331,6 +374,85 @@ class Assets
         } else {
             do_action('hmapi/enqueue/frontend_scripts_end', $options);
         }
+    }
+
+    /**
+     * Construct the proper URL for assets when running in library mode.
+     *
+     * When the plugin is loaded as a Composer library, assets are available at paths like:
+     * wp-content/plugins/some-plugin/vendor-dist/estebanforge/hypermedia-api-wordpress/assets/js/libs/
+     *
+     * This method detects the vendor directory {
+     *      vendor-dist
+     *      vendor-prefixed
+     *      vendor-prefix
+     *      vendor-custom
+     *      vendor
+     * }
+     * And constructs the public URL to reach the plugin's assets, respecting privacy by avoiding CDN.
+     *
+     * @since 2.0.5
+     *
+     * @param string $plugin_path The absolute filesystem path to the plugin directory
+     * @return string The public URL to the plugin directory, or empty string if unable to detect
+     */
+    private function get_library_mode_url(string $plugin_path): string
+    {
+        // Normalize the plugin path
+        $plugin_path = rtrim($plugin_path, '/');
+
+        // Get WordPress content directory paths
+        $content_dir = defined('WP_CONTENT_DIR') ? WP_CONTENT_DIR : ABSPATH . 'wp-content';
+        $content_url = defined('WP_CONTENT_URL') ? WP_CONTENT_URL : get_site_url() . '/wp-content';
+
+        // Normalize content directory path
+        $content_dir = rtrim($content_dir, '/');
+        $content_url = rtrim($content_url, '/');
+
+        // Supported vendor directory names for explicit detection
+        $vendor_directories = [
+            'vendor-dist',
+            'vendor-prefixed',
+            'vendor-prefix',
+            'vendor-custom',
+            'vendor'
+        ];
+
+        // Check if plugin path is within wp-content directory
+        if (strpos($plugin_path, $content_dir) === 0) {
+            // Get the relative path from wp-content
+            $relative_path = substr($plugin_path, strlen($content_dir));
+
+            // Explicitly validate that this is a supported vendor directory structure
+            foreach ($vendor_directories as $vendor_dir) {
+                if (strpos($relative_path, '/' . $vendor_dir . '/') !== false) {
+                    // Construct and return the URL for valid vendor directory
+                    return $content_url . $relative_path . '/';
+                }
+            }
+
+            // For non-vendor paths (direct plugin installation), also allow
+            if (strpos($relative_path, '/plugins/') === 0) {
+                return $content_url . $relative_path . '/';
+            }
+        }
+
+        // Fallback: try to detect plugin directory pattern with explicit vendor directory validation
+        // Look for patterns like: /wp-content/plugins/some-plugin/vendor-*/estebanforge/hypermedia-api-wordpress/
+        foreach ($vendor_directories as $vendor_dir) {
+            $pattern = '#/wp-content/(.+/' . preg_quote($vendor_dir, '#') . '/.+)$#';
+            if (preg_match($pattern, $plugin_path, $matches)) {
+                return $content_url . '/' . $matches[1] . '/';
+            }
+        }
+
+        // Final fallback for any wp-content path (maintains backward compatibility)
+        if (preg_match('#/wp-content/(.+)$#', $plugin_path, $matches)) {
+            return $content_url . '/' . $matches[1] . '/';
+        }
+
+        // If all else fails, return empty string to maintain current behavior
+        return '';
     }
 
     /**

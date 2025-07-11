@@ -1143,6 +1143,178 @@ add_filter('hmapi/sanitize_param_array_value', function($sanitized_array, $origi
 }, 10, 2);
 ```
 
+#### Customize Asset Loading
+
+For developers who need fine-grained control over where JavaScript libraries are loaded from, the plugin provides filters to override asset URLs for all libraries. These filters work in both plugin and library mode, giving you complete flexibility.
+
+**Available Asset Filters:**
+
+- `hmapi/assets/htmx_url` - Override HTMX library URL
+- `hmapi/assets/htmx_version` - Override HTMX library version
+- `hmapi/assets/hyperscript_url` - Override Hyperscript library URL
+- `hmapi/assets/hyperscript_version` - Override Hyperscript library version
+- `hmapi/assets/alpinejs_url` - Override Alpine.js library URL
+- `hmapi/assets/alpinejs_version` - Override Alpine.js library version
+- `hmapi/assets/alpine_ajax_url` - Override Alpine Ajax library URL
+- `hmapi/assets/alpine_ajax_version` - Override Alpine Ajax library version
+- `hmapi/assets/datastar_url` - Override Datastar library URL
+- `hmapi/assets/datastar_version` - Override Datastar library version
+- `hmapi/assets/htmx_extension_url` - Override HTMX extension URLs
+- `hmapi/assets/htmx_extension_version` - Override HTMX extension versions
+
+**Filter Parameters:**
+
+Each filter receives the following parameters:
+- `$url` - Current URL (CDN or local)
+- `$load_from_cdn` - Whether CDN loading is enabled
+- `$asset` - Asset configuration array with `local_url` and `local_path`
+- `$is_library_mode` - Whether running in library mode
+
+For HTMX extensions, additional parameters:
+- `$ext_slug` - Extension slug (e.g., 'loading-states', 'sse')
+
+**Common Use Cases:**
+
+**Load from Custom CDN:**
+```php
+// Use your own CDN for all libraries
+add_filter('hmapi/assets/htmx_url', function($url, $load_from_cdn, $asset, $is_library_mode) {
+    return 'https://your-cdn.com/js/htmx@2.0.3.min.js';
+}, 10, 4);
+
+add_filter('hmapi/assets/datastar_url', function($url, $load_from_cdn, $asset, $is_library_mode) {
+    return 'https://your-cdn.com/js/datastar@1.0.0.min.js';
+}, 10, 4);
+```
+
+**Custom Local Paths for Library Mode:**
+```php
+// Override asset URLs when running as library with custom vendor structure
+add_filter('hmapi/assets/htmx_url', function($url, $load_from_cdn, $asset, $is_library_mode) {
+    if ($is_library_mode) {
+        // Load from your custom assets directory
+        return content_url('plugins/my-plugin/assets/htmx/htmx.min.js');
+    }
+    return $url;
+}, 10, 4);
+
+add_filter('hmapi/assets/datastar_url', function($url, $load_from_cdn, $asset, $is_library_mode) {
+    if ($is_library_mode) {
+        return content_url('plugins/my-plugin/assets/datastar/datastar.min.js');
+    }
+    return $url;
+}, 10, 4);
+```
+
+**Version-Specific Loading:**
+```php
+// Force specific versions for compatibility
+add_filter('hmapi/assets/alpinejs_url', function($url, $load_from_cdn, $asset, $is_library_mode) {
+    return 'https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js';
+}, 10, 4);
+
+add_filter('hmapi/assets/alpinejs_version', function($version, $load_from_cdn, $asset, $is_library_mode) {
+    return '3.13.0';
+}, 10, 4);
+```
+
+**Conditional Loading Based on Environment:**
+```php
+// Different sources for different environments
+add_filter('hmapi/assets/datastar_url', function($url, $load_from_cdn, $asset, $is_library_mode) {
+    if (wp_get_environment_type() === 'production') {
+        return 'https://your-production-cdn.com/datastar.min.js';
+    } elseif (wp_get_environment_type() === 'staging') {
+        return 'https://staging-cdn.com/datastar.js';
+    } else {
+        // Development - use local file
+        return $asset['local_url'];
+    }
+}, 10, 4);
+```
+
+**HTMX Extensions from Custom Sources:**
+```php
+// Override specific HTMX extensions
+add_filter('hmapi/assets/htmx_extension_url', function($url, $ext_slug, $load_from_cdn, $is_library_mode) {
+    // Load SSE extension from custom source
+    if ($ext_slug === 'sse') {
+        return 'https://your-custom-cdn.com/htmx-extensions/sse.js';
+    }
+
+    // Load all extensions from your CDN
+    return "https://your-cdn.com/htmx-extensions/{$ext_slug}.js";
+}, 10, 4);
+```
+
+**Library Mode with Custom Vendor Directory Detection:**
+```php
+// Handle non-standard vendor directory structures
+add_filter('hmapi/assets/htmx_url', function($url, $load_from_cdn, $asset, $is_library_mode) {
+    if ($is_library_mode && empty($url)) {
+        // Custom detection for non-standard paths
+        $plugin_path = plugin_dir_path(__FILE__);
+        if (strpos($plugin_path, '/vendor-custom/') !== false) {
+            $custom_url = str_replace(WP_CONTENT_DIR, WP_CONTENT_URL, $plugin_path);
+            return $custom_url . 'assets/js/libs/htmx.min.js';
+        }
+    }
+    return $url;
+}, 10, 4);
+```
+
+**Complete Asset Override Example:**
+```php
+// Override all hypermedia library URLs for a custom setup
+function my_plugin_override_hypermedia_assets() {
+    $base_url = 'https://my-custom-cdn.com/hypermedia/';
+
+    // HTMX
+    add_filter('hmapi/assets/htmx_url', function() use ($base_url) {
+        return $base_url . 'htmx@2.0.3.min.js';
+    });
+
+    // Hyperscript
+    add_filter('hmapi/assets/hyperscript_url', function() use ($base_url) {
+        return $base_url . 'hyperscript@0.9.12.min.js';
+    });
+
+    // Alpine.js
+    add_filter('hmapi/assets/alpinejs_url', function() use ($base_url) {
+        return $base_url . 'alpinejs@3.13.0.min.js';
+    });
+
+    // Alpine Ajax
+    add_filter('hmapi/assets/alpine_ajax_url', function() use ($base_url) {
+        return $base_url . 'alpine-ajax@1.3.0.min.js';
+    });
+
+    // Datastar
+    add_filter('hmapi/assets/datastar_url', function() use ($base_url) {
+        return $base_url . 'datastar@1.0.0.min.js';
+    });
+
+    // HTMX Extensions
+    add_filter('hmapi/assets/htmx_extension_url', function($url, $ext_slug) use ($base_url) {
+        return $base_url . "htmx-extensions/{$ext_slug}.js";
+    }, 10, 2);
+}
+
+// Apply overrides only in library mode
+add_action('plugins_loaded', function() {
+    if (function_exists('hm_is_library_mode') && hm_is_library_mode()) {
+        my_plugin_override_hypermedia_assets();
+    }
+});
+```
+
+These filters provide maximum flexibility for developers who need to:
+- Host libraries on their own CDN for performance/security
+- Use custom builds or versions
+- Handle non-standard vendor directory structures
+- Implement environment-specific loading strategies
+- Ensure asset availability in complex deployment scenarios
+
 #### Disable Admin Interface Completely
 
 If you want to configure everything programmatically and hide the admin interface, define the `HMAPI_LIBRARY_MODE` constant in your `wp-config.php` or a custom plugin file. This will prevent the settings page from being added.
