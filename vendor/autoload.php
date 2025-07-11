@@ -16,7 +16,7 @@ if (PHP_VERSION_ID < 50600) {
     throw new RuntimeException($err);
 }
 
-require_once __DIR__ . '/../vendor-dist//autoload.php';
+require_once __DIR__ . '/../vendor-prefixed/autoload.php';
 require_once __DIR__ . '/composer/autoload_aliases.php';
 require_once __DIR__ . '/composer/autoload_real.php';
 return ComposerAutoloaderInitd5c8233ff79c1d96de55a511a11b627a::getLoader();

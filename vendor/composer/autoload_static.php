@@ -7,51 +7,81 @@ namespace Composer\Autoload;
 class ComposerStaticInitd5c8233ff79c1d96de55a511a11b627a
 {
     public static $files = array (
-        'd767e4fc2dc52fe66584ab8c6684783e' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/helpers.php',
-        '53b3b608b18ef5b655166dcd8c512966' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/helpers.php',
-        '60bb17a79c7758c8c553181dcced7422' => __DIR__ . '/../..' . '/api-for-htmx.php',
+        '72e816447e9693b5abd7c6b9b4e3c163' => __DIR__ . '/../..' . '/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        's' => 
-        array (
-            'starfederation\\datastar\\' => 24,
-        ),
-        'J' => 
-        array (
-            'Jeffreyvr\\WPSettings\\' => 21,
-        ),
         'H' => 
         array (
             'HMApi\\' => 6,
         ),
-        'A' => 
-        array (
-            'Adbar\\' => 6,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'starfederation\\datastar\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/starfederation/datastar-php/src',
-        ),
-        'Jeffreyvr\\WPSettings\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src',
-        ),
         'HMApi\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'Adbar\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/adbario/php-dot-notation/src',
-        ),
     );
 
     public static $classMap = array (
+        'ComposerAutoloaderInit5bc05b791c01bb0c9db11ac82e616442' => __DIR__ . '/../..' . '/vendor-dist/composer/autoload_real.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'HMApi\\Adbar\\Dot' => __DIR__ . '/../..' . '/vendor-dist/adbario/php-dot-notation/src/Dot.php',
+        'HMApi\\Admin\\Activation' => __DIR__ . '/../..' . '/src/Admin/Activation.php',
+        'HMApi\\Admin\\Options' => __DIR__ . '/../..' . '/src/Admin/Options.php',
+        'HMApi\\Admin\\WPSettingsOptions' => __DIR__ . '/../..' . '/src/Admin/WPSettingsOptions.php',
+        'HMApi\\Assets' => __DIR__ . '/../..' . '/src/Assets.php',
+        'HMApi\\Compatibility' => __DIR__ . '/../..' . '/src/Compatibility.php',
+        'HMApi\\Composer\\Autoload\\ClassLoader' => __DIR__ . '/../..' . '/vendor-dist/composer/ClassLoader.php',
+        'HMApi\\Composer\\Autoload\\ComposerStaticInit5bc05b791c01bb0c9db11ac82e616442' => __DIR__ . '/../..' . '/vendor-dist/composer/autoload_static.php',
+        'HMApi\\Config' => __DIR__ . '/../..' . '/src/Config.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\EnqueueManager' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/EnqueueManager.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Enqueuer' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Enqueuer.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Error' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Error.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Flash' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Flash.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Option' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Option.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Checkbox' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/Checkbox.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Choices' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/Choices.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\CodeEditor' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/CodeEditor.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Color' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/Color.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Image' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/Image.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Media' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/Media.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\OptionAbstract' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/OptionAbstract.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Select' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/Select.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\SelectMultiple' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/SelectMultiple.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Text' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/Text.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Textarea' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/Textarea.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Video' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/Video.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Options\\WPEditor' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Options/WPEditor.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Section' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Section.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Tab' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Tab.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\Traits\\HasOptionLevel' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Traits/HasOptionLevel.php',
+        'HMApi\\Jeffreyvr\\WPSettings\\WPSettings' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/WPSettings.php',
+        'HMApi\\Libraries\\AlpineAjaxLib' => __DIR__ . '/../..' . '/src/Libraries/AlpineAjaxLib.php',
+        'HMApi\\Libraries\\DatastarLib' => __DIR__ . '/../..' . '/src/Libraries/DatastarLib.php',
+        'HMApi\\Libraries\\HTMXLib' => __DIR__ . '/../..' . '/src/Libraries/HTMXLib.php',
+        'HMApi\\Main' => __DIR__ . '/../..' . '/src/Main.php',
+        'HMApi\\Render' => __DIR__ . '/../..' . '/src/Render.php',
+        'HMApi\\Router' => __DIR__ . '/../..' . '/src/Router.php',
+        'HMApi\\Theme' => __DIR__ . '/../..' . '/src/Theme.php',
+        'HMApi\\starfederation\\datastar\\Consts' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/Consts.php',
+        'HMApi\\starfederation\\datastar\\ServerSentEventData' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/ServerSentEventData.php',
+        'HMApi\\starfederation\\datastar\\ServerSentEventGenerator' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/ServerSentEventGenerator.php',
+        'HMApi\\starfederation\\datastar\\enums\\ElementPatchMode' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/enums/ElementPatchMode.php',
+        'HMApi\\starfederation\\datastar\\enums\\EventType' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/enums/EventType.php',
+        'HMApi\\starfederation\\datastar\\enums\\FragmentMergeMode' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/enums/FragmentMergeMode.php',
+        'HMApi\\starfederation\\datastar\\events\\EventInterface' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/EventInterface.php',
+        'HMApi\\starfederation\\datastar\\events\\EventTrait' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/EventTrait.php',
+        'HMApi\\starfederation\\datastar\\events\\ExecuteScript' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/ExecuteScript.php',
+        'HMApi\\starfederation\\datastar\\events\\Location' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/Location.php',
+        'HMApi\\starfederation\\datastar\\events\\MergeFragments' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/MergeFragments.php',
+        'HMApi\\starfederation\\datastar\\events\\MergeSignals' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/MergeSignals.php',
+        'HMApi\\starfederation\\datastar\\events\\PatchElements' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/PatchElements.php',
+        'HMApi\\starfederation\\datastar\\events\\PatchSignals' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/PatchSignals.php',
+        'HMApi\\starfederation\\datastar\\events\\RemoveElements' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/RemoveElements.php',
+        'HMApi\\starfederation\\datastar\\events\\RemoveFragments' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/RemoveFragments.php',
+        'HMApi\\starfederation\\datastar\\events\\RemoveSignals' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/RemoveSignals.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

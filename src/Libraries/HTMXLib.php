@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace HMApi\Libraries;
 
+use HMApi\Main;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +17,7 @@ if (!defined('ABSPATH')) {
  *
  * @since 2.0.2
  */
-class HTMX
+class HTMXLib
 {
     /**
      * Get available HTMX extensions with descriptions using centralized URL management.
@@ -27,14 +29,14 @@ class HTMX
      *
      * @since 2.0.2 Adapted from HMApi\Admin\Options
      *
-     * @param \HMApi\Main $main_instance Main plugin instance for accessing CDN URLs.
+     * @param Main $main_instance Main plugin instance for accessing CDN URLs.
      * @return array {
      *     Array of available HTMX extensions with descriptions.
      *
      *     @type string $extension_key Extension description for display in admin interface.
      * }
      */
-    public static function get_extensions(\HMApi\Main $main_instance): array
+    public static function get_extensions(Main $main_instance): array
     {
         $cdn_urls = $main_instance->get_cdn_urls();
         $available_extensions = $cdn_urls['htmx_extensions'] ?? [];
@@ -71,8 +73,13 @@ class HTMX
         // Build the final array with only extensions that are available in CDN URLs
         $result = [];
         foreach (array_keys($available_extensions) as $extension_key) {
-            $result[$extension_key] = $extension_descriptions[$extension_key] ??
-                sprintf(esc_html__('HTMX %s extension', 'api-for-htmx'), $extension_key);
+            // Create a user-friendly label from the extension key.
+            $label = ucwords(str_replace(['-', '_'], ' ', $extension_key));
+
+            $result[$extension_key] = [
+                'label'       => $label,
+                'description' => $extension_descriptions[$extension_key] ?? sprintf(esc_html__('HTMX %s extension', 'api-for-htmx'), $extension_key),
+            ];
         }
 
         return $result;

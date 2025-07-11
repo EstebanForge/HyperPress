@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "baeacaddcf6adbf7e1d37eeee7d63375",
+    "content-hash": "74bbfb667233a3afd9a9dffe3c1fe4f1",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -121,16 +121,16 @@
         },
         {
             "name": "starfederation/datastar-php",
-            "version": "1.0.0-beta.19",
+            "version": "v1.0.0-RC.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/starfederation/datastar-php.git",
-                "reference": "2b6923998d16ff272572be234b8730bf61f42742"
+                "reference": "bac4f94d1c091476d8fddd6c869aaa1f3a1cdfe6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/starfederation/datastar-php/zipball/2b6923998d16ff272572be234b8730bf61f42742",
-                "reference": "2b6923998d16ff272572be234b8730bf61f42742",
+                "url": "https://api.github.com/repos/starfederation/datastar-php/zipball/bac4f94d1c091476d8fddd6c869aaa1f3a1cdfe6",
+                "reference": "bac4f94d1c091476d8fddd6c869aaa1f3a1cdfe6",
                 "shasum": ""
             },
             "require": {
@@ -164,15 +164,13 @@
                 "issues": "https://github.com/starfederation/datastar-php/issues",
                 "source": "https://github.com/starfederation/datastar-php"
             },
-            "time": "2025-05-06T22:31:23+00:00"
+            "time": "2025-07-10T12:21:14+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
-    "stability-flags": {
-        "starfederation/datastar-php": 10
-    },
+    "minimum-stability": "RC",
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace HMApi\Libraries;
 
+use HMApi\Main;
+use HMApi\starfederation\datastar\Consts;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -15,8 +18,25 @@ if (!defined('ABSPATH')) {
  *
  * @since 2.0.2
  */
-class Datastar
+class DatastarLib
 {
+    /**
+     * The main plugin instance.
+     *
+     * @var Main
+     */
+    private Main $main;
+
+    /**
+     * Constructor.
+     *
+     * @param Main $main The main plugin instance.
+     */
+    public function __construct(Main $main)
+    {
+        $this->main = $main;
+    }
+
     /**
      * Get Datastar SDK status information.
      *
@@ -36,27 +56,23 @@ class Datastar
      *     @type string $message Status message for logging/debugging.
      * }
      */
-    public static function get_sdk_status(string $option_name): array
+    public function get_sdk_status(array $options): array
     {
-        $sdk_loaded = false;
-        $version = '';
-        $message = '';
-        $html = '';
+        $sdk_loaded = $this->is_sdk_loaded();
+        $version = 'not available';
+        $message = 'Datastar PHP SDK not found. Please run composer install.';
 
-        // Check if Datastar classes are already available (namespaced by Strauss)
-        if (class_exists('HMApi\\starfederation\\datastar\\ServerSentEventGenerator')) {
-            $sdk_loaded = true;
-            $message = 'SDK already loaded by another source';
-
-            // Try to get version from composer if possible
-            // Note: Strauss might alter how version is found, this is a best-effort
-            if (function_exists('get_plugin_data') && file_exists(HMAPI_ABSPATH . 'vendor-dist/composer/installed.json')) {
-                $installed_json = @file_get_contents(HMAPI_ABSPATH . 'vendor-dist/composer/installed.json');
-                if ($installed_json) {
-                    $installed_data = json_decode($installed_json, true);
-                    // Adjust logic if Strauss changes package data structure
-                    if (isset($installed_data['packages'])) {
-                        foreach ($installed_data['packages'] as $package) {
+        if ($sdk_loaded) {
+            $version = Consts::VERSION;
+            $message = 'Datastar PHP SDK is available.';
+        } else {
+            // Check Composer's installed.json for the package
+            $composer_installed_path = HMAPI_ABSPATH . '/../../../vendor/composer/installed.json';
+            if (file_exists($composer_installed_path)) {
+                $installed = json_decode(file_get_contents($composer_installed_path), true);
+                if (isset($installed['packages'])) {
+                    foreach ($installed['packages'] as $package) {
+                        if (is_array($package) && isset($package['name'])) {
                             if (str_ends_with($package['name'], 'starfederation/datastar-php')) { // Check suffix due to potential prefixing
                                 $version = $package['version'] ?? 'unknown';
                                 break;
@@ -69,10 +85,7 @@ class Datastar
 
         // Try to load SDK if Datastar is selected as active library and SDK not already loaded
         if (!$sdk_loaded) {
-            $default_options = ['active_library' => 'htmx'];
-            $default_options = apply_filters('hmapi/default_options', $default_options);
-            $current_options = get_option($option_name, $default_options);
-            $active_library = $current_options['active_library'] ?? 'htmx';
+            $active_library = $options['active_library'] ?? 'htmx';
 
             if ($active_library === 'datastar') {
                 $sdk_loaded = self::load_sdk();
@@ -131,29 +144,18 @@ class Datastar
      */
     public static function load_sdk(): bool
     {
-        // Check if already loaded (namespaced by Strauss)
-        if (class_exists('HMApi\\starfederation\\datastar\\ServerSentEventGenerator')) {
-            return true;
-        }
+        // The Datastar SDK is loaded via the main Composer autoloader because it is excluded from Strauss.
+        // We just need to check if the class exists.
+        return class_exists(self::class);
+    }
 
-        // Try to load from plugin's vendor-dist directory
-        $vendor_autoload = HMAPI_ABSPATH . 'vendor-dist/autoload.php';
-        if (file_exists($vendor_autoload)) {
-            try {
-                require_once $vendor_autoload;
-
-                // Verify the classes are now available (namespaced by Strauss)
-                if (class_exists('HMApi\\starfederation\\datastar\\ServerSentEventGenerator')) {
-                    return true;
-                }
-            } catch (\Exception $e) {
-                // Log error if WordPress debug is enabled
-                if (defined('WP_DEBUG') && WP_DEBUG) {
-                    error_log('Hypermedia API: Failed to load Datastar SDK - ' . $e->getMessage());
-                }
-            }
-        }
-
-        return false;
+    /**
+     * Check if the Datastar SDK is loaded.
+     *
+     * @return bool
+     */
+    private function is_sdk_loaded(): bool
+    {
+        return class_exists(self::class);
     }
 }

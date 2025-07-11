@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'estebanforge/hypermedia-api-wordpress',
-        'pretty_version' => '2.0.0',
-        'version' => '2.0.0.0',
+        'pretty_version' => '2.0.1',
+        'version' => '2.0.1.0',
         'reference' => null,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -20,8 +20,8 @@
             'dev_requirement' => false,
         ),
         'estebanforge/hypermedia-api-wordpress' => array(
-            'pretty_version' => '2.0.0',
-            'version' => '2.0.0.0',
+            'pretty_version' => '2.0.1',
+            'version' => '2.0.1.0',
             'reference' => null,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
@@ -38,9 +38,9 @@
             'dev_requirement' => false,
         ),
         'starfederation/datastar-php' => array(
-            'pretty_version' => '1.0.0-beta.19',
-            'version' => '1.0.0.0-beta19',
-            'reference' => '2b6923998d16ff272572be234b8730bf61f42742',
+            'pretty_version' => 'v1.0.0-RC.1',
+            'version' => '1.0.0.0-RC1',
+            'reference' => 'bac4f94d1c091476d8fddd6c869aaa1f3a1cdfe6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../starfederation/datastar-php',
             'aliases' => array(),

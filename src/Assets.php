@@ -60,22 +60,28 @@ class Assets
      *
      * @return array Plugin options with defaults.
      */
-    private function get_options()
+    public function get_options()
     {
         if ($this->options === null) {
             $default_options_fallback = [
-                'active_library'        => 'htmx',
-                'load_from_cdn'         => 0,
-                'load_hyperscript'      => 0,
+                'active_library' => 'htmx',
+                'load_from_cdn' => 0,
+                'load_hyperscript' => 0,
                 'load_alpinejs_with_htmx' => 0,
-                'set_htmx_hxboost'      => 0,
-                'load_htmx_backend'     => 0,
-                'enable_alpinejs_core'  => 0,
-                'enable_alpine_ajax'    => 0,
+                'set_htmx_hxboost' => 0,
+                'load_htmx_backend' => 0,
+                'enable_alpinejs_core' => 0,
+                'enable_alpine_ajax' => 0,
                 'load_alpinejs_backend' => 0,
-                'load_datastar'         => 0,
+                'load_datastar' => 0,
                 'load_datastar_backend' => 0,
             ];
+
+            // Add all HTMX extensions to the defaults
+            $htmx_extensions = $this->main->get_cdn_urls()['htmx_extensions'] ?? [];
+            foreach (array_keys($htmx_extensions) as $extension_key) {
+                $default_options_fallback['load_extension_' . $extension_key] = 0;
+            }
 
             // Apply filter to allow programmatic configuration
             $default_options_fallback = apply_filters('hmapi/default_options', $default_options_fallback);

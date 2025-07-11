@@ -37,6 +37,8 @@ class WPSettingsOptions extends OptionAbstract
             echo $this->render_api_url_info();
         } elseif (isset($this->args['debug_data'])) {
             echo $this->render_debug_table();
+        } elseif ($this->args['name'] === 'datastar_sdk_status') {
+            echo wp_kses_post($this->args['html']);
         }
 
         echo '</td></tr>';
