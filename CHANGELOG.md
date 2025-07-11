@@ -1,6 +1,6 @@
 # Changelog
 
-# 2.0.4 / 2025-07-11
+# 2.0.5 / 2025-07-11
 - **NEW:** Added a suite of Datastar helper functions (`hm_ds_*`) to simplify working with Server-Sent Events (SSE), including functions for patching elements, managing signals, and executing scripts.
 - **IMPROVEMENT:** The admin settings page now dynamically displays tabs based on the selected active library (HTMX, Alpine Ajax, or Datastar), reducing UI clutter.
 - **REFACTOR:** Centralized plugin option management by introducing a `get_options()` method in the main plugin class.
