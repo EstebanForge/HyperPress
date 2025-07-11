@@ -3,6 +3,11 @@
 // No direct access.
 defined('ABSPATH') || exit('Direct access not allowed.');
 
+// Rate limiting check
+if (hm_ds_is_rate_limited()) {
+    return;
+}
+
 if (!hm_validate_request($hmvals, 'datastar_do_something')) {
     hm_die('Invalid request.');
 }

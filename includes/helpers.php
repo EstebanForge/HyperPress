@@ -59,7 +59,7 @@ function hm_send_header_response($data = [], $action = null)
 {
     // Use shared validation logic
     if (!hm_validate_request()) {
-        hm_die('Nonce verification failed.');
+        hm_die(__('Nonce verification failed.', 'api-for-htmx'));
     }
 
     if ($action === null) {
@@ -86,7 +86,7 @@ function hm_send_header_response($data = [], $action = null)
 
     // Headers already sent?
     if (headers_sent()) {
-        wp_die('HMAPI Error: Headers already sent.');
+        wp_die(__('HMAPI Error: Headers already sent.', 'api-for-htmx'));
     }
 
     // Filter our response
@@ -228,6 +228,21 @@ function hm_ds_sse(): ?ServerSentEventGenerator
 }
 
 /**
+ * Reads signals sent from the Datastar client.
+ *
+ * @since 2.0.1
+ * @return array The signals array from the client.
+ */
+function hm_ds_read_signals(): array
+{
+    if (!class_exists(ServerSentEventGenerator::class)) {
+        return [];
+    }
+
+    return ServerSentEventGenerator::readSignals();
+}
+
+/**
  * Patches elements into the DOM.
  *
  * @since 2.0.1
@@ -306,6 +321,112 @@ function hm_ds_location(string $url): void
     }
 }
 
+/**
+ * Check if current request is rate limited for Datastar SSE endpoints.
+ *
+ * Provides configurable rate limiting for SSE connections to prevent abuse
+ * and protect server resources. Uses WordPress transients for persistence.
+ *
+ * @since 2.0.1
+ * @param array $options {
+ *     Rate limiting configuration options.
+ *
+ *     @type int    $requests_per_window Maximum requests allowed per time window. Default 10.
+ *     @type int    $time_window_seconds Time window in seconds for rate limiting. Default 60.
+ *     @type string $identifier         Custom identifier for rate limiting. Default uses IP + user ID.
+ *     @type bool   $send_sse_response  Whether to send SSE error response when rate limited. Default true.
+ *     @type string $error_message      Custom error message for rate limit. Default 'Rate limit exceeded'.
+ *     @type string $error_selector     CSS selector for error display. Default '#rate-limit-error'.
+ * }
+ * @return bool True if rate limited (blocked), false if request is allowed.
+ */
+function hm_ds_is_rate_limited(array $options = []): bool
+{
+    // Default configuration
+    $defaults = [
+        'requests_per_window' => 10,
+        'time_window_seconds' => 60,
+        'identifier' => '',
+        'send_sse_response' => true,
+        'error_message' => __('Rate limit exceeded. Please wait before making more requests.', 'api-for-htmx'),
+        'error_selector' => '#rate-limit-error',
+    ];
+
+    $config = array_merge($defaults, $options);
+
+    // Generate unique identifier for this client
+    if (empty($config['identifier'])) {
+        $user_id = get_current_user_id();
+        $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $config['identifier'] = 'hmds_rate_limit_' . md5($ip_address . '_' . $user_id);
+    } else {
+        $config['identifier'] = 'hmds_rate_limit_' . md5($config['identifier']);
+    }
+
+    // Get current request count from transient
+    $current_count = get_transient($config['identifier']);
+    if ($current_count === false) {
+        $current_count = 0;
+    }
+
+    // Check if rate limit exceeded
+    if ($current_count >= $config['requests_per_window']) {
+        // Rate limit exceeded
+        if ($config['send_sse_response'] && hm_ds_sse()) {
+            // Send error response via SSE
+            hm_ds_patch_elements(
+                '<div class="rate-limit-error error" style="color: #dc3545; background: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 4px; margin: 10px 0;">' .
+                esc_html($config['error_message']) .
+                '</div>',
+                ['selector' => $config['error_selector']]
+            );
+
+            // Update signals to indicate rate limit status
+            hm_ds_patch_signals([
+                'rate_limited' => true,
+                'rate_limit_reset_in' => $config['time_window_seconds'],
+                'requests_remaining' => 0,
+            ]);
+
+            // Send rate limit info to client via script
+            hm_ds_execute_script("
+                console.warn('" . esc_js(__('Rate limit exceeded for Datastar SSE endpoint', 'api-for-htmx')) . "');
+                console.info('" . esc_js(sprintf(__('Requests allowed: %d per %d seconds', 'api-for-htmx'), $config['requests_per_window'], $config['time_window_seconds'])) . "');
+            ");
+        }
+
+        return true; // Rate limited
+    }
+
+    // Increment request count
+    $new_count = $current_count + 1;
+    set_transient($config['identifier'], $new_count, $config['time_window_seconds']);
+
+    // Send rate limit status via SSE if available
+    if ($config['send_sse_response'] && hm_ds_sse()) {
+        $remaining_requests = $config['requests_per_window'] - $new_count;
+
+        hm_ds_patch_signals([
+            'rate_limited' => false,
+            'requests_remaining' => $remaining_requests,
+            'total_requests_allowed' => $config['requests_per_window'],
+            'time_window_seconds' => $config['time_window_seconds'],
+        ]);
+
+        // Remove any existing rate limit error messages
+        hm_ds_remove_elements($config['error_selector'] . ' .rate-limit-error');
+
+        // Log remaining requests for debugging
+        if ($remaining_requests <= 5) {
+            hm_ds_execute_script("
+                console.warn('" . esc_js(sprintf(__('Rate limit warning: %d requests remaining in this time window', 'api-for-htmx'), $remaining_requests)) . "');
+            ");
+        }
+    }
+
+    return false; // Request allowed
+}
+
 // ===================================================================
 // BACKWARD COMPATIBILITY ALIASES
 // ===================================================================
@@ -349,7 +470,7 @@ function hxwp_send_header_response($data = [], $action = null)
 
     // Use shared validation logic
     if (!hm_validate_request()) {
-        hxwp_die('Nonce verification failed.');
+        hxwp_die(__('Nonce verification failed.', 'api-for-htmx'));
     }
 
     if ($action === null) {
@@ -376,7 +497,7 @@ function hxwp_send_header_response($data = [], $action = null)
 
     // Headers already sent?
     if (headers_sent()) {
-        wp_die('HXWP Error: Headers already sent.');
+        wp_die(__('HXWP Error: Headers already sent.', 'api-for-htmx'));
     }
 
     // Filter our response (legacy filter)

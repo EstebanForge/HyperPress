@@ -102,7 +102,7 @@ class WPSettingsOptions extends OptionAbstract
                 document.execCommand('copy');
 
                 var originalHtml = button.innerHTML;
-                button.innerHTML = '<span class=\"dashicons dashicons-yes-alt\" style=\"vertical-align: text-bottom; margin-right: 3px;\"></span>' + 'Copied!';
+                button.innerHTML = '<span class=\"dashicons dashicons-yes-alt\" style=\"vertical-align: text-bottom; margin-right: 3px;\"></span>' + '" . esc_js(__('Copied!', 'api-for-htmx')) . "';
 
                 setTimeout(function() {
                     button.innerHTML = originalHtml;

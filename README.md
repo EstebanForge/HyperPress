@@ -97,45 +97,721 @@ Then, in your theme, use your Hypermedia library to GET/POST to the `/wp-html/v1
 
 ### Helper Functions
 
-You can use the `hm_get_endpoint_url()` helper function to generate the URL for your hypermedia templates. This function will automatically add the `/wp-html/v1/` prefix. The hypermedia file extension (`.hm.php`) is not needed, the API will resolve it automatically.
+The plugin provides a comprehensive set of helper functions for developers to interact with hypermedia templates and manage responses. All functions are designed to work with HTMX, Alpine Ajax, and Datastar.
 
-For example:
+#### URL Generation Functions
 
-```php
-echo hm_get_endpoint_url( 'live-search' );
-```
+**`hm_get_endpoint_url(string $template_path = ''): string`**
 
-Or,
+Generates the full URL for your hypermedia templates. Automatically adds the `/wp-html/v1/` prefix and applies proper URL formatting.
 
 ```php
-hm_endpoint_url( 'live-search' );
+// Basic usage
+echo hm_get_endpoint_url('live-search');
+// Output: http://your-site.com/wp-html/v1/live-search
+
+// With subdirectories
+echo hm_get_endpoint_url('admin/user-list');
+// Output: http://your-site.com/wp-html/v1/admin/user-list
+
+// With namespaced templates (plugin/theme specific)
+echo hm_get_endpoint_url('my-plugin:dashboard/stats');
+// Output: http://your-site.com/wp-html/v1/my-plugin:dashboard/stats
 ```
 
-Will call the template located at:
+**`hm_endpoint_url(string $template_path = ''): void`**
 
-```
-/hypermedia/live-search.hm.php
-```
-And will load it from the URL:
+Same as `hm_get_endpoint_url()` but echoes the result directly. Useful for template output.
 
-```
-http://your-site.com/wp-html/v1/live-search
+```php
+// HTMX usage
+<div hx-get="<?php hm_endpoint_url('search-results'); ?>">
+    Loading...
+</div>
+
+// Datastar usage
+<div data-on-click="@get('<?php hm_endpoint_url('user-profile'); ?>')">
+    Load Profile
+</div>
+
+// Alpine Ajax usage
+<div @click="$ajax('<?php hm_endpoint_url('dashboard-stats'); ?>')">
+    Refresh Stats
+</div>
 ```
 
-This will output:
+#### Response Management Functions
 
+**`hm_send_header_response(array $data = [], string $action = null): void`**
+
+Sends hypermedia-compatible header responses for non-visual actions. Automatically validates nonces and terminates execution. Perfect for "noswap" templates that perform backend actions without returning HTML.
+
+```php
+// Success response (works with HTMX/Alpine Ajax)
+hm_send_header_response([
+    'status' => 'success',
+    'message' => 'User saved successfully',
+    'user_id' => 123
+], 'save_user');
+
+// Error response
+hm_send_header_response([
+    'status' => 'error',
+    'message' => 'Invalid email address'
+], 'save_user');
+
+// Silent success (no user notification)
+hm_send_header_response([
+    'status' => 'silent-success',
+    'data' => ['updated_count' => 5]
+]);
+
+// For Datastar SSE endpoints, use the ds helpers instead:
+// hypermedia/save-user-sse.hm.php
+
+// Get user data from Datastar signals
+$signals = hm_ds_read_signals();
+$user_data = $signals; // Signals contain the form data
+$result = save_user($user_data);
+
+if ($result['success']) {
+    // Update UI with success state
+    hm_ds_patch_elements('<div class="success">User saved!</div>', ['selector' => '#message']);
+    hm_ds_patch_signals(['user_saved' => true, 'user_id' => $result['user_id']]);
+} else {
+    // Show error message
+    hm_ds_patch_elements('<div class="error">Save failed: ' . $result['error'] . '</div>', ['selector' => '#message']);
+    hm_ds_patch_signals(['user_saved' => false, 'error' => $result['error']]);
+}
 ```
-http://your-site.com/wp-html/v1/live-search
+
+**`hm_die(string $message = '', bool $display_error = false): void`**
+
+Terminates template execution with a 200 status code (allowing hypermedia libraries to process the response) and sends error information via headers.
+
+```php
+// Die with hidden error message
+hm_die('Database connection failed');
+
+// Die with visible error message
+hm_die('Please fill in all required fields', true);
 ```
+
+#### Security & Validation Functions
+
+**`hm_validate_request(array $hmvals = null, string $action = null): bool`**
+
+Validates hypermedia requests by checking nonces and optionally validating specific actions. Supports both new (`hmapi_nonce`) and legacy (`hxwp_nonce`) nonce formats.
+
+**Note**: This function is designed for traditional HTMX/Alpine Ajax requests. For Datastar SSE endpoints, nonce validation works differently since SSE connections don't follow the same request pattern. Consider alternative security measures for SSE endpoints (user capability checks, rate limiting, etc.).
+
+```php
+// Basic nonce validation (works for all hypermedia libraries)
+if (!hm_validate_request()) {
+    hm_die('Security check failed');
+}
+
+// Validate specific action
+if (!hm_validate_request($_REQUEST, 'delete_post')) {
+    hm_die('Invalid action');
+}
+
+// Validate custom data array
+$custom_data = ['action' => 'save_settings', '_wpnonce' => $_POST['_wpnonce']];
+if (!hm_validate_request($custom_data, 'save_settings')) {
+    hm_die('Validation failed');
+}
+
+// Datastar SSE endpoint with real-time validation
+// hypermedia/validate-form.hm.php
+$signals = hm_ds_read_signals();
+$email = $signals['email'] ?? '';
+$password = $signals['password'] ?? '';
+
+// Validate email in real-time
+if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    hm_ds_patch_elements('<div class="error">Valid email required</div>', ['selector' => '#email-error']);
+    hm_ds_patch_signals(['email_valid' => false]);
+} else {
+    hm_ds_remove_elements('#email-error');
+    hm_ds_patch_signals(['email_valid' => true]);
+}
+
+// Validate password strength
+if (strlen($password) < 8) {
+    hm_ds_patch_elements('<div class="error">Password must be 8+ characters</div>', ['selector' => '#password-error']);
+    hm_ds_patch_signals(['password_valid' => false]);
+} else {
+    hm_ds_remove_elements('#password-error');
+    hm_ds_patch_signals(['password_valid' => true]);
+}
+```
+
+#### Library Detection Functions
+
+**`hm_is_library_mode(): bool`**
+
+Detects whether the plugin is running as a WordPress plugin or as a Composer library. Useful for conditional functionality.
+
+```php
+if (hm_is_library_mode()) {
+    // Running as composer library - no admin interface
+    // Configure via filters only
+    add_filter('hmapi/default_options', function($defaults) {
+        $defaults['active_library'] = 'htmx';
+        return $defaults;
+    });
+} else {
+    // Running as WordPress plugin - full functionality available
+    add_action('admin_menu', 'my_admin_menu');
+}
+
+// Datastar-specific library mode configuration
+if (hm_is_library_mode()) {
+    // Configure Datastar for production use as library
+    add_filter('hmapi/default_options', function($defaults) {
+        $defaults['active_library'] = 'datastar';
+        $defaults['load_from_cdn'] = false; // Use local files for reliability
+        $defaults['load_datastar_backend'] = true; // Enable in wp-admin
+        return $defaults;
+    });
+
+    // Register custom SSE endpoints for the plugin using this library
+    add_filter('hmapi/register_template_path', function($paths) {
+        $paths['my-plugin'] = plugin_dir_path(__FILE__) . 'datastar-templates/';
+        return $paths;
+    });
+} else {
+    // Plugin mode - users can configure via admin interface
+    // Add custom Datastar functionality only when running as main plugin
+    add_action('wp_enqueue_scripts', function() {
+        if (get_option('hmapi_active_library') === 'datastar') {
+            wp_add_inline_script('datastar', 'console.log("Datastar ready for SSE!");');
+        }
+    });
+}
+```
+
+#### Datastar Helper Functions
+
+These functions provide direct integration with Datastar's Server-Sent Events (SSE) capabilities for real-time updates.
+
+**`hm_ds_sse(): ?ServerSentEventGenerator`**
+
+Gets or creates the ServerSentEventGenerator instance. Returns `null` if Datastar SDK is not available.
+
+```php
+$sse = hm_ds_sse();
+if ($sse) {
+    // SSE is available, proceed with real-time updates
+    $sse->patchElements('<div id="status">Connected</div>');
+}
+```
+
+**`hm_ds_read_signals(): array`**
+
+Reads signals sent from the Datastar client. Returns an empty array if Datastar SDK is not available.
+
+```php
+// Read client signals
+$signals = hm_ds_read_signals();
+$user_input = $signals['search_query'] ?? '';
+$page_number = $signals['page'] ?? 1;
+
+// Use signals for processing
+if (!empty($user_input)) {
+    $results = search_posts($user_input, $page_number);
+    hm_ds_patch_elements($results_html, ['selector' => '#results']);
+}
+```
+
+**`hm_ds_patch_elements(string $html, array $options = []): void`**
+
+Patches HTML elements into the DOM via SSE. Supports various patching modes and view transitions.
+
+```php
+// Basic element patching
+hm_ds_patch_elements('<div id="message">Hello World</div>');
+
+// Advanced patching with options
+hm_ds_patch_elements(
+    '<div class="notification">Task completed</div>',
+    [
+        'selector' => '.notifications',
+        'mode' => 'append',
+        'useViewTransition' => true
+    ]
+);
+```
+
+**`hm_ds_remove_elements(string $selector, array $options = []): void`**
+
+Removes elements from the DOM via SSE.
+
+```php
+// Remove specific element
+hm_ds_remove_elements('#temp-message');
+
+// Remove with view transition
+hm_ds_remove_elements('.expired-items', ['useViewTransition' => true]);
+```
+
+**`hm_ds_patch_signals(mixed $signals, array $options = []): void`**
+
+Updates Datastar signals on the client side. Accepts JSON string or array.
+
+```php
+// Update single signal
+hm_ds_patch_signals(['user_count' => 42]);
+
+// Update multiple signals
+hm_ds_patch_signals([
+    'loading' => false,
+    'message' => 'Data loaded successfully',
+    'timestamp' => time()
+]);
+
+// Only patch if signal doesn't exist
+hm_ds_patch_signals(['default_theme' => 'dark'], ['onlyIfMissing' => true]);
+```
+
+**`hm_ds_execute_script(string $script, array $options = []): void`**
+
+Executes JavaScript code on the client via SSE.
+
+```php
+// Simple script execution
+hm_ds_execute_script('console.log("Server says hello!");');
+
+// Complex client-side operations
+hm_ds_execute_script('
+    document.querySelector("#progress").style.width = "100%";
+    setTimeout(() => {
+        location.reload();
+    }, 2000);
+');
+```
+
+**`hm_ds_location(string $url): void`**
+
+Redirects the browser to a new URL via SSE.
+
+```php
+// Redirect after processing
+hm_ds_location('/dashboard');
+
+// Redirect to external URL
+hm_ds_location('https://example.com/success');
+```
+
+**`hm_ds_is_rate_limited(array $options = []): bool`**
+
+Checks if current request is rate limited for Datastar SSE endpoints to prevent abuse and protect server resources. Uses WordPress transients for persistence across requests.
+
+```php
+// Basic rate limiting (10 requests per 60 seconds)
+if (hm_ds_is_rate_limited()) {
+    hm_die(__('Rate limit exceeded', 'api-for-htmx'));
+}
+
+// Custom rate limiting configuration
+if (hm_ds_is_rate_limited([
+    'requests_per_window' => 30,      // Allow 30 requests
+    'time_window_seconds' => 120,     // Per 2 minutes
+    'identifier' => 'search_' . get_current_user_id(), // Custom identifier
+    'error_message' => __('Search rate limit exceeded. Please wait.', 'api-for-htmx'),
+    'error_selector' => '#search-errors'
+])) {
+    // Rate limit exceeded - SSE error already sent to client
+    return;
+}
+
+// Strict rate limiting without SSE feedback
+if (hm_ds_is_rate_limited([
+    'requests_per_window' => 10,
+    'time_window_seconds' => 60,
+    'send_sse_response' => false  // Don't send SSE feedback
+])) {
+    hm_die(__('Too many requests', 'api-for-htmx'));
+}
+
+// Different rate limits for different actions
+$action = hm_ds_read_signals()['action'] ?? '';
+
+switch ($action) {
+    case 'search':
+        $rate_config = ['requests_per_window' => 20, 'time_window_seconds' => 60];
+        break;
+    case 'upload':
+        $rate_config = ['requests_per_window' => 5, 'time_window_seconds' => 300];
+        break;
+    default:
+        $rate_config = ['requests_per_window' => 30, 'time_window_seconds' => 60];
+}
+
+if (hm_ds_is_rate_limited($rate_config)) {
+    return; // Rate limited
+}
+```
+
+**Rate Limiting Options:**
+- `requests_per_window` (int): Maximum requests allowed per time window. Default: 10
+- `time_window_seconds` (int): Time window in seconds. Default: 60
+- `identifier` (string): Custom identifier for rate limiting. Default: IP + user ID
+- `send_sse_response` (bool): Send SSE error response when rate limited. Default: true
+- `error_message` (string): Custom error message. Default: translatable 'Rate limit exceeded...'
+- `error_selector` (string): CSS selector for error display. Default: '#rate-limit-error'
+
+#### Complete SSE Example
+
+Here's a practical example combining multiple Datastar helpers:
+
+```php
+// hypermedia/process-upload.hm.php
+<?php
+// Apply strict rate limiting for uploads (5 uploads per 5 minutes)
+if (hm_ds_is_rate_limited([
+    'requests_per_window' => 5,
+    'time_window_seconds' => 300,
+    'identifier' => 'file_upload_' . get_current_user_id(),
+    'error_message' => __('Upload rate limit exceeded. You can upload 5 files every 5 minutes.', 'api-for-htmx'),
+    'error_selector' => '#upload-errors'
+])) {
+    return; // Rate limited - error sent via SSE
+}
+
+// Initialize SSE
+$sse = hm_ds_sse();
+if (!$sse) {
+    hm_die('SSE not available');
+}
+
+// Show progress
+hm_ds_patch_elements('<div id="status">Processing upload...</div>');
+hm_ds_patch_signals(['progress' => 0]);
+
+// Simulate file processing
+for ($i = 1; $i <= 5; $i++) {
+    sleep(1);
+    hm_ds_patch_signals(['progress' => $i * 20]);
+    hm_ds_patch_elements('<div id="status">Processing... ' . ($i * 20) . '%</div>');
+}
+
+// Complete
+hm_ds_patch_elements('<div id="status" class="success">Upload complete!</div>');
+hm_ds_patch_signals(['progress' => 100, 'completed' => true]);
+
+// Redirect after 2 seconds
+hm_ds_execute_script('setTimeout(() => { window.location.href = "/dashboard"; }, 2000);');
+?>
+```
+
+#### Complete Datastar Integration Example
+
+Here's a complete frontend-backend example showing how all helper functions work together in a real Datastar application:
+
+**Frontend HTML:**
+```html
+<!-- Live search with real-time validation -->
+<div data-signals-query="" data-signals-results="[]" data-signals-loading="false">
+    <h3>User Search</h3>
+
+    <!-- Search input with live validation -->
+    <input
+        type="text"
+        data-bind-query
+        data-on-input="@get('<?php hm_endpoint_url('search-users-validate'); ?>')"
+        placeholder="Search users..."
+    />
+
+    <!-- Search button -->
+    <button
+        data-on-click="@get('<?php hm_endpoint_url('search-users'); ?>')"
+        data-bind-disabled="loading"
+    >
+        <span data-show="!loading">Search</span>
+        <span data-show="loading">Searching...</span>
+    </button>
+
+    <!-- Results container -->
+    <div id="search-results" data-show="results.length > 0">
+        <!-- Results will be populated via SSE -->
+    </div>
+
+    <!-- No results message -->
+    <div data-show="results.length === 0 && !loading && query.length > 0">
+        No users found
+    </div>
+</div>
+```
+
+**Backend Template - Real-time Validation (hypermedia/search-users-validate.hm.php):**
+```php
+<?php
+// Apply rate limiting
+if (hm_ds_is_rate_limited()) {
+    return; // Rate limited
+}
+
+// Get search query from signals
+$signals = hm_ds_read_signals();
+$query = trim($signals['query'] ?? '');
+
+// Validate query length
+if (strlen($query) < 2 && strlen($query) > 0) {
+    hm_ds_patch_elements(
+        '<div class="validation-error">Please enter at least 2 characters</div>',
+        ['selector' => '#search-validation']
+    );
+    hm_ds_patch_signals(['query_valid' => false]);
+} elseif (strlen($query) >= 2) {
+    hm_ds_remove_elements('#search-validation .validation-error');
+    hm_ds_patch_signals(['query_valid' => true]);
+
+    // Show search suggestion
+    hm_ds_patch_elements(
+        '<div class="search-hint">Press Enter or click Search to find users</div>',
+        ['selector' => '#search-validation']
+    );
+}
+?>
+```
+
+**Backend Template - Search Execution (hypermedia/search-users.hm.php):**
+```php
+<?php
+// Apply rate limiting for search operations
+if (hm_ds_is_rate_limited([
+    'requests_per_window' => 20,
+    'time_window_seconds' => 60,
+    'identifier' => 'user_search_' . get_current_user_id(),
+    'error_message' => __('Search rate limit exceeded. Please wait before searching again.', 'api-for-htmx'),
+    'error_selector' => '#search-errors'
+])) {
+    // Rate limit exceeded - error already sent to client via SSE
+    return;
+}
+
+// Get search parameters
+$signals = hm_ds_read_signals();
+$query = sanitize_text_field($signals['query'] ?? '');
+
+// Set loading state
+hm_ds_patch_signals(['loading' => true, 'results' => []]);
+hm_ds_patch_elements('<div class="loading">Searching users...</div>', ['selector' => '#search-results']);
+
+// Simulate search delay
+usleep(500000); // 0.5 seconds
+
+// Perform user search (example with WordPress users)
+$users = get_users([
+    'search' => '*' . $query . '*',
+    'search_columns' => ['user_login', 'user_email', 'display_name'],
+    'number' => 10
+]);
+
+// Build results HTML
+$results_html = '<div class="user-results">';
+$results_data = [];
+
+foreach ($users as $user) {
+    $results_data[] = [
+        'id' => $user->ID,
+        'name' => $user->display_name,
+        'email' => $user->user_email
+    ];
+
+    $results_html .= sprintf(
+        '<div class="user-item" data-user-id="%d">
+            <strong>%s</strong> (%s)
+            <button data-on-click="@get(\'%s\', {user_id: %d})">View Details</button>
+        </div>',
+        $user->ID,
+        esc_html($user->display_name),
+        esc_html($user->user_email),
+        hm_get_endpoint_url('user-details'),
+        $user->ID
+    );
+}
+
+$results_html .= '</div>';
+
+// Update UI with results
+if (count($users) > 0) {
+    hm_ds_patch_elements($results_html, ['selector' => '#search-results']);
+    hm_ds_patch_signals([
+        'loading' => false,
+        'results' => $results_data,
+        'result_count' => count($users)
+    ]);
+
+    // Show success notification
+    hm_ds_execute_script("
+        const notification = document.createElement('div');
+        notification.className = 'notification success';
+        notification.textContent = 'Found " . count($users) . " users';
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+    ");
+} else {
+    hm_ds_patch_elements('<div class="no-results">No users found for \"' . esc_html($query) . '\"</div>', ['selector' => '#search-results']);
+    hm_ds_patch_signals(['loading' => false, 'results' => []]);
+}
+?>
+```
+
+This example demonstrates:
+- **Frontend**: Datastar signals, reactive UI, and SSE endpoint integration
+- **Backend**: Real-time feedback, progressive enhancement, and signal processing
+- **Helper Usage**: `hm_ds_read_signals()`, `hm_get_endpoint_url()`, and all `hm_ds_*` functions
+- **Security**: Input sanitization and validation, plus rate limiting for SSE endpoints
+- **UX**: Loading states, real-time validation, and user feedback
+
+#### Rate Limiting Integration Example
+
+Here's a complete example showing how to integrate rate limiting with user feedback:
+
+**Frontend HTML:**
+```html
+<!-- Rate limit aware interface -->
+<div data-signals-rate_limited="false" data-signals-requests_remaining="30">
+    <h3>Real-time Chat</h3>
+
+    <!-- Rate limit status display -->
+    <div id="rate-limit-status" data-show="rate_limited">
+        <div class="warning">Rate limit reached. Please wait before sending more messages.</div>
+    </div>
+
+    <!-- Requests remaining indicator -->
+    <div class="rate-info" data-show="!rate_limited && requests_remaining <= 10">
+        <small>Requests remaining: <span data-text="requests_remaining"></span></small>
+    </div>
+
+    <!-- Chat input -->
+    <input
+        type="text"
+        data-bind-message
+        data-on-keyup.enter="@get('<?php hm_endpoint_url('send-message'); ?>')"
+        data-bind-disabled="rate_limited"
+        placeholder="Type your message..."
+    />
+
+    <!-- Send button -->
+    <button
+        data-on-click="@get('<?php hm_endpoint_url('send-message'); ?>')"
+        data-bind-disabled="rate_limited"
+    >
+        Send Message
+    </button>
+
+    <!-- Error display area -->
+    <div id="chat-errors"></div>
+
+    <!-- Messages area -->
+    <div id="chat-messages"></div>
+</div>
+```
+
+**Backend Template (hypermedia/send-message.hm.php):**
+```php
+<?php
+// Apply rate limiting for chat messages (10 messages per minute)
+if (hm_ds_is_rate_limited([
+    'requests_per_window' => 10,
+    'time_window_seconds' => 60,
+    'identifier' => 'chat_' . get_current_user_id(),
+    'error_message' => __('Message rate limit exceeded. You can send 10 messages per minute.', 'api-for-htmx'),
+    'error_selector' => '#chat-errors'
+])) {
+    // Rate limit exceeded - user is notified via SSE
+    // The rate limiting helper automatically updates signals and shows error
+    return;
+}
+
+// Get message from signals
+$signals = hm_ds_read_signals();
+$message = trim($signals['message'] ?? '');
+
+// Validate message
+if (empty($message)) {
+    hm_ds_patch_elements(
+        '<div class="error">' . esc_html__('Message cannot be empty', 'api-for-htmx') . '</div>',
+        ['selector' => '#chat-errors']
+    );
+    return;
+}
+
+if (strlen($message) > 500) {
+    hm_ds_patch_elements(
+        '<div class="error">' . esc_html__('Message too long (max 500 characters)', 'api-for-htmx') . '</div>',
+        ['selector' => '#chat-errors']
+    );
+    return;
+}
+
+// Clear any errors
+hm_ds_remove_elements('#chat-errors .error');
+
+// Save message (example)
+$user = wp_get_current_user();
+$chat_message = [
+    'user' => $user->display_name,
+    'message' => esc_html($message),
+    'timestamp' => current_time('H:i:s')
+];
+
+// Add message to chat
+$message_html = sprintf(
+    '<div class="message">
+        <strong>%s</strong> <small>%s</small><br>
+        %s
+    </div>',
+    $chat_message['user'],
+    $chat_message['timestamp'],
+    $chat_message['message']
+);
+
+hm_ds_patch_elements($message_html, [
+    'selector' => '#chat-messages',
+    'mode' => 'append'
+]);
+
+// Clear input field
+hm_ds_patch_signals(['message' => '']);
+
+// Show success feedback
+hm_ds_execute_script("
+    // Scroll to bottom of chat
+    const chatMessages = document.getElementById('chat-messages');
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Brief success indicator
+    const input = document.querySelector('[data-bind-message]');
+    input.style.borderColor = '#28a745';
+    setTimeout(() => { input.style.borderColor = ''; }, 1000);
+");
+
+// The rate limiting helper automatically updates the requests_remaining signal
+// So the frontend will show the updated count automatically
+?>
+```
+
+This rate limiting example shows:
+- **Intuitive Function Naming**: `hm_ds_is_rate_limited()` returns true when blocked
+- **Proactive Rate Limiting**: Applied before processing the request
+- **Automatic User Feedback**: Rate limit helper sends SSE responses with error messages
+- **Dynamic UI Updates**: Frontend reacts to rate limit signals automatically
+- **Resource Protection**: Prevents abuse of SSE endpoints
+- **User Experience**: Clear feedback about rate limits and remaining requests
 
 #### Backward Compatibility
 
-For backward compatibility, the old `hxwp_api_url()` function is still available as an alias for `hm_get_endpoint_url()`. However, we recommend updating your code to use the new function names as the old ones are deprecated and may be removed in future versions.
+For backward compatibility, the following deprecated functions are still available but should be avoided in new development:
 
-Other helper functions available:
-- `hm_send_header_response()` / `hxwp_send_header_response()` (deprecated alias)
-- `hm_die()` / `hxwp_die()` (deprecated alias)
-- `hm_validate_request()` / `hxwp_validate_request()` (deprecated alias)
+- `hxwp_api_url()` → Use `hm_get_endpoint_url()` instead
+- `hxwp_send_header_response()` → Use `hm_send_header_response()` instead
+- `hxwp_die()` → Use `hm_die()` instead
+- `hxwp_validate_request()` → Use `hm_validate_request()` instead
 
 ### How to pass data to the template
 
@@ -192,30 +868,31 @@ Datastar can be used to implement Server-Sent Events (SSE) to push real-time upd
 ```php
 // In your hypermedia template file, e.g., hypermedia/my-sse-endpoint.hm.php
 
-use HMApi\starfederation\datastar\ServerSentEventGenerator;
+// Apply rate limiting for SSE endpoint
+if (hm_ds_is_rate_limited()) {
+    return; // Rate limited
+}
 
-// Required headers for SSE
-header('Content-Type: text/event-stream');
-header('Cache-Control: no-cache');
-header('Connection: keep-alive');
+// Initialize SSE (headers are sent automatically)
+$sse = hm_ds_sse();
+if (!$sse) {
+    hm_die('SSE not available');
+}
 
-$signals = ServerSentEventGenerator::readSignals();
+// Read client signals
+$signals = hm_ds_read_signals();
 $delay = $signals['delay'] ?? 0;
 $message = 'Hello, world!';
 
-$sse = new ServerSentEventGenerator();
-
+// Stream message character by character
 for ($i = 0; $i < strlen($message); $i++) {
-    $sse->patchElements('<div id="message">'
-        . substr($message, 0, $i + 1)
-        . '</div>'
-    );
+    hm_ds_patch_elements('<div id="message">' . substr($message, 0, $i + 1) . '</div>');
 
-    // Sleep for the provided delay in milliseconds.
+    // Sleep for the provided delay in milliseconds
     usleep($delay * 1000);
 }
 
-// The script will automatically exit and send the SSE stream.
+// Script will automatically exit and send the SSE stream
 ```
 
 On the frontend, you can create an HTML structure to consume this SSE endpoint. The following is a minimal example adapted from the official Datastar SDK companion:

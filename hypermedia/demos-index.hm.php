@@ -168,7 +168,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                 <div class="demo-examples">
                     <div class="example-item">
                         <h4>Simple GET Request</h4>
-                        <button hx-get="<?php echo hm_get_endpoint_url('htmx-demo'); ?>?action=hmapi_do_something&demo_type=simple_get"
+                        <button hx-get="<?php echo hm_get_endpoint_url('htmx-demo'); ?>?action=htmx_do_something&demo_type=simple_get"
                                 hx-target="#htmx-response-1"
                                 hx-indicator="#htmx-loading-1"
                                 class="button">
@@ -182,7 +182,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                         <h4>POST with Form Data</h4>
                         <form hx-post="<?php echo hm_get_endpoint_url('htmx-demo'); ?>"
                               hx-target="#htmx-response-2">
-                            <input type="hidden" name="action" value="hmapi_do_something">
+                            <input type="hidden" name="action" value="htmx_do_something">
                             <input type="hidden" name="demo_type" value="form_post">
                             <input type="text" name="user_input" placeholder="Enter some text" class="input-field">
                             <button type="submit" class="button">Submit Form</button>
@@ -191,7 +191,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                     </div>
 
                     <div style="text-align: center; margin-top: 20px;">
-                        <a href="<?php echo hm_get_endpoint_url('htmx-demo'); ?>?action=hmapi_do_something&demo_type=full_demo"
+                        <a href="<?php echo hm_get_endpoint_url('htmx-demo'); ?>?action=htmx_do_something&demo_type=full_demo"
                            class="button button-secondary" target="_blank">
                             View Full HTMX Demo
                         </a>
