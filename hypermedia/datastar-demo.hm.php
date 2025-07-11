@@ -2,6 +2,11 @@
 // No direct access.
 defined('ABSPATH') || exit('Direct access not allowed.');
 
+// Rate limiting check
+if (hm_ds_is_rate_limited()) {
+    return;
+}
+
 // Secure it.
 $hmapi_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
 
@@ -19,7 +24,7 @@ if (!isset($hmvals['action']) || $hmvals['action'] != 'datastar_do_something') {
 <div class="hmapi-demo-container">
 	<h3>Hello Datastar!</h3>
 
-	<p>Demo template loaded from <code>plugins/api-for-htmx/<?php echo esc_html(HMAPI_TEMPLATE_DIR); ?>/datastar-demo.hm.php</code></p>
+	<p>Demo template loaded from <code>plugins/Hypermedia-API-WordPress/<?php echo esc_html(HMAPI_TEMPLATE_DIR); ?>/datastar-demo.hm.php</code></p>
 
 	<p>Received params ($hmvals):</p>
 

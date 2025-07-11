@@ -3,7 +3,7 @@
 // No direct access.
 defined('ABSPATH') || exit('Direct access not allowed.');
 
-if (!hm_validate_request($hmvals, 'hmapi_do_something')) {
+if (!hm_validate_request($hmvals, 'htmx_do_something')) {
     hm_die('Invalid request.');
 }
 

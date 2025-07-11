@@ -19,7 +19,7 @@ if (!isset($hmvals['action']) || $hmvals['action'] != 'alpine_ajax_do_something'
 <div class="hmapi-demo-container">
 	<h3>Hello Alpine Ajax!</h3>
 
-	<p>Demo template loaded from <code>plugins/api-for-htmx/<?php echo esc_html(HMAPI_TEMPLATE_DIR); ?>/alpine-ajax-demo.hm.php</code></p>
+	<p>Demo template loaded from <code>plugins/Hypermedia-API-WordPress/<?php echo esc_html(HMAPI_TEMPLATE_DIR); ?>/alpine-ajax-demo.hm.php</code></p>
 
 	<p>Received params ($hmvals):</p>
 
