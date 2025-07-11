@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd5c8233ff79c1d96de55a511a11b627a
+class ComposerStaticInit369f32ade1fa3b50a4ccab9651b09a9a
 {
     public static $files = array (
         '72e816447e9693b5abd7c6b9b4e3c163' => __DIR__ . '/../..' . '/bootstrap.php',
@@ -25,7 +25,7 @@ class ComposerStaticInitd5c8233ff79c1d96de55a511a11b627a
     );
 
     public static $classMap = array (
-        'ComposerAutoloaderInit5bc05b791c01bb0c9db11ac82e616442' => __DIR__ . '/../..' . '/vendor-dist/composer/autoload_real.php',
+        'ComposerAutoloaderInitc0e3399e672c61366037eb22a5860f68' => __DIR__ . '/../..' . '/vendor-dist/composer/autoload_real.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'HMApi\\Adbar\\Dot' => __DIR__ . '/../..' . '/vendor-dist/adbario/php-dot-notation/src/Dot.php',
         'HMApi\\Admin\\Activation' => __DIR__ . '/../..' . '/src/Admin/Activation.php',
@@ -34,7 +34,7 @@ class ComposerStaticInitd5c8233ff79c1d96de55a511a11b627a
         'HMApi\\Assets' => __DIR__ . '/../..' . '/src/Assets.php',
         'HMApi\\Compatibility' => __DIR__ . '/../..' . '/src/Compatibility.php',
         'HMApi\\Composer\\Autoload\\ClassLoader' => __DIR__ . '/../..' . '/vendor-dist/composer/ClassLoader.php',
-        'HMApi\\Composer\\Autoload\\ComposerStaticInit5bc05b791c01bb0c9db11ac82e616442' => __DIR__ . '/../..' . '/vendor-dist/composer/autoload_static.php',
+        'HMApi\\Composer\\Autoload\\ComposerStaticInitc0e3399e672c61366037eb22a5860f68' => __DIR__ . '/../..' . '/vendor-dist/composer/autoload_static.php',
         'HMApi\\Config' => __DIR__ . '/../..' . '/src/Config.php',
         'HMApi\\Jeffreyvr\\WPSettings\\EnqueueManager' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/EnqueueManager.php',
         'HMApi\\Jeffreyvr\\WPSettings\\Enqueuer' => __DIR__ . '/../..' . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Enqueuer.php',
@@ -70,26 +70,21 @@ class ComposerStaticInitd5c8233ff79c1d96de55a511a11b627a
         'HMApi\\starfederation\\datastar\\ServerSentEventGenerator' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/ServerSentEventGenerator.php',
         'HMApi\\starfederation\\datastar\\enums\\ElementPatchMode' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/enums/ElementPatchMode.php',
         'HMApi\\starfederation\\datastar\\enums\\EventType' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/enums/EventType.php',
-        'HMApi\\starfederation\\datastar\\enums\\FragmentMergeMode' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/enums/FragmentMergeMode.php',
         'HMApi\\starfederation\\datastar\\events\\EventInterface' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/EventInterface.php',
         'HMApi\\starfederation\\datastar\\events\\EventTrait' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/EventTrait.php',
         'HMApi\\starfederation\\datastar\\events\\ExecuteScript' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/ExecuteScript.php',
         'HMApi\\starfederation\\datastar\\events\\Location' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/Location.php',
-        'HMApi\\starfederation\\datastar\\events\\MergeFragments' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/MergeFragments.php',
-        'HMApi\\starfederation\\datastar\\events\\MergeSignals' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/MergeSignals.php',
         'HMApi\\starfederation\\datastar\\events\\PatchElements' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/PatchElements.php',
         'HMApi\\starfederation\\datastar\\events\\PatchSignals' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/PatchSignals.php',
         'HMApi\\starfederation\\datastar\\events\\RemoveElements' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/RemoveElements.php',
-        'HMApi\\starfederation\\datastar\\events\\RemoveFragments' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/RemoveFragments.php',
-        'HMApi\\starfederation\\datastar\\events\\RemoveSignals' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/RemoveSignals.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd5c8233ff79c1d96de55a511a11b627a::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd5c8233ff79c1d96de55a511a11b627a::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitd5c8233ff79c1d96de55a511a11b627a::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit369f32ade1fa3b50a4ccab9651b09a9a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit369f32ade1fa3b50a4ccab9651b09a9a::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit369f32ade1fa3b50a4ccab9651b09a9a::$classMap;
 
         }, null, ClassLoader::class);
     }

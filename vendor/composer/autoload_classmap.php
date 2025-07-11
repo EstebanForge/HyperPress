@@ -6,7 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'ComposerAutoloaderInit5bc05b791c01bb0c9db11ac82e616442' => $baseDir . '/vendor-dist/composer/autoload_real.php',
+    'ComposerAutoloaderInitc0e3399e672c61366037eb22a5860f68' => $baseDir . '/vendor-dist/composer/autoload_real.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'HMApi\\Adbar\\Dot' => $baseDir . '/vendor-dist/adbario/php-dot-notation/src/Dot.php',
     'HMApi\\Admin\\Activation' => $baseDir . '/src/Admin/Activation.php',
@@ -15,7 +15,7 @@ return array(
     'HMApi\\Assets' => $baseDir . '/src/Assets.php',
     'HMApi\\Compatibility' => $baseDir . '/src/Compatibility.php',
     'HMApi\\Composer\\Autoload\\ClassLoader' => $baseDir . '/vendor-dist/composer/ClassLoader.php',
-    'HMApi\\Composer\\Autoload\\ComposerStaticInit5bc05b791c01bb0c9db11ac82e616442' => $baseDir . '/vendor-dist/composer/autoload_static.php',
+    'HMApi\\Composer\\Autoload\\ComposerStaticInitc0e3399e672c61366037eb22a5860f68' => $baseDir . '/vendor-dist/composer/autoload_static.php',
     'HMApi\\Config' => $baseDir . '/src/Config.php',
     'HMApi\\Jeffreyvr\\WPSettings\\EnqueueManager' => $baseDir . '/vendor-dist/jeffreyvanrossum/wp-settings/src/EnqueueManager.php',
     'HMApi\\Jeffreyvr\\WPSettings\\Enqueuer' => $baseDir . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Enqueuer.php',
@@ -51,16 +51,11 @@ return array(
     'HMApi\\starfederation\\datastar\\ServerSentEventGenerator' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/ServerSentEventGenerator.php',
     'HMApi\\starfederation\\datastar\\enums\\ElementPatchMode' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/enums/ElementPatchMode.php',
     'HMApi\\starfederation\\datastar\\enums\\EventType' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/enums/EventType.php',
-    'HMApi\\starfederation\\datastar\\enums\\FragmentMergeMode' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/enums/FragmentMergeMode.php',
     'HMApi\\starfederation\\datastar\\events\\EventInterface' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/events/EventInterface.php',
     'HMApi\\starfederation\\datastar\\events\\EventTrait' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/events/EventTrait.php',
     'HMApi\\starfederation\\datastar\\events\\ExecuteScript' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/events/ExecuteScript.php',
     'HMApi\\starfederation\\datastar\\events\\Location' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/events/Location.php',
-    'HMApi\\starfederation\\datastar\\events\\MergeFragments' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/events/MergeFragments.php',
-    'HMApi\\starfederation\\datastar\\events\\MergeSignals' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/events/MergeSignals.php',
     'HMApi\\starfederation\\datastar\\events\\PatchElements' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/events/PatchElements.php',
     'HMApi\\starfederation\\datastar\\events\\PatchSignals' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/events/PatchSignals.php',
     'HMApi\\starfederation\\datastar\\events\\RemoveElements' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/events/RemoveElements.php',
-    'HMApi\\starfederation\\datastar\\events\\RemoveFragments' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/events/RemoveFragments.php',
-    'HMApi\\starfederation\\datastar\\events\\RemoveSignals' => $baseDir . '/vendor-dist/starfederation/datastar-php/src/events/RemoveSignals.php',
 );

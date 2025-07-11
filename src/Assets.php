@@ -73,7 +73,6 @@ class Assets
                 'enable_alpinejs_core' => 0,
                 'enable_alpine_ajax' => 0,
                 'load_alpinejs_backend' => 0,
-                'load_datastar' => 0,
                 'load_datastar_backend' => 0,
             ];
 
@@ -277,7 +276,7 @@ class Assets
         if ($is_admin) {
             $should_load_datastar = !empty($options['load_datastar_backend']);
         } else {
-            $should_load_datastar = ($active_library === 'datastar' && !empty($options['load_datastar']));
+            $should_load_datastar = ($active_library === 'datastar');
         }
 
         if ($should_load_datastar) {
