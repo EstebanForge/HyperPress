@@ -6,8 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'starfederation\\datastar\\' => array($vendorDir . '/starfederation/datastar-php/src'),
-    'Jeffreyvr\\WPSettings\\' => array($vendorDir . '/jeffreyvanrossum/wp-settings/src'),
     'HMApi\\' => array($baseDir . '/src'),
-    'Adbar\\' => array($vendorDir . '/adbario/php-dot-notation/src'),
 );

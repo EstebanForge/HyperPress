@@ -1,5 +1,12 @@
 # Changelog
 
+# 2.0.1 / 2025-07-10
+- **NEW:** Added a suite of Datastar helper functions (`hm_ds_*`) to simplify working with Server-Sent Events (SSE), including functions for patching elements, managing signals, and executing scripts.
+- **IMPROVEMENT:** The admin settings page now dynamically displays tabs based on the selected active library (HTMX, Alpine Ajax, or Datastar), reducing UI clutter.
+- **REFACTOR:** Centralized plugin option management by introducing a `get_options()` method in the main plugin class.
+- **REFACTOR:** Improved the structure of the admin options page for better maintainability and separation of concerns.
+- **FIX:** Several bugfixes and improvements.
+
 # 2.0.0 / 2025-06-06
 - Renamed plugin to "Hypermedia API for WordPress" to reflect broader support for multiple hypermedia libraries.
 - **NEW:** Added support for Datastar.js hypermedia library.

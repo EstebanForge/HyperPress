@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use HMApi\starfederation\datastar\ServerSentEventGenerator;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -20,7 +22,6 @@ function hm_get_endpoint_url($template_path = '')
 {
     $hmapi_api_url = home_url((defined('HMAPI_ENDPOINT') ? HMAPI_ENDPOINT : 'wp-html') . '/' . (defined('HMAPI_ENDPOINT_VERSION') ? HMAPI_ENDPOINT_VERSION : 'v1'));
 
-    // Path provided?
     if (!empty($template_path)) {
         $hmapi_api_url .= '/' . ltrim($template_path, '/');
     }
@@ -186,7 +187,12 @@ function hm_validate_request($hmvals = null, $action = null)
  */
 function hm_is_library_mode(): bool
 {
-    // Check if plugin is in active_plugins
+    // If HMAPI_IS_LIBRARY_MODE is defined, it takes precedence
+    if (defined('HMAPI_IS_LIBRARY_MODE')) {
+        return HMAPI_IS_LIBRARY_MODE;
+    }
+
+    // Check if the plugin is in the active plugins list
     if (defined('HMAPI_BASENAME')) {
         $active_plugins = apply_filters('active_plugins', get_option('active_plugins', []));
         if (in_array(HMAPI_BASENAME, $active_plugins, true)) {
@@ -197,6 +203,107 @@ function hm_is_library_mode(): bool
     // If we reach here, plugin is not in active plugins list
     // This means it's loaded as a library
     return true;
+}
+
+/**
+ * Gets the ServerSentEventGenerator instance, creating it if it doesn't exist.
+ *
+ * @since 2.0.1
+ * @return ServerSentEventGenerator|null The SSE generator instance or null if the SDK is not available.
+ */
+function hm_ds_sse(): ?ServerSentEventGenerator
+{
+    static $sse = null;
+
+    if (!class_exists(ServerSentEventGenerator::class)) {
+        return null;
+    }
+
+    if ($sse === null) {
+        $sse = new ServerSentEventGenerator();
+        $sse->sendHeaders();
+    }
+
+    return $sse;
+}
+
+/**
+ * Patches elements into the DOM.
+ *
+ * @since 2.0.1
+ * @param string $html The HTML content to patch.
+ * @param array $options Options for patching, including 'selector', 'mode', and 'useViewTransition'.
+ * @return void
+ */
+function hm_ds_patch_elements(string $html, array $options = []): void
+{
+    $sse = hm_ds_sse();
+    if ($sse) {
+        $sse->patchElements($html, $options);
+    }
+}
+
+/**
+ * Removes elements from the DOM.
+ *
+ * @since 2.0.1
+ * @param string $selector The CSS selector for elements to remove.
+ * @param array $options Options for removal, including 'useViewTransition'.
+ * @return void
+ */
+function hm_ds_remove_elements(string $selector, array $options = []): void
+{
+    $sse = hm_ds_sse();
+    if ($sse) {
+        $sse->removeElements($selector, $options);
+    }
+}
+
+/**
+ * Patches signals.
+ *
+ * @since 2.0.1
+ * @param string|array $signals The signals to patch (JSON string or array).
+ * @param array $options Options for patching, including 'onlyIfMissing'.
+ * @return void
+ */
+function hm_ds_patch_signals($signals, array $options = []): void
+{
+    $sse = hm_ds_sse();
+    if ($sse) {
+        $sse->patchSignals($signals, $options);
+    }
+}
+
+/**
+ * Executes a script in the browser.
+ *
+ * @since 2.0.1
+ * @param string $script The JavaScript code to execute.
+ * @param array $options Options for script execution.
+ * @return void
+ */
+function hm_ds_execute_script(string $script, array $options = []): void
+{
+    $sse = hm_ds_sse();
+    if ($sse) {
+        $sse->executeScript($script, $options);
+    }
+}
+
+/**
+ * Redirects the browser to a new URL.
+ *
+ * @since 2.0.1
+ * @param string $url The URL to redirect to.
+ * @return void
+ */
+function hm_ds_location(string $url): void
+{
+    $sse = hm_ds_sse();
+    if ($sse) {
+        $sse->location($url);
+    }
 }
 
 // ===================================================================

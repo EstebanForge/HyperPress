@@ -185,20 +185,82 @@ The plugin includes local copies of all libraries for privacy and offline develo
 1. **Local files** (default): Libraries are served from your WordPress installation
 2. **CDN**: Optional CDN loading from jsdelivr.net. Will always load the latest version of the library.
 
-#### Build System Integration
+### Datastar Usage
+
+Datastar can be used to implement Server-Sent Events (SSE) to push real-time updates from the server to the client. Here is an example of how to implement a simple SSE endpoint within a hypermedia template:
+
+```php
+// In your hypermedia template file, e.g., hypermedia/my-sse-endpoint.hm.php
+
+use HMApi\starfederation\datastar\ServerSentEventGenerator;
+
+// Required headers for SSE
+header('Content-Type: text/event-stream');
+header('Cache-Control: no-cache');
+header('Connection: keep-alive');
+
+$signals = ServerSentEventGenerator::readSignals();
+$delay = $signals['delay'] ?? 0;
+$message = 'Hello, world!';
+
+$sse = new ServerSentEventGenerator();
+
+for ($i = 0; $i < strlen($message); $i++) {
+    $sse->patchElements('<div id="message">'
+        . substr($message, 0, $i + 1)
+        . '</div>'
+    );
+
+    // Sleep for the provided delay in milliseconds.
+    usleep($delay * 1000);
+}
+
+// The script will automatically exit and send the SSE stream.
+```
+
+On the frontend, you can create an HTML structure to consume this SSE endpoint. The following is a minimal example adapted from the official Datastar SDK companion:
+
+```html
+<!-- Container for the Datastar component -->
+<div data-signals-delay="400">
+    <h1>Datastar SDK Demo</h1>
+    <p>SSE events will be streamed from the backend to the frontend.</p>
+
+    <div>
+        <label for="delay">Delay in milliseconds</label>
+        <input data-bind-delay id="delay" type="number" step="100" min="0" />
+    </div>
+
+    <button data-on-click="@get('<?php echo hm_get_endpoint_url('my-sse-endpoint'); ?>')">
+        Start
+    </button>
+</div>
+
+<!-- Target element for SSE updates -->
+<div id="message">Hello, world!</div>
+```
+
+This example demonstrates how to:
+- Set initial signal values with `data-signals-delay`.
+- Bind signals to form inputs with `data-bind-delay`.
+- Trigger the SSE stream with a button click using `data-on-click`.
+
+The server will receive the `delay` signal and use it to control the stream speed, while the `#message` div is updated in real-time.
+
+#### Managing Frontend Libraries
 
 For developers, the plugin includes npm scripts to download the latest versions of all libraries locally:
 
 ```bash
-# Download all libraries
-npm run download:all
+# Update all libraries
+npm run update-all
 
-# Download specific library
-npm run download:htmx
-npm run download:alpine
-npm run download:hyperscript
-npm run download:datastar
-npm run download:all
+# Update specific library
+npm run update-htmx
+npm run update-alpinejs
+npm run update-hyperscript
+npm run update-datastar
+npm run update-all
 ```
 
 This ensures your local development environment stays in sync with the latest library versions.
@@ -249,7 +311,7 @@ echo hm_get_endpoint_url( 'subfolder/my-listing' );
 
 ## Using as a Composer Library (Programmatic Configuration)
 
-If you include this plugin as a Composer dependency in your own plugin or theme, it will automatically avoid loading multiple copies and only the latest version will be initialized.
+If you require this project as a Composer dependency, it will automatically be loaded. The `library-load.php` file is registered in `composer.json` and ensures that the plugin's bootstrapping logic is safely included only once, even if multiple plugins or themes require it. You do not need to manually `require` or `include` any file.
 
 ### Detecting Library Mode
 
@@ -265,31 +327,30 @@ All plugin settings can be controlled using the `hmapi/default_options` filter. 
 
 ```php
 add_filter('hmapi/default_options', function($defaults) {
-    // Configure the active hypermedia library
-    $defaults['active_library'] = 'htmx'; // Options: 'htmx', 'alpinejs', 'datastar'
+    // General Settings
+    $defaults['active_library'] = 'htmx'; // 'htmx', 'alpinejs', or 'datastar'
+    $defaults['load_from_cdn'] = false;  // `true` to use CDN, `false` for local files
 
-    // Configure CDN loading
-    $defaults['load_from_cdn'] = false; // true = CDN, false = local files
+    // HTMX Core Settings
+    $defaults['load_hyperscript'] = true;
+    $defaults['load_alpinejs_with_htmx'] = false;
+    $defaults['set_htmx_hxboost'] = false;
+    $defaults['load_htmx_backend'] = false;
 
-    // HTMX-specific settings
-    $defaults['load_hyperscript'] = true; // Load Hyperscript with HTMX
-    $defaults['load_alpinejs_with_htmx'] = false; // Load Alpine.js with HTMX
-    $defaults['set_htmx_hxboost'] = false; // Auto add hx-boost="true" to body
-    $defaults['load_htmx_backend'] = false; // Load HTMX in WP Admin
+    // Alpine Ajax Settings
+    $defaults['load_alpinejs_backend'] = false;
 
-    // Alpine.js settings
-    $defaults['load_alpinejs_backend'] = false; // Load Alpine.js in WP Admin
+    // Datastar Settings
+    $defaults['load_datastar_backend'] = false;
 
-    // Datastar settings
-    $defaults['load_datastar_backend'] = false; // Load Datastar in WP Admin
-
-    // HTMX Extensions (enable any extension by setting to true)
+    // HTMX Extensions - Enable by setting to `true`
     $defaults['load_extension_ajax-header'] = false;
     $defaults['load_extension_alpine-morph'] = false;
     $defaults['load_extension_class-tools'] = false;
     $defaults['load_extension_client-side-templates'] = false;
     $defaults['load_extension_debug'] = false;
-    $defaults['load_extension_disable'] = false;
+    $defaults['load_extension_disable-element'] = false; // Note: key is 'disable-element'
+    $defaults['load_extension_event-header'] = false;
     $defaults['load_extension_head-support'] = false;
     $defaults['load_extension_include-vals'] = false;
     $defaults['load_extension_json-enc'] = false;
@@ -303,7 +364,6 @@ add_filter('hmapi/default_options', function($defaults) {
     $defaults['load_extension_response-targets'] = false;
     $defaults['load_extension_restored'] = false;
     $defaults['load_extension_sse'] = false;
-    $defaults['load_extension_web-sockets'] = false;
     $defaults['load_extension_ws'] = false;
 
     return $defaults;
@@ -395,58 +455,37 @@ add_filter('hmapi/sanitize_param_key', function($sanitized_key, $original_key) {
 
 // Customize parameter value sanitization
 add_filter('hmapi/sanitize_param_value', function($sanitized_value, $original_value) {
-    // Custom sanitization logic
+    // Custom sanitization logic for single values
     return $sanitized_value;
+}, 10, 2);
+
+// Customize array parameter value sanitization
+add_filter('hmapi/sanitize_param_array_value', function($sanitized_array, $original_array) {
+    // Custom sanitization logic for array values
+    return array_map('esc_html', $sanitized_array);
 }, 10, 2);
 ```
 
 #### Disable Admin Interface Completely
 
-If you want to configure everything programmatically and hide the admin interface:
+If you want to configure everything programmatically and hide the admin interface, define the `HMAPI_LIBRARY_MODE` constant in your `wp-config.php` or a custom plugin file. This will prevent the settings page from being added.
 
 ```php
-// Force library mode to hide admin interface
+// In wp-config.php or a custom plugin file
+define('HMAPI_LIBRARY_MODE', true);
+
+// You can then configure the plugin using filters as needed
 add_filter('hmapi/default_options', function($defaults) {
-    // Your configuration here
-    return $defaults;
-});
-
-// Optional: Remove the admin menu entirely (if you have admin access)
-add_action('admin_menu', function() {
-    remove_submenu_page('options-general.php', 'hypermedia-api-options');
-}, 999);
-```
-
-#### Environment-Based Configuration
-
-Configure different settings based on environment:
-
-```php
-add_filter('hmapi/default_options', function($defaults) {
-    if (wp_get_environment_type() === 'production') {
-        // Production settings
-        $defaults['active_library'] = 'htmx';
-        $defaults['load_from_cdn'] = true;
-        $defaults['load_extension_debug'] = false;
-    } else {
-        // Development settings
-        $defaults['active_library'] = 'htmx';
-        $defaults['load_from_cdn'] = false; // Local files for offline dev
-        $defaults['load_extension_debug'] = true;
-        $defaults['load_htmx_backend'] = true; // Easier debugging
-    }
-
+    // Your configuration here. See above for examples.
     return $defaults;
 });
 ```
-
-**Note:** All filters should be added before the `plugins_loaded` action fires, preferably in your plugin's main file or theme's `functions.php`.
 
 ## Security
 
 Every call to the `wp-html` endpoint will automatically check for a valid nonce. If the nonce is not valid, the call will be rejected.
 
-The nonce itself is auto-generated and added to all HTMX requests automatically, using HTMX's own `htmx:configRequest` event.
+The nonce itself is auto-generated and added to all Hypermedia requests automatically.
 
 If you are new to Hypermedia, please read the [security section](https://htmx.org/docs/#security) of the official documentation. Remember that Hypermedia requires you to validate and sanitize any data you receive from the user. This is something developers used to do all the time, but it seems to have been forgotten by newer generations of software developers.
 

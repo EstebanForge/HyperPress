@@ -2,7 +2,7 @@
   "name": "hypermedia-api-wordpress",
   "author": "Esteban Cuevas",
   "license": "GPL-2.0-or-later",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "WordPress plugin providing API endpoints and integration for hypermedia libraries like HTMX, AlpineJS, and Datastar.",
   "keywords": [],
   "main": "index.js",

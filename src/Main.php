@@ -92,7 +92,6 @@ class Main
         Compatibility $compatibility,
         Theme $theme_support
     ) {
-        do_action('hmapi/init_construct_start');
         $this->router = $router;
         $this->render = $render;
         $this->config = $config;
@@ -105,7 +104,29 @@ class Main
             $this->options = new Options($this);
             new Activation();
         }
-        do_action('hmapi/init_construct_end');
+    }
+
+    /**
+     * Get plugin options with defaults.
+     *
+     * @since 2.0.3
+     * @return array
+     */
+    public function get_options(): array
+    {
+        $defaults = [
+            'active_library' => 'htmx',
+            'load_in_admin' => false,
+            'htmx_version' => '1.9.10',
+            'htmx_extensions' => [],
+            'alpine_version' => '3.13.3',
+            'datastar_version' => '1.0.0-rc.1',
+            'datastar_load_in_admin' => false,
+        ];
+
+        $options = get_option('hmapi_options', $defaults);
+
+        return wp_parse_args($options, $defaults);
     }
 
     /**
@@ -198,7 +219,7 @@ class Main
         return [
             'htmx' => [
                 'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@2/dist/htmx.min.js',
-                'version' => '2.0.4',
+                'version' => '2.0.6',
             ],
             'hyperscript' => [
                 'url' => 'https://cdn.jsdelivr.net/npm/hyperscript.org/dist/hdb.min.js',
@@ -210,11 +231,11 @@ class Main
             ],
             'alpine_ajax' => [
                 'url' => 'https://cdn.jsdelivr.net/npm/@imacrayon/alpine-ajax/dist/cdn.min.js',
-                'version' => '0.12.2',
+                'version' => '0.12.4',
             ],
             'datastar' => [
-                'url' => 'https://cdn.jsdelivr.net/npm/@starfederation/datastar/dist/datastar.min.js',
-                'version' => '1.0.0-beta.11',
+                'url' => 'https://cdn.jsdelivr.net/gh/starfederation/datastar@main/bundles/datastar.js',
+                'version' => '1.0.0',
             ],
             'htmx_extensions' => [
                 'sse' => [
@@ -322,14 +343,10 @@ class Main
      */
     public function run()
     {
-        do_action('hmapi/init_run_start');
-
         add_action('init', [$this->router, 'register_main_route']);
         add_action('template_redirect', [$this->render, 'load_template']);
         add_action('wp_head', [$this->config, 'insert_config_meta_tag']);
         $this->compatibility->run();
         $this->theme_support->run();
-
-        do_action('hmapi/init_run_end');
     }
 }
