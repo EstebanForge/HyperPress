@@ -988,7 +988,7 @@ echo hm_get_endpoint_url( 'subfolder/my-listing' );
 
 ## Using as a Composer Library (Programmatic Configuration)
 
-If you require this project as a Composer dependency, it will automatically be loaded. The `library-load.php` file is registered in `composer.json` and ensures that the plugin's bootstrapping logic is safely included only once, even if multiple plugins or themes require it. You do not need to manually `require` or `include` any file.
+If you require this project as a Composer dependency, it will automatically be loaded. The `bootstrap.php` file is registered in `composer.json` and ensures that the plugin's bootstrapping logic is safely included only once, even if multiple plugins or themes require it. You do not need to manually `require` or `include` any file.
 
 ### Detecting Library Mode
 
