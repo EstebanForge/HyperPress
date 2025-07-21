@@ -14,7 +14,6 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.1",
-        "jeffreyvanrossum/wp-settings": "^1.2",
         "starfederation/datastar-php": "^1.0"
     },
     "scripts": {
@@ -63,18 +62,9 @@
             "classmap_prefix": "HMApi_",
             "constant_prefix": "HMApi_",
             "packages": [
-                "jeffreyvanrossum/wp-settings",
                 "starfederation/datastar-php"
             ],
             "override_autoload": {
-                "jeffreyvanrossum/wp-settings": {
-                    "psr-4": {
-                        "HMApi\\Jeffreyvr\\WPSettings\\": "src/"
-                    },
-                    "classmap": [
-                        "resources/"
-                    ]
-                },
                 "starfederation/datastar-php": {
                     "psr-4": {
                         "HMApi\\starfederation\\datastar\\": "src/"

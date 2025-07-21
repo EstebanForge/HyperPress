@@ -1,0 +1,39 @@
+{
+    "name": "hyperblocks/quote-block-json",
+    "title": "HB Quote Block (JSON)",
+    "description": "A quote block with author attribution and styling - block.json implementation.",
+    "category": "widgets",
+    "icon": "format-quote",
+    "keywords": ["quote", "blockquote", "author", "testimonial"],
+    "supports": {
+        "html": false,
+        "anchor": true,
+        "spacing": {
+            "padding": true,
+            "margin": true
+        }
+    },
+    "attributes": {
+        "quote_text": {
+            "type": "string",
+            "default": ""
+        },
+        "quote_author": {
+            "type": "string",
+            "default": ""
+        },
+        "author_title": {
+            "type": "string",
+            "default": ""
+        },
+        "background_color": {
+            "type": "string",
+            "default": "#f9f9f9"
+        },
+        "text_color": {
+            "type": "string",
+            "default": "#333333"
+        }
+    },
+    "render": "file:./render.php"
+}

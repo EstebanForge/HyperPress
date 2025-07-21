@@ -340,7 +340,7 @@ function hm_ds_location(string $url): void
  * }
  * @return bool True if rate limited (blocked), false if request is allowed.
  */
-function hm_ds_is_rate_limited(array $options = []): bool
+function hb_ds_is_rate_limited(array $options = []): bool
 {
     // Default configuration
     $defaults = [

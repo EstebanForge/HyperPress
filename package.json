@@ -17,9 +17,11 @@
     "update-alpine-ajax": "npm run update-libraries -- --library=alpine-ajax",
     "update-datastar": "npm run update-libraries -- --library=datastar",
     "update-all": "npm run update-libraries -- --all",
-    "postinstall": "echo '📋 To download all libraries, run: npm run update-all'"
+    "postinstall": "echo '📋 To download all libraries, run: npm run update-all'",
+    "build": "wp-scripts build src/js/editor.js --output-path=assets/js/build"
   },
   "devDependencies": {
+    "@wordpress/scripts": "^27.6.0",
     "alpinejs": "3.*",
     "htmx.org": "2.*",
     "hyperscript.org": "*",

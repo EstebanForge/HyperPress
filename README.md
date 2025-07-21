@@ -1,4 +1,4 @@
-# Hypermedia API for WordPress
+# Hypermedia for WordPress
 
 An unofficial WordPress plugin that enables the use of [HTMX](https://htmx.org), [Alpine AJAX](https://alpine-ajax.js.org/), [Datastar](https://data-star.dev/) and other hypermedia libraries on your WordPress site, theme, and/or plugins. Intended for software developers.
 
@@ -1330,9 +1330,386 @@ add_filter('hmapi/default_options', function($defaults) {
 });
 ```
 
+## 🧱 HyperBlocks - Modern WordPress Block Development
+
+HyperBlocks is a powerful PHP-based block creation system that provides **two complementary approaches** for building Gutenberg blocks without writing JavaScript. Both approaches produce **identical output** and use the **same unified React editor component**.
+
+### 🔥 Why HyperBlocks?
+- **No JavaScript Required**: Build complex blocks using only PHP
+- **Unified Editor**: Both approaches use the same React editor component
+- **WordPress Standards**: Full compatibility with WordPress block API
+- **Developer Choice**: Pick the approach that fits your workflow
+- **Auto-Discovery**: Automatic block registration from `hyperblocks/` directory
+
+### 🎯 Two Development Approaches
+
+#### 1. Fluent API
+**Pure PHP, rapid development - Single file approach**
+```php
+<?php
+// hyperblocks/hero-banner.hb.php - Complete implementation in one file
+use HMApi\Blocks\Block;
+use HMApi\Blocks\Field;
+
+$heroBlock = Block::make('Hero Banner')
+    ->setIcon('format-image')
+    ->addFields([
+        Field::make('text', 'headline', 'Headline')
+            ->setPlaceholder('Enter your headline')
+            ->setRequired(true),
+        Field::make('textarea', 'subtitle', 'Subtitle')
+            ->setPlaceholder('Enter subtitle text'),
+        Field::make('color', 'background_color', 'Background Color')
+            ->setDefault('#ffffff'),
+        Field::make('color', 'text_color', 'Text Color')
+            ->setDefault('#333333'),
+        Field::make('url', 'button_url', 'Button URL'),
+        Field::make('text', 'button_text', 'Button Text')
+            ->setDefault('Learn More')
+    ])
+    ->setRenderTemplate('
+        <div class="hero-banner" style="background-color: {{background_color}}; color: {{text_color}}; padding: 2rem; text-align: center;">
+            <RichText attribute="headline" tag="h1" style="font-size: 3rem; margin-bottom: 1rem;" placeholder="Enter headline..." />
+            <RichText attribute="subtitle" tag="p" style="font-size: 1.5rem; margin-bottom: 2rem; opacity: 0.8;" placeholder="Enter subtitle..." />
+            <a href="{{button_url}}" class="hero-button" style="background: {{text_color}}; color: {{background_color}}; padding: 1rem 2rem; text-decoration: none; border-radius: 4px;">{{button_text}}</a>
+        </div>
+    ');
+
+// Register the block (auto-discovery will handle this)
+return $heroBlock;
+```
+
+#### 2. block.json Approach (WordPress Standard)
+**Multiple files, WordPress conventions**
+
+**File Structure:**
+```
+hyperblocks/my-hero-block/
+├── block.json      (configuration)
+├── render.php      (template)
+└── editor.js       (React editor - optional)
+```
+
+**block.json:**
+```json
+{
+    "name": "my-plugin/hero-banner",
+    "title": "Hero Banner",
+    "description": "A customizable hero banner block",
+    "category": "layout",
+    "icon": "format-image",
+    "attributes": {
+        "headline": {
+            "type": "string",
+            "default": "Welcome to Our Site"
+        },
+        "subtitle": {
+            "type": "string",
+            "default": "Amazing things happen here"
+        },
+        "backgroundColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "textColor": {
+            "type": "string",
+            "default": "#333333"
+        },
+        "buttonUrl": {
+            "type": "string",
+            "default": "#"
+        },
+        "buttonText": {
+            "type": "string",
+            "default": "Learn More"
+        }
+    },
+    "supports": {
+        "align": ["wide", "full"],
+        "html": false
+    },
+    "render": "file:./render.php"
+}
+```
+
+**render.php:**
+```php
+<?php
+$headline = $attributes['headline'] ?? 'Welcome to Our Site';
+$subtitle = $attributes['subtitle'] ?? 'Amazing things happen here';
+$backgroundColor = $attributes['backgroundColor'] ?? '#ffffff';
+$textColor = $attributes['textColor'] ?? '#333333';
+$buttonUrl = $attributes['buttonUrl'] ?? '#';
+$buttonText = $attributes['buttonText'] ?? 'Learn More';
+?>
+
+<div class="hero-banner" style="background-color: <?php echo esc_attr($backgroundColor); ?>; color: <?php echo esc_attr($textColor); ?>; padding: 2rem; text-align: center;">
+    <h1><?php echo esc_html($headline); ?></h1>
+    <p><?php echo esc_html($subtitle); ?></p>
+    <a href="<?php echo esc_url($buttonUrl); ?>" class="hero-button">
+        <?php echo esc_html($buttonText); ?>
+    </a>
+</div>
+```
+
+### 📊 Side-by-Side Comparison
+
+| Aspect | Fluent API | block.json |
+|--------|------------|------------|
+| **Files Required** | 1 file per block | 2-3 files per block |
+| **Development Speed** | Very fast | Moderate |
+| **JavaScript Knowledge** | Not required | Not required |
+| **WordPress Standards** | Custom approach | Official standard |
+| **Customization Level** | Template-based | Full control |
+| **Reusability** | Field groups | Component libraries |
+
+### 🚀 Auto-Discovery & Registration
+
+**Automatic block discovery works from:**
+- `wp-content/themes/your-theme/hyperblocks/`
+- `wp-content/plugins/your-plugin/hyperblocks/`
+
+**Supported formats:**
+- **`.hb.php`** files for Fluent API blocks
+- **`block.json`** files for WordPress standard blocks
+- **Ignored files:** Prefix directory/filenames with `_` to disable
+
+**Example directory structure:**
+```
+hyperblocks/
+├── hero-banner.hb.php          # Fluent API
+├── content-card.hb.php         # Fluent API
+├── quote-block/
+│   ├── block.json              # WordPress standard
+│   ├── render.php
+│   └── editor.js
+├── _draft-block/               # Disabled (ignored)
+│   └── draft.hb.php
+└── _deprecated/                # Disabled directory
+    └── old-block.hb.php
+```
+
+### 🎯 When to Choose Which?
+
+#### Choose **Fluent API** when:
+- 🚀 **Rapid prototyping** is priority
+- 👥 **PHP-only team** (no JavaScript developers)
+- 🔄 **Quick iterations** needed
+- 📦 **Plugin/theme bundling** for distribution
+- 🎨 **Template-heavy** blocks (lots of HTML/CSS)
+
+#### Choose **block.json** when:
+- 📋 **WordPress standards compliance** is required
+- 🔧 **Schema validation** needed
+- 📊 **Standard WordPress tooling** preferred
+- 🏢 **Enterprise development** with strict standards
+
+### 🛠️ Technical Details
+
+**Both approaches use:**
+- **Same Rendering Engine**: `HMApi\Blocks\Renderer`
+- **Same REST API**: `/hyperblocks/v1/block-fields`, `/hyperblocks/v1/render-preview`
+- **Same Custom Components**: `<RichText>`, `<InnerBlocks>`, `<MediaUpload>`
+- **Same Field Types**: `text`, `textarea`, `color`, `url`, `media`, `repeater`, etc.
+- **Same React Editor**: Unified generic editor component
+
+### 📦 Demo Blocks Included
+
+The plugin includes **three identical demo blocks** implemented in both approaches:
+
+1. **Hero Banner** - Landing page headers with headline, subtitle, and CTA
+2. **Content Card** - Product cards with image, title, and content
+3. **Quote Block** - Testimonials with quote, author, and styling
+
+**To test:**
+1. Go to **Posts** → **Add New**
+2. Search for blocks: "Hero Banner", "Hero Banner (JSON)", etc.
+3. Compare identical functionality between approaches
+
+### 🎯 Demo Options Pages
+
+The plugin includes comprehensive examples for creating plugin and theme options pages using the universal field system. Check out `/hyperoptions/options-page-demo.php` for complete working examples.
+
+#### Quick Start Examples
+
+**Basic Plugin Options Page:**
+```php
+<?php
+use HMApi\Fields\OptionsPage;
+use HMApi\Fields\Field;
+
+$plugin_options = OptionsPage::make('My Plugin Settings', 'my-plugin-settings')
+    ->set_menu_title('My Plugin')
+    ->set_parent_slug('options-general.php');
+
+// Add a simple text field
+$plugin_options->add_field(
+    Field::make('text', 'plugin_title', 'Plugin Title')
+        ->set_default('My Awesome Plugin')
+        ->set_placeholder('Enter plugin title...')
+);
+
+// Register the options page
+$plugin_options->register();
+```
+
+**Theme Options with Tabs:**
+```php
+<?php
+use HMApi\Fields\OptionsPage;
+use HMApi\Fields\Field;
+use HMApi\Fields\TabsField;
+
+$theme_options = OptionsPage::make('Theme Settings', 'theme-settings')
+    ->set_menu_title('Theme Options')
+    ->set_parent_slug('themes.php');
+
+// Create tabs for organized settings
+$tabs = TabsField::make('theme_tabs', 'Theme Configuration')
+    ->add_tab('header', 'Header', [
+        Field::make('image', 'header_logo', 'Header Logo'),
+        Field::make('color', 'header_bg', 'Header Background')->set_default('#ffffff')
+    ])
+    ->add_tab('typography', 'Typography', [
+        Field::make('select', 'primary_font', 'Primary Font')
+            ->set_options(['system' => 'System', 'roboto' => 'Roboto'])
+            ->set_default('system'),
+        Field::make('number', 'base_font_size', 'Base Font Size (px)')
+            ->set_default(16)->set_min(12)->set_max(24)
+    ]);
+
+$theme_options->add_field($tabs);
+$theme_options->register();
+```
+
+#### Available Demo Examples
+
+The demo file includes **6 complete examples** covering all field types:
+
+1. **Basic Plugin Options** - Simple plugin settings with text, color, image, and checkbox fields
+2. **Advanced Settings with Tabs** - Organized settings using tabs for complex configurations
+3. **Repeater Fields** - Social media links with platform selection and URLs
+4. **Conditional Logic** - Fields that show/hide based on other field values
+5. **Theme Options Page** - Complete theme customization with header, typography, and footer settings
+6. **Custom Top-Level Menu** - Standalone admin menu with dashboard and settings sections
+
+#### Field Types Demonstrated
+
+The demo includes examples for **all 27 field types**:
+- **Text**: `text`, `textarea`, `email`, `url`, `number`
+- **Selection**: `select`, `multiselect`, `radio`, `radio_image`, `checkbox`
+- **Media**: `image`, `media_gallery`, `file`
+- **Advanced**: `color`, `map`, `date`, `datetime`, `time`
+- **Content**: `html`, `header_scripts`, `footer_scripts`
+- **Organization**: `tabs`, `repeater`, `separator`
+- **Special**: `association`, `oembed`, `rich_text`, `hidden`, `set`
+
+#### Running the Demos
+
+**To test the demo options pages:**
+
+1. **Copy the demo file** to your theme or plugin:
+   ```bash
+   cp hyperoptions/options-page-demo.php your-plugin/options-demo.php
+   ```
+
+2. **Include the file** in your plugin/theme:
+   ```php
+   require_once 'options-demo.php';
+   ```
+
+3. **Navigate to the new options pages**:
+   - **Plugin Settings**: Settings → My Plugin Settings
+   - **Theme Options**: Appearance → Theme Options
+   - **Custom Menu**: Admin sidebar → Custom Plugin
+
+#### Conditional Logic Examples
+
+The demo showcases advanced conditional logic:
+
+```php
+// Show field only when another field has specific value
+Field::make('number', 'items_per_page', 'Items Per Page')
+    ->set_conditional_logic([
+        'conditions' => [[
+            'field' => 'display_mode',
+            'operator' => '=',
+            'value' => 'advanced'
+        ]]
+    ]);
+
+// Complex conditions with multiple rules
+Field::make('text', 'api_key', 'API Key')
+    ->set_conditional_logic([
+        'relation' => 'AND',
+        'conditions' => [
+            [
+                'field' => 'enable_api',
+                'operator' => '=',
+                'value' => 'yes'
+            ],
+            [
+                'field' => 'api_provider',
+                'operator' => 'IN',
+                'value' => ['stripe', 'paypal']
+            ]
+        ]
+    ]);
+```
+
+#### Repeater Fields with Nested Data
+
+Create complex data structures with nested fields:
+
+```php
+RepeaterField::make('team_members', 'Team Members')
+    ->set_min_rows(1)
+    ->set_max_rows(20)
+    ->add_sub_field(Field::make('text', 'name', 'Full Name')->set_required(true))
+    ->add_sub_field(Field::make('email', 'email', 'Email Address'))
+    ->add_sub_field(Field::make('image', 'photo', 'Profile Photo'))
+    ->add_sub_field(Field::make('select', 'role', 'Role')
+        ->set_options(['Developer', 'Designer', 'Manager']));
+```
+
+All demo examples are ready to use and demonstrate best practices for creating professional WordPress options pages with the universal field system.
+
+### 🔧 Advanced Features
+
+**Field Types Available:**
+- `text`, `textarea`, `color`, `url`, `email`, `number`
+- `media`, `gallery`, `rich_text`, `select`, `checkbox`
+- `repeater` (nested fields), `tabs` (field organization)
+- `association`, `map`, `date`, `datetime`, `time`
+
+**Conditional Logic:**
+```php
+// Show field only when another field has specific value
+Field::make('text', 'custom_text', 'Custom Text')
+    ->setConditionalLogic(
+        ConditionalLogic::if('show_custom')->equals('yes')
+    );
+```
+
+**Custom Validation:**
+```php
+Field::make('email', 'contact_email', 'Contact Email')
+    ->setValidation('email')
+    ->setRequired(true);
+```
+
+### 🎉 Getting Started
+
+1. **Create `hyperblocks/` directory** in your theme/plugin
+2. **Choose your approach** (Fluent API or block.json)
+3. **Build your first block** using the examples above
+4. **Blocks are auto-discovered** and ready to use in the editor
+
+**No build process required** - changes are immediately available!
+
 ## Security
 
-Every call to the `wp-html` endpoint will automatically check for a valid nonce. If the nonce is not valid, the call will be rejected.
+Every call to the `wp-html` endpoint, using this plugin included helpers, will automatically check for a valid nonce. If the nonce is not valid, the call will be rejected.
 
 The nonce itself is auto-generated and added to all Hypermedia requests automatically.
 
@@ -1381,4 +1758,4 @@ If you want to contribute with code, please open a pull request.
 
 This plugin is licensed under the GPLv2 or later.
 
-You can find the full license text in the `license.txt` file.
+You can find the full license text in the `LICENSE` file.

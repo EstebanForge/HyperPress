@@ -174,7 +174,7 @@ class Assets
         // Detect library mode (when plugin URL is empty)
         $is_library_mode = empty($plugin_url);
 
-                // In library mode, construct URLs using vendor directory detection
+        // In library mode, construct URLs using vendor directory detection
         if ($is_library_mode) {
             $plugin_url = $this->get_library_mode_url($plugin_path);
         }
@@ -415,7 +415,7 @@ class Assets
             'vendor-prefixed',
             'vendor-prefix',
             'vendor-custom',
-            'vendor'
+            'vendor',
         ];
 
         // Check if plugin path is within wp-content directory

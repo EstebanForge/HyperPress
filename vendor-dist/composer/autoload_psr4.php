@@ -7,7 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'HMApi\\starfederation\\datastar\\' => array($vendorDir . '/starfederation/datastar-php/src'),
-    'HMApi\\Jeffreyvr\\WPSettings\\' => array($vendorDir . '/jeffreyvanrossum/wp-settings/src'),
-    'HMApi\\Adbar\\' => array($vendorDir . '/adbario/php-dot-notation/src'),
     'HMApi\\' => array($baseDir . '/src'),
 );
