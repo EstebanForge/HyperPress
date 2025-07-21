@@ -28,7 +28,9 @@ class PatchElements implements EventInterface
                 $value = $this->getMode($value);
             }
 
-            $this->$key = $value;
+            if (property_exists($this, $key)) {
+                $this->{$key} = $value;
+            }
         }
     }
 

@@ -1,0 +1,70 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+$type = $field_data['type'] ?? 'map';
+$name = $field_data['name'] ?? '';
+$label = $field_data['label'] ?? '';
+$value = $field_data['value'] ?? ['lat' => 0, 'lng' => 0, 'address' => ''];
+$required = $field_data['required'] ?? false;
+$help = $field_data['help'] ?? '';
+$map_options = $field_data['map_options'] ?? [];
+
+$lat = $value['lat'] ?? 0;
+$lng = $value['lng'] ?? 0;
+$address = $value['address'] ?? '';
+
+// Default map options
+$zoom = $map_options['zoom'] ?? 15;
+$map_type = $map_options['type'] ?? 'roadmap';
+$api_key = $map_options['api_key'] ?? '';
+?>
+
+<div class="hmapi-field-wrapper">
+    <label for="<?php echo esc_attr($name); ?>" class="hmapi-field-label">
+        <?php echo esc_html($label); ?>
+        <?php if ($required): ?><span class="required">*</span><?php endif; ?>
+    </label>
+
+    <div class="hmapi-field-input">
+        <div class="hmapi-map-field">
+            <input type="text" 
+                   id="<?php echo esc_attr($name); ?>_address" 
+                   name="<?php echo esc_attr($name); ?>[address]" 
+                   value="<?php echo esc_attr($address); ?>" 
+                   placeholder="<?php _e('Search for an address...', 'hmapi'); ?>" 
+                   class="regular-text hmapi-map-search">
+            
+            <button type="button" class="button hmapi-geocode-button" data-field="<?php echo esc_attr($name); ?>">
+                <?php _e('Search', 'hmapi'); ?>
+            </button>
+            
+            <div class="hmapi-map-canvas" 
+                 data-field="<?php echo esc_attr($name); ?>" 
+                 data-lat="<?php echo esc_attr($lat); ?>" 
+                 data-lng="<?php echo esc_attr($lng); ?>" 
+                 data-zoom="<?php echo esc_attr($zoom); ?>" 
+                 style="height: 300px; margin-top: 10px; border: 1px solid #ccc;">
+            </div>
+            
+            <input type="hidden" 
+                   id="<?php echo esc_attr($name); ?>_lat" 
+                   name="<?php echo esc_attr($name); ?>[lat]" 
+                   value="<?php echo esc_attr($lat); ?>">
+            
+            <input type="hidden" 
+                   id="<?php echo esc_attr($name); ?>_lng" 
+                   name="<?php echo esc_attr($name); ?>[lng]" 
+                   value="<?php echo esc_attr($lng); ?>">
+        </div>
+
+        <?php if ($help): ?>
+            <p class="description"><?php echo esc_html($help); ?></p>
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php if ($api_key): ?>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo esc_attr($api_key); ?>&libraries=places"></script>
+<?php endif; ?>

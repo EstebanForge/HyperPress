@@ -23,3 +23,12 @@ if (!defined('ABSPATH')) {
 
 // Load the shared bootstrap file.
 require_once __DIR__ . '/bootstrap.php';
+
+
+// Initialize the Registry.
+$registry = HMApi\Blocks\Registry::getInstance();
+$registry->init();
+
+// Initialize the REST API.
+$rest_api = new HMApi\Blocks\RestApi();
+$rest_api->init();

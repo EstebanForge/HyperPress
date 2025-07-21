@@ -1,5 +1,19 @@
 # Changelog
 
+# 2.1.0 / 2025-07-20
+- **NEW:** **HyperBlocks** - Revolutionary PHP-based block creation system with **two complementary approaches**
+  - **Fluent API**: Carbon Fields-style PHP-only block development (no JavaScript required)
+  - **block.json**: WordPress-standard JSON blocks (no custom JavaScript required)
+  - **Unified Editor**: Both approaches use the same React editor component for consistent UX
+  - **Zero JavaScript**: Build complex Gutenberg blocks using only PHP
+- **NEW:** Auto-discovery system for blocks in `/hyperblocks/` directories
+- **NEW:** Server-side rendering engine with secure PHP template execution
+- **NEW:** Custom component system with `<RichText>` and `<InnerBlocks>` support
+- **NEW:** REST API endpoints for dynamic block field definitions and live previews
+- **NEW:** Reusable field groups for consistent block development
+- **NEW:** Comprehensive documentation and demo blocks included
+- **NEW:** Backward compatible with existing WordPress block ecosystem
+
 # 2.0.5 / 2025-07-11
 - **NEW:** Added a suite of Datastar helper functions (`hm_ds_*`) to simplify working with Server-Sent Events (SSE), including functions for patching elements, managing signals, and executing scripts.
 - **IMPROVEMENT:** The admin settings page now dynamically displays tabs based on the selected active library (HTMX, Alpine Ajax, or Datastar), reducing UI clutter.
