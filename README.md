@@ -1381,4 +1381,4 @@ If you want to contribute with code, please open a pull request.
 
 This plugin is licensed under the GPLv2 or later.
 
-You can find the full license text in the `license.txt` file.
+You can find the full license text in the `LICENSE` file.

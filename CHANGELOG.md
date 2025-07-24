@@ -1,5 +1,8 @@
 # Changelog
 
+# 2.0.6 / 2025-07-23
+- **FIX:** Updated Datastar.js enqueue to use `wp_enqueue_script_module()` for proper ES module support (WordPress 6.5+). Thanks @eduwass for the report.
+
 # 2.0.5 / 2025-07-11
 - **NEW:** Added a suite of Datastar helper functions (`hm_ds_*`) to simplify working with Server-Sent Events (SSE), including functions for patching elements, managing signals, and executing scripts.
 - **IMPROVEMENT:** The admin settings page now dynamically displays tabs based on the selected active library (HTMX, Alpine Ajax, or Datastar), reducing UI clutter.

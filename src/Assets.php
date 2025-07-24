@@ -319,7 +319,7 @@ class Assets
             $url = apply_filters('hmapi/assets/datastar_url', $url, $load_from_cdn, $asset, $is_library_mode);
             $ver = apply_filters('hmapi/assets/datastar_version', $ver, $load_from_cdn, $asset, $is_library_mode);
 
-            wp_enqueue_script('hmapi-datastar', $url, [], $ver, true);
+            wp_enqueue_script_module('hmapi-datastar', $url, [], $ver);
             $datastar_loaded = true;
         }
 
