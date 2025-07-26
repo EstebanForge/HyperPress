@@ -23,6 +23,8 @@ $layout_class = 'hmapi-set-' . $layout;
     </label>
 
     <div class="hmapi-field-input">
+        <!-- Hidden input to ensure the field is always sent in POST data -->
+        <input type="hidden" name="<?php echo esc_attr($name); ?>" value="">
         <div class="<?php echo esc_attr($layout_class); ?>">
             <?php foreach ($options as $option_value => $option_label): ?>
                 <label>

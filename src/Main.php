@@ -102,7 +102,7 @@ class Main
         $this->assets_manager = new Assets($this);
 
         if (is_admin()) {
-            // Handle migration from wp-settings to universal fields
+            // Handle migration from wp-settings to hyper fields
             $migration = new OptionsMigration($this);
             if ($migration->needs_migration()) {
                 $migration->migrate();

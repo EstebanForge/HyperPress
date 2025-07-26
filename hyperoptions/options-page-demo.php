@@ -1,8 +1,9 @@
 <?php
+
 /**
- * Example: Creating an Options Page with Universal Fields
- * 
- * This demonstrates how to use the new universal field system
+ * Example: Creating an Options Page with Hyper Fields
+ *
+ * This demonstrates how to use the new hyper fields system
  * to create plugin/theme options pages in WordPress.
  */
 

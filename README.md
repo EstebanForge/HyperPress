@@ -1528,7 +1528,7 @@ The plugin includes **three identical demo blocks** implemented in both approach
 
 ### 🎯 Demo Options Pages
 
-The plugin includes comprehensive examples for creating plugin and theme options pages using the universal field system. Check out `/hyperoptions/options-page-demo.php` for complete working examples.
+The plugin includes comprehensive examples for creating plugin and theme options pages using the hyper fields system. Check out `/hyperoptions/options-page-demo.php` for complete working examples.
 
 #### Quick Start Examples
 
@@ -1672,7 +1672,7 @@ RepeaterField::make('team_members', 'Team Members')
         ->set_options(['Developer', 'Designer', 'Manager']));
 ```
 
-All demo examples are ready to use and demonstrate best practices for creating professional WordPress options pages with the universal field system.
+All demo examples are ready to use and demonstrate best practices for creating professional WordPress options pages with the hyper fields system.
 
 ### 🔧 Advanced Features
 

@@ -13,6 +13,8 @@ $help = $field_data['help'] ?? '';
 
 <div class="hmapi-field-wrapper">
     <div class="hmapi-field-input">
+        <!-- Hidden input to ensure the field is always sent in POST data -->
+        <input type="hidden" name="<?php echo esc_attr($name); ?>" value="0">
         <label>
             <input type="checkbox" 
                    id="<?php echo esc_attr($name); ?>" 
