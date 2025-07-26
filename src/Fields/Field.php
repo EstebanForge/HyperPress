@@ -77,7 +77,8 @@ class Field
             throw new \InvalidArgumentException("Invalid field type: {$type}");
         }
 
-        if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $name)) {
+        // Allow hyphens in field names for compatibility with extension filenames
+        if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_-]*$/', $name)) {
             throw new \InvalidArgumentException("Invalid field name: {$name}");
         }
 
@@ -194,9 +195,19 @@ class Field
         return $this->help;
     }
 
+    public function get_description(): ?string
+    {
+        return $this->help;
+    }
+
     public function get_options(): array
     {
         return $this->options;
+    }
+
+    public function get_html(): string
+    {
+        return $this->html_content ?? '';
     }
 
     public function get_validation(): array

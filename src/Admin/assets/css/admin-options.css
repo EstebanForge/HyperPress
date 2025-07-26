@@ -1,0 +1,132 @@
+.hmapi-options-page .section {
+    margin-bottom: 2rem;
+    padding: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+
+.hmapi-options-page .section h2 {
+    margin-top: 0;
+    padding: 0;
+    font-size: 1.3em;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5rem;
+}
+
+.hmapi-options-page .field {
+    margin-bottom: 0.5rem;
+    padding: 0;
+}
+
+.hmapi-options-page .field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.hmapi-options-page .field input[type="text"],
+.hmapi-options-page .field select {
+    width: 300px;
+    max-width: 100%;
+}
+
+.hmapi-options-page .field .description {
+    margin-top: 0.5rem;
+    color: #666;
+    font-style: italic;
+}
+
+.hmapi-options-page .field input[type="checkbox"] + label {
+    font-weight: normal;
+    display: inline;
+    margin-left: 0.5rem;
+}
+
+.hmapi-options-page .field input[type="checkbox"] {
+    margin-top: 0;
+}
+
+.hmapi-options-page .section-separator {
+    margin: 2rem 0;
+    border: 0;
+    border-top: 1px solid #ddd;
+}
+
+.hmapi-options-page .submit {
+    padding: 1rem 0;
+}
+
+.hmapi-system-info table {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.hmapi-system-info table th,
+.hmapi-system-info table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.hmapi-system-info table th {
+    background: #f0f0f1;
+    font-weight: 600;
+}
+
+.hmapi-system-info table tr:last-child td {
+    border-bottom: none;
+}
+
+/* API URL Styles */
+.hmapi-api-url {
+    margin: 1rem 0;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: 0;
+}
+
+
+.hmapi-api-url .api-url-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.hmapi-api-url .api-url-container {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    overflow-x: auto;
+}
+
+.hmapi-api-url .api-url-code {
+    font-family: monospace;
+    font-size: 14px;
+    white-space: nowrap;
+    background-color: transparent;
+}
+
+.hmapi-api-url .copy-api-url {
+    margin-left: 1rem;
+}
+
+.hmapi-api-url .description {
+    margin: 0.5rem 0 0 0;
+    color: #666;
+    font-style: italic;
+}
+
+/* Tab Content Styles */
+.hmapi-options-page .tab-content {
+    background: none;
+    border: none;
+    border-top: none;
+    padding: 0;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
