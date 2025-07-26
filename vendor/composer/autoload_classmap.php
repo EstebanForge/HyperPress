@@ -27,6 +27,7 @@ return array(
     'HMApi\\Fields\\ConditionalLogic' => $baseDir . '/src/Fields/ConditionalLogic.php',
     'HMApi\\Fields\\CustomField' => $baseDir . '/src/Fields/CustomField.php',
     'HMApi\\Fields\\Field' => $baseDir . '/src/Fields/Field.php',
+    'HMApi\\Fields\\HyperFields' => $baseDir . '/src/Fields/HyperFields.php',
     'HMApi\\Fields\\OptionField' => $baseDir . '/src/Fields/OptionField.php',
     'HMApi\\Fields\\OptionsPage' => $baseDir . '/src/Fields/OptionsPage.php',
     'HMApi\\Fields\\OptionsSection' => $baseDir . '/src/Fields/OptionsSection.php',

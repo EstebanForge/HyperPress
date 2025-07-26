@@ -1526,96 +1526,144 @@ The plugin includes **three identical demo blocks** implemented in both approach
 2. Search for blocks: "Hero Banner", "Hero Banner (JSON)", etc.
 3. Compare identical functionality between approaches
 
-### 🎯 Demo Options Pages
+### 🎯 Simplified HyperFields API
 
-The plugin includes comprehensive examples for creating plugin and theme options pages using the hyper fields system. Check out `/hyperoptions/options-page-demo.php` for complete working examples.
+The HyperFields system now provides two simplified approaches for creating options pages and fields with minimal imports:
 
-#### Quick Start Examples
+#### Option 1: HyperFields Facade Class (Recommended)
 
-**Basic Plugin Options Page:**
+Use a single facade class to access all field types:
+
 ```php
 <?php
-use HMApi\Fields\OptionsPage;
-use HMApi\Fields\Field;
+use HMApi\Fields\HyperFields;
 
-$plugin_options = OptionsPage::make('My Plugin Settings', 'my-plugin-settings')
+// Create an options page
+$plugin_options = HyperFields::makeOptionPage('My Plugin Settings', 'my-plugin-settings')
     ->set_menu_title('My Plugin')
     ->set_parent_slug('options-general.php');
 
-// Add a simple text field
+// Add fields using the facade
 $plugin_options->add_field(
-    Field::make('text', 'plugin_title', 'Plugin Title')
+    HyperFields::makeField('text', 'plugin_title', 'Plugin Title')
         ->set_default('My Awesome Plugin')
         ->set_placeholder('Enter plugin title...')
 );
+
+// Add tabs
+$tabs = HyperFields::makeTabs('theme_tabs', 'Theme Configuration')
+    ->add_tab('header', 'Header', [
+        HyperFields::makeField('image', 'header_logo', 'Header Logo'),
+        HyperFields::makeField('color', 'header_bg', 'Header Background')->set_default('#ffffff')
+    ])
+    ->add_tab('typography', 'Typography', [
+        HyperFields::makeField('select', 'primary_font', 'Primary Font')
+            ->set_options(['system' => 'System', 'roboto' => 'Roboto'])
+            ->set_default('system'),
+        HyperFields::makeField('number', 'base_font_size', 'Base Font Size (px)')
+            ->set_default(16)->set_min(12)->set_max(24)
+    ]);
+
+$plugin_options->add_field($tabs);
+
+// Add repeater fields
+$social_links = HyperFields::makeRepeater('social_links', 'Social Media Links')
+    ->add_sub_field(HyperFields::makeField('select', 'platform', 'Platform')
+        ->set_options(['facebook' => 'Facebook', 'twitter' => 'Twitter', 'instagram' => 'Instagram']))
+    ->add_sub_field(HyperFields::makeField('url', 'url', 'Profile URL'));
+
+$plugin_options->add_field($social_links);
 
 // Register the options page
 $plugin_options->register();
 ```
 
-**Theme Options with Tabs:**
+#### Option 2: Helper Functions
+
+Use global helper functions for even simpler syntax:
+
 ```php
 <?php
-use HMApi\Fields\OptionsPage;
-use HMApi\Fields\Field;
-use HMApi\Fields\TabsField;
+// No imports needed!
 
-$theme_options = OptionsPage::make('Theme Settings', 'theme-settings')
-    ->set_menu_title('Theme Options')
-    ->set_parent_slug('themes.php');
+// Create an options page
+$plugin_options = hf_option_page('My Plugin Settings', 'my-plugin-settings')
+    ->set_menu_title('My Plugin')
+    ->set_parent_slug('options-general.php');
 
-// Create tabs for organized settings
-$tabs = TabsField::make('theme_tabs', 'Theme Configuration')
+// Add sections using helper functions
+$general_section = hf_section('general', 'General Settings', 'Configure basic plugin settings');
+$plugin_options->add_section($general_section);
+
+$general_section->add_field(
+    hf_field('text', 'plugin_title', 'Plugin Title')
+        ->set_default('My Awesome Plugin')
+        ->set_placeholder('Enter plugin title...')
+);
+
+// Add tabs
+$tabs = hf_tabs('theme_tabs', 'Theme Configuration')
     ->add_tab('header', 'Header', [
-        Field::make('image', 'header_logo', 'Header Logo'),
-        Field::make('color', 'header_bg', 'Header Background')->set_default('#ffffff')
+        hf_field('image', 'header_logo', 'Header Logo'),
+        hf_field('color', 'header_bg', 'Header Background')->set_default('#ffffff')
     ])
     ->add_tab('typography', 'Typography', [
-        Field::make('select', 'primary_font', 'Primary Font')
+        hf_field('select', 'primary_font', 'Primary Font')
             ->set_options(['system' => 'System', 'roboto' => 'Roboto'])
             ->set_default('system'),
-        Field::make('number', 'base_font_size', 'Base Font Size (px)')
+        hf_field('number', 'base_font_size', 'Base Font Size (px)')
             ->set_default(16)->set_min(12)->set_max(24)
     ]);
 
-$theme_options->add_field($tabs);
-$theme_options->register();
+$general_section->add_field($tabs);
+
+// Add repeater fields
+$social_links = hf_repeater('social_links', 'Social Media Links')
+    ->add_sub_field(hf_field('select', 'platform', 'Platform')
+        ->set_options(['facebook' => 'Facebook', 'twitter' => 'Twitter', 'instagram' => 'Instagram']))
+    ->add_sub_field(hf_field('url', 'url', 'Profile URL'));
+
+$general_section->add_field($social_links);
+
+// Register the options page
+$plugin_options->register();
 ```
 
-#### Available Demo Examples
+#### Comparison
 
-The demo file includes **6 complete examples** covering all field types:
+| Approach | Imports Required | IDE Support | Simplicity | Extensibility |
+|----------|------------------|-------------|------------|---------------|
+| **Facade Class** | 1 import | Excellent | High | Excellent |
+| **Helper Functions** | None | Limited | Highest | Good |
 
-1. **Basic Plugin Options** - Simple plugin settings with text, color, image, and checkbox fields
-2. **Advanced Settings with Tabs** - Organized settings using tabs for complex configurations
-3. **Repeater Fields** - Social media links with platform selection and URLs
-4. **Conditional Logic** - Fields that show/hide based on other field values
-5. **Theme Options Page** - Complete theme customization with header, typography, and footer settings
-6. **Custom Top-Level Menu** - Standalone admin menu with dashboard and settings sections
+**Recommendation**: Use the **Facade Class** approach for production projects as it provides better IDE support, type hinting, and extensibility. Use the **Helper Functions** approach for rapid prototyping or when maximum simplicity is preferred.
 
-#### Field Types Demonstrated
+#### Demo Files
 
-The demo includes examples for **all 27 field types**:
-- **Text**: `text`, `textarea`, `email`, `url`, `number`
-- **Selection**: `select`, `multiselect`, `radio`, `radio_image`, `checkbox`
-- **Media**: `image`, `media_gallery`, `file`
-- **Advanced**: `color`, `map`, `date`, `datetime`, `time`
-- **Content**: `html`, `header_scripts`, `footer_scripts`
-- **Organization**: `tabs`, `repeater`, `separator`
-- **Special**: `association`, `oembed`, `rich_text`, `hidden`, `set`
+Check out the demo files for complete working examples:
+- `/hyperoptions/options-page-demo.php` - Uses the Facade Class approach
+- `/hyperoptions/options-page-demo-functions.php` - Uses the Helper Functions approach
 
 #### Running the Demos
 
 **To test the demo options pages:**
 
-1. **Copy the demo file** to your theme or plugin:
+1. **Copy one of the demo files** to your theme or plugin:
    ```bash
+   # For Facade Class approach
    cp hyperoptions/options-page-demo.php your-plugin/options-demo.php
+   
+   # For Helper Functions approach
+   cp hyperoptions/options-page-demo-functions.php your-plugin/options-demo-functions.php
    ```
 
 2. **Include the file** in your plugin/theme:
    ```php
+   // For Facade Class approach
    require_once 'options-demo.php';
+   
+   // For Helper Functions approach
+   require_once 'options-demo-functions.php';
    ```
 
 3. **Navigate to the new options pages**:
@@ -1625,11 +1673,12 @@ The demo includes examples for **all 27 field types**:
 
 #### Conditional Logic Examples
 
-The demo showcases advanced conditional logic:
+The demo showcases advanced conditional logic using the new simplified APIs:
 
+**Using HyperFields Facade Class:**
 ```php
 // Show field only when another field has specific value
-Field::make('number', 'items_per_page', 'Items Per Page')
+HyperFields::makeField('number', 'items_per_page', 'Items Per Page')
     ->set_conditional_logic([
         'conditions' => [[
             'field' => 'display_mode',
@@ -1639,7 +1688,38 @@ Field::make('number', 'items_per_page', 'Items Per Page')
     ]);
 
 // Complex conditions with multiple rules
-Field::make('text', 'api_key', 'API Key')
+HyperFields::makeField('text', 'api_key', 'API Key')
+    ->set_conditional_logic([
+        'relation' => 'AND',
+        'conditions' => [
+            [
+                'field' => 'enable_api',
+                'operator' => '=',
+                'value' => 'yes'
+            ],
+            [
+                'field' => 'api_provider',
+                'operator' => 'IN',
+                'value' => ['stripe', 'paypal']
+            ]
+        ]
+    ]);
+```
+
+**Using Helper Functions:**
+```php
+// Show field only when another field has specific value
+hf_field('number', 'items_per_page', 'Items Per Page')
+    ->set_conditional_logic([
+        'conditions' => [[
+            'field' => 'display_mode',
+            'operator' => '=',
+            'value' => 'advanced'
+        ]]
+    ]);
+
+// Complex conditions with multiple rules
+hf_field('text', 'api_key', 'API Key')
     ->set_conditional_logic([
         'relation' => 'AND',
         'conditions' => [
@@ -1659,16 +1739,29 @@ Field::make('text', 'api_key', 'API Key')
 
 #### Repeater Fields with Nested Data
 
-Create complex data structures with nested fields:
+Create complex data structures with nested fields using the new simplified APIs:
 
+**Using HyperFields Facade Class:**
 ```php
-RepeaterField::make('team_members', 'Team Members')
+HyperFields::makeRepeater('team_members', 'Team Members')
     ->set_min_rows(1)
     ->set_max_rows(20)
-    ->add_sub_field(Field::make('text', 'name', 'Full Name')->set_required(true))
-    ->add_sub_field(Field::make('email', 'email', 'Email Address'))
-    ->add_sub_field(Field::make('image', 'photo', 'Profile Photo'))
-    ->add_sub_field(Field::make('select', 'role', 'Role')
+    ->add_sub_field(HyperFields::makeField('text', 'name', 'Full Name')->set_required(true))
+    ->add_sub_field(HyperFields::makeField('email', 'email', 'Email Address'))
+    ->add_sub_field(HyperFields::makeField('image', 'photo', 'Profile Photo'))
+    ->add_sub_field(HyperFields::makeField('select', 'role', 'Role')
+        ->set_options(['Developer', 'Designer', 'Manager']));
+```
+
+**Using Helper Functions:**
+```php
+hf_repeater('team_members', 'Team Members')
+    ->set_min_rows(1)
+    ->set_max_rows(20)
+    ->add_sub_field(hf_field('text', 'name', 'Full Name')->set_required(true))
+    ->add_sub_field(hf_field('email', 'email', 'Email Address'))
+    ->add_sub_field(hf_field('image', 'photo', 'Profile Photo'))
+    ->add_sub_field(hf_field('select', 'role', 'Role')
         ->set_options(['Developer', 'Designer', 'Manager']));
 ```
 
@@ -1681,21 +1774,42 @@ All demo examples are ready to use and demonstrate best practices for creating p
 - `media`, `gallery`, `rich_text`, `select`, `checkbox`
 - `repeater` (nested fields), `tabs` (field organization)
 - `association`, `map`, `date`, `datetime`, `time`
+- `section` (organize fields into sections)
 
 **Conditional Logic:**
 ```php
 // Show field only when another field has specific value
-Field::make('text', 'custom_text', 'Custom Text')
-    ->setConditionalLogic(
-        ConditionalLogic::if('show_custom')->equals('yes')
-    );
+HyperFields::makeField('text', 'custom_text', 'Custom Text')
+    ->set_conditional_logic([
+        'conditions' => [[
+            'field' => 'show_custom',
+            'operator' => '=',
+            'value' => 'yes'
+        ]]
+    ]);
+
+// Or using helper functions
+hf_field('text', 'custom_text', 'Custom Text')
+    ->set_conditional_logic([
+        'conditions' => [[
+            'field' => 'show_custom',
+            'operator' => '=',
+            'value' => 'yes'
+        ]]
+    ]);
 ```
 
 **Custom Validation:**
 ```php
-Field::make('email', 'contact_email', 'Contact Email')
-    ->setValidation('email')
-    ->setRequired(true);
+// Using HyperFields facade
+HyperFields::makeField('email', 'contact_email', 'Contact Email')
+    ->set_validation('email')
+    ->set_required(true);
+
+// Or using helper functions
+hf_field('email', 'contact_email', 'Contact Email')
+    ->set_validation('email')
+    ->set_required(true);
 ```
 
 ### 🎉 Getting Started
