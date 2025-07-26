@@ -51,6 +51,7 @@ class ComposerStaticInitc0e3399e672c61366037eb22a5860f68
         'HMApi\\Fields\\ConditionalLogic' => __DIR__ . '/../..' . '/src/Fields/ConditionalLogic.php',
         'HMApi\\Fields\\CustomField' => __DIR__ . '/../..' . '/src/Fields/CustomField.php',
         'HMApi\\Fields\\Field' => __DIR__ . '/../..' . '/src/Fields/Field.php',
+        'HMApi\\Fields\\HyperFields' => __DIR__ . '/../..' . '/src/Fields/HyperFields.php',
         'HMApi\\Fields\\OptionField' => __DIR__ . '/../..' . '/src/Fields/OptionField.php',
         'HMApi\\Fields\\OptionsPage' => __DIR__ . '/../..' . '/src/Fields/OptionsPage.php',
         'HMApi\\Fields\\OptionsSection' => __DIR__ . '/../..' . '/src/Fields/OptionsSection.php',
