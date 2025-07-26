@@ -31,6 +31,7 @@ class Field
     public function set_html(string $html): self
     {
         $this->html_content = $html;
+
         return $this;
     }
 
@@ -116,12 +117,14 @@ class Field
     public function set_help(?string $help): self
     {
         $this->help = $help;
+
         return $this;
     }
 
     public function set_description(?string $description): self
     {
         $this->help = $description;
+
         return $this;
     }
 

@@ -3,15 +3,15 @@
 declare(strict_types=1);
 
 /**
- * Field class for the fluent API.
+ * HyperField class for the fluent API.
  *
- * This class is now a wrapper around the universal HMApi\Fields\Field class,
+ * This class is now a wrapper around the hyper HMApi\Fields\Field class,
  * providing backward compatibility for the HyperBlocks API.
  */
 
 namespace HMApi\Blocks;
 
-use HMApi\Fields\Field as UniversalField;
+use HMApi\Fields\Field as HyperField;
 
 // Prevent direct file access.
 if (!defined('ABSPATH')) {
@@ -35,11 +35,11 @@ class Field
     ];
 
     /**
-     * The underlying universal field instance.
+     * The underlying hyper fields instance.
      *
-     * @var UniversalField
+     * @var HyperField
      */
-    private UniversalField $universal_field;
+    private HyperField $hyper_field;
 
     /**
      * Constructor.
@@ -55,11 +55,11 @@ class Field
             throw new \InvalidArgumentException("Unsupported field type: {$type}. Supported types: " . implode(', ', self::FIELD_TYPES));
         }
 
-        $this->universal_field = UniversalField::make($type, $name, $label);
+        $this->hyper_field = HyperField::make($type, $name, $label);
     }
 
     /**
-     * Create a new Field instance.
+     * Create a new HyperField instance.
      *
      * @param string $type  The field type.
      * @param string $name  The field name.
@@ -79,7 +79,7 @@ class Field
      */
     public function setDefault($default): self
     {
-        $this->universal_field->set_default($default);
+        $this->hyper_field->set_default($default);
 
         return $this;
     }
@@ -92,7 +92,7 @@ class Field
      */
     public function setPlaceholder(string $placeholder): self
     {
-        $this->universal_field->set_placeholder($placeholder);
+        $this->hyper_field->set_placeholder($placeholder);
 
         return $this;
     }
@@ -105,7 +105,7 @@ class Field
      */
     public function setRequired(bool $required = true): self
     {
-        $this->universal_field->set_required($required);
+        $this->hyper_field->set_required($required);
 
         return $this;
     }
@@ -118,7 +118,7 @@ class Field
      */
     public function setHelp(string $help): self
     {
-        $this->universal_field->set_help($help);
+        $this->hyper_field->set_help($help);
 
         return $this;
     }
@@ -130,17 +130,17 @@ class Field
      */
     public function toArray(): array
     {
-        return $this->universal_field->to_array();
+        return $this->hyper_field->to_array();
     }
 
     /**
-     * Get the underlying universal field instance.
+     * Get the underlying hyper fields instance.
      *
-     * @return UniversalField
+     * @return HyperField
      */
-    public function getUniversalField(): UniversalField
+    public function getHyperField(): HyperField
     {
-        return $this->universal_field;
+        return $this->hyper_field;
     }
 
     /**
@@ -153,19 +153,19 @@ class Field
     {
         switch ($name) {
             case 'type':
-                return $this->universal_field->get_type();
+                return $this->hyper_field->get_type();
             case 'name':
-                return $this->universal_field->get_name();
+                return $this->hyper_field->get_name();
             case 'label':
-                return $this->universal_field->get_label();
+                return $this->hyper_field->get_label();
             case 'default':
-                return $this->universal_field->get_default();
+                return $this->hyper_field->get_default();
             case 'placeholder':
-                return $this->universal_field->get_placeholder();
+                return $this->hyper_field->get_placeholder();
             case 'required':
-                return $this->universal_field->is_required();
+                return $this->hyper_field->is_required();
             case 'help':
-                return $this->universal_field->get_help();
+                return $this->hyper_field->get_help();
             default:
                 return null;
         }
@@ -186,16 +186,16 @@ class Field
                 // These are immutable after construction
                 break;
             case 'default':
-                $this->universal_field->set_default($value);
+                $this->hyper_field->set_default($value);
                 break;
             case 'placeholder':
-                $this->universal_field->set_placeholder($value);
+                $this->hyper_field->set_placeholder($value);
                 break;
             case 'required':
-                $this->universal_field->set_required((bool) $value);
+                $this->hyper_field->set_required((bool) $value);
                 break;
             case 'help':
-                $this->universal_field->set_help($value);
+                $this->hyper_field->set_help($value);
                 break;
         }
     }

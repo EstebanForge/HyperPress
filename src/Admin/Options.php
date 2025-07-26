@@ -19,8 +19,8 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * New Options Class using Universal Field System.
- * Replaces wp-settings dependency with our universal field system.
+ * New Options Class using Hyper Fields System.
+ * Replaces wp-settings dependency with our Hyper fields system.
  *
  * @since 2025-07-21
  */
@@ -226,7 +226,7 @@ class Options
         $value = $options[$name] ?? $field->get_default();
 
         echo '<div class="field">';
-        
+
         switch ($field->get_type()) {
             case 'select':
                 echo '<label for="' . esc_attr($name) . '">' . esc_html($field->get_label()) . '</label>';
@@ -488,24 +488,56 @@ class Options
         echo '<p class="description">Load libraries from CDN for better performance, or disable to use local copies for version consistency.</p>';
     }
 
-    public function sanitize_options(array $input): array
+    public function sanitize_options($input): array
     {
-        $sanitized = [];
+        // Handle case when no input is provided
+        if (!is_array($input)) {
+            return $this->get_current_options();
+        }
+        
+        // Get current options to preserve values not in input
+        $current_options = $this->get_current_options();
+        $sanitized = $current_options;
 
-        // Sanitize each field based on type
-        $sanitized['active_library'] = sanitize_text_field($input['active_library'] ?? 'htmx');
-        $sanitized['load_from_cdn'] = isset($input['load_from_cdn']) ? (bool) $input['load_from_cdn'] : false;
-        $sanitized['load_hyperscript'] = isset($input['load_hyperscript']) ? (bool) $input['load_hyperscript'] : false;
-        $sanitized['load_alpinejs_with_htmx'] = isset($input['load_alpinejs_with_htmx']) ? (bool) $input['load_alpinejs_with_htmx'] : false;
-        $sanitized['set_htmx_hxboost'] = isset($input['set_htmx_hxboost']) ? (bool) $input['set_htmx_hxboost'] : false;
-        $sanitized['load_htmx_backend'] = isset($input['load_htmx_backend']) ? (bool) $input['load_htmx_backend'] : false;
-        $sanitized['load_alpinejs_backend'] = isset($input['load_alpinejs_backend']) ? (bool) $input['load_alpinejs_backend'] : false;
-        $sanitized['load_datastar_backend'] = isset($input['load_datastar_backend']) ? (bool) $input['load_datastar_backend'] : false;
+        // Update all fields that are present in the input
+        if (isset($input['active_library'])) {
+            $sanitized['active_library'] = sanitize_text_field($input['active_library']);
+        }
+        
+        if (isset($input['load_from_cdn'])) {
+            $sanitized['load_from_cdn'] = (bool) $input['load_from_cdn'];
+        }
+        
+        if (isset($input['load_hyperscript'])) {
+            $sanitized['load_hyperscript'] = (bool) $input['load_hyperscript'];
+        }
+        
+        if (isset($input['load_alpinejs_with_htmx'])) {
+            $sanitized['load_alpinejs_with_htmx'] = (bool) $input['load_alpinejs_with_htmx'];
+        }
+        
+        if (isset($input['set_htmx_hxboost'])) {
+            $sanitized['set_htmx_hxboost'] = (bool) $input['set_htmx_hxboost'];
+        }
+        
+        if (isset($input['load_htmx_backend'])) {
+            $sanitized['load_htmx_backend'] = (bool) $input['load_htmx_backend'];
+        }
+        
+        if (isset($input['load_alpinejs_backend'])) {
+            $sanitized['load_alpinejs_backend'] = (bool) $input['load_alpinejs_backend'];
+        }
+        
+        if (isset($input['load_datastar_backend'])) {
+            $sanitized['load_datastar_backend'] = (bool) $input['load_datastar_backend'];
+        }
 
         // Sanitize HTMX extensions - keep hyphenated keys as-is
         $extensions = $this->get_htmx_extensions();
         foreach ($extensions as $key => $details) {
-            $sanitized['load_extension_' . $key] = isset($input['load_extension_' . $key]) ? (bool) $input['load_extension_' . $key] : false;
+            if (isset($input['load_extension_' . $key])) {
+                $sanitized['load_extension_' . $key] = (bool) $input['load_extension_' . $key];
+            }
         }
 
         return $sanitized;

@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Migration class to handle transition from wp-settings to universal field system.
+ * Migration class to handle transition from wp-settings to hyper fields system.
  * Ensures no data loss during the migration process.
  *
  * @since 2025-07-21
@@ -41,7 +41,7 @@ class OptionsMigration
     }
 
     /**
-     * Perform the migration from wp-settings to universal field system.
+     * Perform the migration from wp-settings to hyper fields system.
      *
      * @return bool True if migration was successful, false otherwise.
      */
