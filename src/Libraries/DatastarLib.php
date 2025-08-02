@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace HMApi\Libraries;
 
 use HMApi\Main;
-use HMApi\starfederation\datastar\Consts;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -63,21 +62,18 @@ class DatastarLib
         $message = 'Datastar PHP SDK not found. Please run composer install.';
 
         if ($sdk_loaded) {
-            $version = Consts::VERSION;
             $message = 'Datastar PHP SDK is available.';
-        } else {
-            // Check Composer's installed.json for the package
-            $composer_installed_path = HMAPI_ABSPATH . '/../../../vendor/composer/installed.json';
-            if (file_exists($composer_installed_path)) {
-                $installed = json_decode(file_get_contents($composer_installed_path), true);
-                if (isset($installed['packages'])) {
-                    foreach ($installed['packages'] as $package) {
-                        if (is_array($package) && isset($package['name'])) {
-                            if (str_ends_with($package['name'], 'starfederation/datastar-php')) { // Check suffix due to potential prefixing
-                                $version = $package['version'] ?? 'unknown';
-                                break;
-                            }
-                        }
+        }
+
+        // Check Composer's installed.json for the package version.
+        $composer_installed_path = HMAPI_ABSPATH . '/vendor/composer/installed.json';
+        if (file_exists($composer_installed_path)) {
+            $installed_data = json_decode(file_get_contents($composer_installed_path), true);
+            if (isset($installed_data['packages'])) {
+                foreach ($installed_data['packages'] as $package) {
+                    if (is_array($package) && isset($package['name']) && $package['name'] === 'starfederation/datastar-php') {
+                        $version = $package['version'] ?? 'unknown';
+                        break;
                     }
                 }
             }
@@ -144,9 +140,7 @@ class DatastarLib
      */
     public static function load_sdk(): bool
     {
-        // The Datastar SDK is loaded via the main Composer autoloader because it is excluded from Strauss.
-        // We just need to check if the class exists.
-        return class_exists(self::class);
+        return class_exists('HMApi\starfederation\datastar\Consts');
     }
 
     /**
@@ -156,6 +150,6 @@ class DatastarLib
      */
     private function is_sdk_loaded(): bool
     {
-        return class_exists(self::class);
+        return class_exists('HMApi\starfederation\datastar\Consts');
     }
 }

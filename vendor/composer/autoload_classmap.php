@@ -6,7 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'ComposerAutoloaderInitc0e3399e672c61366037eb22a5860f68' => $baseDir . '/vendor-dist/composer/autoload_real.php',
+    'ComposerAutoloaderInit8fdab5c4c154ad8745577288bf43f397' => $baseDir . '/vendor-dist/composer/autoload_real.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'HMApi\\Adbar\\Dot' => $baseDir . '/vendor-dist/adbario/php-dot-notation/src/Dot.php',
     'HMApi\\Admin\\Activation' => $baseDir . '/src/Admin/Activation.php',
@@ -15,7 +15,7 @@ return array(
     'HMApi\\Assets' => $baseDir . '/src/Assets.php',
     'HMApi\\Compatibility' => $baseDir . '/src/Compatibility.php',
     'HMApi\\Composer\\Autoload\\ClassLoader' => $baseDir . '/vendor-dist/composer/ClassLoader.php',
-    'HMApi\\Composer\\Autoload\\ComposerStaticInitc0e3399e672c61366037eb22a5860f68' => $baseDir . '/vendor-dist/composer/autoload_static.php',
+    'HMApi\\Composer\\Autoload\\ComposerStaticInit8fdab5c4c154ad8745577288bf43f397' => $baseDir . '/vendor-dist/composer/autoload_static.php',
     'HMApi\\Config' => $baseDir . '/src/Config.php',
     'HMApi\\Jeffreyvr\\WPSettings\\EnqueueManager' => $baseDir . '/vendor-dist/jeffreyvanrossum/wp-settings/src/EnqueueManager.php',
     'HMApi\\Jeffreyvr\\WPSettings\\Enqueuer' => $baseDir . '/vendor-dist/jeffreyvanrossum/wp-settings/src/Enqueuer.php',
