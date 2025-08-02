@@ -3,7 +3,7 @@
   "author": "Esteban Cuevas",
   "license": "GPL-2.0-or-later",
   "version": "2.0.6",
-  "description": "WordPress plugin providing API endpoints and integration for hypermedia libraries like HTMX, AlpineJS, and Datastar.",
+  "description": "Supercharge WordPress with the power of hypermedia. Create rich, interactive blocks and pages using only PHP. Hypermedia powered by HTMX, Alpine Ajax and Datastar.",
   "keywords": [],
   "main": "index.js",
   "scripts": {
