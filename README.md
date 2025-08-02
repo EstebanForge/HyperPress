@@ -32,7 +32,7 @@ It empowers you to build rich, interactive experiences—including SPA-like beha
 ### Why Choose HyperPress?
 
 * **🚀 Drastically Faster Workflow**: Skip the JavaScript build process entirely. There's no need to compile assets or manage complex dependencies. Write your logic in PHP and render dynamic HTML directly.
-* **🧠 Simplified Development**: Build modern user experiences without writing complex client-side JavaScript. Leverage the simple, attribute-based syntax of HTMX to handle AJAX, WebSockets, and more.
+* **🧠 Simplified Development**: Build modern user experiences without writing complex client-side JavaScript. Leverage the simple, attribute-based syntax of HTMX to handle AJAX, WebSockets, SSE and more.
 * **💪 PHP-First Gutenberg Blocks**: Create dynamic and interactive Gutenberg blocks using only PHP. Avoid the steep learning curve and cumbersome boilerplate of the standard React-based block development.
 * **⚡️ Lightweight & High-Performance**: By sending lean HTML fragments from the server instead of large JSON payloads, you create faster, more responsive user experiences with a minimal client-side footprint.
 
@@ -70,7 +70,7 @@ Activate the plugin. Configure it to your liking on Settings > HyperPress.
 If you want to use this plugin as a library, you can install it via Composer. This allows you to use hypermedia libraries in your own plugins or themes, without the need to install this plugin.
 
 ```bash
-composer require estebanforge/hypermedia-api-wordpress
+composer require estebanforge/hyperpress
 ```
 
 This plugin/library will determine which instance of itself is the newer one when WordPress is loading. Then, it will use the newer instance between all competing plugins or themes. This is to avoid conflicts with other plugins or themes that may be using the same library for their Hypermedia implementation.
