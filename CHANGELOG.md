@@ -11,7 +11,7 @@
 - **FIX:** Several bugfixes and improvements.
 
 # 2.0.0 / 2025-06-06
-- Renamed plugin to "Hypermedia API for WordPress" to reflect broader support for multiple hypermedia libraries.
+- Renamed plugin to "HyperPress: Modern Hypermedia for WordPress" to reflect broader support for multiple hypermedia libraries.
 - **NEW:** Added support for Datastar.js hypermedia library.
 - **NEW:** Added support for Alpine Ajax hypermedia library.
 - **NEW:** Template engine now supports both `.hm.php` (primary) and `.htmx.php` (legacy) extensions.

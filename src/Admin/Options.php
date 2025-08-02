@@ -159,8 +159,8 @@ class Options
         // If not, add it manually
         if (!$page_exists) {
             $this->hook_suffix = add_options_page(
-                esc_html__('Hypermedia API Options', 'api-for-htmx'),
-                esc_html__('Hypermedia API', 'api-for-htmx'),
+                esc_html__('HyperPress Options', 'api-for-htmx'),
+                esc_html__('HyperPress', 'api-for-htmx'),
                 'manage_options',
                 'hypermedia-api-options',
                 [$this, 'render_fallback_page']
@@ -186,7 +186,7 @@ class Options
             echo $plugin_info_html;
         } else {
             echo '<div class="wrap">';
-            echo '<h1>' . esc_html__('Hypermedia API Options', 'api-for-htmx') . '</h1>';
+            echo '<h1>' . esc_html__('HyperPress Options', 'api-for-htmx') . '</h1>';
             echo '<p>' . esc_html__('Settings are loading... If this message persists, please refresh the page.', 'api-for-htmx') . '</p>';
             echo '</div>';
         }
@@ -250,10 +250,10 @@ class Options
     public function page_init()
     {
         $options = $this->main->assets_manager->get_options();
-        $this->settings = new WPSettings(esc_html__('Hypermedia API Options', 'api-for-htmx'), 'hypermedia-api-options');
+        $this->settings = new WPSettings(esc_html__('HyperPress Options', 'api-for-htmx'), 'hypermedia-api-options');
         $this->settings->set_option_name($this->option_name);
         $this->settings->set_menu_parent_slug('options-general.php');
-        $this->settings->set_menu_title(esc_html__('Hypermedia API', 'api-for-htmx'));
+        $this->settings->set_menu_title(esc_html__('HyperPress', 'api-for-htmx'));
 
         // --- General Tab (Always Visible) ---
         $general_tab = $this->settings->add_tab(esc_html__('General Settings', 'api-for-htmx'));
@@ -265,8 +265,8 @@ class Options
         $general_section->add_option('display', [
             'name' => 'api_url_info',
             'api_url' => $api_url,
-            'title' => esc_html__('Hypermedia API Endpoint', 'api-for-htmx'),
-            'description' => esc_html__('Use this base URL to make requests to the hypermedia API endpoints from your frontend code.', 'api-for-htmx'),
+            'title' => esc_html__('HyperPress API Endpoint', 'api-for-htmx'),
+            'description' => esc_html__('Use this base URL to make requests to the HyperPress API endpoints from your frontend code.', 'api-for-htmx'),
         ]);
 
         $general_section->add_option('select', [
@@ -376,9 +376,9 @@ class Options
         // --- About Tab (Always Visible) ---
         $about_tab = $this->settings->add_tab(esc_html__('About', 'api-for-htmx'));
         $about_section = $about_tab->add_section(esc_html__('About', 'api-for-htmx'), [
-            'description' => esc_html__('Hypermedia API for WordPress is an unofficial plugin that enables the use of HTMX, Alpine AJAX, Datastar, and other hypermedia libraries on your WordPress site, theme, and/or plugins. Intended for software developers.', 'api-for-htmx') . '<br>' .
+            'description' => esc_html__('Designed for developers, HyperPress brings the power and simplicity of hypermedia to your WordPress projects. It seamlessly integrates popular libraries like HTMX, Alpine AJAX, and Datastar, empowering you to create rich, dynamic user interfaces without the complexity of traditional JavaScript frameworks.', 'api-for-htmx') . '<br>' .
                 esc_html__('Adds a new endpoint /wp-html/v1/ from which you can load any hypermedia template.', 'api-for-htmx') . '<br><br>' .
-                esc_html__('Hypermedia is a concept that allows you to build modern web applications, even SPAs, without writing JavaScript. HTMX, Alpine Ajax, and Datastar let you use AJAX, WebSockets, and Server-Sent Events directly in HTML using attributes.', 'api-for-htmx') . '<br><br>' .
+                esc_html__('At its core, hypermedia is an approach that empowers you to build modern, dynamic applications by extending the capabilities of HTML. Libraries like HTMX, Alpine AJAX, and Datastar allow you to harness advanced browser technologies—such as AJAX, WebSockets, and Server-Sent Events, simply by adding special attributes to your HTML, minimizing or eliminating the need for a complex JavaScript layer.', 'api-for-htmx') . '<br><br>' .
                 esc_html__('Plugin repository and documentation:', 'api-for-htmx') . ' <a href="https://github.com/EstebanForge/Hypermedia-API-WordPress" target="_blank">https://github.com/EstebanForge/Hypermedia-API-WordPress</a>',
         ]);
 

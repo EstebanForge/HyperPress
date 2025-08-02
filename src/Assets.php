@@ -513,7 +513,7 @@ class Assets
 
         // Common nonce getter function
         $inline_script_parts[] = "
-// Hypermedia API nonce configuration for all libraries
+// HyperPress nonce configuration for all libraries
 (function() {
     'use strict';
 

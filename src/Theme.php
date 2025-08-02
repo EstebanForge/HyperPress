@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Handles theme-related integrations for Hypermedia API for WordPress.
+ * Handles theme-related integrations for HyperPress for WordPress.
  *
  * @since   2024-02-27
  */

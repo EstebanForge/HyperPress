@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Handles the API endpoints for Hypermedia API for WordPress.
+ * Handles the API endpoints for HyperPress for WordPress.
  * Registers both the primary (HMAPI_ENDPOINT) and legacy (HMAPI_LEGACY_ENDPOINT) routes.
  *
  * @since   2023-11-22
