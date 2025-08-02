@@ -131,6 +131,9 @@ class Render
 
         // For backward compatibility
         $hxvals = $hmvals;
+        
+        // Run actions before loading the template
+        do_action('hmapi/before_template_load', $template_name, $hmvals);
 
         // Load the template
         require_once $template_path;
