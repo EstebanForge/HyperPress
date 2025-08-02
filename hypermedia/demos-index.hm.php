@@ -11,10 +11,11 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hypermedia API for WordPress - Demos</title>
+    <title>HyperPress: Modern Hypermedia for WordPress - Demos</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -23,26 +24,30 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
             padding: 20px;
             background: #f1f1f1;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .header {
             text-align: center;
             margin-bottom: 40px;
             border-bottom: 2px solid #0073aa;
             padding-bottom: 20px;
         }
+
         .demos-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
             margin-bottom: 40px;
         }
+
         .demo-card {
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -50,23 +55,28 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
             background: #fafafa;
             transition: transform 0.2s, box-shadow 0.2s;
         }
+
         .demo-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
+
         .demo-title {
             color: #0073aa;
             margin-top: 0;
             margin-bottom: 15px;
             font-size: 1.4em;
         }
+
         .demo-description {
             color: #666;
             margin-bottom: 20px;
         }
+
         .demo-examples {
             margin-top: 20px;
         }
+
         .example-item {
             background: white;
             padding: 15px;
@@ -74,6 +84,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
             border-radius: 4px;
             border-left: 4px solid #0073aa;
         }
+
         .button {
             background: #0073aa;
             color: white;
@@ -85,16 +96,20 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
             display: inline-block;
             margin: 5px 5px 5px 0;
         }
+
         .button:hover {
             background: #005a87;
             color: white;
         }
+
         .button-secondary {
             background: #666;
         }
+
         .button-secondary:hover {
             background: #555;
         }
+
         .input-field {
             width: 100%;
             padding: 8px;
@@ -102,6 +117,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+
         .response-area {
             margin-top: 15px;
             padding: 15px;
@@ -110,12 +126,14 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
             border-radius: 4px;
             min-height: 20px;
         }
+
         .tech-info {
             background: #e7f3ff;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 30px;
         }
+
         .nonce-info {
             background: #fff3cd;
             border: 1px solid #ffeaa7;
@@ -123,12 +141,14 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
             border-radius: 4px;
             margin-bottom: 20px;
         }
+
         code {
             background: #f1f1f1;
             padding: 2px 6px;
             border-radius: 3px;
             font-family: 'Courier New', monospace;
         }
+
         pre {
             background: #f8f8f8;
             padding: 15px;
@@ -137,10 +157,11 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 Hypermedia API for WordPress</h1>
+            <h1>🚀 HyperPress: Modern Hypermedia for WordPress</h1>
             <p>Interactive demos showcasing HTMX, Alpine Ajax, and Datastar integration with WordPress</p>
         </div>
 
@@ -169,9 +190,9 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                     <div class="example-item">
                         <h4>Simple GET Request</h4>
                         <button hx-get="<?php echo hm_get_endpoint_url('htmx-demo'); ?>?action=htmx_do_something&demo_type=simple_get"
-                                hx-target="#htmx-response-1"
-                                hx-indicator="#htmx-loading-1"
-                                class="button">
+                            hx-target="#htmx-response-1"
+                            hx-indicator="#htmx-loading-1"
+                            class="button">
                             Load Content
                         </button>
                         <span id="htmx-loading-1" class="htmx-indicator" style="display:none;">Loading...</span>
@@ -181,7 +202,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                     <div class="example-item">
                         <h4>POST with Form Data</h4>
                         <form hx-post="<?php echo hm_get_endpoint_url('htmx-demo'); ?>"
-                              hx-target="#htmx-response-2">
+                            hx-target="#htmx-response-2">
                             <input type="hidden" name="action" value="htmx_do_something">
                             <input type="hidden" name="demo_type" value="form_post">
                             <input type="text" name="user_input" placeholder="Enter some text" class="input-field">
@@ -192,7 +213,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
 
                     <div style="text-align: center; margin-top: 20px;">
                         <a href="<?php echo hm_get_endpoint_url('htmx-demo'); ?>?action=htmx_do_something&demo_type=full_demo"
-                           class="button button-secondary" target="_blank">
+                            class="button button-secondary" target="_blank">
                             View Full HTMX Demo
                         </a>
                     </div>
@@ -228,7 +249,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
 
                     <div style="text-align: center; margin-top: 20px;">
                         <a href="<?php echo hm_get_endpoint_url('alpine-ajax-demo'); ?>?action=alpine_ajax_do_something&demo_type=full_demo"
-                           class="button button-secondary" target="_blank">
+                            class="button button-secondary" target="_blank">
                             View Full Alpine Ajax Demo
                         </a>
                     </div>
@@ -243,15 +264,15 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                 </p>
 
                 <div class="demo-examples"
-                     data-store='{"message": "", "inputData": "Hello Datastar!", "loading": false}'>
+                    data-store='{"message": "", "inputData": "Hello Datastar!", "loading": false}'>
 
                     <div class="example-item">
                         <h4>Simple GET Request</h4>
                         <button data-on-click="$$get('<?php echo hm_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=simple_get')"
-                                data-header="X-WP-Nonce:<?php echo wp_create_nonce('hmapi_nonce'); ?>"
-                                data-on-load-start="loading = true"
-                                data-on-load-end="loading = false"
-                                class="button">
+                            data-header="X-WP-Nonce:<?php echo wp_create_nonce('hmapi_nonce'); ?>"
+                            data-on-load-start="loading = true"
+                            data-on-load-end="loading = false"
+                            class="button">
                             <span data-show="!loading">Load Content</span>
                             <span data-show="loading">Loading...</span>
                         </button>
@@ -262,10 +283,10 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
                         <h4>POST with Data Binding</h4>
                         <input type="text" data-model="inputData" placeholder="Enter some text" class="input-field">
                         <button data-on-click="$$post('<?php echo hm_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'post_data', user_data: inputData})"
-                                data-header="X-WP-Nonce:<?php echo wp_create_nonce('hmapi_nonce'); ?>"
-                                data-on-load-start="loading = true"
-                                data-on-load-end="loading = false"
-                                class="button">
+                            data-header="X-WP-Nonce:<?php echo wp_create_nonce('hmapi_nonce'); ?>"
+                            data-on-load-start="loading = true"
+                            data-on-load-end="loading = false"
+                            class="button">
                             <span data-show="!loading">Send Data</span>
                             <span data-show="loading">Sending...</span>
                         </button>
@@ -274,7 +295,7 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
 
                     <div style="text-align: center; margin-top: 20px;">
                         <a href="<?php echo hm_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=full_demo"
-                           class="button button-secondary" target="_blank">
+                            class="button button-secondary" target="_blank">
                             View Full Datastar Demo
                         </a>
                     </div>
@@ -355,4 +376,5 @@ if (!empty($_POST) && (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_fi
         }
     </script>
 </body>
+
 </html>

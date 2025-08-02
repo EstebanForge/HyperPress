@@ -6,7 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'ComposerAutoloaderInitc0e3399e672c61366037eb22a5860f68' => $vendorDir . '/composer/autoload_real.php',
+    'ComposerAutoloaderInit8fdab5c4c154ad8745577288bf43f397' => $vendorDir . '/composer/autoload_real.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'HMApi\\Adbar\\Dot' => $vendorDir . '/adbario/php-dot-notation/src/Dot.php',
     'HMApi\\Admin\\Activation' => $baseDir . '/src/Admin/Activation.php',
@@ -21,7 +21,7 @@ return array(
     'HMApi\\Blocks\\RestApi' => $baseDir . '/src/Blocks/RestApi.php',
     'HMApi\\Compatibility' => $baseDir . '/src/Compatibility.php',
     'HMApi\\Composer\\Autoload\\ClassLoader' => $vendorDir . '/composer/ClassLoader.php',
-    'HMApi\\Composer\\Autoload\\ComposerStaticInitc0e3399e672c61366037eb22a5860f68' => $vendorDir . '/composer/autoload_static.php',
+    'HMApi\\Composer\\Autoload\\ComposerStaticInit8fdab5c4c154ad8745577288bf43f397' => $vendorDir . '/composer/autoload_static.php',
     'HMApi\\Config' => $baseDir . '/src/Config.php',
     'HMApi\\Fields\\BlockFieldAdapter' => $baseDir . '/src/Fields/BlockFieldAdapter.php',
     'HMApi\\Fields\\ConditionalLogic' => $baseDir . '/src/Fields/ConditionalLogic.php',

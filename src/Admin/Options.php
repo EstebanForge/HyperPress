@@ -214,7 +214,7 @@ class Options
         $section->add_field(
             HyperFields::makeField('html', 'about_content', 'About Hypermedia API')
                 ->set_html(sprintf(
-                '<div class="hmapi-about-content">
+                    '<div class="hmapi-about-content">
                         <p>%s</p>
                         <p>%s</p>
                         <p>%s</p>
@@ -227,17 +227,17 @@ class Options
                         <a href="https://alpinejs.dev" target="_blank" rel="noopener">%s</a> |
                         <a href="https://data-star.org" target="_blank" rel="noopener">%s</a></p>
                     </div>',
-                esc_html__('The Hypermedia API plugin provides a modern, declarative approach to building interactive WordPress sites using hypermedia principles.', 'api-for-htmx'),
-                esc_html__('It supports multiple libraries including HTMX, Alpine Ajax, and Datastar, allowing you to choose the best tool for your project.', 'api-for-htmx'),
-                esc_html__('All libraries are automatically loaded with proper versioning and CDN support.', 'api-for-htmx'),
-                esc_html__('Key Features:', 'api-for-htmx'),
-                esc_html__('REST API Endpoints', 'api-for-htmx'),
-                esc_html__('Pre-built endpoints for common WordPress data', 'api-for-htmx'),
-                esc_html__('Frontend Libraries', 'api-for-htmx'),
-                esc_html__('Automatic loading with CDN support', 'api-for-htmx'),
-                esc_html__('HTMX Documentation', 'api-for-htmx'),
-                esc_html__('Alpine.js Documentation', 'api-for-htmx'),
-                esc_html__('Datastar Documentation', 'api-for-htmx')
+                    esc_html__('The Hypermedia API plugin provides a modern, declarative approach to building interactive WordPress sites using hypermedia principles.', 'api-for-htmx'),
+                    esc_html__('It supports multiple libraries including HTMX, Alpine Ajax, and Datastar, allowing you to choose the best tool for your project.', 'api-for-htmx'),
+                    esc_html__('All libraries are automatically loaded with proper versioning and CDN support.', 'api-for-htmx'),
+                    esc_html__('Key Features:', 'api-for-htmx'),
+                    esc_html__('REST API Endpoints', 'api-for-htmx'),
+                    esc_html__('Pre-built endpoints for common WordPress data', 'api-for-htmx'),
+                    esc_html__('Frontend Libraries', 'api-for-htmx'),
+                    esc_html__('Automatic loading with CDN support', 'api-for-htmx'),
+                    esc_html__('HTMX Documentation', 'api-for-htmx'),
+                    esc_html__('Alpine.js Documentation', 'api-for-htmx'),
+                    esc_html__('Datastar Documentation', 'api-for-htmx')
                 ))
         );
 

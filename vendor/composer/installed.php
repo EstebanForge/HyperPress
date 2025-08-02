@@ -1,8 +1,10 @@
-<?php return array(
+<?php
+
+return array(
     'root' => array(
-        'name' => 'estebanforge/hypermedia-api-wordpress',
-        'pretty_version' => '2.0.5',
-        'version' => '2.0.5.0',
+        'name' => 'estebanforge/hyperpress',
+        'pretty_version' => '2.0.7',
+        'version' => '2.0.7.0',
         'reference' => null,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -10,9 +12,18 @@
         'dev' => true,
     ),
     'versions' => array(
-        'estebanforge/hypermedia-api-wordpress' => array(
-            'pretty_version' => '2.0.5',
-            'version' => '2.0.5.0',
+        'adbario/php-dot-notation' => array(
+            'pretty_version' => '3.3.0',
+            'version' => '3.3.0.0',
+            'reference' => 'a94ce4493d19ea430baa8d7d210a2c9bd7129fc2',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../adbario/php-dot-notation',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'estebanforge/hyperpress' => array(
+            'pretty_version' => '2.0.7',
+            'version' => '2.0.7.0',
             'reference' => null,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
@@ -20,9 +31,9 @@
             'dev_requirement' => false,
         ),
         'starfederation/datastar-php' => array(
-            'pretty_version' => '1.0.0-RC.2',
-            'version' => '1.0.0.0-RC2',
-            'reference' => '993e98b9d6f4de9662067b89723fc1bcefc7e3b9',
+            'pretty_version' => '1.0.0-RC.3',
+            'version' => '1.0.0.0-RC3',
+            'reference' => '4990d27208d2e3c1b34cb874cbd258c55dc984f8',
             'type' => 'library',
             'install_path' => __DIR__ . '/../starfederation/datastar-php',
             'aliases' => array(),

@@ -31,7 +31,7 @@ if (file_exists(__DIR__ . '/vendor-dist/autoload.php')) {
 } else {
     // Display an admin notice if the autoloader is missing.
     add_action('admin_notices', function () {
-        echo '<div class="error"><p>' . esc_html__('Hypermedia API: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'api-for-htmx') . '</p></div>';
+        echo '<div class="error"><p>' . esc_html__('HyperPress: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'api-for-htmx') . '</p></div>';
     });
 
     return;
@@ -99,7 +99,7 @@ if (!function_exists('hmapi_run_initialization_logic')) {
             // Library mode: use the directory containing the bootstrap/plugin file
             $plugin_dir = dirname($plugin_file_path);
             define('HMAPI_ABSPATH', trailingslashit($plugin_dir));
-            define('HMAPI_BASENAME', 'hypermedia-api-wordpress/bootstrap.php');
+            define('HMAPI_BASENAME', 'hyperpress/bootstrap.php');
             define('HMAPI_PLUGIN_URL', ''); // Not applicable in library mode
             define('HMAPI_PLUGIN_FILE', $plugin_file_path);
         } else {

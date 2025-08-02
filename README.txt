@@ -1,4 +1,4 @@
-=== Hypermedia API for WordPress ===
+=== HyperPress: Modern Hypermedia for WordPress ===
 Contributors: tcattd
 Tags: hypermedia, ajax, htmx, hyperscript, alpinejs, datastar
 Stable tag: 2.1.0
@@ -15,7 +15,7 @@ An unofficial WordPress plugin that enables the use of Hypermedia on WordPress. 
 
 Hypermedia is a concept that extends the idea of hypertext by allowing for more complex interactions and data representations. It enables the use of AJAX, WebSockets, and Server-Sent Events directly in HTML using attributes, without writing any JavaScript. It reuses an "old" concept, [Hypermedia](https://hypermedia.systems/), to handle the modern web in a more HTML-like and natural way.
 
-Check the [full feature set at here](https://github.com/EstebanForge/Hypermedia-API-WordPress).
+Check the [full feature set at here](https://github.com/EstebanForge/HyperPress).
 
 This plugin include several Hypermedia libraries by default, locally from the plugin folder. Currently, it includes:
 
@@ -26,25 +26,26 @@ This plugin include several Hypermedia libraries by default, locally from the pl
 The plugin has an opt-in option, not enforced, to include these third-party libraries from a CDN (using the unpkg.com service). You must explicitly enable this option for privacy and security reasons.
 
 == Installation ==
-1. Install Hypermedia-API-WordPress from WordPress repository. Plugins > Add New > Search for: Hypermedia API or API-for-HTMX. Activate it.
-2. Configure Hypermedia-API-WordPress at Settings > Hypermedia API.
+1. Install HyperPress from WordPress repository. Plugins > Add New > Search for: HyperPress (or Hypermedia). Activate it.
+2. Configure HyperPress at Settings > HyperPress.
 3. Enjoy.
 
 == Frequently Asked Questions ==
 = Where is the FAQ? =
-You can [read the full FAQ at GitHub](https://github.com/EstebanForge/Hypermedia-API-WordPress/blob/main/FAQ.md).
+You can [read the full FAQ at GitHub](https://github.com/EstebanForge/HyperPress/blob/main/FAQ.md).
 
 = Suggestions, Support? =
-Please, open [a discussion](https://github.com/EstebanForge/Hypermedia-API-WordPress/discussions).
+Please, open [a discussion](https://github.com/EstebanForge/HyperPress/discussions).
 
 = Found a Bug or Error? =
-Please, open [an issue](https://github.com/EstebanForge/Hypermedia-API-WordPress/issues).
+Please, open [an issue](https://github.com/EstebanForge/HyperPress/issues).
 
 == Screenshots ==
 1. Main options page.
+2. About
 
 == Upgrade Notice ==
 Nothing to see here.
 
 == Changelog ==
-[Check the changelog at GitHub](https://github.com/EstebanForge/Hypermedia-API-WordPress/blob/master/CHANGELOG.md).
+[Check the changelog at GitHub](https://github.com/EstebanForge/HyperPress/blob/master/CHANGELOG.md).
