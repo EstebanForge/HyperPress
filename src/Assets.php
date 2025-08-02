@@ -319,7 +319,7 @@ class Assets
             $url = apply_filters('hmapi/assets/datastar_url', $url, $load_from_cdn, $asset, $is_library_mode);
             $ver = apply_filters('hmapi/assets/datastar_version', $ver, $load_from_cdn, $asset, $is_library_mode);
 
-            wp_enqueue_script('hmapi-datastar', $url, [], $ver, true);
+            wp_enqueue_script_module('hmapi-datastar', $url, [], $ver);
             $datastar_loaded = true;
         }
 
@@ -380,7 +380,7 @@ class Assets
      * Construct the proper URL for assets when running in library mode.
      *
      * When the plugin is loaded as a Composer library, assets are available at paths like:
-     * wp-content/plugins/some-plugin/vendor-dist/estebanforge/hypermedia-api-wordpress/assets/js/libs/
+     * wp-content/plugins/some-plugin/vendor-dist/estebanforge/hyperpress/assets/js/libs/
      *
      * This method detects the vendor directory {
      *      vendor-dist
@@ -438,7 +438,7 @@ class Assets
         }
 
         // Fallback: try to detect plugin directory pattern with explicit vendor directory validation
-        // Look for patterns like: /wp-content/plugins/some-plugin/vendor-*/estebanforge/hypermedia-api-wordpress/
+        // Look for patterns like: /wp-content/plugins/some-plugin/vendor-*/estebanforge/hyperpress/
         foreach ($vendor_directories as $vendor_dir) {
             $pattern = '#/wp-content/(.+/' . preg_quote($vendor_dir, '#') . '/.+)$#';
             if (preg_match($pattern, $plugin_path, $matches)) {
@@ -513,7 +513,7 @@ class Assets
 
         // Common nonce getter function
         $inline_script_parts[] = "
-// Hypermedia API nonce configuration for all libraries
+// HyperPress nonce configuration for all libraries
 (function() {
     'use strict';
 

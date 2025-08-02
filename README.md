@@ -1,30 +1,42 @@
-# Hypermedia for WordPress
+# HyperPress - Hypermedia for WordPress
 
-An unofficial WordPress plugin that enables the use of [HTMX](https://htmx.org), [Alpine AJAX](https://alpine-ajax.js.org/), [Datastar](https://data-star.dev/) and other hypermedia libraries on your WordPress site, theme, and/or plugins. Intended for software developers.
+**HyperPress** is a developer-focused WordPress plugin (and library) that integrates powerful hypermedia libraries like [HTMX](https://htmx.org), [Alpine AJAX](https://alpine-ajax.js.org/), and [Datastar](https://data-star.dev/). It provides a robust foundation for building modern, dynamic, and high-performance websites and applications directly within the WordPress ecosystem.
 
-Adds a new endpoint `/wp-html/v1/` from which you can load any hypermedia template.
+HyperPress equips developers with a powerful toolkit, including:
+* A dedicated REST API endpoint (`/wp-html/v1/`) for serving hypermedia templates.
+* (WIP) A streamlined PHP API for registering custom data fields.
+* (WIP) A simple but powerful PHP API for building dynamic, render-on-the-fly Gutenberg blocks.
 
 <div align="center">
 
-[![Hypermedia API for WordPress Demo](https://img.youtube.com/vi/6mrRA5QIcRw/0.jpg)](https://www.youtube.com/watch?v=6mrRA5QIcRw "Hypermedia API for WordPress Demo")
+[![HyperPress for WordPress Demo](https://img.youtube.com/vi/6mrRA5QIcRw/0.jpg)](https://www.youtube.com/watch?v=6mrRA5QIcRw "HyperPress for WordPress Demo")
 
 <small>
 
-[Check the video](https://www.youtube.com/watch?v=6mrRA5QIcRw)
+[Watch a quick demo of HyperPress in action.](https://www.youtube.com/watch?v=6mrRA5QIcRw)
 
 </small>
 
 </div>
 
-## Hypermedia what?
+---
 
-[Hypermedia](https://hypermedia.systems/) is a "new" concept that allows you to build modern web applications, even SPAs, without the need to write a single line of JavaScript. A forgotten concept that was popular in the 90s and early 2000s, but has been forgotten by newer generations of software developers.
+## The HyperPress Advantage: Modern UIs, Classic Simplicity
 
-HTMX, Alpine Ajax and Datastar are JavaScript libraries that allows you to access AJAX, WebSockets, and Server-Sent Events directly in HTML using attributes, without writing any JavaScript.
+In standard modern WordPress development, creating dynamic user interfaces often requires complex JavaScript tooling: Node.js, npm, bundlers (like Vite or Webpack), and extensive knowledge of a framework like React. This introduces a heavy build step, increases complexity, and moves development away from the PHP-centric simplicity that WordPress is known for.
 
-Unless you're trying to build a Google Docs clone or a competitor, Hypermedia allows you to build modern web applications, even SPAs, without the need to write a single line of JavaScript.
+**HyperPress eliminates this complexity.**
 
-For a better explanation and demos, check the following video:
+It empowers you to build rich, interactive experiences—including SPA-like behavior, partial page updates, and dynamic Gutenberg blocks—using the skills you already have.
+
+### Why Choose HyperPress?
+
+* **🚀 Drastically Faster Workflow**: Skip the JavaScript build process entirely. There's no need to compile assets or manage complex dependencies. Write your logic in PHP and render dynamic HTML directly.
+* **🧠 Simplified Development**: Build modern user experiences without writing complex client-side JavaScript. Leverage the simple, attribute-based syntax of HTMX to handle AJAX, WebSockets, SSE and more.
+* **💪 PHP-First Gutenberg Blocks**: Create dynamic and interactive Gutenberg blocks using only PHP. Avoid the steep learning curve and cumbersome boilerplate of the standard React-based block development.
+* **⚡️ Lightweight & High-Performance**: By sending lean HTML fragments from the server instead of large JSON payloads, you create faster, more responsive user experiences with a minimal client-side footprint.
+
+Hypermedia is a powerful approach for building the vast majority of modern web applications without the overhead of a full frontend framework. For a deeper dive into this philosophy, this video provides an excellent explanation:
 
 <div align="center">
 
@@ -48,17 +60,17 @@ So, if you find any bugs, please report them.
 
 ## Installation
 
-Install it directly from the WordPress.org plugin repository. On the plugins install page, search for: Hypermedia API
+Install it directly from the WordPress.org plugin repository. On the plugins install page, search for: HyperPress (or Hypermedia)
 
 Or download the zip from the [official plugin repository](https://wordpress.org/plugins/api-for-htmx/) and install it from your WordPress plugins install page.
 
-Activate the plugin. Configure it to your liking on Settings > Hypermedia API.
+Activate the plugin. Configure it to your liking on Settings > HyperPress.
 
 ### Installation via Composer
 If you want to use this plugin as a library, you can install it via Composer. This allows you to use hypermedia libraries in your own plugins or themes, without the need to install this plugin.
 
 ```bash
-composer require estebanforge/hypermedia-api-wordpress
+composer require estebanforge/hyperpress
 ```
 
 This plugin/library will determine which instance of itself is the newer one when WordPress is loading. Then, it will use the newer instance between all competing plugins or themes. This is to avoid conflicts with other plugins or themes that may be using the same library for their Hypermedia implementation.
@@ -850,9 +862,9 @@ Nothing stops you from using regular templates to do the same thing or using ano
 
 This plugin comes with [HTMX](https://htmx.org), [Alpine Ajax](https://alpine-ajax.js.org/) and [Datastar](https://data-star.dev/) already integrated and enabled.
 
-You can choose which library to use in the plugin's options page: Settings > Hypermedia API.
+You can choose which library to use in the plugin's options page: Settings > HyperPress.
 
-In the case of HTMX, you can also enable any of its extensions in the plugin's options page: Settings > Hypermedia API.
+In the case of HTMX, you can also enable any of its extensions in the plugin's options page: Settings > HyperPress.
 
 #### Local vs CDN Loading
 
@@ -944,7 +956,7 @@ This ensures your local development environment stays in sync with the latest li
 
 ## Using Hypermedia Libraries in your plugin
 
-You can definitely use hypermedia libraries and this Hypermedia API for WordPress in your plugin. You are not limited to using it only in your theme.
+You can definitely use hypermedia libraries and this HyperPress for WordPress in your plugin. You are not limited to using it only in your theme.
 
 The plugin provides the filter: `hmapi/register_template_path`
 
@@ -1454,14 +1466,14 @@ $buttonText = $attributes['buttonText'] ?? 'Learn More';
 
 ### 📊 Side-by-Side Comparison
 
-| Aspect | Fluent API | block.json |
-|--------|------------|------------|
-| **Files Required** | 1 file per block | 2-3 files per block |
-| **Development Speed** | Very fast | Moderate |
-| **JavaScript Knowledge** | Not required | Not required |
-| **WordPress Standards** | Custom approach | Official standard |
-| **Customization Level** | Template-based | Full control |
-| **Reusability** | Field groups | Component libraries |
+| Aspect                   | Fluent API       | block.json          |
+| ------------------------ | ---------------- | ------------------- |
+| **Files Required**       | 1 file per block | 2-3 files per block |
+| **Development Speed**    | Very fast        | Moderate            |
+| **JavaScript Knowledge** | Not required     | Not required        |
+| **WordPress Standards**  | Custom approach  | Official standard   |
+| **Customization Level**  | Template-based   | Full control        |
+| **Reusability**          | Field groups     | Component libraries |
 
 ### 🚀 Auto-Discovery & Registration
 
@@ -1631,10 +1643,10 @@ $plugin_options->register();
 
 #### Comparison
 
-| Approach | Imports Required | IDE Support | Simplicity | Extensibility |
-|----------|------------------|-------------|------------|---------------|
-| **Facade Class** | 1 import | Excellent | High | Excellent |
-| **Helper Functions** | None | Limited | Highest | Good |
+| Approach             | Imports Required | IDE Support | Simplicity | Extensibility |
+| -------------------- | ---------------- | ----------- | ---------- | ------------- |
+| **Facade Class**     | 1 import         | Excellent   | High       | Excellent     |
+| **Helper Functions** | None             | Limited     | Highest    | Good          |
 
 **Recommendation**: Use the **Facade Class** approach for production projects as it provides better IDE support, type hinting, and extensibility. Use the **Helper Functions** approach for rapid prototyping or when maximum simplicity is preferred.
 
@@ -1652,7 +1664,7 @@ Check out the demo files for complete working examples:
    ```bash
    # For Facade Class approach
    cp hyperoptions/options-page-demo.php your-plugin/options-demo.php
-   
+
    # For Helper Functions approach
    cp hyperoptions/options-page-demo-functions.php your-plugin/options-demo-functions.php
    ```
@@ -1661,7 +1673,7 @@ Check out the demo files for complete working examples:
    ```php
    // For Facade Class approach
    require_once 'options-demo.php';
-   
+
    // For Helper Functions approach
    require_once 'options-demo-functions.php';
    ```
@@ -1847,24 +1859,24 @@ Check out the showcase/demo theme at [EstebanForge/Hypermedia-Theme-WordPress](h
 
 ## Suggestions, Support
 
-Please, open [a discussion](https://github.com/EstebanForge/hypermedia-api-wordpress/discussions).
+Please, open [a discussion](https://github.com/EstebanForge/HyperPress/discussions).
 
 ## Bugs and Error reporting
 
-Please, open [an issue](https://github.com/EstebanForge/hypermedia-api-wordpress/issues).
+Please, open [an issue](https://github.com/EstebanForge/HyperPress/issues).
 
 ## FAQ
-[FAQ available here](https://github.com/EstebanForge/hypermedia-api-wordpress/blob/main/FAQ.md).
+[FAQ available here](https://github.com/EstebanForge/HyperPress/blob/main/FAQ.md).
 
 ## Changelog
 
-[Changelog available here](https://github.com/EstebanForge/hypermedia-api-wordpress/blob/main/CHANGELOG.md).
+[Changelog available here](https://github.com/EstebanForge/HyperPress/blob/main/CHANGELOG.md).
 
 ## Contributing
 
 You are welcome to contribute to this plugin.
 
-If you have a feature request or a bug report, please open an issue on the [GitHub repository](https://github.com/EstebanForge/hypermedia-api-wordpress/issues).
+If you have a feature request or a bug report, please open an issue on the [GitHub repository](https://github.com/EstebanForge/HyperPress/issues).
 
 If you want to contribute with code, please open a pull request.
 

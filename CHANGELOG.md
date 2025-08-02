@@ -14,6 +14,15 @@
 - **NEW:** Comprehensive documentation and demo blocks included
 - **NEW:** Backward compatible with existing WordPress block ecosystem
 
+# 2.0.7 / 2025-08-02
+- **IMPROVEMENT:** Added a `hmapi/before_template_load` action hook that fires before each hypermedia template is loaded, providing a centralized point for common template preparation logic. Thanks @eduwass.
+- **FIX:** Added `stripslashes_deep()` to the `hm_ds_read_signals()` function to remove WordPress "magic quotes" slashes from GET requests, ensuring proper JSON decoding for Datastar signals. Thanks @eduwass.
+- Updated Datastar JS library to the latest version.
+- Updated Datastar PHP SDK to the latest version.
+
+# 2.0.6 / 2025-07-23
+- **FIX:** Updated Datastar.js enqueue to use `wp_enqueue_script_module()` for proper ES module support (WordPress 6.5+). Thanks @eduwass for the report.
+
 # 2.0.5 / 2025-07-11
 - **NEW:** Added a suite of Datastar helper functions (`hm_ds_*`) to simplify working with Server-Sent Events (SSE), including functions for patching elements, managing signals, and executing scripts.
 - **IMPROVEMENT:** The admin settings page now dynamically displays tabs based on the selected active library (HTMX, Alpine Ajax, or Datastar), reducing UI clutter.
@@ -22,7 +31,7 @@
 - **FIX:** Several bugfixes and improvements.
 
 # 2.0.0 / 2025-06-06
-- Renamed plugin to "Hypermedia API for WordPress" to reflect broader support for multiple hypermedia libraries.
+- Renamed plugin to "HyperPress: Modern Hypermedia for WordPress" to reflect broader support for multiple hypermedia libraries.
 - **NEW:** Added support for Datastar.js hypermedia library.
 - **NEW:** Added support for Alpine Ajax hypermedia library.
 - **NEW:** Template engine now supports both `.hm.php` (primary) and `.htmx.php` (legacy) extensions.

@@ -1,9 +1,9 @@
 {
-  "name": "hypermedia-api-wordpress",
+  "name": "hyperpress",
   "author": "Esteban Cuevas",
   "license": "GPL-2.0-or-later",
-  "version": "2.0.5",
-  "description": "WordPress plugin providing API endpoints and integration for hypermedia libraries like HTMX, AlpineJS, and Datastar.",
+  "version": "2.0.7",
+  "description": "Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.",
   "keywords": [],
   "main": "index.js",
   "scripts": {
@@ -22,10 +22,10 @@
   },
   "devDependencies": {
     "@wordpress/scripts": "^27.6.0",
-    "alpinejs": "3.*",
-    "htmx.org": "2.*",
+    "alpinejs": "^3",
+    "htmx.org": "^2",
     "hyperscript.org": "*",
-    "@starfederation/datastar": "^1.0.0-beta.11"
+    "@starfederation/datastar": "^1"
   },
   "volta": {
     "node": "22.15.0",

@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Get the Hypermedia API URL, with a template path if provided.
+ * Get the HyperPress API URL, with a template path if provided.
  *
  * @since 2.0.0
  *
@@ -30,7 +30,7 @@ function hm_get_endpoint_url($template_path = '')
 }
 
 /**
- * Echo the Hypermedia API URL, with a template path if provided.
+ * Echo the HyperPress API URL, with a template path if provided.
  *
  * @since 2.0.0
  *
@@ -233,6 +233,13 @@ function hm_ds_read_signals(): array
     if (!class_exists(ServerSentEventGenerator::class)) {
         return [];
     }
+
+    // WordPress automatically adds slashes to all GET, POST, REQUEST, etc. data
+    // through its legacy 'magic quotes' feature. This breaks JSON parsing in
+    // Datastar signals sent via GET requests. We need to remove these slashes
+    // so that the Datastar SDK can properly decode the JSON data.
+    // @see https://stackoverflow.com/a/8949871
+    $_GET = array_map('stripslashes_deep', $_GET);
 
     return ServerSentEventGenerator::readSignals();
 }

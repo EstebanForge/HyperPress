@@ -4,33 +4,33 @@
 
 namespace HMApi\Composer\Autoload;
 
-class ComposerStaticInitc0e3399e672c61366037eb22a5860f68
+class ComposerStaticInit8fdab5c4c154ad8745577288bf43f397
 {
-    public static $files = array (
+    public static $files = array(
         '16384c332de4c1779a45fa95a6930f09' => __DIR__ . '/../..' . '/bootstrap.php',
     );
 
-    public static $prefixLengthsPsr4 = array (
-        'H' => 
-        array (
+    public static $prefixLengthsPsr4 = array(
+        'H' =>
+        array(
             'HMApi\\starfederation\\datastar\\' => 30,
             'HMApi\\' => 6,
         ),
     );
 
-    public static $prefixDirsPsr4 = array (
-        'HMApi\\starfederation\\datastar\\' => 
-        array (
+    public static $prefixDirsPsr4 = array(
+        'HMApi\\starfederation\\datastar\\' =>
+        array(
             0 => __DIR__ . '/..' . '/starfederation/datastar-php/src',
         ),
-        'HMApi\\' => 
-        array (
+        'HMApi\\' =>
+        array(
             0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
-    public static $classMap = array (
-        'ComposerAutoloaderInitc0e3399e672c61366037eb22a5860f68' => __DIR__ . '/..' . '/composer/autoload_real.php',
+    public static $classMap = array(
+        'ComposerAutoloaderInit8fdab5c4c154ad8745577288bf43f397' => __DIR__ . '/..' . '/composer/autoload_real.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'HMApi\\Adbar\\Dot' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/Dot.php',
         'HMApi\\Admin\\Activation' => __DIR__ . '/../..' . '/src/Admin/Activation.php',
@@ -45,7 +45,7 @@ class ComposerStaticInitc0e3399e672c61366037eb22a5860f68
         'HMApi\\Blocks\\RestApi' => __DIR__ . '/../..' . '/src/Blocks/RestApi.php',
         'HMApi\\Compatibility' => __DIR__ . '/../..' . '/src/Compatibility.php',
         'HMApi\\Composer\\Autoload\\ClassLoader' => __DIR__ . '/..' . '/composer/ClassLoader.php',
-        'HMApi\\Composer\\Autoload\\ComposerStaticInitc0e3399e672c61366037eb22a5860f68' => __DIR__ . '/..' . '/composer/autoload_static.php',
+        'HMApi\\Composer\\Autoload\\ComposerStaticInit8fdab5c4c154ad8745577288bf43f397' => __DIR__ . '/..' . '/composer/autoload_static.php',
         'HMApi\\Config' => __DIR__ . '/../..' . '/src/Config.php',
         'HMApi\\Fields\\BlockFieldAdapter' => __DIR__ . '/../..' . '/src/Fields/BlockFieldAdapter.php',
         'HMApi\\Fields\\ConditionalLogic' => __DIR__ . '/../..' . '/src/Fields/ConditionalLogic.php',
@@ -108,9 +108,9 @@ class ComposerStaticInitc0e3399e672c61366037eb22a5860f68
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc0e3399e672c61366037eb22a5860f68::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc0e3399e672c61366037eb22a5860f68::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc0e3399e672c61366037eb22a5860f68::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::$classMap;
 
         }, null, ClassLoader::class);
     }
