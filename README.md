@@ -1,4 +1,4 @@
-# Hypermedia API for WordPress
+# HyperPress - Hypermedia for WordPress
 
 An unofficial WordPress plugin that enables the use of [HTMX](https://htmx.org), [Alpine AJAX](https://alpine-ajax.js.org/), [Datastar](https://data-star.dev/) and other hypermedia libraries on your WordPress site, theme, and/or plugins. Intended for software developers.
 
