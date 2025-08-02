@@ -42,6 +42,7 @@ Please, open [an issue](https://github.com/EstebanForge/HyperPress/issues).
 
 == Screenshots ==
 1. Main options page.
+2. About
 
 == Upgrade Notice ==
 Nothing to see here.
