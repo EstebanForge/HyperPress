@@ -1,7 +1,7 @@
-=== Hypermedia API for WordPress ===
+=== HyperPress: Modern Hypermedia for WordPress ===
 Contributors: tcattd
 Tags: hypermedia, ajax, htmx, hyperscript, alpinejs, datastar
-Stable tag: 2.0.6
+Stable tag: 2.0.7
 Requires at least: 6.5
 Tested up to: 6.6
 Requires PHP: 8.1
@@ -26,8 +26,8 @@ This plugin include several Hypermedia libraries by default, locally from the pl
 The plugin has an opt-in option, not enforced, to include these third-party libraries from a CDN (using the unpkg.com service). You must explicitly enable this option for privacy and security reasons.
 
 == Installation ==
-1. Install Hypermedia-API-WordPress from WordPress repository. Plugins > Add New > Search for: Hypermedia API or API-for-HTMX. Activate it.
-2. Configure Hypermedia-API-WordPress at Settings > Hypermedia API.
+1. Install HyperPress from WordPress repository. Plugins > Add New > Search for: HyperPress (or Hypermedia). Activate it.
+2. Configure HyperPress at Settings > HyperPress.
 3. Enjoy.
 
 == Frequently Asked Questions ==

@@ -131,7 +131,7 @@ class Render
 
         // For backward compatibility
         $hxvals = $hmvals;
-        
+
         // Run actions before loading the template
         do_action('hmapi/before_template_load', $template_name, $hmvals);
 
@@ -171,14 +171,15 @@ class Render
         }
 
         $base_url = home_url($current_endpoint . '/' . $endpoint_version);
-        $plugin_name = defined('HMAPI_PLUGIN_NAME') ? HMAPI_PLUGIN_NAME : 'Hypermedia API for WordPress';
+        $plugin_name = defined('HMAPI_PLUGIN_NAME') ? HMAPI_PLUGIN_NAME : 'HyperPress: Modern Hypermedia for WordPress';
 
         // Only show debug info if WP_DEBUG is enabled or user can manage options
         $show_debug = defined('WP_DEBUG') && WP_DEBUG || current_user_can('manage_options');
 
-        ?>
+?>
         <!DOCTYPE html>
         <html <?php language_attributes(); ?>>
+
         <head>
             <meta charset="<?php bloginfo('charset'); ?>">
             <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -193,21 +194,25 @@ class Render
                     padding: 20px;
                     background: #f5f5f5;
                 }
+
                 .container {
                     background: white;
                     padding: 30px;
                     border-radius: 8px;
-                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
                 }
+
                 h1 {
                     color: #0073aa;
                     border-bottom: 3px solid #0073aa;
                     padding-bottom: 10px;
                 }
+
                 h2 {
                     color: #555;
                     margin-top: 30px;
                 }
+
                 .error-box {
                     background: #fff3cd;
                     border: 1px solid #ffeaa7;
@@ -216,6 +221,7 @@ class Render
                     margin: 20px 0;
                     border-radius: 4px;
                 }
+
                 .info-box {
                     background: #d1ecf1;
                     border: 1px solid #bee5eb;
@@ -224,6 +230,7 @@ class Render
                     margin: 20px 0;
                     border-radius: 4px;
                 }
+
                 .success-box {
                     background: #d4edda;
                     border: 1px solid #c3e6cb;
@@ -232,12 +239,14 @@ class Render
                     margin: 20px 0;
                     border-radius: 4px;
                 }
+
                 code {
                     background: #f8f9fa;
                     padding: 2px 6px;
                     border-radius: 3px;
                     font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
                 }
+
                 pre {
                     background: #f8f9fa;
                     padding: 15px;
@@ -245,21 +254,26 @@ class Render
                     overflow-x: auto;
                     border: 1px solid #e9ecef;
                 }
+
                 .endpoint-url {
                     font-weight: bold;
                     color: #0073aa;
                 }
+
                 .debug-info {
                     margin-top: 30px;
                     font-size: 0.9em;
                     color: #666;
                 }
+
                 ul {
                     padding-left: 20px;
                 }
+
                 li {
                     margin: 8px 0;
                 }
+
                 .footer {
                     margin-top: 40px;
                     padding-top: 20px;
@@ -269,6 +283,7 @@ class Render
                 }
             </style>
         </head>
+
         <body>
             <div class="container">
                 <h1><?php echo esc_html($plugin_name); ?></h1>
@@ -297,7 +312,7 @@ class Render
                 <?php else: ?>
                     <div class="info-box">
                         <strong>API Endpoint Information</strong><br>
-                        This is a hypermedia API endpoint for dynamic content delivery.
+                        This is a HyperPress API endpoint for dynamic content delivery.
                     </div>
                 <?php endif; ?>
 
@@ -355,8 +370,9 @@ class Render
                 </div>
             </div>
         </body>
+
         </html>
-        <?php
+<?php
         die();
     }
 
@@ -478,7 +494,9 @@ class Render
                 }
             }
             // Filter out any truly empty parts that might result from sanitization or original string (e.g. "foo//bar")
-            $filtered_parts = array_filter($sanitized_template_segment_parts, function ($value) { return $value !== ''; });
+            $filtered_parts = array_filter($sanitized_template_segment_parts, function ($value) {
+                return $value !== '';
+            });
             $sanitized_template_segment = implode('/', $filtered_parts);
 
             if (empty($namespace) || empty($sanitized_template_segment)) {
@@ -486,7 +504,6 @@ class Render
             }
 
             return $namespace . ':' . $sanitized_template_segment;
-
         } else {
             // Not a namespaced path (no colon, or invalid format). Treat as theme-relative.
             $template_segment_parts = explode('/', $path_string);
@@ -507,7 +524,9 @@ class Render
                     $sanitized_template_segment_parts[] = sanitize_key($part_cleaned);
                 }
             }
-            $filtered_parts = array_filter($sanitized_template_segment_parts, function ($value) { return $value !== ''; });
+            $filtered_parts = array_filter($sanitized_template_segment_parts, function ($value) {
+                return $value !== '';
+            });
             $sanitized_path = implode('/', $filtered_parts);
 
             return empty($sanitized_path) ? false : $sanitized_path;

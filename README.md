@@ -9,7 +9,7 @@ HyperPress equips developers with a powerful toolkit, including:
 
 <div align="center">
 
-[![HyperPress for WordPress Demo](https://img.youtube.com/vi/6mrRA5QIcRw/0.jpg)](https://www.youtube.com/watch?v=6mrRA5QIcRw "Hypermedia API for WordPress Demo")
+[![HyperPress for WordPress Demo](https://img.youtube.com/vi/6mrRA5QIcRw/0.jpg)](https://www.youtube.com/watch?v=6mrRA5QIcRw "HyperPress for WordPress Demo")
 
 <small>
 

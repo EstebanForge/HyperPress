@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Plugin Name: Hypermedia API for WordPress
- * Plugin URI: https://github.com/EstebanForge/Hypermedia-API-WordPress
+ * Plugin Name: HyperPress: Modern Hypermedia for WordPress
+ * Plugin URI: https://github.com/EstebanForge/HyperPress
  * Description: Adds API endpoints and integration for hypermedia libraries like HTMX, AlpineJS, and Datastar.
- * Version: 2.0.6
+ * Version: 2.0.7
  * Author: Esteban Cuevas
  * Author URI: https://actitud.xyz
  * License: GPLv2 or later
