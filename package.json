@@ -3,7 +3,7 @@
   "author": "Esteban Cuevas",
   "license": "GPL-2.0-or-later",
   "version": "2.0.6",
-  "description": "Supercharge WordPress with the power of hypermedia. Create rich, interactive blocks and pages using only PHP. Hypermedia powered by HTMX, Alpine Ajax and Datastar.",
+  "description": "Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.",
   "keywords": [],
   "main": "index.js",
   "scripts": {
