@@ -102,7 +102,7 @@ class Main
         $this->assets_manager = new Assets($this);
 
         // Initialize TemplateLoader
-        \HMApi\Fields\TemplateLoader::init();
+        Fields\TemplateLoader::init();
 
         if (is_admin()) {
             // Handle migration from wp-settings to hyper fields

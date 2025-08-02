@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace HMApi\Fields;
 
+use HMApi\Log;
+
 class Field
 {
+    private ?string $option_group = null;
     private string $type;
     private string $name;
     private string $label;
+    private string|array|null $option_name = null;
     private mixed $default = null;
     private ?string $placeholder = null;
     private bool $required = false;
@@ -27,6 +31,7 @@ class Field
     private bool $media_library = true;
     private array $map_options = [];
     private ?string $html_content = null;
+    protected array $args = [];
 
     public function set_html(string $html): self
     {
@@ -233,9 +238,67 @@ class Field
         return $this->storage_type;
     }
 
-    public function render(): void
+    public function add_arg(string $key, mixed $value): self
     {
-        $value = $this->get_option_value();
+        $this->args[$key] = $value;
+
+        return $this;
+    }
+
+    public function set_option_values(array $values, ?string $option_group = null): self
+    {
+        Log::debug("Field {$this->name} setting option values: " . print_r($values, true), ['source' => 'hmapi-fields']);
+        $this->option_name = $values; // Holds the values array for pre-loading
+        if ($option_group !== null) {
+            $this->option_group = $option_group;
+        }
+        return $this;
+    }
+
+    public function get_option_name(): string|array|null
+    {
+        return $this->option_name;
+    }
+
+    public function get_value()
+    {
+        // If option_name is an array, it means the OptionsPage has pre-loaded the values.
+        if (is_array($this->option_name)) {
+            Log::debug("Field {$this->name} using pre-loaded values. Value: " . print_r($this->option_name[$this->name] ?? 'NOT SET', true), ['source' => 'hmapi-fields']);
+
+            return $this->option_name[$this->name] ?? $this->default;
+        }
+
+        // Fallback for standalone fields or fields rendered outside the OptionsPage context.
+        if ($this->option_name) {
+            $options = get_option($this->option_name);
+            if (is_array($options)) {
+                Log::debug("Field {$this->name} using get_option. Value: " . print_r($options[$this->name] ?? 'NOT SET', true), ['source' => 'hmapi-fields']);
+
+                return $options[$this->name] ?? $this->default;
+            }
+        }
+
+        Log::debug("Field {$this->name} using default value: " . print_r($this->default, true), ['source' => 'hmapi-fields']);
+
+        return $this->default;
+    }
+
+    public function get_args(): array
+    {
+        return $this->args;
+    }
+
+    protected function set_args(array $args): void
+    {
+        $this->args = array_merge($this->args, $args);
+    }
+
+    public function render(array $args = []): void
+    {
+        $value = $this->get_value();
+        $this->set_args($args);
+
         $field_data = $this->to_array();
         $field_data['value'] = $value;
 
@@ -247,11 +310,25 @@ class Field
         return get_option($this->name, $this->default);
     }
 
+    public function get_name_attr(): string
+    {
+        // Always use option_group[field_name] for options pages
+        if ($this->option_group) {
+            return sprintf('%s[%s]', $this->option_group, $this->name);
+        }
+        if (is_array($this->option_name)) {
+            // Fallback for legacy/other usages
+            return $this->name;
+        }
+        return $this->option_name ? sprintf('%s[%s]', $this->option_name, $this->name) : $this->name;
+    }
+
     public function to_array(): array
     {
         return [
             'type' => $this->type,
             'name' => $this->name,
+            'name_attr' => $this->get_name_attr(),
             'label' => $this->label,
             'default' => $this->default,
             'placeholder' => $this->placeholder,

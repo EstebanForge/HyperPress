@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 
 $type = $field_data['type'] ?? 'media_gallery';
 $name = $field_data['name'] ?? '';
+$name_attr = $field_data['name_attr'] ?? $name;
 $label = $field_data['label'] ?? '';
 $value = $field_data['value'] ?? [];
 $required = $field_data['required'] ?? false;
@@ -28,7 +29,7 @@ foreach ($value as $attachment_id) {
 
     <div class="hmapi-field-input">
         <div class="hmapi-media-gallery-field">
-            <input type="hidden" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr(implode(',', $value)); ?>">
+            <input type="hidden" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name_attr); ?>" value="<?php echo esc_attr(implode(',', $value)); ?>">
             
             <button type="button" class="button hmapi-gallery-button" data-field="<?php echo esc_attr($name); ?>" data-multiple="<?php echo $multiple ? 'true' : 'false'; ?>">
                 <?php _e('Add Images', 'hmapi'); ?>

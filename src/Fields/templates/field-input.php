@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 
 $type = $field_data['type'] ?? 'text';
 $name = $field_data['name'] ?? '';
+$name_attr = $field_data['name_attr'] ?? $name;
 $label = $field_data['label'] ?? '';
 $value = $field_data['value'] ?? '';
 $placeholder = $field_data['placeholder'] ?? '';
@@ -14,68 +15,70 @@ $options = $field_data['options'] ?? [];
 ?>
 
 <div class="hmapi-field-wrapper">
-    <label for="<?php echo esc_attr($name); ?>" class="hmapi-field-label">
-        <?php echo esc_html($label); ?>
-        <?php if ($required): ?><span class="required">*</span><?php endif; ?>
-    </label>
-
-    <div class="hmapi-field-input">
-<?php switch ($type): 
+    <div class="hmapi-field-row">
+        <div class="hmapi-field-label">
+            <label for="<?php echo esc_attr($name); ?>">
+                <?php echo esc_html($label); ?>
+                <?php if ($required): ?><span class="required">*</span><?php endif; ?>
+            </label>
+        </div>
+        <div class="hmapi-field-input-wrapper">
+<?php switch ($type):
     case 'text': ?>
         <input type="text" 
                id="<?php echo esc_attr($name); ?>" 
-               name="<?php echo esc_attr($name); ?>" 
+               name="<?php echo esc_attr($name_attr); ?>" 
                value="<?php echo esc_attr($value); ?>" 
                placeholder="<?php echo esc_attr($placeholder); ?>" 
                <?php echo $required ? 'required' : ''; ?>
                class="regular-text">
-        <?php break; 
+        <?php break;
     case 'textarea': ?>
         <textarea id="<?php echo esc_attr($name); ?>" 
-                  name="<?php echo esc_attr($name); ?>" 
+                  name="<?php echo esc_attr($name_attr); ?>" 
                   placeholder="<?php echo esc_attr($placeholder); ?>" 
                   <?php echo $required ? 'required' : ''; ?>
                   class="large-text" 
                   rows="4"><?php echo esc_textarea($value); ?></textarea>
-        <?php break; 
+        <?php break;
     case 'number': ?>
         <input type="number" 
                id="<?php echo esc_attr($name); ?>" 
-               name="<?php echo esc_attr($name); ?>" 
+               name="<?php echo esc_attr($name_attr); ?>" 
                value="<?php echo esc_attr($value); ?>" 
                placeholder="<?php echo esc_attr($placeholder); ?>" 
                <?php echo $required ? 'required' : ''; ?>
                class="regular-text">
-        <?php break; 
+        <?php break;
     case 'email': ?>
         <input type="email" 
                id="<?php echo esc_attr($name); ?>" 
-               name="<?php echo esc_attr($name); ?>" 
+               name="<?php echo esc_attr($name_attr); ?>" 
                value="<?php echo esc_attr($value); ?>" 
                placeholder="<?php echo esc_attr($placeholder); ?>" 
                <?php echo $required ? 'required' : ''; ?>
                class="regular-text">
-        <?php break; 
+        <?php break;
     case 'url': ?>
         <input type="url" 
                id="<?php echo esc_attr($name); ?>" 
-               name="<?php echo esc_attr($name); ?>" 
+               name="<?php echo esc_attr($name_attr); ?>" 
                value="<?php echo esc_attr($value); ?>" 
                placeholder="<?php echo esc_attr($placeholder); ?>" 
                <?php echo $required ? 'required' : ''; ?>
                class="regular-text">
-        <?php break; 
+        <?php break;
     case 'color': ?>
         <input type="color" 
                id="<?php echo esc_attr($name); ?>" 
-               name="<?php echo esc_attr($name); ?>" 
+               name="<?php echo esc_attr($name_attr); ?>" 
                value="<?php echo esc_attr($value); ?>" 
                <?php echo $required ? 'required' : ''; ?>
                class="hmapi-color-picker">
-        <?php break; 
+        <?php break;
     case 'select': ?>
         <select id="<?php echo esc_attr($name); ?>" 
-                name="<?php echo esc_attr($name); ?>" 
+                name="<?php echo esc_attr($name_attr); ?>" 
                 <?php echo $required ? 'required' : ''; ?>
                 class="regular-text">
             <?php foreach ($options as $option_value => $option_label): ?>
@@ -84,35 +87,35 @@ $options = $field_data['options'] ?? [];
                 </option>
             <?php endforeach; ?>
         </select>
-        <?php break; 
+        <?php break;
     case 'checkbox': ?>
         <!-- Hidden input to ensure the field is always sent in POST data -->
-        <input type="hidden" name="<?php echo esc_attr($name); ?>" value="0">
+        <input type="hidden" name="<?php echo esc_attr($name_attr); ?>" value="0">
         <label>
             <input type="checkbox" 
                    id="<?php echo esc_attr($name); ?>" 
-                   name="<?php echo esc_attr($name); ?>" 
+                   name="<?php echo esc_attr($name_attr); ?>" 
                    value="1" 
                    <?php checked($value, '1'); ?>
                    <?php echo $required ? 'required' : ''; ?>>
             <?php echo esc_html($label); ?>
         </label>
-        <?php break; 
+        <?php break;
     case 'radio': ?>
         <?php foreach ($options as $option_value => $option_label): ?>
             <label>
                 <input type="radio" 
-                       name="<?php echo esc_attr($name); ?>" 
+                       name="<?php echo esc_attr($name_attr); ?>" 
                        value="<?php echo esc_attr($option_value); ?>" 
                        <?php checked($value, $option_value); ?>
                        <?php echo $required ? 'required' : ''; ?>>
                 <?php echo esc_html($option_label); ?>
             </label>
         <?php endforeach; ?>
-        <?php break; 
+        <?php break;
     case 'image': ?>
         <div class="hmapi-image-field">
-            <input type="hidden" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>">
+            <input type="hidden" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name_attr); ?>" value="<?php echo esc_attr($value); ?>">
             <button type="button" class="button hmapi-upload-button" data-field="<?php echo esc_attr($name); ?>">
                 <?php _e('Select Image', 'hmapi'); ?>
             </button>
@@ -122,10 +125,10 @@ $options = $field_data['options'] ?? [];
                 <?php endif; ?>
             </div>
         </div>
-        <?php break; 
+        <?php break;
     case 'file': ?>
         <div class="hmapi-file-field">
-            <input type="url" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>" 
+            <input type="url" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name_attr); ?>" 
                    value="<?php echo esc_attr($value); ?>" 
                    placeholder="<?php echo esc_attr($placeholder); ?>" 
                    <?php echo $required ? 'required' : ''; ?>
@@ -134,20 +137,20 @@ $options = $field_data['options'] ?? [];
                 <?php _e('Select File', 'hmapi'); ?>
             </button>
         </div>
-        <?php break; 
-    case 'wysiwyg': 
+        <?php break;
+    case 'wysiwyg':
         wp_editor(
             $value,
             $name,
             [
-                'textarea_name' => $name,
+                'textarea_name' => $name_attr,
                 'textarea_rows' => 10,
                 'media_buttons' => true,
                 'teeny' => true,
             ]
         );
         ?>
-        <?php break; 
+        <?php break;
 endswitch; ?>
 
         <?php if ($help): ?>

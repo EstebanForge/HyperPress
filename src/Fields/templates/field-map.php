@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 
 $type = $field_data['type'] ?? 'map';
 $name = $field_data['name'] ?? '';
+$name_attr = $field_data['name_attr'] ?? $name;
 $label = $field_data['label'] ?? '';
 $value = $field_data['value'] ?? ['lat' => 0, 'lng' => 0, 'address' => ''];
 $required = $field_data['required'] ?? false;
@@ -31,7 +32,7 @@ $api_key = $map_options['api_key'] ?? '';
         <div class="hmapi-map-field">
             <input type="text" 
                    id="<?php echo esc_attr($name); ?>_address" 
-                   name="<?php echo esc_attr($name); ?>[address]" 
+                   name="<?php echo esc_attr($name_attr); ?>[address]" 
                    value="<?php echo esc_attr($address); ?>" 
                    placeholder="<?php _e('Search for an address...', 'hmapi'); ?>" 
                    class="regular-text hmapi-map-search">
@@ -50,12 +51,12 @@ $api_key = $map_options['api_key'] ?? '';
             
             <input type="hidden" 
                    id="<?php echo esc_attr($name); ?>_lat" 
-                   name="<?php echo esc_attr($name); ?>[lat]" 
+                   name="<?php echo esc_attr($name_attr); ?>[lat]" 
                    value="<?php echo esc_attr($lat); ?>">
             
             <input type="hidden" 
                    id="<?php echo esc_attr($name); ?>_lng" 
-                   name="<?php echo esc_attr($name); ?>[lng]" 
+                   name="<?php echo esc_attr($name_attr); ?>[lng]" 
                    value="<?php echo esc_attr($lng); ?>">
         </div>
 
@@ -64,7 +65,3 @@ $api_key = $map_options['api_key'] ?? '';
         <?php endif; ?>
     </div>
 </div>
-
-<?php if ($api_key): ?>
-    <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo esc_attr($api_key); ?>&libraries=places"></script>
-<?php endif; ?>

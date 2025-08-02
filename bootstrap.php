@@ -28,6 +28,14 @@ define('HMAPI_BOOTSTRAP_LOADED', true);
 if (file_exists(__DIR__ . '/vendor-dist/autoload.php')) {
     require_once __DIR__ . '/vendor-dist/autoload.php';
     require_once __DIR__ . '/includes/helpers.php';
+
+    // Initialize the Registry.
+    $registry = HMApi\Blocks\Registry::getInstance();
+    $registry->init();
+
+    // Initialize the REST API.
+    $rest_api = new HMApi\Blocks\RestApi();
+    $rest_api->init();
 } else {
     // Display an admin notice if the autoloader is missing.
     add_action('admin_notices', function () {

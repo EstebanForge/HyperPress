@@ -13,9 +13,9 @@ $help = $field_data['help'] ?? '';
 
 <div class="hmapi-field-wrapper">
     <?php if ($label): ?>
-        <label class="hmapi-field-label">
-            <?php echo esc_html($label); ?>
-        </label>
+        <div class="hmapi-field-label">
+            <strong><?php echo esc_html($label); ?></strong>
+        </div>
     <?php endif; ?>
 
     <div class="hmapi-field-input">

@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 
 $type = $field_data['type'] ?? 'rich_text';
 $name = $field_data['name'] ?? '';
+$name_attr = $field_data['name_attr'] ?? $name;
 $label = $field_data['label'] ?? '';
 $value = $field_data['value'] ?? '';
 $required = $field_data['required'] ?? false;
@@ -12,7 +13,7 @@ $help = $field_data['help'] ?? '';
 
 // Editor settings
 $editor_settings = [
-    'textarea_name' => $name,
+    'textarea_name' => $name_attr,
     'textarea_rows' => 10,
     'media_buttons' => true,
     'teeny' => false,

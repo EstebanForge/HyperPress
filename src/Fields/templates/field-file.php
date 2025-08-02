@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 
 $type = $field_data['type'] ?? 'file';
 $name = $field_data['name'] ?? '';
+$name_attr = $field_data['name_attr'] ?? $name;
 $label = $field_data['label'] ?? '';
 $value = $field_data['value'] ?? '';
 $placeholder = $field_data['placeholder'] ?? '';
@@ -22,7 +23,7 @@ $help = $field_data['help'] ?? '';
         <div class="hmapi-file-field">
             <input type="url" 
                    id="<?php echo esc_attr($name); ?>" 
-                   name="<?php echo esc_attr($name); ?>" 
+                   name="<?php echo esc_attr($name_attr); ?>" 
                    value="<?php echo esc_attr($value); ?>" 
                    placeholder="<?php echo esc_attr($placeholder); ?>" 
                    <?php echo $required ? 'required' : ''; ?>

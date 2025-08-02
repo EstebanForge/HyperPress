@@ -68,11 +68,7 @@ class OptionsMigration
 
             // Mark migration as complete
             return $this->mark_migration_complete();
-
         } catch (\Exception $e) {
-            // Log error and return false
-            error_log('HMAPI Migration Error: ' . $e->getMessage());
-
             return false;
         }
     }

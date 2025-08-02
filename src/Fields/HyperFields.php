@@ -32,10 +32,10 @@ class HyperFields
      *
      * @param string $type The field type
      * @param string $name The field name
-     * @param string $label The field label
+     * @param string $label The field label (optional)
      * @return Field
      */
-    public static function makeField(string $type, string $name, string $label): Field
+    public static function makeField(string $type, string $name, string $label = ''): Field
     {
         return Field::make($type, $name, $label);
     }
@@ -74,5 +74,57 @@ class HyperFields
     public static function makeSection(string $id, string $title): OptionsSection
     {
         return OptionsSection::make($id, $title);
+    }
+
+    /**
+     * Create a SeparatorField instance.
+     *
+     * @param string $name The field name
+     * @return SeparatorField
+     */
+    public static function makeSeparator(string $name): Field
+    {
+        return self::makeField('separator', $name, '');
+    }
+
+    /**
+     * Create a HeadingField instance.
+     *
+     * @param string $name The field name
+     * @param string $label The field label
+     * @return HeadingField
+     */
+    public static function makeHeading(string $name, string $label): Field
+    {
+        return self::makeField('html', $name, $label);
+    }
+
+    /**
+     * Get the value of a field.
+     *
+     * @param string $option_name The name of the option
+     * @param string $field_name The name of the field
+     * @param mixed $default The default value to return if the field is not set
+     * @return mixed
+     */
+    public static function getFieldValue(string $option_name, string $field_name, mixed $default = null): mixed
+    {
+        $options = get_option($option_name, []);
+        return $options[$field_name] ?? $default;
+    }
+
+    /**
+     * Set the value of a field.
+     *
+     * @param string $option_name The name of the option
+     * @param string $field_name The name of the field
+     * @param mixed $value The value to set
+     * @return bool
+     */
+    public static function setFieldValue(string $option_name, string $field_name, mixed $value): bool
+    {
+        $options = get_option($option_name, []);
+        $options[$field_name] = $value;
+        return update_option($option_name, $options);
     }
 }

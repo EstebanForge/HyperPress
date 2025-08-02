@@ -143,25 +143,13 @@ final class Registry
         // Allow 3rd party devs to add individual block directories
         $additionalBlocks = apply_filters('hmapi/blocks/register_json_blocks', []);
 
-        // Debug: log paths being scanned
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('Hyperblocks: Scanning paths for JSON blocks: ' . print_r($scanPaths, true));
-        }
-
         // Collect all JSON blocks
         foreach ($scanPaths as $basePath) {
             if (!is_dir($basePath)) {
-                if (defined('WP_DEBUG') && WP_DEBUG) {
-                    error_log('Hyperblocks: Directory does not exist: ' . $basePath);
-                }
                 continue;
             }
 
             $blockDirectories = glob($basePath . '/*', GLOB_ONLYDIR);
-
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('Hyperblocks: Found directories in ' . $basePath . ': ' . print_r($blockDirectories, true));
-            }
 
             foreach ($blockDirectories as $blockDirectory) {
                 $blockName = basename($blockDirectory);
@@ -174,13 +162,7 @@ final class Registry
                 $blockJsonFile = $blockDirectory . '/block.json';
                 if (file_exists($blockJsonFile)) {
                     $jsonBlocks[] = $blockDirectory;
-                    if (defined('WP_DEBUG') && WP_DEBUG) {
-                        error_log('Hyperblocks: Found JSON block: ' . $blockDirectory);
-                    }
                 } else {
-                    if (defined('WP_DEBUG') && WP_DEBUG) {
-                        error_log('Hyperblocks: No block.json found in: ' . $blockDirectory);
-                    }
                 }
             }
         }
@@ -190,11 +172,6 @@ final class Registry
             if (is_dir($blockPath) && file_exists($blockPath . '/block.json')) {
                 $jsonBlocks[] = $blockPath;
             }
-        }
-
-        // Debug: log blocks being registered
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('Hyperblocks: Registering JSON blocks: ' . print_r($jsonBlocks, true));
         }
 
         // Register JSON blocks using our unified system (like fluent blocks)
@@ -391,11 +368,6 @@ final class Registry
         // Add JSON blocks discovered via block.json
         $jsonBlocks = $this->discoverJsonBlocksForEditor();
 
-        // Debug: Log JSON blocks for editor
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('Hyperblocks: JSON blocks for editor registration: ' . print_r($jsonBlocks, true));
-        }
-
         foreach ($jsonBlocks as $block) {
             $blockRegistrations[] = $block;
         }
@@ -469,37 +441,22 @@ final class Registry
      */
     private function registerJsonBlockFromPath(string $blockPath): void
     {
-        // Debug: Log the block path being processed
-        error_log('=== HYPERBLOCKS JSON DEBUG ===');
-        error_log('registerJsonBlockFromPath: Starting registration for path: ' . $blockPath);
-
         $blockJsonFile = $blockPath . '/block.json';
 
-        // Debug: Check if block.json exists
+        // Check if block.json exists
         if (!file_exists($blockJsonFile)) {
-            error_log('registerJsonBlockFromPath: ERROR - block.json not found at: ' . $blockJsonFile);
 
             return;
         }
-
-        // Debug: Log the block.json file being read
-        error_log('registerJsonBlockFromPath: Reading block.json from: ' . $blockJsonFile);
 
         $metadata = json_decode(file_get_contents($blockJsonFile), true);
 
-        // Debug: Log the raw metadata
-        error_log('registerJsonBlockFromPath: Raw metadata: ' . print_r($metadata, true));
-
         if (!$metadata || !isset($metadata['name'])) {
-            error_log('registerJsonBlockFromPath: ERROR - Invalid metadata or missing name. Metadata: ' . print_r($metadata, true));
-
             return;
         }
 
-        // Debug: Log the block name being registered
+        // Log the block name being registered
         $blockName = $metadata['name'];
-        error_log('registerJsonBlockFromPath: Before registration - Block name: ' . $blockName);
-        error_log('registerJsonBlockFromPath: Expected block name format: ' . str_replace('/', '-', $blockName));
 
         // Extract attributes from block.json
         $attributes = [];
@@ -511,9 +468,6 @@ final class Registry
                 ];
             }
         }
-
-        // Debug: Log extracted attributes
-        error_log('registerJsonBlockFromPath: Extracted attributes: ' . print_r($attributes, true));
 
         // Register the block using our unified system
         $block_args = [
@@ -543,25 +497,10 @@ final class Registry
             $block_args['supports'] = $metadata['supports'];
         }
 
-        // Debug: Log final block arguments
-        error_log('registerJsonBlockFromPath: Final block arguments: ' . print_r($block_args, true));
-        error_log('registerJsonBlockFromPath: Registering block with name: ' . $blockName);
-
         try {
             $result = register_block_type($blockName, $block_args);
-            if ($result) {
-                error_log('registerJsonBlockFromPath: SUCCESS - Block registered: ' . $blockName);
-                error_log('registerJsonBlockFromPath: Registered block details: ' . print_r($result, true));
-            } else {
-                error_log('registerJsonBlockFromPath: ERROR - Failed to register block: ' . $blockName);
-                error_log('registerJsonBlockFromPath: This might be due to block name conflicts or invalid arguments');
-            }
-        } catch (Exception $e) {
-            error_log('registerJsonBlockFromPath: EXCEPTION - Error registering block ' . $blockName . ': ' . $e->getMessage());
-            error_log('registerJsonBlockFromPath: Stack trace: ' . $e->getTraceAsString());
+        } catch (\Exception $e) {
         }
-
-        error_log('=== HYPERBLOCKS JSON DEBUG END ===');
     }
 
     /**
