@@ -6,30 +6,30 @@ namespace HMApi\Composer\Autoload;
 
 class ComposerStaticInit8fdab5c4c154ad8745577288bf43f397
 {
-    public static $files = array(
-        '16384c332de4c1779a45fa95a6930f09' => __DIR__ . '/../..' . '/bootstrap.php',
+    public static $files = array (
+        '0b3972c8fa41f32090bbf90aec8eea24' => __DIR__ . '/../..' . '/bootstrap.php',
     );
 
-    public static $prefixLengthsPsr4 = array(
-        'H' =>
-        array(
+    public static $prefixLengthsPsr4 = array (
+        'H' => 
+        array (
             'HMApi\\starfederation\\datastar\\' => 30,
             'HMApi\\' => 6,
         ),
     );
 
-    public static $prefixDirsPsr4 = array(
-        'HMApi\\starfederation\\datastar\\' =>
-        array(
+    public static $prefixDirsPsr4 = array (
+        'HMApi\\starfederation\\datastar\\' => 
+        array (
             0 => __DIR__ . '/..' . '/starfederation/datastar-php/src',
         ),
-        'HMApi\\' =>
-        array(
+        'HMApi\\' => 
+        array (
             0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
-    public static $classMap = array(
+    public static $classMap = array (
         'ComposerAutoloaderInit8fdab5c4c154ad8745577288bf43f397' => __DIR__ . '/..' . '/composer/autoload_real.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'HMApi\\Adbar\\Dot' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/Dot.php',
@@ -51,6 +51,7 @@ class ComposerStaticInit8fdab5c4c154ad8745577288bf43f397
         'HMApi\\Fields\\ConditionalLogic' => __DIR__ . '/../..' . '/src/Fields/ConditionalLogic.php',
         'HMApi\\Fields\\CustomField' => __DIR__ . '/../..' . '/src/Fields/CustomField.php',
         'HMApi\\Fields\\Field' => __DIR__ . '/../..' . '/src/Fields/Field.php',
+        'HMApi\\Fields\\HeadingField' => __DIR__ . '/../..' . '/src/Fields/HeadingField.php',
         'HMApi\\Fields\\HyperFields' => __DIR__ . '/../..' . '/src/Fields/HyperFields.php',
         'HMApi\\Fields\\OptionField' => __DIR__ . '/../..' . '/src/Fields/OptionField.php',
         'HMApi\\Fields\\OptionsPage' => __DIR__ . '/../..' . '/src/Fields/OptionsPage.php',
@@ -58,35 +59,15 @@ class ComposerStaticInit8fdab5c4c154ad8745577288bf43f397
         'HMApi\\Fields\\PostField' => __DIR__ . '/../..' . '/src/Fields/PostField.php',
         'HMApi\\Fields\\Registry' => __DIR__ . '/../..' . '/src/Fields/Registry.php',
         'HMApi\\Fields\\RepeaterField' => __DIR__ . '/../..' . '/src/Fields/RepeaterField.php',
+        'HMApi\\Fields\\SeparatorField' => __DIR__ . '/../..' . '/src/Fields/SeparatorField.php',
         'HMApi\\Fields\\TabsField' => __DIR__ . '/../..' . '/src/Fields/TabsField.php',
         'HMApi\\Fields\\TemplateLoader' => __DIR__ . '/../..' . '/src/Fields/TemplateLoader.php',
         'HMApi\\Fields\\TermField' => __DIR__ . '/../..' . '/src/Fields/TermField.php',
         'HMApi\\Fields\\UserField' => __DIR__ . '/../..' . '/src/Fields/UserField.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\EnqueueManager' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/EnqueueManager.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Enqueuer' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Enqueuer.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Error' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Error.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Flash' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Flash.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Option' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Option.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Checkbox' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Checkbox.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Choices' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Choices.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\CodeEditor' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/CodeEditor.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Color' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Color.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Image' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Image.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Media' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Media.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\OptionAbstract' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/OptionAbstract.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Select' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Select.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\SelectMultiple' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/SelectMultiple.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Text' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Text.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Textarea' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Textarea.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\Video' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/Video.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Options\\WPEditor' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Options/WPEditor.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Section' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Section.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Tab' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Tab.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\Traits\\HasOptionLevel' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Traits/HasOptionLevel.php',
-        'HMApi\\Jeffreyvr\\WPSettings\\WPSettings' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/WPSettings.php',
         'HMApi\\Libraries\\AlpineAjaxLib' => __DIR__ . '/../..' . '/src/Libraries/AlpineAjaxLib.php',
         'HMApi\\Libraries\\DatastarLib' => __DIR__ . '/../..' . '/src/Libraries/DatastarLib.php',
         'HMApi\\Libraries\\HTMXLib' => __DIR__ . '/../..' . '/src/Libraries/HTMXLib.php',
+        'HMApi\\Log' => __DIR__ . '/../..' . '/src/Log.php',
         'HMApi\\Main' => __DIR__ . '/../..' . '/src/Main.php',
         'HMApi\\Render' => __DIR__ . '/../..' . '/src/Render.php',
         'HMApi\\Router' => __DIR__ . '/../..' . '/src/Router.php',

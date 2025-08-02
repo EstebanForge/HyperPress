@@ -32,22 +32,25 @@ if (!empty($render_callback) && is_callable($render_callback)) {
     // Fallback to basic input
     ?>
     <div class="hmapi-field-wrapper">
-        <label for="<?php echo esc_attr($name); ?>" class="hmapi-field-label">
-            <?php echo esc_html($label); ?>
-            <?php if ($required): ?><span class="required">*</span><?php endif; ?>
-        </label>
+        <div class="hmapi-field-row">
+            <div class="hmapi-field-label">
+                <label for="<?php echo esc_attr($name); ?>">
+                    <?php echo esc_html($label); ?>
+                    <?php if ($required): ?><span class="required">*</span><?php endif; ?>
+                </label>
+            </div>
+            <div class="hmapi-field-input-wrapper">
+                <input type="text"
+                       id="<?php echo esc_attr($name); ?>"
+                       name="<?php echo esc_attr($name); ?>"
+                       value="<?php echo esc_attr($value); ?>"
+                       <?php echo $required ? 'required' : ''; ?>
+                       class="regular-text">
 
-        <div class="hmapi-field-input">
-            <input type="text" 
-                   id="<?php echo esc_attr($name); ?>" 
-                   name="<?php echo esc_attr($name); ?>" 
-                   value="<?php echo esc_attr($value); ?>" 
-                   <?php echo $required ? 'required' : ''; ?>
-                   class="regular-text">
-
-            <?php if ($help): ?>
-                <p class="description"><?php echo esc_html($help); ?></p>
-            <?php endif; ?>
+                <?php if ($help): ?>
+                    <p class="description"><?php echo esc_html($help); ?></p>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
     <?php

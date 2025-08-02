@@ -18,55 +18,53 @@ if (empty($active_tab) && !empty($tabs)) {
     $active_tab = array_key_first($tabs);
 }
 
+// Set active tab from URL if available
+if (isset($_GET['tab']) && isset($tabs[$_GET['tab']])) {
+    $active_tab = sanitize_text_field($_GET['tab']);
+}
+
 $layout_class = 'hmapi-tabs-' . $layout;
 ?>
 
-<div class="hmapi-field-wrapper hmapi-tabs-wrapper <?php echo esc_attr($layout_class); ?>">
-    <?php if ($label): ?>
-        <label class="hmapi-field-label">
-            <?php echo esc_html($label); ?>
-            <?php if ($required): ?><span class="required">*</span><?php endif; ?>
-        </label>
-    <?php endif; ?>
+<div class="hmapi-tabs-wrapper <?php echo esc_attr($layout_class); ?>">
+    <h2 class="nav-tab-wrapper">
+        <?php foreach ($tabs as $tab_id => $tab):
+            $is_active = $tab_id === $active_tab;
+            $tab_url = add_query_arg('tab', $tab_id);
+            ?>
+            <a href="<?php echo esc_url($tab_url); ?>" class="nav-tab <?php echo $is_active ? 'nav-tab-active' : ''; ?>">
+                <?php echo esc_html($tab['label']); ?>
+            </a>
+        <?php endforeach; ?>
+    </h2>
 
-    <div class="hmapi-field-input">
-        <div class="hmapi-tabs-container" data-field="<?php echo esc_attr($name); ?>">
-            <div class="hmapi-tabs-nav">
-                <?php foreach ($tabs as $tab_id => $tab): ?>
-                    <button type="button" 
-                            class="hmapi-tab-button <?php echo $tab_id === $active_tab ? 'active' : ''; ?>" 
-                            data-tab="<?php echo esc_attr($tab_id); ?>"
-                            data-field="<?php echo esc_attr($name); ?>">
-                        <?php echo esc_html($tab['label']); ?>
-                    </button>
-                <?php endforeach; ?>
-            </div>
-
-            <div class="hmapi-tabs-content">
-                <?php foreach ($tabs as $tab_id => $tab): ?>
-                    <div class="hmapi-tab-panel <?php echo $tab_id === $active_tab ? 'active' : ''; ?>" 
-                         data-tab="<?php echo esc_attr($tab_id); ?>"
-                         data-field="<?php echo esc_attr($name); ?>">
-                        <?php if (!empty($tab['fields'])): ?>
-                            <?php foreach ($tab['fields'] as $field): ?>
-                                <?php
-                                // Render sub-fields
-                                $template_path = __DIR__ . '/field-' . $field['type'] . '.php';
-                                if (file_exists($template_path)) {
-                                    include $template_path;
-                                } else {
-                                    include __DIR__ . '/field-input.php';
-                                }
-                                ?>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-
-        <?php if ($help): ?>
-            <p class="description"><?php echo esc_html($help); ?></p>
-        <?php endif; ?>
+    <div class="hmapi-tabs-content">
+        <?php
+        // Render only the active tab's content
+        if (isset($tabs[$active_tab])) {
+            $active_tab_data = $tabs[$active_tab];
+            if (!empty($active_tab_data['fields'])) {
+                echo '<div class="hmapi-tab-fields-wrapper">';
+                foreach ($active_tab_data['fields'] as $field) {
+                    if (is_object($field) && method_exists($field, 'render')) {
+                        $field->render();
+                    } else {
+                        // Legacy handling for array-based fields
+                        $template_path = __DIR__ . '/field-' . $field['type'] . '.php';
+                        if (file_exists($template_path)) {
+                            include $template_path;
+                        } else {
+                            include __DIR__ . '/field-input.php';
+                        }
+                    }
+                }
+                echo '</div>';
+            }
+        }
+?>
     </div>
+
+    <?php if ($help): ?>
+        <p class="description"><?php echo esc_html($help); ?></p>
+    <?php endif; ?>
 </div>

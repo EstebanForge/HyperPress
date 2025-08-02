@@ -6,19 +6,31 @@ class TemplateLoader
 {
     private static string $template_dir;
     private static array $template_cache = [];
+    private static array $rendered_field_types = [];
 
     public static function init(): void
     {
         self::$template_dir = __DIR__ . '/templates/';
+        add_action('admin_enqueue_scripts', [__CLASS__, 'enqueue_assets']);
+        add_action('wp_enqueue_scripts', [__CLASS__, 'enqueue_assets']);
     }
 
     public static function render_field(array $field_data, mixed $value = null): void
     {
         $type = $field_data['type'] ?? 'text';
         $name = $field_data['name'] ?? '';
+        self::$rendered_field_types[$type] = true;
 
         // Set the value in field data
         $field_data['value'] = $value;
+
+        // Store TabsField instances in global variable for template access
+        if ($type === 'tabs' && isset($field_data['instance'])) {
+            if (!isset($GLOBALS['hmapi_tabs_instances'])) {
+                $GLOBALS['hmapi_tabs_instances'] = [];
+            }
+            $GLOBALS['hmapi_tabs_instances'][$name] = $field_data['instance'];
+        }
 
         // Get the appropriate template file
         $template_file = self::get_template_file($type);
@@ -96,42 +108,53 @@ class TemplateLoader
             </label>
 
             <div class="hmapi-field-input">
-                <input type="<?php echo esc_attr($type); ?>" 
-                       id="<?php echo esc_attr($name); ?>" 
-                       name="<?php echo esc_attr($name); ?>" 
-                       value="<?php echo esc_attr($value); ?>" 
-                       placeholder="<?php echo esc_attr($placeholder); ?>" 
-                       <?php echo $required ? 'required' : ''; ?>
-                       class="regular-text">
+                <input type="<?php echo esc_attr($type); ?>"
+                    id="<?php echo esc_attr($name); ?>"
+                    name="<?php echo esc_attr($name); ?>"
+                    value="<?php echo esc_attr($value); ?>"
+                    placeholder="<?php echo esc_attr($placeholder); ?>"
+                    <?php echo $required ? 'required' : ''; ?>
+                    class="regular-text">
 
                 <?php if ($help): ?>
                     <p class="description"><?php echo esc_html($help); ?></p>
                 <?php endif; ?>
             </div>
         </div>
-        <?php
+<?php
     }
 
     public static function enqueue_assets(): void
     {
+        if (empty(self::$rendered_field_types)) {
+            return;
+        }
+
         // Common field styles
         wp_enqueue_style(
             'hmapi-fields',
-            plugins_url('../../../assets/css/fields.css', __FILE__),
+            HMAPI_PLUGIN_URL . 'assets/css/fields.css',
             [],
-            '1.0.0'
+            HMAPI_VERSION
         );
 
         // Common field scripts
         wp_enqueue_script(
             'hmapi-fields',
-            plugins_url('../../../assets/js/fields.js', __FILE__),
+            HMAPI_PLUGIN_URL . 'assets/js/fields.js',
             ['jquery'],
-            '1.0.0',
+            HMAPI_VERSION,
             true
         );
 
         // Localize script
+        // Conditionally enqueue assets for specific field types
+        if (isset(self::$rendered_field_types['map'])) {
+            wp_enqueue_style('hmapi-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4');
+            wp_enqueue_script('hmapi-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true);
+            wp_enqueue_script('hmapi-map-field', HMAPI_PLUGIN_URL . 'assets/js/map-field.js', ['hmapi-leaflet'], HMAPI_VERSION, true);
+        }
+
         wp_localize_script('hmapi-fields', 'hmapiFields', [
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('hmapi_fields_nonce'),

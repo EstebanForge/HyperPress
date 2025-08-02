@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 
 $type = $field_data['type'] ?? 'set';
 $name = $field_data['name'] ?? '';
+$name_attr = $field_data['name_attr'] ?? $name;
 $label = $field_data['label'] ?? '';
 $value = $field_data['value'] ?? [];
 $required = $field_data['required'] ?? false;
@@ -23,13 +24,12 @@ $layout_class = 'hmapi-set-' . $layout;
     </label>
 
     <div class="hmapi-field-input">
-        <!-- Hidden input to ensure an empty array is sent when no checkboxes are selected -->
-        <input type="hidden" name="<?php echo esc_attr($name); ?>[]" value="">
+        
         <div class="<?php echo esc_attr($layout_class); ?>">
             <?php foreach ($options as $option_value => $option_label): ?>
                 <label>
                     <input type="checkbox" 
-                           name="<?php echo esc_attr($name); ?>[]" 
+                           name="<?php echo esc_attr($name_attr); ?>[]" 
                            value="<?php echo esc_attr($option_value); ?>" 
                            <?php checked(in_array($option_value, $value)); ?>
                            <?php echo $required ? 'required' : ''; ?>>

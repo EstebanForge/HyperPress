@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace HMApi\Fields;
 
+/**
+ * @method self add_arg(string $key, mixed $value)
+ */
 class TabsField extends Field
 {
     private array $tabs = [];
@@ -39,6 +42,22 @@ class TabsField extends Field
         }
 
         return $this;
+    }
+
+    public function set_active_tab_from_url(string $param = 'tab'): self
+    {
+        if (isset($_GET[$param]) && isset($this->tabs[$_GET[$param]])) {
+            $this->active_tab = sanitize_text_field($_GET[$param]);
+        }
+
+        return $this;
+    }
+
+    public function get_tab_url(string $tab_id): string
+    {
+        $current_url = add_query_arg([]); // Get current URL with all parameters
+
+        return add_query_arg('tab', $tab_id, $current_url);
     }
 
     public function get_tabs(): array
@@ -78,5 +97,10 @@ class TabsField extends Field
             'layout' => $this->layout,
             'active_tab' => $this->active_tab,
         ]);
+    }
+
+    public function render(array $args = []): void
+    {
+        parent::render($args);
     }
 }

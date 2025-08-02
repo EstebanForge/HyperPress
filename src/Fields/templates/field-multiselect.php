@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 
 $type = $field_data['type'] ?? 'multiselect';
 $name = $field_data['name'] ?? '';
+$name_attr = $field_data['name_attr'] ?? $name;
 $label = $field_data['label'] ?? '';
 $value = $field_data['value'] ?? [];
 $required = $field_data['required'] ?? false;
@@ -22,7 +23,7 @@ $value = is_array($value) ? $value : [$value];
 
     <div class="hmapi-field-input">
         <select id="<?php echo esc_attr($name); ?>" 
-                name="<?php echo esc_attr($name); ?>[]" 
+                name="<?php echo esc_attr($name_attr); ?>[]" 
                 multiple
                 <?php echo $required ? 'required' : ''; ?>
                 class="regular-text hmapi-multiselect"
