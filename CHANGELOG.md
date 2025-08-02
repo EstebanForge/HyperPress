@@ -3,6 +3,8 @@
 # 2.0.7 / 2025-08-02
 - **IMPROVEMENT:** Added a `hmapi/before_template_load` action hook that fires before each hypermedia template is loaded, providing a centralized point for common template preparation logic. Thanks @eduwass.
 - **FIX:** Added `stripslashes_deep()` to the `hm_ds_read_signals()` function to remove WordPress "magic quotes" slashes from GET requests, ensuring proper JSON decoding for Datastar signals. Thanks @eduwass.
+- Updated Datastar JS library to the latest version.
+- Updated Datastar PHP SDK to the latest version.
 
 # 2.0.6 / 2025-07-23
 - **FIX:** Updated Datastar.js enqueue to use `wp_enqueue_script_module()` for proper ES module support (WordPress 6.5+). Thanks @eduwass for the report.

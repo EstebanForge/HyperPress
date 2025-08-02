@@ -174,7 +174,7 @@ class Assets
         // Detect library mode (when plugin URL is empty)
         $is_library_mode = empty($plugin_url);
 
-                // In library mode, construct URLs using vendor directory detection
+        // In library mode, construct URLs using vendor directory detection
         if ($is_library_mode) {
             $plugin_url = $this->get_library_mode_url($plugin_path);
         }
@@ -380,7 +380,7 @@ class Assets
      * Construct the proper URL for assets when running in library mode.
      *
      * When the plugin is loaded as a Composer library, assets are available at paths like:
-     * wp-content/plugins/some-plugin/vendor-dist/estebanforge/hypermedia-api-wordpress/assets/js/libs/
+     * wp-content/plugins/some-plugin/vendor-dist/estebanforge/hyperpress/assets/js/libs/
      *
      * This method detects the vendor directory {
      *      vendor-dist
@@ -415,7 +415,7 @@ class Assets
             'vendor-prefixed',
             'vendor-prefix',
             'vendor-custom',
-            'vendor'
+            'vendor',
         ];
 
         // Check if plugin path is within wp-content directory
@@ -438,7 +438,7 @@ class Assets
         }
 
         // Fallback: try to detect plugin directory pattern with explicit vendor directory validation
-        // Look for patterns like: /wp-content/plugins/some-plugin/vendor-*/estebanforge/hypermedia-api-wordpress/
+        // Look for patterns like: /wp-content/plugins/some-plugin/vendor-*/estebanforge/hyperpress/
         foreach ($vendor_directories as $vendor_dir) {
             $pattern = '#/wp-content/(.+/' . preg_quote($vendor_dir, '#') . '/.+)$#';
             if (preg_match($pattern, $plugin_path, $matches)) {

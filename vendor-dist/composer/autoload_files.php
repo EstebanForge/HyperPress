@@ -8,5 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     '765877c22806cd3aae73f7162b2a69d7' => $vendorDir . '/adbario/php-dot-notation/src/helpers.php',
     '09cf3936aa2ba06d40dd63bf48b69aca' => $vendorDir . '/jeffreyvanrossum/wp-settings/src/helpers.php',
-    '72e816447e9693b5abd7c6b9b4e3c163' => $baseDir . '/bootstrap.php',
+    'b4e0b991acd5ddad926ebc747d73282f' => $baseDir . '/bootstrap.php',
 );

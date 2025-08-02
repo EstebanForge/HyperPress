@@ -121,17 +121,17 @@
         },
         {
             "name": "starfederation/datastar-php",
-            "version": "v1.0.0-RC.1",
-            "version_normalized": "1.0.0.0-RC1",
+            "version": "1.0.0-RC.3",
+            "version_normalized": "1.0.0.0-RC3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/starfederation/datastar-php.git",
-                "reference": "bac4f94d1c091476d8fddd6c869aaa1f3a1cdfe6"
+                "reference": "4990d27208d2e3c1b34cb874cbd258c55dc984f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/starfederation/datastar-php/zipball/bac4f94d1c091476d8fddd6c869aaa1f3a1cdfe6",
-                "reference": "bac4f94d1c091476d8fddd6c869aaa1f3a1cdfe6",
+                "url": "https://api.github.com/repos/starfederation/datastar-php/zipball/4990d27208d2e3c1b34cb874cbd258c55dc984f8",
+                "reference": "4990d27208d2e3c1b34cb874cbd258c55dc984f8",
                 "shasum": ""
             },
             "require": {
@@ -142,7 +142,7 @@
                 "craftcms/phpstan": "dev-main",
                 "pestphp/pest": "^3.5"
             },
-            "time": "2025-07-10T12:21:14+00:00",
+            "time": "2025-07-30T11:56:13+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {

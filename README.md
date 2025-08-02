@@ -1368,24 +1368,24 @@ Check out the showcase/demo theme at [EstebanForge/Hypermedia-Theme-WordPress](h
 
 ## Suggestions, Support
 
-Please, open [a discussion](https://github.com/EstebanForge/hypermedia-api-wordpress/discussions).
+Please, open [a discussion](https://github.com/EstebanForge/HyperPress/discussions).
 
 ## Bugs and Error reporting
 
-Please, open [an issue](https://github.com/EstebanForge/hypermedia-api-wordpress/issues).
+Please, open [an issue](https://github.com/EstebanForge/HyperPress/issues).
 
 ## FAQ
-[FAQ available here](https://github.com/EstebanForge/hypermedia-api-wordpress/blob/main/FAQ.md).
+[FAQ available here](https://github.com/EstebanForge/HyperPress/blob/main/FAQ.md).
 
 ## Changelog
 
-[Changelog available here](https://github.com/EstebanForge/hypermedia-api-wordpress/blob/main/CHANGELOG.md).
+[Changelog available here](https://github.com/EstebanForge/HyperPress/blob/main/CHANGELOG.md).
 
 ## Contributing
 
 You are welcome to contribute to this plugin.
 
-If you have a feature request or a bug report, please open an issue on the [GitHub repository](https://github.com/EstebanForge/hypermedia-api-wordpress/issues).
+If you have a feature request or a bug report, please open an issue on the [GitHub repository](https://github.com/EstebanForge/HyperPress/issues).
 
 If you want to contribute with code, please open a pull request.
 

@@ -4,12 +4,12 @@
 
 namespace HMApi\Composer\Autoload;
 
-class ComposerStaticInitc0e3399e672c61366037eb22a5860f68
+class ComposerStaticInit8fdab5c4c154ad8745577288bf43f397
 {
     public static $files = array (
         '765877c22806cd3aae73f7162b2a69d7' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/helpers.php',
         '09cf3936aa2ba06d40dd63bf48b69aca' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/helpers.php',
-        '16384c332de4c1779a45fa95a6930f09' => __DIR__ . '/../..' . '/bootstrap.php',
+        '0b3972c8fa41f32090bbf90aec8eea24' => __DIR__ . '/../..' . '/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -42,7 +42,7 @@ class ComposerStaticInitc0e3399e672c61366037eb22a5860f68
     );
 
     public static $classMap = array (
-        'ComposerAutoloaderInitc0e3399e672c61366037eb22a5860f68' => __DIR__ . '/..' . '/composer/autoload_real.php',
+        'ComposerAutoloaderInit8fdab5c4c154ad8745577288bf43f397' => __DIR__ . '/..' . '/composer/autoload_real.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'HMApi\\Adbar\\Dot' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/Dot.php',
         'HMApi\\Admin\\Activation' => __DIR__ . '/../..' . '/src/Admin/Activation.php',
@@ -51,7 +51,7 @@ class ComposerStaticInitc0e3399e672c61366037eb22a5860f68
         'HMApi\\Assets' => __DIR__ . '/../..' . '/src/Assets.php',
         'HMApi\\Compatibility' => __DIR__ . '/../..' . '/src/Compatibility.php',
         'HMApi\\Composer\\Autoload\\ClassLoader' => __DIR__ . '/..' . '/composer/ClassLoader.php',
-        'HMApi\\Composer\\Autoload\\ComposerStaticInitc0e3399e672c61366037eb22a5860f68' => __DIR__ . '/..' . '/composer/autoload_static.php',
+        'HMApi\\Composer\\Autoload\\ComposerStaticInit8fdab5c4c154ad8745577288bf43f397' => __DIR__ . '/..' . '/composer/autoload_static.php',
         'HMApi\\Config' => __DIR__ . '/../..' . '/src/Config.php',
         'HMApi\\Jeffreyvr\\WPSettings\\EnqueueManager' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/EnqueueManager.php',
         'HMApi\\Jeffreyvr\\WPSettings\\Enqueuer' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Enqueuer.php',
@@ -99,9 +99,9 @@ class ComposerStaticInitc0e3399e672c61366037eb22a5860f68
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc0e3399e672c61366037eb22a5860f68::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc0e3399e672c61366037eb22a5860f68::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc0e3399e672c61366037eb22a5860f68::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::$classMap;
 
         }, null, ClassLoader::class);
     }

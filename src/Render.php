@@ -176,7 +176,7 @@ class Render
         // Only show debug info if WP_DEBUG is enabled or user can manage options
         $show_debug = defined('WP_DEBUG') && WP_DEBUG || current_user_can('manage_options');
 
-?>
+        ?>
         <!DOCTYPE html>
         <html <?php language_attributes(); ?>>
 
@@ -366,14 +366,14 @@ class Render
                 <?php endif; ?>
 
                 <div class="footer">
-                    <p><?php echo esc_html($plugin_name); ?> | For more information, visit the <a href="https://github.com/EstebanForge/Hypermedia-API-WordPress" target="_blank" rel="noopener noreferrer">plugin documentation</a>.</p>
+                    <p><?php echo esc_html($plugin_name); ?> | For more information, visit the <a href="https://github.com/EstebanForge/HyperPress" target="_blank" rel="noopener noreferrer">plugin documentation</a>.</p>
                 </div>
             </div>
         </body>
 
         </html>
 <?php
-        die();
+                die();
     }
 
     /**

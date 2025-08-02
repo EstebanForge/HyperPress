@@ -379,7 +379,7 @@ class Options
             'description' => esc_html__('Designed for developers, HyperPress brings the power and simplicity of hypermedia to your WordPress projects. It seamlessly integrates popular libraries like HTMX, Alpine AJAX, and Datastar, empowering you to create rich, dynamic user interfaces without the complexity of traditional JavaScript frameworks.', 'api-for-htmx') . '<br>' .
                 esc_html__('Adds a new endpoint /wp-html/v1/ from which you can load any hypermedia template.', 'api-for-htmx') . '<br><br>' .
                 esc_html__('At its core, hypermedia is an approach that empowers you to build modern, dynamic applications by extending the capabilities of HTML. Libraries like HTMX, Alpine AJAX, and Datastar allow you to harness advanced browser technologies—such as AJAX, WebSockets, and Server-Sent Events, simply by adding special attributes to your HTML, minimizing or eliminating the need for a complex JavaScript layer.', 'api-for-htmx') . '<br><br>' .
-                esc_html__('Plugin repository and documentation:', 'api-for-htmx') . ' <a href="https://github.com/EstebanForge/Hypermedia-API-WordPress" target="_blank">https://github.com/EstebanForge/Hypermedia-API-WordPress</a>',
+                esc_html__('Plugin repository and documentation:', 'api-for-htmx') . ' <a href="https://github.com/EstebanForge/HyperPress" target="_blank">https://github.com/EstebanForge/HyperPress</a>',
         ]);
 
         $system_info_section = $about_tab->add_section(esc_html__('System Information', 'api-for-htmx'), [
