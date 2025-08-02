@@ -10,6 +10,7 @@ namespace HMApi;
 
 use HMApi\Admin\Activation;
 use HMApi\Admin\Options;
+use HMApi\Admin\OptionsMigration;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -100,7 +101,17 @@ class Main
 
         $this->assets_manager = new Assets($this);
 
+        // Initialize TemplateLoader
+        \HMApi\Fields\TemplateLoader::init();
+
         if (is_admin()) {
+            // Handle migration from wp-settings to hyper fields
+            $migration = new OptionsMigration($this);
+            if ($migration->needs_migration()) {
+                $migration->migrate();
+            }
+
+            // Initialize new options system
             $this->options = new Options($this);
             new Activation();
         }
@@ -344,7 +355,7 @@ class Main
     public function run()
     {
         add_action('init', [$this->router, 'register_main_route']);
-        add_action('template_redirect', [$this->render, 'load_template']);
+        add_action('template_redirect', [$this->render, 'loadTemplate']);
         add_action('wp_head', [$this->config, 'insert_config_meta_tag']);
         $this->compatibility->run();
         $this->theme_support->run();

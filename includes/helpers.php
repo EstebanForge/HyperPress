@@ -187,11 +187,6 @@ function hm_validate_request($hmvals = null, $action = null)
  */
 function hm_is_library_mode(): bool
 {
-    // If HMAPI_IS_LIBRARY_MODE is defined, it takes precedence
-    if (defined('HMAPI_IS_LIBRARY_MODE')) {
-        return HMAPI_IS_LIBRARY_MODE;
-    }
-
     // Check if the plugin is in the active plugins list
     if (defined('HMAPI_BASENAME')) {
         $active_plugins = apply_filters('active_plugins', get_option('active_plugins', []));
@@ -347,7 +342,7 @@ function hm_ds_location(string $url): void
  * }
  * @return bool True if rate limited (blocked), false if request is allowed.
  */
-function hm_ds_is_rate_limited(array $options = []): bool
+function hb_ds_is_rate_limited(array $options = []): bool
 {
     // Default configuration
     $defaults = [
@@ -432,6 +427,67 @@ function hm_ds_is_rate_limited(array $options = []): bool
     }
 
     return false; // Request allowed
+}
+
+/**
+ * Create an OptionsPage instance.
+ *
+ * @param string $page_title The title of the page
+ * @param string $menu_slug The slug for the menu
+ * @return HMApi\Fields\OptionsPage
+ */
+function hf_option_page(string $page_title, string $menu_slug): HMApi\Fields\OptionsPage
+{
+    return HMApi\Fields\OptionsPage::make($page_title, $menu_slug);
+}
+
+/**
+ * Create a Field instance.
+ *
+ * @param string $type The field type
+ * @param string $name The field name
+ * @param string $label The field label
+ * @return HMApi\Fields\Field
+ */
+function hf_field(string $type, string $name, string $label): HMApi\Fields\Field
+{
+    return HMApi\Fields\Field::make($type, $name, $label);
+}
+
+/**
+ * Create a TabsField instance.
+ *
+ * @param string $name The field name
+ * @param string $label The field label
+ * @return HMApi\Fields\TabsField
+ */
+function hf_tabs(string $name, string $label): HMApi\Fields\TabsField
+{
+    return HMApi\Fields\TabsField::make($name, $label);
+}
+
+/**
+ * Create a RepeaterField instance.
+ *
+ * @param string $name The field name
+ * @param string $label The field label
+ * @return HMApi\Fields\RepeaterField
+ */
+function hf_repeater(string $name, string $label): HMApi\Fields\RepeaterField
+{
+    return HMApi\Fields\RepeaterField::make($name, $label);
+}
+
+/**
+ * Create an OptionsSection instance.
+ *
+ * @param string $id The section ID
+ * @param string $title The section title
+ * @return HMApi\Fields\OptionsSection
+ */
+function hf_section(string $id, string $title): HMApi\Fields\OptionsSection
+{
+    return HMApi\Fields\OptionsSection::make($id, $title);
 }
 
 // ===================================================================

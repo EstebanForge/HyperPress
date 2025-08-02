@@ -28,15 +28,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'jeffreyvanrossum/wp-settings' => array(
-            'pretty_version' => '1.2.2',
-            'version' => '1.2.2.0',
-            'reference' => '89f4713690a800c4e23f7578f12035ce4f6d0007',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../jeffreyvanrossum/wp-settings',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'starfederation/datastar-php' => array(
             'pretty_version' => '1.0.0-RC.3',
             'version' => '1.0.0.0-RC3',

@@ -146,6 +146,20 @@ if (!function_exists('hmapi_run_initialization_logic')) {
                 $theme_support
             );
             $hmapi_main->run();
+
+            // Initialize the blocks system
+            if (class_exists('HMApi\Blocks\Registry')) {
+                $blocksRegistry = HMApi\Blocks\Registry::getInstance();
+                $blocksRegistry->init();
+
+                // Initialize the blocks REST API
+                if (class_exists('HMApi\Blocks\RestApi')) {
+                    $blocksRestApi = new HMApi\Blocks\RestApi();
+                    $blocksRestApi->init();
+                }
+            }
+
+            // Demo blocks are automatically discovered by the Registry auto-discovery system
         }
     }
 }

@@ -1342,9 +1342,500 @@ add_filter('hmapi/default_options', function($defaults) {
 });
 ```
 
+## 🧱 HyperBlocks - Modern WordPress Block Development
+
+HyperBlocks is a powerful PHP-based block creation system that provides **two complementary approaches** for building Gutenberg blocks without writing JavaScript. Both approaches produce **identical output** and use the **same unified React editor component**.
+
+### 🔥 Why HyperBlocks?
+- **No JavaScript Required**: Build complex blocks using only PHP
+- **Unified Editor**: Both approaches use the same React editor component
+- **WordPress Standards**: Full compatibility with WordPress block API
+- **Developer Choice**: Pick the approach that fits your workflow
+- **Auto-Discovery**: Automatic block registration from `hyperblocks/` directory
+
+### 🎯 Two Development Approaches
+
+#### 1. Fluent API
+**Pure PHP, rapid development - Single file approach**
+```php
+<?php
+// hyperblocks/hero-banner.hb.php - Complete implementation in one file
+use HMApi\Blocks\Block;
+use HMApi\Blocks\Field;
+
+$heroBlock = Block::make('Hero Banner')
+    ->setIcon('format-image')
+    ->addFields([
+        Field::make('text', 'headline', 'Headline')
+            ->setPlaceholder('Enter your headline')
+            ->setRequired(true),
+        Field::make('textarea', 'subtitle', 'Subtitle')
+            ->setPlaceholder('Enter subtitle text'),
+        Field::make('color', 'background_color', 'Background Color')
+            ->setDefault('#ffffff'),
+        Field::make('color', 'text_color', 'Text Color')
+            ->setDefault('#333333'),
+        Field::make('url', 'button_url', 'Button URL'),
+        Field::make('text', 'button_text', 'Button Text')
+            ->setDefault('Learn More')
+    ])
+    ->setRenderTemplate('
+        <div class="hero-banner" style="background-color: {{background_color}}; color: {{text_color}}; padding: 2rem; text-align: center;">
+            <RichText attribute="headline" tag="h1" style="font-size: 3rem; margin-bottom: 1rem;" placeholder="Enter headline..." />
+            <RichText attribute="subtitle" tag="p" style="font-size: 1.5rem; margin-bottom: 2rem; opacity: 0.8;" placeholder="Enter subtitle..." />
+            <a href="{{button_url}}" class="hero-button" style="background: {{text_color}}; color: {{background_color}}; padding: 1rem 2rem; text-decoration: none; border-radius: 4px;">{{button_text}}</a>
+        </div>
+    ');
+
+// Register the block (auto-discovery will handle this)
+return $heroBlock;
+```
+
+#### 2. block.json Approach (WordPress Standard)
+**Multiple files, WordPress conventions**
+
+**File Structure:**
+```
+hyperblocks/my-hero-block/
+├── block.json      (configuration)
+├── render.php      (template)
+└── editor.js       (React editor - optional)
+```
+
+**block.json:**
+```json
+{
+    "name": "my-plugin/hero-banner",
+    "title": "Hero Banner",
+    "description": "A customizable hero banner block",
+    "category": "layout",
+    "icon": "format-image",
+    "attributes": {
+        "headline": {
+            "type": "string",
+            "default": "Welcome to Our Site"
+        },
+        "subtitle": {
+            "type": "string",
+            "default": "Amazing things happen here"
+        },
+        "backgroundColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "textColor": {
+            "type": "string",
+            "default": "#333333"
+        },
+        "buttonUrl": {
+            "type": "string",
+            "default": "#"
+        },
+        "buttonText": {
+            "type": "string",
+            "default": "Learn More"
+        }
+    },
+    "supports": {
+        "align": ["wide", "full"],
+        "html": false
+    },
+    "render": "file:./render.php"
+}
+```
+
+**render.php:**
+```php
+<?php
+$headline = $attributes['headline'] ?? 'Welcome to Our Site';
+$subtitle = $attributes['subtitle'] ?? 'Amazing things happen here';
+$backgroundColor = $attributes['backgroundColor'] ?? '#ffffff';
+$textColor = $attributes['textColor'] ?? '#333333';
+$buttonUrl = $attributes['buttonUrl'] ?? '#';
+$buttonText = $attributes['buttonText'] ?? 'Learn More';
+?>
+
+<div class="hero-banner" style="background-color: <?php echo esc_attr($backgroundColor); ?>; color: <?php echo esc_attr($textColor); ?>; padding: 2rem; text-align: center;">
+    <h1><?php echo esc_html($headline); ?></h1>
+    <p><?php echo esc_html($subtitle); ?></p>
+    <a href="<?php echo esc_url($buttonUrl); ?>" class="hero-button">
+        <?php echo esc_html($buttonText); ?>
+    </a>
+</div>
+```
+
+### 📊 Side-by-Side Comparison
+
+| Aspect | Fluent API | block.json |
+|--------|------------|------------|
+| **Files Required** | 1 file per block | 2-3 files per block |
+| **Development Speed** | Very fast | Moderate |
+| **JavaScript Knowledge** | Not required | Not required |
+| **WordPress Standards** | Custom approach | Official standard |
+| **Customization Level** | Template-based | Full control |
+| **Reusability** | Field groups | Component libraries |
+
+### 🚀 Auto-Discovery & Registration
+
+**Automatic block discovery works from:**
+- `wp-content/themes/your-theme/hyperblocks/`
+- `wp-content/plugins/your-plugin/hyperblocks/`
+
+**Supported formats:**
+- **`.hb.php`** files for Fluent API blocks
+- **`block.json`** files for WordPress standard blocks
+- **Ignored files:** Prefix directory/filenames with `_` to disable
+
+**Example directory structure:**
+```
+hyperblocks/
+├── hero-banner.hb.php          # Fluent API
+├── content-card.hb.php         # Fluent API
+├── quote-block/
+│   ├── block.json              # WordPress standard
+│   ├── render.php
+│   └── editor.js
+├── _draft-block/               # Disabled (ignored)
+│   └── draft.hb.php
+└── _deprecated/                # Disabled directory
+    └── old-block.hb.php
+```
+
+### 🎯 When to Choose Which?
+
+#### Choose **Fluent API** when:
+- 🚀 **Rapid prototyping** is priority
+- 👥 **PHP-only team** (no JavaScript developers)
+- 🔄 **Quick iterations** needed
+- 📦 **Plugin/theme bundling** for distribution
+- 🎨 **Template-heavy** blocks (lots of HTML/CSS)
+
+#### Choose **block.json** when:
+- 📋 **WordPress standards compliance** is required
+- 🔧 **Schema validation** needed
+- 📊 **Standard WordPress tooling** preferred
+- 🏢 **Enterprise development** with strict standards
+
+### 🛠️ Technical Details
+
+**Both approaches use:**
+- **Same Rendering Engine**: `HMApi\Blocks\Renderer`
+- **Same REST API**: `/hyperblocks/v1/block-fields`, `/hyperblocks/v1/render-preview`
+- **Same Custom Components**: `<RichText>`, `<InnerBlocks>`, `<MediaUpload>`
+- **Same Field Types**: `text`, `textarea`, `color`, `url`, `media`, `repeater`, etc.
+- **Same React Editor**: Unified generic editor component
+
+### 📦 Demo Blocks Included
+
+The plugin includes **three identical demo blocks** implemented in both approaches:
+
+1. **Hero Banner** - Landing page headers with headline, subtitle, and CTA
+2. **Content Card** - Product cards with image, title, and content
+3. **Quote Block** - Testimonials with quote, author, and styling
+
+**To test:**
+1. Go to **Posts** → **Add New**
+2. Search for blocks: "Hero Banner", "Hero Banner (JSON)", etc.
+3. Compare identical functionality between approaches
+
+### 🎯 Simplified HyperFields API
+
+The HyperFields system now provides two simplified approaches for creating options pages and fields with minimal imports:
+
+#### Option 1: HyperFields Facade Class (Recommended)
+
+Use a single facade class to access all field types:
+
+```php
+<?php
+use HMApi\Fields\HyperFields;
+
+// Create an options page
+$plugin_options = HyperFields::makeOptionPage('My Plugin Settings', 'my-plugin-settings')
+    ->set_menu_title('My Plugin')
+    ->set_parent_slug('options-general.php');
+
+// Add fields using the facade
+$plugin_options->add_field(
+    HyperFields::makeField('text', 'plugin_title', 'Plugin Title')
+        ->set_default('My Awesome Plugin')
+        ->set_placeholder('Enter plugin title...')
+);
+
+// Add tabs
+$tabs = HyperFields::makeTabs('theme_tabs', 'Theme Configuration')
+    ->add_tab('header', 'Header', [
+        HyperFields::makeField('image', 'header_logo', 'Header Logo'),
+        HyperFields::makeField('color', 'header_bg', 'Header Background')->set_default('#ffffff')
+    ])
+    ->add_tab('typography', 'Typography', [
+        HyperFields::makeField('select', 'primary_font', 'Primary Font')
+            ->set_options(['system' => 'System', 'roboto' => 'Roboto'])
+            ->set_default('system'),
+        HyperFields::makeField('number', 'base_font_size', 'Base Font Size (px)')
+            ->set_default(16)->set_min(12)->set_max(24)
+    ]);
+
+$plugin_options->add_field($tabs);
+
+// Add repeater fields
+$social_links = HyperFields::makeRepeater('social_links', 'Social Media Links')
+    ->add_sub_field(HyperFields::makeField('select', 'platform', 'Platform')
+        ->set_options(['facebook' => 'Facebook', 'twitter' => 'Twitter', 'instagram' => 'Instagram']))
+    ->add_sub_field(HyperFields::makeField('url', 'url', 'Profile URL'));
+
+$plugin_options->add_field($social_links);
+
+// Register the options page
+$plugin_options->register();
+```
+
+#### Option 2: Helper Functions
+
+Use global helper functions for even simpler syntax:
+
+```php
+<?php
+// No imports needed!
+
+// Create an options page
+$plugin_options = hf_option_page('My Plugin Settings', 'my-plugin-settings')
+    ->set_menu_title('My Plugin')
+    ->set_parent_slug('options-general.php');
+
+// Add sections using helper functions
+$general_section = hf_section('general', 'General Settings', 'Configure basic plugin settings');
+$plugin_options->add_section($general_section);
+
+$general_section->add_field(
+    hf_field('text', 'plugin_title', 'Plugin Title')
+        ->set_default('My Awesome Plugin')
+        ->set_placeholder('Enter plugin title...')
+);
+
+// Add tabs
+$tabs = hf_tabs('theme_tabs', 'Theme Configuration')
+    ->add_tab('header', 'Header', [
+        hf_field('image', 'header_logo', 'Header Logo'),
+        hf_field('color', 'header_bg', 'Header Background')->set_default('#ffffff')
+    ])
+    ->add_tab('typography', 'Typography', [
+        hf_field('select', 'primary_font', 'Primary Font')
+            ->set_options(['system' => 'System', 'roboto' => 'Roboto'])
+            ->set_default('system'),
+        hf_field('number', 'base_font_size', 'Base Font Size (px)')
+            ->set_default(16)->set_min(12)->set_max(24)
+    ]);
+
+$general_section->add_field($tabs);
+
+// Add repeater fields
+$social_links = hf_repeater('social_links', 'Social Media Links')
+    ->add_sub_field(hf_field('select', 'platform', 'Platform')
+        ->set_options(['facebook' => 'Facebook', 'twitter' => 'Twitter', 'instagram' => 'Instagram']))
+    ->add_sub_field(hf_field('url', 'url', 'Profile URL'));
+
+$general_section->add_field($social_links);
+
+// Register the options page
+$plugin_options->register();
+```
+
+#### Comparison
+
+| Approach | Imports Required | IDE Support | Simplicity | Extensibility |
+|----------|------------------|-------------|------------|---------------|
+| **Facade Class** | 1 import | Excellent | High | Excellent |
+| **Helper Functions** | None | Limited | Highest | Good |
+
+**Recommendation**: Use the **Facade Class** approach for production projects as it provides better IDE support, type hinting, and extensibility. Use the **Helper Functions** approach for rapid prototyping or when maximum simplicity is preferred.
+
+#### Demo Files
+
+Check out the demo files for complete working examples:
+- `/hyperoptions/options-page-demo.php` - Uses the Facade Class approach
+- `/hyperoptions/options-page-demo-functions.php` - Uses the Helper Functions approach
+
+#### Running the Demos
+
+**To test the demo options pages:**
+
+1. **Copy one of the demo files** to your theme or plugin:
+   ```bash
+   # For Facade Class approach
+   cp hyperoptions/options-page-demo.php your-plugin/options-demo.php
+   
+   # For Helper Functions approach
+   cp hyperoptions/options-page-demo-functions.php your-plugin/options-demo-functions.php
+   ```
+
+2. **Include the file** in your plugin/theme:
+   ```php
+   // For Facade Class approach
+   require_once 'options-demo.php';
+   
+   // For Helper Functions approach
+   require_once 'options-demo-functions.php';
+   ```
+
+3. **Navigate to the new options pages**:
+   - **Plugin Settings**: Settings → My Plugin Settings
+   - **Theme Options**: Appearance → Theme Options
+   - **Custom Menu**: Admin sidebar → Custom Plugin
+
+#### Conditional Logic Examples
+
+The demo showcases advanced conditional logic using the new simplified APIs:
+
+**Using HyperFields Facade Class:**
+```php
+// Show field only when another field has specific value
+HyperFields::makeField('number', 'items_per_page', 'Items Per Page')
+    ->set_conditional_logic([
+        'conditions' => [[
+            'field' => 'display_mode',
+            'operator' => '=',
+            'value' => 'advanced'
+        ]]
+    ]);
+
+// Complex conditions with multiple rules
+HyperFields::makeField('text', 'api_key', 'API Key')
+    ->set_conditional_logic([
+        'relation' => 'AND',
+        'conditions' => [
+            [
+                'field' => 'enable_api',
+                'operator' => '=',
+                'value' => 'yes'
+            ],
+            [
+                'field' => 'api_provider',
+                'operator' => 'IN',
+                'value' => ['stripe', 'paypal']
+            ]
+        ]
+    ]);
+```
+
+**Using Helper Functions:**
+```php
+// Show field only when another field has specific value
+hf_field('number', 'items_per_page', 'Items Per Page')
+    ->set_conditional_logic([
+        'conditions' => [[
+            'field' => 'display_mode',
+            'operator' => '=',
+            'value' => 'advanced'
+        ]]
+    ]);
+
+// Complex conditions with multiple rules
+hf_field('text', 'api_key', 'API Key')
+    ->set_conditional_logic([
+        'relation' => 'AND',
+        'conditions' => [
+            [
+                'field' => 'enable_api',
+                'operator' => '=',
+                'value' => 'yes'
+            ],
+            [
+                'field' => 'api_provider',
+                'operator' => 'IN',
+                'value' => ['stripe', 'paypal']
+            ]
+        ]
+    ]);
+```
+
+#### Repeater Fields with Nested Data
+
+Create complex data structures with nested fields using the new simplified APIs:
+
+**Using HyperFields Facade Class:**
+```php
+HyperFields::makeRepeater('team_members', 'Team Members')
+    ->set_min_rows(1)
+    ->set_max_rows(20)
+    ->add_sub_field(HyperFields::makeField('text', 'name', 'Full Name')->set_required(true))
+    ->add_sub_field(HyperFields::makeField('email', 'email', 'Email Address'))
+    ->add_sub_field(HyperFields::makeField('image', 'photo', 'Profile Photo'))
+    ->add_sub_field(HyperFields::makeField('select', 'role', 'Role')
+        ->set_options(['Developer', 'Designer', 'Manager']));
+```
+
+**Using Helper Functions:**
+```php
+hf_repeater('team_members', 'Team Members')
+    ->set_min_rows(1)
+    ->set_max_rows(20)
+    ->add_sub_field(hf_field('text', 'name', 'Full Name')->set_required(true))
+    ->add_sub_field(hf_field('email', 'email', 'Email Address'))
+    ->add_sub_field(hf_field('image', 'photo', 'Profile Photo'))
+    ->add_sub_field(hf_field('select', 'role', 'Role')
+        ->set_options(['Developer', 'Designer', 'Manager']));
+```
+
+All demo examples are ready to use and demonstrate best practices for creating professional WordPress options pages with the hyper fields system.
+
+### 🔧 Advanced Features
+
+**Field Types Available:**
+- `text`, `textarea`, `color`, `url`, `email`, `number`
+- `media`, `gallery`, `rich_text`, `select`, `checkbox`
+- `repeater` (nested fields), `tabs` (field organization)
+- `association`, `map`, `date`, `datetime`, `time`
+- `section` (organize fields into sections)
+
+**Conditional Logic:**
+```php
+// Show field only when another field has specific value
+HyperFields::makeField('text', 'custom_text', 'Custom Text')
+    ->set_conditional_logic([
+        'conditions' => [[
+            'field' => 'show_custom',
+            'operator' => '=',
+            'value' => 'yes'
+        ]]
+    ]);
+
+// Or using helper functions
+hf_field('text', 'custom_text', 'Custom Text')
+    ->set_conditional_logic([
+        'conditions' => [[
+            'field' => 'show_custom',
+            'operator' => '=',
+            'value' => 'yes'
+        ]]
+    ]);
+```
+
+**Custom Validation:**
+```php
+// Using HyperFields facade
+HyperFields::makeField('email', 'contact_email', 'Contact Email')
+    ->set_validation('email')
+    ->set_required(true);
+
+// Or using helper functions
+hf_field('email', 'contact_email', 'Contact Email')
+    ->set_validation('email')
+    ->set_required(true);
+```
+
+### 🎉 Getting Started
+
+1. **Create `hyperblocks/` directory** in your theme/plugin
+2. **Choose your approach** (Fluent API or block.json)
+3. **Build your first block** using the examples above
+4. **Blocks are auto-discovered** and ready to use in the editor
+
+**No build process required** - changes are immediately available!
+
 ## Security
 
-Every call to the `wp-html` endpoint will automatically check for a valid nonce. If the nonce is not valid, the call will be rejected.
+Every call to the `wp-html` endpoint, using this plugin included helpers, will automatically check for a valid nonce. If the nonce is not valid, the call will be rejected.
 
 The nonce itself is auto-generated and added to all Hypermedia requests automatically.
 

@@ -26,7 +26,7 @@ class Render
      *
      * @var string|null
      */
-    protected $template_name;
+    protected $templateName;
 
     /**
      * Current request nonce for validation.
@@ -40,7 +40,7 @@ class Render
      *
      * @var array|false
      */
-    protected $hmvals = false;
+    protected $hmVals = false;
 
     /**
      * Render the template.
@@ -48,7 +48,7 @@ class Render
      * @since 2023-11-22
      * @return void
      */
-    public function load_template()
+    public function loadTemplate()
     {
         global $wp_query;
 
@@ -63,32 +63,32 @@ class Render
         // Don't go further if this is not a request for one of our endpoints
         if (null === $actual_endpoint_key) {
             // Check if this might be a base endpoint access (without version)
-            $this->handle_base_endpoint_access();
+            $this->handleBaseEndpointAccess();
 
             return;
         }
 
         // Check if nonce exists and is valid, only on POST requests
-        if (!$this->valid_nonce() && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!$this->validNonce() && $_SERVER['REQUEST_METHOD'] === 'POST') {
             wp_die(esc_html__('Invalid nonce', 'api-for-htmx'), esc_html__('Error', 'api-for-htmx'), ['response' => 403]);
         }
 
         // Sanitize template name using the determined endpoint key
-        $template_name = $this->sanitize_path($wp_query->query_vars[$actual_endpoint_key]);
+        $template_name = $this->sanitizePath($wp_query->query_vars[$actual_endpoint_key]);
 
         // Get hmvals from $_REQUEST and sanitize them
         $hmvals = $_REQUEST; // Nonce is validated in valid_nonce()
         if (!isset($hmvals) || empty($hmvals)) {
             $hmvals = false;
         } else {
-            $hmvals = $this->sanitize_params($hmvals);
+            $hmvals = $this->sanitizeParams($hmvals);
         }
 
         // For backward compatibility
         $hxvals = $hmvals;
 
         // Load the requested template or fail with a 404
-        $this->render_or_fail($template_name, $hmvals);
+        $this->renderOrFail($template_name, $hmvals);
         die(); // No wp_die() here, we don't want to show the complete WP error page
     }
 
@@ -102,26 +102,26 @@ class Render
      *
      * @return void
      */
-    protected function render_or_fail($template_name = '', $hmvals = false)
+    protected function renderOrFail($template_name = '', $hmvals = false)
     {
         if (empty($template_name)) {
-            $this->show_developer_info_page('missing-template-name');
+            $this->showDeveloperInfoPage('missing-template-name');
 
             return;
         }
 
         // Get our template file and vars
-        $template_path = $this->get_template_file($template_name);
+        $template_path = $this->getTemplateFile($template_name);
 
         if (!$template_path) {
-            $this->show_developer_info_page('invalid-route', $template_name);
+            $this->showDeveloperInfoPage('invalid-route', $template_name);
 
             return;
         }
 
         // Check if the template exists
         if (!file_exists($template_path)) {
-            $this->show_developer_info_page('template-not-found', $template_name, $template_path);
+            $this->showDeveloperInfoPage('template-not-found', $template_name, $template_path);
 
             return;
         }
@@ -148,7 +148,7 @@ class Render
      * @param string $template_path Optional template path that was searched
      * @return void
      */
-    protected function show_developer_info_page($error_type = 'endpoint-info', $template_name = '', $template_path = '')
+    protected function showDeveloperInfoPage($error_type = 'endpoint-info', $template_name = '', $template_path = '')
     {
         status_header(200); // Use 200 to show helpful info instead of 404
 
@@ -382,7 +382,7 @@ class Render
      * @since 2.0.0
      * @return void
      */
-    protected function handle_base_endpoint_access()
+    protected function handleBaseEndpointAccess()
     {
         $request_uri = $_SERVER['REQUEST_URI'] ?? '';
 
@@ -400,7 +400,7 @@ class Render
         foreach ($base_endpoints as $endpoint) {
             if (strpos($request_uri, $endpoint) !== false) {
                 // This is likely a base endpoint access, show helpful info
-                $this->show_developer_info_page('endpoint-info');
+                $this->showDeveloperInfoPage('endpoint-info');
 
                 return;
             }
@@ -415,7 +415,7 @@ class Render
      *
      * @return bool
      */
-    protected function valid_nonce()
+    protected function validNonce()
     {
         // https://github.com/WP-API/api-core/blob/develop/wp-includes/rest-api.php#L555
         $nonce = null;
@@ -456,7 +456,7 @@ class Render
      *
      * @return string|false The sanitized path string, or false if sanitization fails or input is empty.
      */
-    private function sanitize_path($path_string = '')
+    private function sanitizePath($path_string = '')
     {
         if (empty($path_string)) {
             return false;
@@ -465,7 +465,7 @@ class Render
         $path_string = (string) $path_string;
 
         // Attempt to parse using the colon separator.
-        $parsed_data = $this->parse_namespaced_template($path_string);
+        $parsed_data = $this->parseNamespacedTemplate($path_string);
 
         if ($parsed_data !== false) {
             // Namespaced path: namespace:template_segment
@@ -487,7 +487,7 @@ class Render
 
                 if ($index === count($template_segment_parts) - 1) {
                     // Last part is the filename
-                    $sanitized_template_segment_parts[] = $this->sanitize_file_name($part_cleaned);
+                    $sanitized_template_segment_parts[] = $this->sanitizeFileName($part_cleaned);
                 } else {
                     // Directory part
                     $sanitized_template_segment_parts[] = sanitize_key($part_cleaned);
@@ -518,7 +518,7 @@ class Render
 
                 if ($index === count($template_segment_parts) - 1) {
                     // Last part is the filename
-                    $sanitized_template_segment_parts[] = $this->sanitize_file_name($part_cleaned);
+                    $sanitized_template_segment_parts[] = $this->sanitizeFileName($part_cleaned);
                 } else {
                     // Directory part
                     $sanitized_template_segment_parts[] = sanitize_key($part_cleaned);
@@ -543,7 +543,7 @@ class Render
      *
      * @return string|false Sanitized file name, or false if input is empty.
      */
-    private function sanitize_file_name($file_name = '')
+    private function sanitizeFileName($file_name = '')
     {
         if (empty($file_name)) {
             return false;
@@ -566,7 +566,7 @@ class Render
      *
      * @return array|false Sanitized parameters array, or false if input is empty.
      */
-    private function sanitize_params($hmvals = [])
+    private function sanitizeParams($hmvals = [])
     {
         if (empty($hmvals)) {
             return false;
@@ -611,7 +611,7 @@ class Render
      *
      * @return string
      */
-    protected function get_theme_path()
+    protected function getThemePath()
     {
         $theme_path = trailingslashit(get_template_directory());
 
@@ -633,7 +633,7 @@ class Render
      * @param string $template_name The name of the template file (without extension).
      * @return string|false The full path to the found template file, or false if not found.
      */
-    private function find_template_with_extensions(string $base_dir, string $template_name): string|false
+    private function findTemplateWithExtensions(string $base_dir, string $template_name): string|false
     {
         // Define the extensions to check, with primary first.
         $extensions = [
@@ -643,7 +643,7 @@ class Render
 
         foreach ($extensions as $extension) {
             $potential_path = $base_dir . $template_name . $extension;
-            $resolved_path = $this->sanitize_full_path($potential_path);
+            $resolved_path = $this->sanitizeFullPath($potential_path);
 
             if ($resolved_path) {
                 // Ensure the resolved path is within the allowed base directory.
@@ -669,14 +669,14 @@ class Render
      *
      * @return string|false The full, sanitized path to the template file, or false if not found.
      */
-    protected function get_template_file($template_name = '')
+    protected function getTemplateFile($templateName = '')
     {
-        if (empty($template_name)) {
+        if (empty($templateName)) {
             return false;
         }
 
         $namespaced_paths = apply_filters('hmapi/register_template_path', []);
-        $parsed_template_data = $this->parse_namespaced_template($template_name);
+        $parsed_template_data = $this->parseNamespacedTemplate($templateName);
 
         if ($parsed_template_data !== false) {
             $namespace = $parsed_template_data['namespace'];
@@ -684,7 +684,7 @@ class Render
 
             if (isset($namespaced_paths[$namespace])) {
                 $base_dir_registered = trailingslashit((string) $namespaced_paths[$namespace]);
-                $found_path = $this->find_template_with_extensions($base_dir_registered, $template_part);
+                $found_path = $this->findTemplateWithExtensions($base_dir_registered, $template_part);
 
                 if ($found_path) {
                     return $found_path;
@@ -695,8 +695,8 @@ class Render
         } else {
             // No colon found (or invalid colon format). Treat as a theme-relative path.
             $default_paths = [
-                $this->get_theme_path() . HMAPI_TEMPLATE_DIR . '/',
-                $this->get_theme_path() . HMAPI_LEGACY_TEMPLATE_DIR . '/',
+                $this->getThemePath() . HMAPI_TEMPLATE_DIR . '/',
+                $this->getThemePath() . HMAPI_LEGACY_TEMPLATE_DIR . '/',
             ];
 
             // Apply modern and legacy filters for backward compatibility.
@@ -709,7 +709,7 @@ class Render
                 }
 
                 $base_dir_theme = trailingslashit((string) $default_path_item_base);
-                $found_path = $this->find_template_with_extensions($base_dir_theme, $template_name);
+                $found_path = $this->findTemplateWithExtensions($base_dir_theme, $templateName);
 
                 if ($found_path) {
                     return $found_path;
@@ -728,10 +728,10 @@ class Render
      * @param string $template_name The template name to parse.
      * @return array{'namespace': string, 'template': string}|false Array with 'namespace' and 'template' keys if ':' is found and parts are valid, or false otherwise.
      */
-    protected function parse_namespaced_template($template_name)
+    protected function parseNamespacedTemplate($templateName)
     {
-        if (str_contains((string) $template_name, ':')) {
-            $parts = explode(':', (string) $template_name, 2);
+        if (str_contains((string) $templateName, ':')) {
+            $parts = explode(':', (string) $templateName, 2);
             if (count($parts) === 2 && !empty($parts[0]) && !empty($parts[1])) {
                 return [
                     'namespace' => $parts[0],
@@ -753,18 +753,18 @@ class Render
      *
      * @return string|false Resolved and sanitized file path, or false if invalid/nonexistent.
      */
-    protected function sanitize_full_path($full_path = '')
+    protected function sanitizeFullPath($fullPath = '')
     {
-        if (empty($full_path)) {
+        if (empty($fullPath)) {
             return false;
         }
 
         // Ensure full path is always a string
-        $full_path = (string) $full_path;
+        $fullPath = (string) $fullPath;
 
         // Realpath
-        $full_path = realpath($full_path);
+        $fullPath = realpath($fullPath);
 
-        return $full_path;
+        return $fullPath;
     }
 }

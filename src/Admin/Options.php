@@ -1,14 +1,10 @@
 <?php
 
-/**
- * Load plugin Options.
- *
- * @since   2023
- */
+declare(strict_types=1);
 
 namespace HMApi\Admin;
 
-use HMApi\Jeffreyvr\WPSettings\WPSettings;
+use HMApi\Fields\HyperFields;
 use HMApi\Libraries\AlpineAjaxLib;
 use HMApi\Libraries\DatastarLib;
 use HMApi\Libraries\HTMXLib;
@@ -20,491 +16,387 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Options Class.
- * Handles the admin settings page and option management for the plugin.
+ * New Options Class using Hyper Fields System.
+ * Replaces wp-settings dependency with our Hyper fields system.
  *
- * @since 2023-11-22
+ * @since 2025-07-21
  */
 class Options
 {
-    /**
-     * Main plugin instance for accessing centralized configuration.
-     *
-     * @var Main
-     */
-    protected $main;
-
-    /**
-     * WordPress option name for storing plugin settings.
-     *
-     * @var string
-     */
-    private $option_name = 'hmapi_options';
-
-    /**
-     * WP Settings instance for rendering the settings page.
-     *
-     * @since 1.3.0
-     *
-     * @var WPSettings
-     */
-    private $settings;
-
-    /**
-     * Datastar SDK Manager instance.
-     *
-     * @since 2.0.2
-     * @var DatastarLib
-     */
+    private string $option_name = 'hmapi_options';
+    private Main $main;
     private DatastarLib $datastar_manager;
-
-    /**
-     * HTMX Extensions Manager instance.
-     *
-     * @since 2.0.2
-     * @var HTMXLib
-     */
     private HTMXLib $htmx_manager;
-
-    /**
-     * AlpineAjax Manager instance.
-     *
-     * @since 2.0.2
-     * @var AlpineAjaxLib
-     */
     private AlpineAjaxLib $alpine_ajax_manager;
 
-    /**
-     * The hook suffix for the settings page.
-     *
-     * @var string|false
-     */
-    private $hook_suffix = false;
-
-    /**
-     * Options constructor.
-     * Initializes admin hooks and settings page functionality.
-     *
-     * @since 2023-11-22
-     *
-     * @param Main $main Main plugin instance for dependency injection.
-     */
-    public function __construct($main)
+    public function __construct(Main $main)
     {
         $this->main = $main;
-        $this->datastar_manager = new DatastarLib($this->main);
-        $this->htmx_manager = new HTMXLib($this->main);
-        $this->alpine_ajax_manager = new AlpineAjaxLib($this->main);
+        $this->datastar_manager = new DatastarLib($main);
+        $this->htmx_manager = new HTMXLib($main);
+        $this->alpine_ajax_manager = new AlpineAjaxLib($main);
 
-        if (!hm_is_library_mode()) {
-            // Register custom option type early, before WPSettings is initialized
-            add_filter('wp_settings_option_type_map', [$this, 'register_custom_option_types']);
-
-            add_action('admin_init', [$this, 'page_init'], 100); // Low priority to ensure WP is fully initialized
-            add_action('admin_menu', [$this, 'ensure_admin_menu'], 50); // Ensure menu registration
-            add_filter('plugin_action_links_' . HMAPI_BASENAME, [$this, 'plugin_action_links']);
-            add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
-        }
+        // Initialize the options page using HyperFields system
+        add_action('init', [$this, 'init_options_page']);
     }
 
-    /**
-     * Register custom option types for WPSettings.
-     *
-     * @since 2.0.0
-     *
-     * @param array $options Existing option types
-     * @return array Modified option types
-     */
-    public function register_custom_option_types($options)
+    public function init_options_page(): void
     {
-        // Ensure WPSettingsOptions class is loaded
-        if (!class_exists('HMApi\Admin\WPSettingsOptions')) {
-            require_once HMAPI_ABSPATH . 'src/Admin/WPSettingsOptions.php';
-        }
+        $current_options = $this->get_current_options();
 
-        $options['display'] = 'HMApi\Admin\WPSettingsOptions';
+        // Create the options page
+        $options_page = \HMApi\Fields\HyperFields::makeOptionPage('Hypermedia API Options', 'hypermedia-api-options')
+            ->set_menu_title('Hypermedia API')
+            ->set_parent_slug('options-general.php')
+            ->set_capability('manage_options');
 
-        return $options;
-    }
+        // Build and add sections
+        $general_sections = $this->build_general_tab($current_options);
+        $htmx_sections = $this->build_htmx_tab($current_options);
+        $alpine_sections = $this->build_alpine_tab($current_options);
+        $datastar_sections = $this->build_datastar_tab($current_options);
+        $about_sections = $this->build_about_tab($current_options);
 
-    /**
-     * Ensure admin menu registration.
-     * Checks if WP Settings registered the menu, and if not, adds it manually.
-     * Also ensures settings are initialized if they weren't already.
-     *
-     * @since 2023-11-22
-     *
-     * @return void
-     */
-    public function ensure_admin_menu()
-    {
-        // Ensure settings are initialized
-        if (!isset($this->settings)) {
-            $this->page_init();
-        }
+        // Add all sections to the options page
+        $all_sections = array_merge($general_sections, $htmx_sections, $alpine_sections, $datastar_sections, $about_sections);
 
-        // Check if the page was registered by WP Settings
-        global $submenu;
-        $page_exists = false;
+        foreach ($all_sections as $section) {
+            if ($section instanceof \HMApi\Fields\OptionsSection) {
+                // Add the section directly to the options page
+                $section_obj = $options_page->add_section($section->get_id(), $section->get_title(), $section->get_description());
 
-        if (isset($submenu['options-general.php'])) {
-            foreach ($submenu['options-general.php'] as $submenu_item) {
-                if (isset($submenu_item[2]) && $submenu_item[2] === 'hypermedia-api-options') {
-                    $page_exists = true;
-                    break;
+                // Add all fields from the section
+                foreach ($section->get_fields() as $field) {
+                    $section_obj->add_field($field);
                 }
             }
         }
 
-        // If not, add it manually
-        if (!$page_exists) {
-            $this->hook_suffix = add_options_page(
-                esc_html__('HyperPress Options', 'api-for-htmx'),
-                esc_html__('HyperPress', 'api-for-htmx'),
-                'manage_options',
-                'hypermedia-api-options',
-                [$this, 'render_fallback_page']
+        // Register the options page
+        $options_page->register();
+    }
+
+    private function build_general_tab(array $options)
+    {
+        $section = HyperFields::makeSection('general_settings', 'General Settings')
+            ->set_description('Configure which hypermedia library to use and CDN loading preferences.');
+
+        // API Endpoint URL (read-only)
+        $api_url = home_url('/' . HMAPI_ENDPOINT . '/' . HMAPI_ENDPOINT_VERSION . '/');
+        $section->add_field(
+            HyperFields::makeField('html', 'api_url_display', 'Hypermedia API Endpoint')
+                ->set_html(sprintf(
+                    '<div class="field hmapi-api-url">
+    <div class="api-url-header">
+        <strong>%s</strong>
+        <button type="button" class="button button-secondary copy-api-url" data-clipboard-text="%s">%s</button>
+    </div>
+    <div class="api-url-container">
+        <code class="api-url-code">%s</code>
+    </div>
+    <p class="description">%s</p>
+</div>',
+                    esc_html__('API Endpoint URL:', 'api-for-htmx'),
+                    esc_attr($api_url),
+                    esc_html__('Copy URL', 'api-for-htmx'),
+                    esc_url($api_url),
+                    esc_html__('Use this base URL to make requests to the hypermedia API endpoints from your frontend code.', 'api-for-htmx')
+                ))
+        );
+
+        // Active Library Selection
+        $section->add_field(
+            HyperFields::makeField('select', 'active_library', 'Active Hypermedia Library')
+                ->set_options([
+                    'htmx' => 'HTMX',
+                    'alpinejs' => 'Alpine Ajax',
+                    'datastar' => 'Datastar',
+                ])
+                ->set_default($options['active_library'] ?? 'htmx')
+                ->set_description('Select the primary hypermedia library to activate and configure.')
+        );
+
+        // CDN Loading
+        $section->add_field(
+            HyperFields::makeField('checkbox', 'load_from_cdn', 'Load active library from CDN')
+                ->set_default($options['load_from_cdn'] ?? false)
+                ->set_description('Load libraries from CDN for better performance, or disable to use local copies for version consistency.')
+        );
+
+        return [$section];
+    }
+
+    private function build_htmx_tab(array $options)
+    {
+        $section = HyperFields::makeSection('htmx_settings', 'HTMX Settings')
+            ->set_description('Configure HTMX-specific settings and features.');
+
+        $section->add_field(
+            HyperFields::makeField('checkbox', 'load_hyperscript', 'Load Hyperscript with HTMX')
+                ->set_default($options['load_hyperscript'] ?? true)
+                ->set_description('Automatically load Hyperscript when HTMX is active.')
+        );
+
+        $section->add_field(
+            HyperFields::makeField('checkbox', 'load_alpinejs_with_htmx', 'Load Alpine.js with HTMX')
+                ->set_default($options['load_alpinejs_with_htmx'] ?? false)
+                ->set_description('Load Alpine.js alongside HTMX for enhanced interactivity.')
+        );
+
+        $section->add_field(
+            HyperFields::makeField('checkbox', 'set_htmx_hxboost', 'Enable hx-boost on body')
+                ->set_default($options['set_htmx_hxboost'] ?? false)
+                ->set_description('Automatically add `hx-boost="true"` to the `<body>` tag for progressive enhancement.')
+        );
+
+        $section->add_field(
+            HyperFields::makeField('checkbox', 'load_htmx_backend', 'Load HTMX in WP Admin')
+                ->set_default($options['load_htmx_backend'] ?? false)
+                ->set_description('Enable HTMX functionality within the WordPress admin area.')
+        );
+
+        // HTMX Extensions
+        $extensions_section = HyperFields::makeSection('htmx_extensions', 'HTMX Extensions')
+            ->set_description('Enable specific HTMX extensions for enhanced functionality.');
+
+        $available_extensions = $this->get_htmx_extensions();
+        foreach ($available_extensions as $key => $details) {
+            $extensions_section->add_field(
+                HyperFields::makeField('checkbox', 'load_extension_' . $key, $details['label'])
+                    ->set_default($options['load_extension_' . $key] ?? false)
+                    ->set_description($details['description'])
             );
         }
+
+        return [$section, $extensions_section];
     }
 
-    /**
-     * Render fallback settings page.
-     * Uses WP Settings library render method if available, otherwise shows basic page.
-     *
-     * @since 2023-11-22
-     *
-     * @return void
-     */
-    public function render_fallback_page()
+    private function build_alpine_tab(array $options)
     {
-        if (isset($this->settings)) {
-            $this->settings->render();
+        $section = HyperFields::makeSection('alpine_settings', 'Alpine Ajax Settings')
+            ->set_description('Configure Alpine Ajax-specific settings.');
 
-            // Add our settings footer: active instance, proudly brought to you by Actitud Studio
-            $plugin_info_html = $this->get_plugin_info_html(false);
-            echo $plugin_info_html;
-        } else {
-            echo '<div class="wrap">';
-            echo '<h1>' . esc_html__('HyperPress Options', 'api-for-htmx') . '</h1>';
-            echo '<p>' . esc_html__('Settings are loading... If this message persists, please refresh the page.', 'api-for-htmx') . '</p>';
-            echo '</div>';
-        }
+        $section->add_field(
+            HyperFields::makeField('checkbox', 'load_alpinejs_backend', 'Load Alpine.js in WP Admin')
+                ->set_default($options['load_alpinejs_backend'] ?? false)
+                ->set_description('Enable Alpine.js functionality within the WordPress admin area.')
+        );
+
+        return [$section];
     }
 
-    /**
-     * Enqueue admin-specific JavaScript files.
-     * Loads JavaScript only on the plugin's settings page for enhanced functionality.
-     *
-     * @since 2023-11-22
-     *
-     * @param string $hook_suffix Current admin page hook suffix.
-     *
-     * @return void
-     */
-    public function enqueue_admin_scripts($hook_suffix)
+    private function build_datastar_tab(array $options)
     {
-        // The hook_suffix for our page is 'settings_page_hypermedia-api-options'
-        // We also need to check our manually added page's hook suffix.
-        if ($hook_suffix === 'settings_page_hypermedia-api-options' || $hook_suffix === $this->hook_suffix) {
-            wp_enqueue_script(
-                'hmapi-admin-options',
-                plugin_dir_url(__FILE__) . 'assets/js/admin-options.js',
-                [], // No dependencies
-                HMAPI_VERSION, // Cache busting
-                true // Load in footer
-            );
-        }
+        $section = HyperFields::makeSection('datastar_settings', 'Datastar Settings')
+            ->set_description('Datastar automatically loads when selected as the active library. Configure backend loading below.');
+
+        $section->add_field(
+            HyperFields::makeField('checkbox', 'load_datastar_backend', 'Load Datastar in WP Admin')
+                ->set_default($options['load_datastar_backend'] ?? false)
+                ->set_description('Enable Datastar functionality within the WordPress admin area.')
+        );
+
+        // Datastar SDK Status
+        $sdk_status = $this->datastar_manager->get_sdk_status($options);
+        $section->add_field(
+            HyperFields::makeField('html', 'datastar_sdk_status', 'Datastar PHP SDK Status')
+                ->set_html($sdk_status['html'])
+        );
+
+        return [$section];
     }
 
-    /**
-     * Get available HTMX extensions with descriptions using centralized URL management.
-     *
-     * @since 2023-11-22
-     * @return array
-     */
+    private function build_about_tab(array $options)
+    {
+        $section = HyperFields::makeSection('about_info', 'About')
+            ->set_description('Information about the Hypermedia API plugin.');
+
+        $section->add_field(
+            HyperFields::makeField('html', 'about_content', 'About Hypermedia API')
+                ->set_html(sprintf(
+                '<div class="hmapi-about-content">
+                        <p>%s</p>
+                        <p>%s</p>
+                        <p>%s</p>
+                        <h3>%s</h3>
+                        <ul>
+                            <li><strong>%s</strong> - %s</li>
+                            <li><strong>%s</strong> - %s</li>
+                        </ul>
+                        <p><a href="https://htmx.org" target="_blank" rel="noopener">%s</a> |
+                        <a href="https://alpinejs.dev" target="_blank" rel="noopener">%s</a> |
+                        <a href="https://data-star.org" target="_blank" rel="noopener">%s</a></p>
+                    </div>',
+                esc_html__('The Hypermedia API plugin provides a modern, declarative approach to building interactive WordPress sites using hypermedia principles.', 'api-for-htmx'),
+                esc_html__('It supports multiple libraries including HTMX, Alpine Ajax, and Datastar, allowing you to choose the best tool for your project.', 'api-for-htmx'),
+                esc_html__('All libraries are automatically loaded with proper versioning and CDN support.', 'api-for-htmx'),
+                esc_html__('Key Features:', 'api-for-htmx'),
+                esc_html__('REST API Endpoints', 'api-for-htmx'),
+                esc_html__('Pre-built endpoints for common WordPress data', 'api-for-htmx'),
+                esc_html__('Frontend Libraries', 'api-for-htmx'),
+                esc_html__('Automatic loading with CDN support', 'api-for-htmx'),
+                esc_html__('HTMX Documentation', 'api-for-htmx'),
+                esc_html__('Alpine.js Documentation', 'api-for-htmx'),
+                esc_html__('Datastar Documentation', 'api-for-htmx')
+                ))
+        );
+
+        $system_info = $this->get_system_information();
+        $section2 = HyperFields::makeSection('system_info', 'System Information')
+            ->set_description('Technical details about your WordPress installation and plugin configuration.');
+
+        $section2->add_field(
+            HyperFields::makeField('html', 'system_information', 'System Information')
+                ->set_html($this->render_system_info($system_info))
+        );
+
+        $section = HyperFields::makeSection('about_info', 'About')
+            ->set_description('Information about the Hypermedia API plugin.');
+
+        $section->add_field(
+            HyperFields::makeField('html', 'about_content', 'About Hypermedia API')
+                ->set_html(sprintf(
+                    '<div class="hmapi-about-content">
+                    <p>%s</p>
+                    <p>%s</p>
+                    <p>%s</p>
+                    <h3>%s</h3>
+                    <ul>
+                        <li><strong>%s</strong> - %s</li>
+                        <li><strong>%s</strong> - %s</li>
+                    </ul>
+                    <p><a href="https://htmx.org" target="_blank" rel="noopener">%s</a> |
+                    <a href="https://alpinejs.dev" target="_blank" rel="noopener">%s</a> |
+                    <a href="https://data-star.org" target="_blank" rel="noopener">%s</a></p>
+                </div>',
+                    esc_html__('The Hypermedia API plugin provides a modern, declarative approach to building interactive WordPress sites using hypermedia principles.', 'api-for-htmx'),
+                    esc_html__('It supports multiple libraries including HTMX, Alpine Ajax, and Datastar, allowing you to choose the best tool for your project.', 'api-for-htmx'),
+                    esc_html__('All libraries are automatically loaded with proper versioning and CDN support.', 'api-for-htmx'),
+                    esc_html__('Key Features:', 'api-for-htmx'),
+                    esc_html__('REST API Endpoints', 'api-for-htmx'),
+                    esc_html__('Pre-built endpoints for common WordPress data', 'api-for-htmx'),
+                    esc_html__('Frontend Libraries', 'api-for-htmx'),
+                    esc_html__('Automatic loading with CDN support', 'api-for-htmx'),
+                    esc_html__('HTMX Documentation', 'api-for-htmx'),
+                    esc_html__('Alpine.js Documentation', 'api-for-htmx'),
+                    esc_html__('Datastar Documentation', 'api-for-htmx')
+                ))
+        );
+
+        $system_info = $this->get_system_information();
+        $section2 = HyperFields::makeSection('system_info', 'System Information')
+            ->set_description('Technical details about your WordPress installation and plugin configuration.');
+
+        $section2->add_field(
+            HyperFields::makeField('html', 'system_information', 'System Information')
+                ->set_html($this->render_system_info($system_info))
+        );
+
+        return [$section, $section2];
+    }
+
+    private function get_default_options(): array
+    {
+        return [
+            'active_library' => 'htmx',
+            'load_from_cdn' => false,
+            'load_hyperscript' => true,
+            'load_alpinejs_with_htmx' => false,
+            'set_htmx_hxboost' => false,
+            'load_htmx_backend' => false,
+            'load_alpinejs_backend' => false,
+            'load_datastar_backend' => false,
+            'load_extension_sse' => false,
+            'load_extension_head-support' => false,
+            'load_extension_response-targets' => false,
+            'load_extension_loading-states' => false,
+            'load_extension_debug' => false,
+            'load_extension_path-deps' => false,
+            'load_extension_class-tools' => false,
+            'load_extension_multi-swap' => false,
+            'load_extension_includes' => false,
+            'load_extension_json-enc' => false,
+            'load_extension_method-override' => false,
+            'load_extension_morphdom-swap' => false,
+            'load_extension_client-side-templates' => false,
+            'load_extension_preload' => false,
+        ];
+    }
+
+    private function get_current_options(): array
+    {
+        $options = get_option($this->option_name, []);
+
+        return array_merge($this->get_default_options(), $options);
+    }
+
     private function get_htmx_extensions(): array
     {
         return $this->htmx_manager::get_extensions($this->main);
     }
 
-    /**
-     * Load Datastar PHP SDK if available.
-     *
-     * @since 2.0.1
-     * @return bool True if SDK is loaded and available, false otherwise.
-     */
-    private function load_datastar_sdk(): bool
+    private function render_system_info(array $system_info): string
     {
-        return $this->datastar_manager::load_sdk();
-    }
+        $html = '<div class="hmapi-system-info"><table class="widefat">';
+        $html .= '<thead><tr><th>Setting</th><th>Value</th></tr></thead><tbody>';
 
-    /**
-     * Initialize settings page sections and fields.
-     * Registers all settings fields, sections, and tabs using WPSettings library.
-     *
-     * @since 2023-11-22
-     *
-     * @return void
-     */
-    public function page_init()
-    {
-        $options = $this->main->assets_manager->get_options();
-        $this->settings = new WPSettings(esc_html__('HyperPress Options', 'api-for-htmx'), 'hypermedia-api-options');
-        $this->settings->set_option_name($this->option_name);
-        $this->settings->set_menu_parent_slug('options-general.php');
-        $this->settings->set_menu_title(esc_html__('HyperPress', 'api-for-htmx'));
-
-        // --- General Tab (Always Visible) ---
-        $general_tab = $this->settings->add_tab(esc_html__('General Settings', 'api-for-htmx'));
-        $general_section = $general_tab->add_section(esc_html__('General Settings', 'api-for-htmx'), [
-            'description' => esc_html__('Configure which hypermedia library to use and CDN loading preferences.', 'api-for-htmx'),
-        ]);
-
-        $api_url = home_url('/' . HMAPI_ENDPOINT . '/' . HMAPI_ENDPOINT_VERSION . '/');
-        $general_section->add_option('display', [
-            'name' => 'api_url_info',
-            'api_url' => $api_url,
-            'title' => esc_html__('HyperPress API Endpoint', 'api-for-htmx'),
-            'description' => esc_html__('Use this base URL to make requests to the HyperPress API endpoints from your frontend code.', 'api-for-htmx'),
-        ]);
-
-        $general_section->add_option('select', [
-            'name' => 'active_library',
-            'label' => esc_html__('Active Hypermedia Library', 'api-for-htmx'),
-            'description' => esc_html__('Select the primary hypermedia library to activate and configure. The page will reload to show relevant settings.', 'api-for-htmx'),
-            'options' => [
-                'htmx'     => esc_html__('HTMX', 'api-for-htmx'),
-                'alpinejs' => esc_html__('Alpine Ajax', 'api-for-htmx'),
-                'datastar' => esc_html__('Datastar', 'api-for-htmx'),
-            ],
-            'default' => $options['active_library'] ?? 'htmx',
-        ]);
-
-        $general_section->add_option('checkbox', [
-            'name' => 'load_from_cdn',
-            'label' => esc_html__('Load active library from CDN', 'api-for-htmx'),
-            'description' => esc_html__('Load libraries from CDN for better performance, or disable to use local copies for version consistency.', 'api-for-htmx'),
-            'default' => $options['load_from_cdn'] ?? false,
-        ]);
-
-        // --- Library-Specific Tabs (Conditionally Visible) ---
-        // Check for a submitted value first to ensure the UI updates immediately after a change,
-        // otherwise fall back to the saved option.
-        $active_library = isset($_POST['hmapi_options']['active_library']) ?
-            sanitize_text_field($_POST['hmapi_options']['active_library']) : ($options['active_library'] ?? 'htmx');
-
-        if ($active_library === 'htmx') {
-            $htmx_tab = $this->settings->add_tab(esc_html__('HTMX Settings', 'api-for-htmx'));
-            $htmx_section = $htmx_tab->add_section(esc_html__('HTMX Core Settings', 'api-for-htmx'), [
-                'description' => esc_html__('Configure HTMX-specific settings and features.', 'api-for-htmx'),
-            ]);
-            $extensions_section = $htmx_tab->add_section(esc_html__('HTMX Extensions', 'api-for-htmx'), [
-                'description' => esc_html__('Enable specific HTMX extensions for enhanced functionality.', 'api-for-htmx'),
-            ]);
-
-            $htmx_section->add_option('checkbox', [
-                'name' => 'load_hyperscript',
-                'label' => esc_html__('Load Hyperscript with HTMX', 'api-for-htmx'),
-                'description' => esc_html__('Automatically load Hyperscript when HTMX is active.', 'api-for-htmx'),
-                'default' => $options['load_hyperscript'] ?? true,
-            ]);
-            $htmx_section->add_option('checkbox', [
-                'name' => 'load_alpinejs_with_htmx',
-                'label' => esc_html__('Load Alpine.js with HTMX', 'api-for-htmx'),
-                'description' => esc_html__('Load Alpine.js alongside HTMX for enhanced interactivity.', 'api-for-htmx'),
-                'default' => $options['load_alpinejs_with_htmx'] ?? false,
-            ]);
-            $htmx_section->add_option('checkbox', [
-                'name' => 'set_htmx_hxboost',
-                'label' => esc_html__('Enable hx-boost on body', 'api-for-htmx'),
-                'description' => esc_html__('Automatically add `hx-boost="true"` to the `<body>` tag for progressive enhancement.', 'api-for-htmx'),
-                'default' => $options['set_htmx_hxboost'] ?? false,
-            ]);
-            $htmx_section->add_option('checkbox', [
-                'name' => 'load_htmx_backend',
-                'label' => esc_html__('Load HTMX in WP Admin', 'api-for-htmx'),
-                'description' => esc_html__('Enable HTMX functionality within the WordPress admin area.', 'api-for-htmx'),
-                'default' => $options['load_htmx_backend'] ?? false,
-            ]);
-
-            $available_extensions = $this->get_htmx_extensions();
-            foreach ($available_extensions as $key => $details) {
-                $extensions_section->add_option('checkbox', [
-                    'name' => 'load_extension_' . $key,
-                    'label' => esc_html($details['label']),
-                    'description' => esc_html($details['description']),
-                    'default' => $options['load_extension_' . $key] ?? false,
-                ]);
-            }
-        } elseif ($active_library === 'alpinejs') {
-            $alpinejs_tab = $this->settings->add_tab(esc_html__('Alpine Ajax Settings', 'api-for-htmx'));
-            $alpinejs_section = $alpinejs_tab->add_section(esc_html__('Alpine Ajax Settings', 'api-for-htmx'), [
-                'description' => esc_html__('Alpine.js automatically loads when selected as the active library. Configure backend loading below.', 'api-for-htmx'),
-            ]);
-
-            $alpinejs_section->add_option('checkbox', [
-                'name' => 'load_alpinejs_backend',
-                'label' => esc_html__('Load Alpine Ajax in WP Admin', 'api-for-htmx'),
-                'description' => esc_html__('Enable Alpine Ajax functionality within the WordPress admin area.', 'api-for-htmx'),
-                'default' => $options['load_alpinejs_backend'] ?? false,
-            ]);
-        } elseif ($active_library === 'datastar') {
-            $datastar_tab = $this->settings->add_tab(esc_html__('Datastar Settings', 'api-for-htmx'));
-            $datastar_section = $datastar_tab->add_section(esc_html__('Datastar Settings', 'api-for-htmx'), [
-                'description' => esc_html__('Datastar automatically loads when selected as the active library. Configure backend loading below.', 'api-for-htmx'),
-            ]);
-
-            $datastar_section->add_option('checkbox', [
-                'name' => 'load_datastar_backend',
-                'label' => esc_html__('Load Datastar in WP Admin', 'api-for-htmx'),
-                'description' => esc_html__('Enable Datastar functionality within the WordPress admin area.', 'api-for-htmx'),
-                'default' => $options['load_datastar_backend'] ?? false,
-            ]);
-
-            // Add Datastar SDK status section
-            $sdk_section = $datastar_tab->add_section(esc_html__('Datastar PHP SDK Status', 'api-for-htmx'));
-
-            $sdk_status = $this->datastar_manager->get_sdk_status($options);
-
-            $sdk_section->add_option('display', [
-                'name' => 'datastar_sdk_status',
-                'html' => $sdk_status['html'],
-            ]);
+        foreach ($system_info as $key => $value) {
+            $html .= sprintf(
+                '<tr><td><strong>%s</strong></td><td>%s</td></tr>',
+                esc_html($key),
+                esc_html($value)
+            );
         }
 
-        // --- About Tab (Always Visible) ---
-        $about_tab = $this->settings->add_tab(esc_html__('About', 'api-for-htmx'));
-        $about_section = $about_tab->add_section(esc_html__('About', 'api-for-htmx'), [
-            'description' => esc_html__('Designed for developers, HyperPress brings the power and simplicity of hypermedia to your WordPress projects. It seamlessly integrates popular libraries like HTMX, Alpine AJAX, and Datastar, empowering you to create rich, dynamic user interfaces without the complexity of traditional JavaScript frameworks.', 'api-for-htmx') . '<br>' .
-                esc_html__('Adds a new endpoint /wp-html/v1/ from which you can load any hypermedia template.', 'api-for-htmx') . '<br><br>' .
-                esc_html__('At its core, hypermedia is an approach that empowers you to build modern, dynamic applications by extending the capabilities of HTML. Libraries like HTMX, Alpine AJAX, and Datastar allow you to harness advanced browser technologies—such as AJAX, WebSockets, and Server-Sent Events, simply by adding special attributes to your HTML, minimizing or eliminating the need for a complex JavaScript layer.', 'api-for-htmx') . '<br><br>' .
-                esc_html__('Plugin repository and documentation:', 'api-for-htmx') . ' <a href="https://github.com/EstebanForge/HyperPress" target="_blank">https://github.com/EstebanForge/HyperPress</a>',
-        ]);
+        $html .= '</tbody></table></div>';
 
-        $system_info_section = $about_tab->add_section(esc_html__('System Information', 'api-for-htmx'), [
-            'description' => esc_html__('General information about your WordPress installation and this plugin status.', 'api-for-htmx'),
-        ]);
-
-        $system_info_section->add_option('display', [
-            'name' => 'system_information',
-            'debug_data' => $this->get_system_information(),
-        ]);
-
-        $this->settings->add_option('display', [
-            'name' => 'plugin_info',
-            'html' => $this->get_plugin_info_html(),
-        ]);
-
-        $this->settings->make();
+        return $html;
     }
 
-    /**
-     * Get system information for the debug table.
-     *
-     * @since 2.0.3
-     * @return array
-     */
     private function get_system_information(): array
     {
-        $options = $this->main->get_options();
+        global $wp_version;
 
-        $system_info = [
-            'WordPress Version' => get_bloginfo('version'),
-            'PHP Version'       => PHP_VERSION,
-            'Plugin Version'    => HMAPI_VERSION,
-            'Active Library'    => ucfirst($options['active_library'] ?? 'htmx'),
+        return [
+            'WordPress Version' => $wp_version,
+            'PHP Version' => PHP_VERSION,
+            'Plugin Version' => HMAPI_VERSION,
+            'Active Library' => get_option('hmapi_options')['active_library'] ?? 'htmx',
+            'REST API Base' => home_url('/' . HMAPI_ENDPOINT . '/' . HMAPI_ENDPOINT_VERSION . '/'),
+            'Library Mode' => hm_is_library_mode() ? 'Yes' : 'No',
+            'CDN Loading' => get_option('hmapi_options')['load_from_cdn'] ?? false ? 'Enabled' : 'Disabled',
         ];
-
-        if (($options['active_library'] ?? 'htmx') === 'datastar') {
-            $sdk_status = $this->datastar_manager->get_sdk_status($options);
-            $sdk_status_text = $sdk_status['loaded'] ?
-                sprintf('Available (v%s)', esc_html($sdk_status['version'])) :
-                esc_html__('Not Available', 'api-for-htmx');
-            $system_info['Datastar SDK'] = $sdk_status_text;
-        }
-
-        return $system_info;
     }
 
-    /**
-     * Add link to plugins settings page on plugins list page.
-     *
-     * @param array $links
-     *
-     * @return array
-     */
-    public function plugin_action_links($links)
+    public function plugin_action_links(array $links): array
     {
         $links[] = '<a href="' . esc_url(admin_url('options-general.php?page=hypermedia-api-options')) . '">' . esc_html__('Settings', 'api-for-htmx') . '</a>';
 
         return $links;
     }
 
-    /**
-     * Generate plugin information HTML.
-     *
-     * Creates the standardized plugin information display including active instance
-     * and attribution that appears throughout the admin interface.
-     *
-     * @since 2.0.0
-     *
-     * @param bool $detailed Whether to show detailed debug information.
-     *
-     * @return string The generated HTML for the plugin information display.
-     */
-    private function get_plugin_info_html(bool $detailed = false): string
+    public function enqueue_admin_scripts(string $hook_suffix): void
     {
-        $plugin_info_html = '<div class="hmapi-plugin-info-footer"><p>';
-
-        // Get active instance information
-        $main_instance = $this->main;
-        if ($main_instance) {
-            $reflection = new \ReflectionClass($main_instance);
-            $real_instance_path = $reflection->getFileName();
-            $real_plugin_dir = defined('WP_PLUGIN_DIR') ? wp_normalize_path(WP_PLUGIN_DIR) : '';
-
-            if (hm_is_library_mode()) {
-                $instance_type = esc_html__('Library', 'api-for-htmx');
-            } else {
-                $instance_type = esc_html__('Plugin', 'api-for-htmx');
-            }
-
-            $plugin_info_html .= '<strong>' . esc_html__('Active Instance:', 'api-for-htmx') . '</strong> ' .
-                $instance_type . ' v' . esc_html(HMAPI_LOADED_VERSION) . '<br/>';
-
-            // Add debug information if in detailed mode and WP_DEBUG is enabled
-            if ($detailed && defined('WP_DEBUG') && WP_DEBUG) {
-                $expected_plugin_path = '';
-                $instance_basename = '';
-                if ($real_instance_path && $real_plugin_dir) {
-                    $real_instance_path_norm = wp_normalize_path($real_instance_path);
-                    $expected_plugin_path = $real_plugin_dir . '/' . HMAPI_BASENAME;
-                    $instance_basename = str_starts_with($real_instance_path_norm, $real_plugin_dir) ?
-                        plugin_basename($real_instance_path) :
-                        basename(dirname($real_instance_path)) . '/' . basename($real_instance_path);
-                }
-
-                $plugin_info_html .= '<br/><small style="font-family: monospace; color: #666;">';
-                $plugin_info_html .= '<strong>Debug Info:</strong><br/>';
-                $plugin_info_html .= 'Instance Path: ' . esc_html($real_instance_path ?? 'N/A') . '<br/>';
-                $plugin_info_html .= 'Plugin Dir: ' . esc_html($real_plugin_dir ?? 'N/A') . '<br/>';
-                $plugin_info_html .= 'Expected Path: ' . esc_html($expected_plugin_path ?? 'N/A') . '<br/>';
-                $plugin_info_html .= 'Instance Basename: ' . esc_html($instance_basename ?? 'N/A') . '<br/>';
-                $plugin_info_html .= 'HMAPI_BASENAME: ' . esc_html(HMAPI_BASENAME) . '<br/>';
-                $plugin_info_html .= '</small>';
-            }
-        }
-
-        if (!$detailed) {
-            $plugin_info_html .= sprintf(
-                esc_html__('Proudly brought to you by %s.', 'api-for-htmx'),
-                '<a href="https://actitud.xyz" target="_blank">' . esc_html__('Actitud Studio', 'api-for-htmx') . '</a>'
+        if ($hook_suffix === 'settings_page_hypermedia-api-options') {
+            wp_enqueue_style(
+                'hmapi-admin-options',
+                plugin_dir_url(__FILE__) . 'assets/css/admin-options.css',
+                [],
+                HMAPI_VERSION
             );
+
+            wp_enqueue_script(
+                'hmapi-admin-options',
+                plugin_dir_url(__FILE__) . 'assets/js/admin-options.js',
+                ['jquery'],
+                HMAPI_VERSION,
+                true
+            );
+
+            wp_localize_script('hmapi-admin-options', 'hmapiOptions', [
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('hmapi_options'),
+            ]);
         }
-
-        $plugin_info_html .= '</p></div>';
-
-        return $plugin_info_html;
     }
 }

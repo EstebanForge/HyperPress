@@ -1,5 +1,19 @@
 # Changelog
 
+# 2.1.0 / 2025-XX-YY
+- **NEW:** **HyperBlocks** - Revolutionary PHP-based block creation system with **two complementary approaches**
+  - **Fluent API**: Carbon Fields-style PHP-only block development (no JavaScript required)
+  - **block.json**: WordPress-standard JSON blocks (no custom JavaScript required)
+  - **Unified Editor**: Both approaches use the same React editor component for consistent UX
+  - **Zero JavaScript**: Build complex Gutenberg blocks using only PHP
+- **NEW:** Auto-discovery system for blocks in `/hyperblocks/` directories
+- **NEW:** Server-side rendering engine with secure PHP template execution
+- **NEW:** Custom component system with `<RichText>` and `<InnerBlocks>` support
+- **NEW:** REST API endpoints for dynamic block field definitions and live previews
+- **NEW:** Reusable field groups for consistent block development
+- **NEW:** Comprehensive documentation and demo blocks included
+- **NEW:** Backward compatible with existing WordPress block ecosystem
+
 # 2.0.7 / 2025-08-02
 - **IMPROVEMENT:** Added a `hmapi/before_template_load` action hook that fires before each hypermedia template is loaded, providing a centralized point for common template preparation logic. Thanks @eduwass.
 - **FIX:** Added `stripslashes_deep()` to the `hm_ds_read_signals()` function to remove WordPress "magic quotes" slashes from GET requests, ensuring proper JSON decoding for Datastar signals. Thanks @eduwass.

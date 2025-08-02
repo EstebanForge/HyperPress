@@ -7,17 +7,13 @@ namespace HMApi\Composer\Autoload;
 class ComposerStaticInit8fdab5c4c154ad8745577288bf43f397
 {
     public static $files = array (
-        '765877c22806cd3aae73f7162b2a69d7' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/helpers.php',
-        '09cf3936aa2ba06d40dd63bf48b69aca' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/helpers.php',
-        '0b3972c8fa41f32090bbf90aec8eea24' => __DIR__ . '/../..' . '/bootstrap.php',
+        '16384c332de4c1779a45fa95a6930f09' => __DIR__ . '/../..' . '/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'H' => 
         array (
             'HMApi\\starfederation\\datastar\\' => 30,
-            'HMApi\\Jeffreyvr\\WPSettings\\' => 27,
-            'HMApi\\Adbar\\' => 12,
             'HMApi\\' => 6,
         ),
     );
@@ -26,14 +22,6 @@ class ComposerStaticInit8fdab5c4c154ad8745577288bf43f397
         'HMApi\\starfederation\\datastar\\' => 
         array (
             0 => __DIR__ . '/..' . '/starfederation/datastar-php/src',
-        ),
-        'HMApi\\Jeffreyvr\\WPSettings\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src',
-        ),
-        'HMApi\\Adbar\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/adbario/php-dot-notation/src',
         ),
         'HMApi\\' => 
         array (
@@ -47,12 +35,33 @@ class ComposerStaticInit8fdab5c4c154ad8745577288bf43f397
         'HMApi\\Adbar\\Dot' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/Dot.php',
         'HMApi\\Admin\\Activation' => __DIR__ . '/../..' . '/src/Admin/Activation.php',
         'HMApi\\Admin\\Options' => __DIR__ . '/../..' . '/src/Admin/Options.php',
-        'HMApi\\Admin\\WPSettingsOptions' => __DIR__ . '/../..' . '/src/Admin/WPSettingsOptions.php',
+        'HMApi\\Admin\\OptionsMigration' => __DIR__ . '/../..' . '/src/Admin/OptionsMigration.php',
         'HMApi\\Assets' => __DIR__ . '/../..' . '/src/Assets.php',
+        'HMApi\\Blocks\\Block' => __DIR__ . '/../..' . '/src/Blocks/Block.php',
+        'HMApi\\Blocks\\Field' => __DIR__ . '/../..' . '/src/Blocks/Field.php',
+        'HMApi\\Blocks\\FieldGroup' => __DIR__ . '/../..' . '/src/Blocks/FieldGroup.php',
+        'HMApi\\Blocks\\Registry' => __DIR__ . '/../..' . '/src/Blocks/Registry.php',
+        'HMApi\\Blocks\\Renderer' => __DIR__ . '/../..' . '/src/Blocks/Renderer.php',
+        'HMApi\\Blocks\\RestApi' => __DIR__ . '/../..' . '/src/Blocks/RestApi.php',
         'HMApi\\Compatibility' => __DIR__ . '/../..' . '/src/Compatibility.php',
         'HMApi\\Composer\\Autoload\\ClassLoader' => __DIR__ . '/..' . '/composer/ClassLoader.php',
         'HMApi\\Composer\\Autoload\\ComposerStaticInit8fdab5c4c154ad8745577288bf43f397' => __DIR__ . '/..' . '/composer/autoload_static.php',
         'HMApi\\Config' => __DIR__ . '/../..' . '/src/Config.php',
+        'HMApi\\Fields\\BlockFieldAdapter' => __DIR__ . '/../..' . '/src/Fields/BlockFieldAdapter.php',
+        'HMApi\\Fields\\ConditionalLogic' => __DIR__ . '/../..' . '/src/Fields/ConditionalLogic.php',
+        'HMApi\\Fields\\CustomField' => __DIR__ . '/../..' . '/src/Fields/CustomField.php',
+        'HMApi\\Fields\\Field' => __DIR__ . '/../..' . '/src/Fields/Field.php',
+        'HMApi\\Fields\\HyperFields' => __DIR__ . '/../..' . '/src/Fields/HyperFields.php',
+        'HMApi\\Fields\\OptionField' => __DIR__ . '/../..' . '/src/Fields/OptionField.php',
+        'HMApi\\Fields\\OptionsPage' => __DIR__ . '/../..' . '/src/Fields/OptionsPage.php',
+        'HMApi\\Fields\\OptionsSection' => __DIR__ . '/../..' . '/src/Fields/OptionsSection.php',
+        'HMApi\\Fields\\PostField' => __DIR__ . '/../..' . '/src/Fields/PostField.php',
+        'HMApi\\Fields\\Registry' => __DIR__ . '/../..' . '/src/Fields/Registry.php',
+        'HMApi\\Fields\\RepeaterField' => __DIR__ . '/../..' . '/src/Fields/RepeaterField.php',
+        'HMApi\\Fields\\TabsField' => __DIR__ . '/../..' . '/src/Fields/TabsField.php',
+        'HMApi\\Fields\\TemplateLoader' => __DIR__ . '/../..' . '/src/Fields/TemplateLoader.php',
+        'HMApi\\Fields\\TermField' => __DIR__ . '/../..' . '/src/Fields/TermField.php',
+        'HMApi\\Fields\\UserField' => __DIR__ . '/../..' . '/src/Fields/UserField.php',
         'HMApi\\Jeffreyvr\\WPSettings\\EnqueueManager' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/EnqueueManager.php',
         'HMApi\\Jeffreyvr\\WPSettings\\Enqueuer' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Enqueuer.php',
         'HMApi\\Jeffreyvr\\WPSettings\\Error' => __DIR__ . '/..' . '/jeffreyvanrossum/wp-settings/src/Error.php',
