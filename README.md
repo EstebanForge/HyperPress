@@ -1268,7 +1268,7 @@ add_filter('hmapi/assets/htmx_url', function($url, $load_from_cdn, $asset, $is_l
         $plugin_path = plugin_dir_path(__FILE__);
         if (strpos($plugin_path, '/vendor-custom/') !== false) {
             $custom_url = str_replace(WP_CONTENT_DIR, WP_CONTENT_URL, $plugin_path);
-            return $custom_url . 'assets/js/libs/htmx.min.js';
+            return $custom_url . 'assets/libs/htmx.min.js';
         }
     }
     return $url;

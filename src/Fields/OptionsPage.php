@@ -16,6 +16,8 @@ class OptionsPage
     private array $sections = [];
     private array $fields = [];
     private string $option_name = 'hmapi_options';
+    private array $option_values = [];
+    private array $default_values = [];
 
     public static function make(string $page_title, string $menu_slug): self
     {
@@ -92,6 +94,11 @@ class OptionsPage
     {
         $this->sections[$section->get_id()] = $section;
 
+        // Collect default values from the fields in this section
+        foreach ($section->get_fields() as $field) {
+            $this->default_values[$field->get_name()] = $field->get_default();
+        }
+
         return $this;
     }
 
@@ -104,9 +111,16 @@ class OptionsPage
 
     public function register(): void
     {
+        $this->load_options();
         add_action('admin_menu', [$this, 'add_menu_page']);
         add_action('admin_init', [$this, 'register_settings']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_assets']);
+    }
+
+    private function load_options(): void
+    {
+        $saved_options = get_option($this->option_name, []);
+        $this->option_values = array_merge($this->default_values, $saved_options);
     }
 
     public function add_menu_page(): void
@@ -141,18 +155,15 @@ class OptionsPage
             'sanitize_callback' => [$this, 'sanitize_options'],
         ]);
         
-        // Get option values once for all fields
-        $option_values = get_option($this->option_name, []);
-        
         // Register fields for all sections/tabs, but only register settings fields for the active tab
         $active_tab = $this->get_active_tab();
-        
+
         foreach ($this->sections as $section_id => $section) {
             add_settings_section($section_id, '', '__return_false', $this->option_name);
-            
+
             // Set option values for all fields in all sections
             foreach ($section->get_fields() as $field) {
-                $field->set_option_values($option_values, $this->option_name);
+                $field->set_option_values($this->option_values, $this->option_name);
             }
             
             // Only register settings fields for the active tab
@@ -199,10 +210,9 @@ class OptionsPage
     public function sanitize_options(?array $input): array
     {
         \HMApi\Log::debug('sanitize_options called: input=' . print_r($input, true) . ' option_name=' . $this->option_name);
-        // Get existing options to preserve values from other tabs
-        $existing_options = get_option($this->option_name, []);
-        \HMApi\Log::debug('sanitize_options existing_options: ' . print_r($existing_options, true) . ' option_name=' . $this->option_name);
-        $output = $existing_options;
+        // Use the already loaded options to preserve values from other tabs
+        $output = $this->option_values;
+        \HMApi\Log::debug('sanitize_options existing_options (from property): ' . print_r($output, true) . ' option_name=' . $this->option_name);
         
         // Only process fields from the active tab
         $active_tab = $this->get_active_tab();

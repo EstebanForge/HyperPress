@@ -17,7 +17,7 @@
  */
 
 // Configuration
-define('ASSETS_DIR', 'assets/js/libs');
+define('ASSETS_DIR', 'assets/libs');
 define('EXTENSIONS_DIR', ASSETS_DIR . '/htmx-extensions');
 
 /**

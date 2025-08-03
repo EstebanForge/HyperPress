@@ -16,6 +16,67 @@ namespace HMApi\Fields;
 class HyperFields
 {
     /**
+     * Register an options page from a configuration array.
+     *
+     * @param array $config The configuration array for the options page.
+     * @return void
+     */
+    public static function registerOptionsPage(array $config): void
+    {
+        $options_page = self::makeOptionPage($config['title'], $config['slug']);
+
+        if (isset($config['menu_title'])) {
+            $options_page->set_menu_title($config['menu_title']);
+        }
+        if (isset($config['parent_slug'])) {
+            $options_page->set_parent_slug($config['parent_slug']);
+        }
+        if (isset($config['capability'])) {
+            $options_page->set_capability($config['capability']);
+        }
+        if (isset($config['option_name'])) {
+            $options_page->set_option_name($config['option_name']);
+        }
+
+        if (isset($config['sections']) && is_array($config['sections'])) {
+            foreach ($config['sections'] as $section_config) {
+                if (!isset($section_config['id'], $section_config['title'])) {
+                    continue;
+                }
+
+                $section = $options_page->add_section($section_config['id'], $section_config['title'], $section_config['description'] ?? '');
+
+                if (isset($section_config['fields']) && is_array($section_config['fields'])) {
+                    foreach ($section_config['fields'] as $field_config) {
+                        if (!isset($field_config['type'], $field_config['name'])) {
+                            continue;
+                        }
+
+                        $field = self::makeField($field_config['type'], $field_config['name'], $field_config['label'] ?? '');
+
+                        if (isset($field_config['default'])) {
+                            $field->set_default($field_config['default']);
+                        }
+                        if (isset($field_config['placeholder'])) {
+                            $field->set_placeholder($field_config['placeholder']);
+                        }
+                        if (isset($field_config['help'])) {
+                            $field->set_help($field_config['help']);
+                        }
+                        if (isset($field_config['options'])) {
+                            $field->set_options($field_config['options']);
+                        }
+
+                        $section->add_field($field);
+                    }
+                }
+            }
+        }
+
+        $options_page->register();
+    }
+
+    /**
      * Create an OptionsPage instance.
      *
      * @param string $page_title The title of the page
