@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace HMApi\Admin;
 
 use HMApi\Fields\HyperFields;
-use HMApi\Libraries\AlpineAjaxLib;
-use HMApi\Libraries\DatastarLib;
-use HMApi\Libraries\HTMXLib;
 use HMApi\Main;
 
 // Exit if accessed directly.
@@ -24,17 +21,10 @@ if (!defined('ABSPATH')) {
 class Options
 {
     private string $option_name = 'hmapi_options';
-    private Main $main;
-    private HTMXLib $htmx_manager;
-    private AlpineAjaxLib $alpine_ajax_manager;
-    private DatastarLib $datastar_manager;
 
     public function __construct(Main $main)
     {
         $this->main = $main;
-        $this->datastar_manager = new DatastarLib($main);
-        $this->htmx_manager = new HTMXLib($main);
-        $this->alpine_ajax_manager = new AlpineAjaxLib($main);
 
         // Initialize the options page using HyperFields system
         add_action('init', [$this, 'init_options_page']);
@@ -208,34 +198,6 @@ class Options
                     ],
                 ],
             ],
-        ];
-    }
-
-    private function get_default_options(): array
-    {
-        return [
-            'active_library' => 'htmx',
-            'load_from_cdn' => false,
-            'load_hyperscript' => true,
-            'load_alpinejs_with_htmx' => false,
-            'set_htmx_hxboost' => false,
-            'load_htmx_backend' => false,
-            'load_alpinejs_backend' => false,
-            'load_datastar_backend' => false,
-            'load_extension_sse' => false,
-            'load_extension_head-support' => false,
-            'load_extension_response-targets' => false,
-            'load_extension_loading-states' => false,
-            'load_extension_debug' => false,
-            'load_extension_path-deps' => false,
-            'load_extension_class-tools' => false,
-            'load_extension_multi-swap' => false,
-            'load_extension_includes' => false,
-            'load_extension_json-enc' => false,
-            'load_extension_method-override' => false,
-            'load_extension_morphdom-swap' => false,
-            'load_extension_client-side-templates' => false,
-            'load_extension_preload' => false,
         ];
     }
 
