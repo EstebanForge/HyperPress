@@ -33,7 +33,8 @@ class Options
 
     public function init_options_page(): void
     {
-        $options = get_option($this->option_name, []);
+        $options = HyperFields::getOptions($this->option_name, []);
+
         $all_sections = array_merge(
             $this->build_general_tab_config(),
             $this->build_htmx_tab_config(),
@@ -223,14 +224,16 @@ class Options
     {
         global $wp_version;
 
+        $options = HyperFields::getOptions($this->option_name);
+
         return [
             'WordPress Version' => $wp_version,
             'PHP Version' => PHP_VERSION,
             'Plugin Version' => HMAPI_VERSION,
-            'Active Library' => get_option('hmapi_options')['active_library'] ?? 'htmx',
+            'Active Library' => $options['active_library'] ?? 'htmx',
             'REST API Base' => home_url('/' . HMAPI_ENDPOINT . '/' . HMAPI_ENDPOINT_VERSION . '/'),
             'Library Mode' => hm_is_library_mode() ? 'Yes' : 'No',
-            'CDN Loading' => get_option('hmapi_options')['load_from_cdn'] ?? false ? 'Enabled' : 'Disabled',
+            'CDN Loading' => !empty($options['load_from_cdn']) ? 'Enabled' : 'Disabled',
         ];
     }
 

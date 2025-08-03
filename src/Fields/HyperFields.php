@@ -161,6 +161,18 @@ class HyperFields
     }
 
     /**
+     * Get all options for a given option name.
+     *
+     * @param string $option_name The name of the option.
+     * @param array  $default     The default value to return if the option is not set.
+     * @return array
+     */
+    public static function getOptions(string $option_name, array $default = []): array
+    {
+        return get_option($option_name, $default);
+    }
+
+    /**
      * Get the value of a field.
      *
      * @param string $option_name The name of the option
