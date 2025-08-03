@@ -182,24 +182,24 @@ class Assets
         // Asset definitions
         $assets_config = [
             'htmx' => [
-                'local_url' => $plugin_url . 'assets/js/libs/htmx.min.js',
-                'local_path' => $plugin_path . 'assets/js/libs/htmx.min.js',
+                'local_url' => $plugin_url . 'assets/libs/htmx.min.js',
+                'local_path' => $plugin_path . 'assets/libs/htmx.min.js',
             ],
             'hyperscript' => [
-                'local_url' => $plugin_url . 'assets/js/libs/_hyperscript.min.js',
-                'local_path' => $plugin_path . 'assets/js/libs/_hyperscript.min.js',
+                'local_url' => $plugin_url . 'assets/libs/_hyperscript.min.js',
+                'local_path' => $plugin_path . 'assets/libs/_hyperscript.min.js',
             ],
             'alpine_core' => [
-                'local_url' => $plugin_url . 'assets/js/libs/alpinejs.min.js',
-                'local_path' => $plugin_path . 'assets/js/libs/alpinejs.min.js',
+                'local_url' => $plugin_url . 'assets/libs/alpinejs.min.js',
+                'local_path' => $plugin_path . 'assets/libs/alpinejs.min.js',
             ],
             'alpine_ajax' => [
-                'local_url' => $plugin_url . 'assets/js/libs/alpine-ajax.min.js',
-                'local_path' => $plugin_path . 'assets/js/libs/alpine-ajax.min.js',
+                'local_url' => $plugin_url . 'assets/libs/alpine-ajax.min.js',
+                'local_path' => $plugin_path . 'assets/libs/alpine-ajax.min.js',
             ],
             'datastar' => [
-                'local_url' => $plugin_url . 'assets/js/libs/datastar.min.js',
-                'local_path' => $plugin_path . 'assets/js/libs/datastar.min.js',
+                'local_url' => $plugin_url . 'assets/libs/datastar.min.js',
+                'local_path' => $plugin_path . 'assets/libs/datastar.min.js',
             ],
         ];
 
@@ -325,8 +325,8 @@ class Assets
 
         // --- HTMX Extensions ---
         if ($htmx_loaded && ($is_admin ? !empty($options['load_htmx_backend']) : $active_library === 'htmx')) {
-            $extensions_dir_local = $plugin_path . 'assets/js/libs/htmx-extensions/';
-            $extensions_dir_url = $plugin_url . 'assets/js/libs/htmx-extensions/';
+            $extensions_dir_local = $plugin_path . 'assets/libs/htmx-extensions/';
+            $extensions_dir_url = $plugin_url . 'assets/libs/htmx-extensions/';
 
             // Filter: Allow developers to override HTMX extensions directory
             $extensions_dir_url = apply_filters('hmapi/htmx_extensions_url', $extensions_dir_url, $extensions_dir_local, $plugin_url, $plugin_path, $is_library_mode);
@@ -380,7 +380,7 @@ class Assets
      * Construct the proper URL for assets when running in library mode.
      *
      * When the plugin is loaded as a Composer library, assets are available at paths like:
-     * wp-content/plugins/some-plugin/vendor-dist/estebanforge/hyperpress/assets/js/libs/
+     * wp-content/plugins/some-plugin/vendor-dist/estebanforge/hyperpress/assets/libs/
      *
      * This method detects the vendor directory {
      *      vendor-dist

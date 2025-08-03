@@ -18,9 +18,7 @@
     "update-datastar": "npm run update-libraries -- --library=datastar",
     "update-all": "npm run update-libraries -- --all",
     "postinstall": "echo '📋 To download all libraries, run: npm run update-all'",
-    "build:editor": "wp-scripts build src/js/editor.js --output-path=assets/js/build",
-    "build:admin": "wp-scripts build src/Admin/assets/js/admin-options.js src/Admin/assets/js/map-field.js --output-path=assets/js",
-    "build": "npm run build:editor && npm run build:admin"
+    "build": "wp-scripts build src/js/editor.js src/js/admin-options.js src/js/map-field.js --output-path=assets/js"
   },
   "devDependencies": {
     "@wordpress/scripts": "^27.6.0",

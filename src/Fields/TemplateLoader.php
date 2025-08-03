@@ -138,14 +138,7 @@ class TemplateLoader
             HMAPI_VERSION
         );
 
-        // Common field scripts
-        wp_enqueue_script(
-            'hmapi-fields',
-            HMAPI_PLUGIN_URL . 'assets/js/fields.js',
-            ['jquery'],
-            HMAPI_VERSION,
-            true
-        );
+
 
         // Localize script
         // Conditionally enqueue assets for specific field types
