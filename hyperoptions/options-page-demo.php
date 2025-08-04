@@ -13,39 +13,56 @@ declare(strict_types=1);
 use HMApi\Fields\HyperFields;
 
 // Example 1: Basic Plugin Options Page
-$plugin_options = HyperFields::makeOptionPage('My Plugin Settings', 'my-plugin-settings')
-    ->set_menu_title('My Plugin')
-    ->set_parent_slug('options-general.php');
+$plugin_options = HyperFields::makeOptionPage(__('My Plugin Settings', 'api-for-htmx'), 'my-plugin-settings')
+    ->set_menu_title(__('My Plugin', 'api-for-htmx'))
+    ->set_parent_slug('options-general.php')
+    ->set_footer_content('<span>' . __('Demo Footer: Powered by HyperFields', 'api-for-htmx') . '</span>');
 
 // Add sections and fields
-$general_section = $plugin_options->add_section('general', 'General Settings', 'Configure basic plugin settings');
+$general_section = $plugin_options->add_section('general', __('General Settings', 'api-for-htmx'), __('Configure basic plugin settings', 'api-for-htmx'));
 $general_section->add_field(
-    HyperFields::makeField('text', 'plugin_title', 'Plugin Title')
-        ->set_default('My Awesome Plugin')
-        ->set_placeholder('Enter plugin title...')
+    HyperFields::makeField('text', 'plugin_title', __('Plugin Title', 'api-for-htmx'))
+        ->set_default(__('My Awesome Plugin', 'api-for-htmx'))
+        ->set_placeholder(__('Enter plugin title...', 'api-for-htmx'))
 );
 
 $general_section->add_field(
-    HyperFields::makeField('textarea', 'plugin_description', 'Plugin Description')
-        ->set_placeholder('Describe your plugin...')
-        ->set_help('This description will appear in the plugin header.')
+    HyperFields::makeField('textarea', 'plugin_description', __('Plugin Description', 'api-for-htmx'))
+        ->set_placeholder(__('Describe your plugin...', 'api-for-htmx'))
+        ->set_help(__('This description will appear in the plugin header.', 'api-for-htmx'))
 );
 
 $general_section->add_field(
-    HyperFields::makeField('color', 'primary_color', 'Primary Color')
+    HyperFields::makeField('color', 'primary_color', __('Primary Color', 'api-for-htmx'))
         ->set_default('#007cba')
-        ->set_help('Choose the primary color for your plugin interface')
+        ->set_help(__('Choose the primary color for your plugin interface', 'api-for-htmx'))
 );
 
 $general_section->add_field(
-    HyperFields::makeField('image', 'plugin_logo', 'Plugin Logo')
-        ->set_help('Recommended size: 300x100px')
+    HyperFields::makeField('image', 'plugin_logo', __('Plugin Logo', 'api-for-htmx'))
+        ->set_help(__('Recommended size: 300x100px', 'api-for-htmx'))
 );
 
 $general_section->add_field(
-    HyperFields::makeField('checkbox', 'enable_feature_x', 'Enable Feature X')
+    HyperFields::makeField('checkbox', 'enable_feature_x', __('Enable Feature X', 'api-for-htmx'))
         ->set_default(true)
-        ->set_help('Turn on the advanced Feature X functionality')
+        ->set_help(__('Turn on the advanced Feature X functionality', 'api-for-htmx'))
+);
+
+// API Endpoint field using helper
+$api_url = hm_get_endpoint_url();
+
+$general_section->add_field(
+    HyperFields::makeField('html', 'api_endpoint', __('API Endpoint', 'api-for-htmx'))
+        ->set_html_content('<div><input type="text" readonly value="' . esc_attr($api_url) . '" style="width:100%" /></div>')
+        ->set_help(__('This is the base API endpoint for your integration.', 'api-for-htmx'))
+);
+
+// HTML/script field demo
+$general_section->add_field(
+    HyperFields::makeField('html', 'custom_script', __('Custom Script Demo', 'api-for-htmx'))
+        ->set_html_content('<button id="demo-btn">' . esc_html__('Click Me', 'api-for-htmx') . '</button><script>document.getElementById("demo-btn").onclick=function(){alert("' . esc_js(__('Hello from HyperFields!', 'api-for-htmx')) . '");}</script>')
+        ->set_help(__('Demo of HTML field with script.', 'api-for-htmx'))
 );
 
 // Example 2: Advanced Settings with Tabs
@@ -117,8 +134,8 @@ $advanced_section->add_field(
 $advanced_section->add_field(
     HyperFields::makeField('number', 'items_per_page', 'Items Per Page')
         ->set_default(10)
-        ->set_min(1)
-        ->set_max(100)
+        // ->set_min(1)
+        // ->set_max(100)
         ->set_conditional_logic([
             'relation' => 'AND',
             'conditions' => [[
@@ -172,8 +189,8 @@ $typography_section->add_field(
 $typography_section->add_field(
     HyperFields::makeField('number', 'base_font_size', 'Base Font Size (px)')
         ->set_default(16)
-        ->set_min(12)
-        ->set_max(24)
+        // ->set_min(12)
+        // ->set_max(24)
 );
 
 // Footer settings
@@ -214,15 +231,15 @@ $dashboard_section->add_field(
 $settings_section = $custom_menu->add_section('settings', 'Plugin Settings', 'Configure your plugin behavior');
 $settings_section->add_field(
     HyperFields::makeField('map', 'business_location', 'Business Location')
-        ->set_map_options([
-            'zoom' => 15,
-            'type' => 'roadmap'
-        ])
+        // ->set_map_options([
+        // 'zoom' => 15,
+        // 'type' => 'roadmap'
+        // ])
 );
 
 $settings_section->add_field(
     HyperFields::makeField('media_gallery', 'gallery_images', 'Gallery Images')
-        ->set_multiple(true)
+        // ->set_multiple(true)
 );
 
 // Register custom menu

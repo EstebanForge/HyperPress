@@ -18,6 +18,7 @@ class OptionsPage
     private string $option_name = 'hmapi_options';
     private array $option_values = [];
     private array $default_values = [];
+    private ?string $footer_content = null;
 
     public static function make(string $page_title, string $menu_slug): self
     {
@@ -73,6 +74,13 @@ class OptionsPage
     public function set_option_name(string $option_name): self
     {
         $this->option_name = $option_name;
+
+        return $this;
+    }
+
+    public function set_footer_content(string $footer_content): self
+    {
+        $this->footer_content = $footer_content;
 
         return $this;
     }
@@ -154,7 +162,7 @@ class OptionsPage
         register_setting($this->option_name, $this->option_name, [
             'sanitize_callback' => [$this, 'sanitize_options'],
         ]);
-        
+
         // Register fields for all sections/tabs, but only register settings fields for the active tab
         $active_tab = $this->get_active_tab();
 
@@ -165,11 +173,11 @@ class OptionsPage
             foreach ($section->get_fields() as $field) {
                 $field->set_option_values($this->option_values, $this->option_name);
             }
-            
+
             // Only register settings fields for the active tab
             if ($section_id === $active_tab) {
                 foreach ($section->get_fields() as $field) {
-                    add_settings_field($field->get_name(), $field->get_label(), [$field, 'render'], $this->option_name, $section_id, $field->get_args());
+                    add_settings_field($field->get_name(), '', [$field, 'render'], $this->option_name, $section_id, $field->get_args());
                 }
             }
         }
@@ -179,7 +187,7 @@ class OptionsPage
     {
         $active_tab = $this->get_active_tab();
         ?>
-        <div class="wrap">
+        <div class="wrap hyperpress hyperpress-options-wrap">
             <h1><?php echo esc_html($this->page_title); ?></h1>
             <?php $this->render_tabs(); ?>
             <form method="post" action="options.php">
@@ -198,11 +206,21 @@ class OptionsPage
                         echo '<p>' . esc_html($section->get_description()) . '</p>';
                     }
                     // Render fields for this section
+                    echo '<div class="hmapi-fields-group">';
                     do_settings_fields($this->option_name, $active_tab);
+                    echo '</div>';
                 }
-                submit_button();
+                submit_button(
+                    esc_html__('Save Changes', 'api-for-htmx'),
+                    'primary'
+                );
                 ?>
             </form>
+            <?php if ($this->footer_content): ?>
+                <div class="hmapi-options-footer">
+                    <?php echo wp_kses_post($this->footer_content); ?>
+                </div>
+            <?php endif; ?>
         </div>
 <?php
     }
@@ -213,11 +231,11 @@ class OptionsPage
         // Use the already loaded options to preserve values from other tabs
         $output = $this->option_values;
         \HMApi\Log::debug('sanitize_options existing_options (from property): ' . print_r($output, true) . ' option_name=' . $this->option_name);
-        
+
         // Only process fields from the active tab
         $active_tab = $this->get_active_tab();
         \HMApi\Log::debug('sanitize_options active_tab: ' . $active_tab);
-        
+
         if (isset($this->sections[$active_tab])) {
             $section = $this->sections[$active_tab];
             // Only update fields for the current tab, preserve all others
@@ -282,5 +300,18 @@ class OptionsPage
         }
 
         TemplateLoader::enqueue_assets();
+
+        // Enqueue admin options JS for HyperFields options pages
+        wp_enqueue_script(
+            'hmapi-admin-options',
+            defined('HMAPI_PLUGIN_URL') ? HMAPI_PLUGIN_URL . 'assets/js/admin-options.js' : '',
+            ['jquery'],
+            defined('HMAPI_VERSION') ? HMAPI_VERSION : '2.0.7',
+            true
+        );
+        wp_localize_script('hmapi-admin-options', 'hmapiOptions', [
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('hmapi_options'),
+        ]);
     }
 }

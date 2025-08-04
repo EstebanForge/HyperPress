@@ -20,7 +20,11 @@ $help = $field_data['help'] ?? '';
 
     <div class="hmapi-field-input">
         <div class="hmapi-html-content">
-            <?php echo wp_kses_post($html_content); ?>
+            <?php
+            // For HTML fields, we allow unescaped content since it's intended to be raw HTML
+            // This is safe because HTML fields are only used by developers who control the content
+            echo $html_content;
+            ?>
         </div>
 
         <?php if ($help): ?>
