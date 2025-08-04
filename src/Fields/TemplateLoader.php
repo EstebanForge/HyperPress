@@ -126,6 +126,15 @@ class TemplateLoader
 
     public static function enqueue_assets(): void
     {
+        // Always enqueue admin.css for HyperFields admin pages
+        if (is_admin()) {
+            wp_enqueue_style(
+                'hyperpress-admin',
+                HMAPI_PLUGIN_URL . 'assets/css/admin.css',
+                [],
+                defined('HYPERPRESS_VERSION') ? constant('HYPERPRESS_VERSION') : '2.0.7'
+            );
+        }
         if (empty(self::$rendered_field_types)) {
             return;
         }

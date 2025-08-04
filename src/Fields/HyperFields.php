@@ -37,6 +37,9 @@ class HyperFields
         if (isset($config['option_name'])) {
             $options_page->set_option_name($config['option_name']);
         }
+        if (isset($config['footer_content'])) {
+            $options_page->set_footer_content($config['footer_content']);
+        }
 
         if (isset($config['sections']) && is_array($config['sections'])) {
             foreach ($config['sections'] as $section_config) {
@@ -65,6 +68,9 @@ class HyperFields
                         }
                         if (isset($field_config['options'])) {
                             $field->set_options($field_config['options']);
+                        }
+                        if (isset($field_config['html_content'])) {
+                            $field->set_html_content($field_config['html_content']);
                         }
 
                         $section->add_field($field);

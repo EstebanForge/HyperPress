@@ -1,0 +1,223 @@
+.hyperpress {
+  &-options-wrap {
+    max-width: 100vw;
+    padding-bottom: 32px;
+  }
+
+  h1 {
+    margin-bottom: 0.5em;
+    font-size: 2em;
+    font-weight: 700;
+  }
+
+  .nav-tab-wrapper {
+    margin-bottom: 1rem !important;
+  }
+
+  .hmapi-api-endpoint-box {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    padding: 24px 24px 16px 24px;
+    margin-bottom: 32px;
+    border-radius: 8px;
+    max-width: 700px;
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.2em;
+      font-weight: 600;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      font-family: monospace;
+      font-size: 1em;
+      padding: 2px 12px;
+      border-radius: 4px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+    }
+
+    .button {
+      margin-left: 8px;
+    }
+
+    p {
+      margin: 8px 0 0 0;
+      color: #555;
+    }
+  }
+
+  form {
+    max-width: 700px;
+  }
+
+  h2 {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-top: 0;
+  }
+
+  p {
+    margin: 5px 0 5px 0;
+    color: #555;
+  }
+
+  .hmapi-fields-group {
+    margin-bottom: 24px;
+  }
+
+  .button-primary {
+    margin-top: 24px;
+  }
+
+  &-options-footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+    color: #666;
+    font-size: 0.95em;
+    max-width: 700px;
+
+    a {
+      color: #21759b;
+      text-decoration: underline;
+    }
+  }
+
+  /*
+ * This is the main container for each field row.
+ * We use Flexbox to create the two-column layout.
+ * 'align-items: flex-start' ensures that the label and input align at the top.
+ * A bottom margin provides vertical spacing between fields.
+ */
+  .hmapi-field-row {
+    display: flex;
+    align-items: flex-start;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .hmapi-field-row:last-child {
+    border-bottom: none;
+  }
+
+  /*
+ * The label container takes up the first column.
+ * It has a flexible width and padding for alignment.
+ * This width is similar to the native WordPress settings pages.
+ */
+  /* The label takes up the first column, with a 1/3 width. */
+  .hmapi-field-label {
+    flex: 1;
+    padding-right: 2rem;
+  }
+
+  .hmapi-field-label label {
+    font-weight: 600;
+    display: block;
+  }
+
+  /*
+ * The input container takes up the remaining space in the flex container.
+ */
+  /* The input wrapper takes up the remaining 2/3 of the width. */
+  .hmapi-field-input-wrapper {
+    flex: 2;
+    padding-top: 5px;
+  }
+
+  /*
+ * Ensure inputs and selects take up a reasonable width.
+ */
+  .hmapi-field-input-wrapper .regular-text,
+  .hmapi-field-input-wrapper select {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .hmapi-field-input-wrapper .hmapi-color-picker {
+    height: 40px;
+    width: 60px;
+  }
+
+  /*
+ * Style for checkbox and radio button labels to ensure proper alignment and spacing.
+ */
+  .hmapi-field-input-wrapper label {
+    display: flex;
+    align-items: center;
+  }
+
+  .hmapi-field-input-wrapper input[type="checkbox"],
+  .hmapi-field-input-wrapper input[type="radio"] {
+    margin-right: 8px;
+  }
+
+  /*
+ * The description/help text associated with a field.
+ */
+  .hmapi-field-input-wrapper .description {
+    font-size: 13px;
+    color: #646970;
+    margin-top: 8px;
+  }
+
+  /* For checkboxes, the description is a span inside the label */
+  .hmapi-field-input-wrapper label .description {
+    margin-top: 0;
+    margin-left: 8px;
+    font-style: italic;
+  }
+
+  /* Hide the table row that WordPress generates for the TabsField container */
+  .hmapi-tabs-field-row th {
+    display: none;
+  }
+
+  .hmapi-tabs-field-row td {
+    padding-left: 0;
+  }
+
+  /* Separator Field */
+  .hmapi-separator-wrapper {
+    padding: 1rem 0;
+  }
+
+  .hmapi-separator {
+    width: 100%;
+    border: 0;
+    border-top: 1px solid #ddd;
+  }
+
+  /* Heading Field */
+  .hmapi-heading-wrapper {
+    padding: 1.5rem 0 0.5rem;
+  }
+
+  .hmapi-heading-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .hmapi-heading-wrapper .description {
+    font-size: 14px;
+    color: #646970;
+  }
+
+  /* Tabs content */
+  .hmapi-tabs-content {
+    margin-top: 1rem;
+  }
+
+  /* Remove top padding from the first field and bottom border from the last for a cleaner look */
+  .hmapi-tabs-content .hmapi-field-wrapper:first-child .hmapi-field-row {
+    padding-top: 0.5rem;
+  }
+
+  .hmapi-tabs-content .hmapi-field-wrapper:last-child .hmapi-field-row {
+    border-bottom: none;
+    padding-bottom: 0.5rem;
+  }
+}
