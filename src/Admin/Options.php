@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HMApi\Admin;
 
 use HMApi\Fields\HyperFields;
+use HMApi\Libraries\HTMXLib;
 use HMApi\Main;
 
 // Exit if accessed directly.
@@ -21,9 +22,11 @@ if (!defined('ABSPATH')) {
 class Options
 {
     private string $option_name = 'hmapi_options';
+    private Main $main;
 
     public function __construct(Main $main)
     {
+        $this->main = $main;
         // Initialize the options page using HyperFields system
         add_action('init', [$this, 'init_options_page']);
     }
@@ -106,35 +109,65 @@ class Options
 
     private function build_htmx_tab_config(): array
     {
+        $available_extensions = HTMXLib::get_extensions($this->main);
+
+        $fields = [
+            [
+                'type' => 'checkbox',
+                'name' => 'load_hyperscript',
+                'label' => __('Load Hyperscript with HTMX', 'api-for-htmx'),
+                'default' => true,
+                'help' => __('Automatically load Hyperscript when HTMX is active.', 'api-for-htmx'),
+            ],
+            [
+                'type' => 'checkbox',
+                'name' => 'load_alpinejs_with_htmx',
+                'label' => __('Load Alpine.js with HTMX', 'api-for-htmx'),
+                'default' => false,
+                'help' => __('Load Alpine.js alongside HTMX for enhanced interactivity.', 'api-for-htmx'),
+            ],
+            [
+                'type' => 'checkbox',
+                'name' => 'set_htmx_hxboost',
+                'label' => __('Enable hx-boost on body', 'api-for-htmx'),
+                'default' => false,
+                'help' => __('Automatically add `hx-boost="true"` to the `<body>` tag for progressive enhancement.', 'api-for-htmx'),
+            ],
+            [
+                'type' => 'checkbox',
+                'name' => 'load_htmx_backend',
+                'label' => __('Load HTMX in WP Admin', 'api-for-htmx'),
+                'default' => false,
+                'help' => __('Enable HTMX functionality within the WordPress admin area.', 'api-for-htmx'),
+            ],
+            [
+                'type' => 'separator',
+                'name' => 'htmx_ext_separator',
+            ],
+            [
+                'type' => 'html',
+                'name' => 'htmx_ext_heading',
+                'html_content' => '<h2 style="margin-top:1.5em">' . esc_html__('HTMX Extensions', 'api-for-htmx') . '</h2><p>' . esc_html__('Enable specific HTMX extensions for enhanced functionality.', 'api-for-htmx') . '</p>',
+            ],
+        ];
+
+        foreach ($available_extensions as $extension_key => $extension_details) {
+            $fields[] = [
+                'type' => 'checkbox',
+                'name' => 'load_extension_' . str_replace('-', '_', $extension_key),
+                'label' => esc_html($extension_details['label']),
+                'default' => false,
+                'help' => esc_html($extension_details['description']),
+            ];
+        }
+
         return [
             [
                 'id' => 'htmx_settings',
                 'title' => __('HTMX Settings', 'api-for-htmx'),
                 'visible_if' => [ 'field' => 'active_library', 'value' => 'htmx' ],
-                'description' => __('Configure HTMX specific settings.', 'api-for-htmx'),
-                'fields' => [
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'load_hyperscript',
-                        'label' => __('Load Hyperscript', 'api-for-htmx'),
-                        'default' => false,
-                        'description' => __('Load Hyperscript library for advanced scripting with HTMX.', 'api-for-htmx'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'load_alpine_with_htmx',
-                        'label' => __('Load Alpine.js with HTMX', 'api-for-htmx'),
-                        'default' => false,
-                        'description' => __('Load Alpine.js for reactive components alongside HTMX.', 'api-for-htmx'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'hx_boost',
-                        'label' => __('Enable hx-boost on body', 'api-for-htmx'),
-                        'default' => false,
-                        'description' => __('Enable hx-boost on the body tag to make all links and forms use AJAX.', 'api-for-htmx'),
-                    ],
-                ],
+                'description' => __('Configure HTMX-specific settings and features.', 'api-for-htmx'),
+                'fields' => $fields,
             ],
         ];
     }
@@ -144,16 +177,16 @@ class Options
         return [
             [
                 'id' => 'alpine_settings',
-                'title' => __('Alpine.js Settings', 'api-for-htmx'),
+                'title' => __('Alpine Ajax Settings', 'api-for-htmx'),
                 'visible_if' => [ 'field' => 'active_library', 'value' => 'alpine-ajax' ],
-                'description' => __('Configure Alpine.js specific settings.', 'api-for-htmx'),
+                'description' => __('Alpine.js automatically loads when selected as the active library. Configure backend loading below.', 'api-for-htmx'),
                 'fields' => [
                     [
                         'type' => 'checkbox',
                         'name' => 'load_alpinejs_backend',
-                        'label' => __('Load Alpine.js in Backend', 'api-for-htmx'),
+                        'label' => __('Load Alpine Ajax in WP Admin', 'api-for-htmx'),
                         'default' => false,
-                        'description' => __('Load Alpine.js in the WordPress admin area.', 'api-for-htmx'),
+                        'help' => __('Enable Alpine Ajax functionality within the WordPress admin area.', 'api-for-htmx'),
                     ],
                 ],
             ],
@@ -167,14 +200,14 @@ class Options
                 'id' => 'datastar_settings',
                 'title' => __('Datastar Settings', 'api-for-htmx'),
                 'visible_if' => [ 'field' => 'active_library', 'value' => 'datastar' ],
-                'description' => __('Configure Datastar specific settings.', 'api-for-htmx'),
+                'description' => __('Datastar automatically loads when selected as the active library. Configure backend loading below.', 'api-for-htmx'),
                 'fields' => [
                     [
                         'type' => 'checkbox',
                         'name' => 'load_datastar_backend',
-                        'label' => __('Load Datastar in Backend', 'api-for-htmx'),
+                        'label' => __('Load Datastar in WP Admin', 'api-for-htmx'),
                         'default' => false,
-                        'description' => __('Load Datastar in the WordPress admin area.', 'api-for-htmx'),
+                        'help' => __('Enable Datastar functionality within the WordPress admin area.', 'api-for-htmx'),
                     ],
                 ],
             ],

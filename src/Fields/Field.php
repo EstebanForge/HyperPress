@@ -75,6 +75,8 @@ class Field
         'association',
         'tabs',
         'custom',
+        'heading',
+        'media_gallery',
     ];
 
     protected function __construct(string $type, string $name, string $label)
