@@ -314,6 +314,12 @@ class Field
 
     public function get_name_attr(): string
     {
+
+// For metabox context, use just the field name (meta key)
+if ($this->context === 'metabox') {
+    return $this->name;
+}
+
         // Always use option_group[field_name] for options pages
         if ($this->option_group) {
             return sprintf('%s[%s]', $this->option_group, $this->name);

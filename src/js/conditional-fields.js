@@ -91,7 +91,7 @@ class HyperFieldsConditional {
   evaluateField(fieldName, fieldData) {
     const { element, logic } = fieldData;
 
-    // Support Carbon Fields format: { relation: 'AND', rules: [...] }
+    // Support format: { relation: 'AND', rules: [...] }
     // or legacy format: [condition1, condition2, ...]
     let relation = "AND";
     let conditions = logic;
@@ -128,7 +128,7 @@ class HyperFieldsConditional {
   evaluateCondition(condition) {
     const { field, value, compare = "=", operator } = condition;
 
-    // Support both 'compare' (Carbon Fields) and 'operator' (our format)
+    // Support both 'compare' and 'operator' (our format)
     const op = compare || operator || "=";
 
     if (!field) {

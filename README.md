@@ -1548,6 +1548,503 @@ The plugin includes **three identical demo blocks** implemented in both approach
 2. Search for blocks: "Hero Banner", "Hero Banner (JSON)", etc.
 3. Compare identical functionality between approaches
 
+## 🔧 HyperFields - Advanced Custom Fields System
+
+HyperFields is a powerful, flexible custom fields system that provides **options pages**, **metaboxes**, and **conditional logic** for WordPress development.
+
+### 🚀 Key Features
+
+- **📄 Options Pages**: Easy admin settings pages with tabs and sections
+- **📦 Metaboxes**: Custom fields for posts, terms, and users
+- **🔀 Conditional Logic**: Dynamic field visibility with AND/OR relations
+- **🎨 Modern UI**: Clean, responsive admin interface
+- **🔧 Developer Friendly**: Intuitive facade pattern and helper functions
+
+### 📄 Options Pages
+
+Create beautiful admin settings pages with tabbed sections and organized fields:
+
+```php
+use HMApi\Fields\HyperFields;
+
+// Create an options page
+$options_page = HyperFields::makeOptionPage('Theme Settings', 'theme-settings')
+    ->set_menu_title('Theme Options')
+    ->set_parent_slug('themes.php')
+    ->set_capability('manage_options');
+
+// Add sections and fields
+$general_section = $options_page->add_section('general', 'General Settings', 'Configure basic theme options');
+
+$general_section
+    ->add_field(HyperFields::makeField('text', 'site_title', 'Custom Site Title')
+        ->set_placeholder('Enter custom title')
+        ->set_help('Override the default site title'))
+    ->add_field(HyperFields::makeField('textarea', 'footer_text', 'Footer Text')
+        ->set_default('© 2025 Your Company')
+        ->set_help('Text displayed in the site footer'))
+    ->add_field(HyperFields::makeField('color', 'primary_color', 'Primary Color')
+        ->set_default('#007cba'))
+    ->add_field(HyperFields::makeField('select', 'layout_mode', 'Layout Mode')
+        ->set_options([
+            'standard' => 'Standard',
+            'wide' => 'Wide',
+            'fullwidth' => 'Full Width'
+        ])
+        ->set_default('standard'));
+
+// Register the options page
+$options_page->register();
+```
+
+**Available field types:**
+- **Basic**: `text`, `textarea`, `number`, `email`, `url`, `password`
+- **Choices**: `select`, `radio`, `checkbox`, `set` (multiple checkboxes)
+- **Media**: `image`, `file`, `gallery`
+- **Advanced**: `color`, `date`, `time`, `datetime`, `map`
+- **Structural**: `html`, `separator`, `tabs`, `repeater`
+
+### 📦 Metaboxes for Posts, Terms & Users
+
+Add custom fields to any WordPress content type with a unified API:
+
+#### Post Meta Example
+
+```php
+// Add custom fields to posts and pages
+$post_container = HyperFields::makePostMeta('post_details', 'Post Details')
+    ->where('post')        // Apply to 'post' post type
+    ->where('page')        // Apply to 'page' post type
+    ->setContext('side')   // 'normal', 'side', or 'advanced'
+    ->setPriority('high'); // 'high', 'default', or 'low'
+
+$post_container
+    ->addField(HyperFields::makeField('text', 'custom_subtitle', 'Subtitle')
+        ->set_placeholder('Enter a subtitle for this post'))
+    ->addField(HyperFields::makeField('textarea', 'seo_description', 'SEO Description')
+        ->set_help('Meta description for search engines'))
+    ->addField(HyperFields::makeField('select', 'post_priority', 'Priority')
+        ->set_options([
+            'low' => 'Low',
+            'normal' => 'Normal',
+            'high' => 'High',
+            'urgent' => 'Urgent'
+        ])
+        ->set_default('normal'))
+    ->addField(HyperFields::makeField('checkbox', 'featured_post', 'Featured Post')
+        ->set_help('Mark this post as featured'))
+    ->addField(HyperFields::makeField('image', 'hero_image', 'Hero Image')
+        ->set_help('Large banner image for this post'))
+    ->addField(HyperFields::makeField('url', 'external_link', 'External Link')
+        ->set_placeholder('https://example.com')
+        ->set_help('Link to external source'));
+```
+
+#### Term Meta Example
+
+```php
+// Add custom fields to categories and tags
+$category_container = HyperFields::makeTermMeta('category_details', 'Category Details')
+    ->where('category');
+
+$category_container
+    ->addField(HyperFields::makeField('text', 'category_subtitle', 'Category Subtitle')
+        ->set_placeholder('Short description for this category'))
+    ->addField(HyperFields::makeField('textarea', 'category_description', 'Extended Description')
+        ->set_help('Detailed description for this category'))
+    ->addField(HyperFields::makeField('color', 'category_color', 'Category Color')
+        ->set_default('#007cba')
+        ->set_help('Color associated with this category'))
+    ->addField(HyperFields::makeField('image', 'category_icon', 'Category Icon')
+        ->set_help('Icon image for this category'));
+
+// Tag meta example
+$tag_container = HyperFields::makeTermMeta('tag_details', 'Tag Details')
+    ->where('post_tag');
+
+$tag_container
+    ->addField(HyperFields::makeField('text', 'tag_synonym', 'Synonym')
+        ->set_placeholder('Alternative name for this tag'))
+    ->addField(HyperFields::makeField('select', 'tag_importance', 'Importance')
+        ->set_options([
+            'low' => 'Low',
+            'medium' => 'Medium',
+            'high' => 'High'
+        ])
+        ->set_default('medium'));
+```
+
+### 🎯 Advanced Targeting
+
+HyperFields provides comprehensive targeting capabilities for precise control over where metaboxes appear:
+
+#### Post Targeting
+
+```php
+// Target by post type (basic)
+$container = HyperFields::makePostMeta('basic_meta', 'Basic Fields')
+    ->where('post')     // Single post type
+    ->where('page')     // Multiple post types
+    ->where('product'); // Custom post type
+
+// Target specific post by ID
+$container = HyperFields::makePostMeta('specific_post', 'Specific Post Fields')
+    ->wherePostId(1)    // Only show for post ID 1
+    ->wherePostId(5);   // Also show for post ID 5
+
+// Target post by slug
+$container = HyperFields::makePostMeta('homepage_fields', 'Homepage Fields')
+    ->wherePostSlug('homepage')  // Post with slug 'homepage'
+    ->wherePostSlug('home');     // Also post with slug 'home'
+
+// Target multiple posts by IDs array
+$container = HyperFields::makePostMeta('vip_posts', 'VIP Post Settings')
+    ->wherePostIds([1, 5, 10, 15]); // Multiple specific posts
+
+// Target multiple posts by slugs array
+$container = HyperFields::makePostMeta('landing_pages', 'Landing Page Fields')
+    ->wherePostSlugs(['homepage', 'contact', 'about']);
+
+// Combined targeting
+$container = HyperFields::makePostMeta('featured_posts', 'Featured Post Settings')
+    ->where('post')              // Must be a post
+    ->wherePostIds([1, 5])      // AND one of these IDs
+    ->wherePostSlug('featured'); // OR this slug
+```
+
+#### User Targeting
+
+```php
+// Target by user role (basic)
+$container = HyperFields::makeUserMeta('admin_fields', 'Admin Fields')
+    ->where('administrator')  // Single role
+    ->where('editor')         // Multiple roles
+    ->where('author');
+
+// Target specific user by ID
+$container = HyperFields::makeUserMeta('super_admin', 'Super Admin Settings')
+    ->whereUserId(1)    // Only for user ID 1
+    ->whereUserId(2);   // Also for user ID 2
+
+// Target multiple users by IDs array
+$container = HyperFields::makeUserMeta('team_leads', 'Team Lead Settings')
+    ->whereUserIds([3, 7, 12, 18]); // Specific team members
+
+// Combined targeting: role + specific users
+$container = HyperFields::makeUserMeta('special_access', 'Special Access')
+    ->where('administrator')    // All administrators
+    ->whereUserId(5);          // AND/OR specific user ID 5
+```
+
+#### Term Targeting
+
+```php
+// Target by taxonomy (basic)
+$container = HyperFields::makeTermMeta('category_fields', 'Category Fields')
+    ->where('category')         // Built-in taxonomy
+    ->where('post_tag')         // Built-in taxonomy
+    ->where('product_category'); // Custom taxonomy
+
+// Target specific term by ID
+$container = HyperFields::makeTermMeta('featured_category', 'Featured Category')
+    ->where('category')
+    ->whereTermId(1)    // Only for term ID 1
+    ->whereTermId(5);   // Also for term ID 5
+
+// Target term by slug
+$container = HyperFields::makeTermMeta('special_categories', 'Special Categories')
+    ->where('category')
+    ->whereTermSlug('featured')  // Term with slug 'featured'
+    ->whereTermSlug('trending'); // Also term with slug 'trending'
+
+// Target multiple terms by IDs array
+$container = HyperFields::makeTermMeta('priority_tags', 'Priority Tags')
+    ->where('post_tag')
+    ->whereTermIds([5, 12, 18, 25]); // Specific tags
+
+// Target multiple terms by slugs array
+$container = HyperFields::makeTermMeta('special_tags', 'Special Tags')
+    ->where('post_tag')
+    ->whereTermSlugs(['featured', 'trending', 'popular']);
+
+// Combined targeting
+$container = HyperFields::makeTermMeta('vip_categories', 'VIP Categories')
+    ->where('category')              // Must be a category
+    ->whereTermIds([1, 5])          // AND one of these IDs
+    ->whereTermSlug('special');     // OR this slug
+```
+
+#### Metabox Positioning
+
+```php
+// Control metabox appearance for posts
+$container = HyperFields::makePostMeta('styled_meta', 'Styled Metabox')
+    ->where('post')
+    ->setContext('side')        // 'normal', 'side', 'advanced'
+    ->setPriority('high');      // 'high', 'core', 'default', 'low'
+```
+
+#### Practical Examples
+
+```php
+// VIP content management
+$vip_container = HyperFields::makePostMeta('vip_content', 'VIP Settings')
+    ->where('post')
+    ->where('page')
+    ->wherePostIds([1, 5, 10])  // Homepage, About, Contact
+    ->setContext('side');
+
+$vip_container->addField(
+    HyperFields::makeField('checkbox', 'is_vip_content', 'VIP Content')
+        ->set_help('Mark as VIP content for special treatment')
+);
+
+// Staff directory for specific roles and users
+$staff_container = HyperFields::makeUserMeta('staff_directory', 'Staff Directory')
+    ->where('editor')           // All editors
+    ->where('author')           // All authors
+    ->whereUserIds([3, 7, 12]); // Plus specific staff members
+
+// Featured categories with special styling
+$featured_categories = HyperFields::makeTermMeta('featured_categories', 'Featured Settings')
+    ->where('category')
+    ->whereTermSlugs(['featured', 'trending', 'popular']);
+
+$featured_categories->addField(
+    HyperFields::makeField('color', 'featured_color', 'Featured Color')
+        ->set_default('#007cba')
+);
+```
+
+#### User Meta Example
+
+```php
+// Add custom fields to user profiles
+$user_container = HyperFields::makeUserMeta('user_profile', 'Additional Profile Information');
+
+$user_container
+    ->addField(HyperFields::makeField('text', 'job_title', 'Job Title')
+        ->set_placeholder('e.g., Senior Developer'))
+    ->addField(HyperFields::makeField('text', 'company', 'Company')
+        ->set_placeholder('Company name'))
+    ->addField(HyperFields::makeField('url', 'linkedin_profile', 'LinkedIn Profile')
+        ->set_placeholder('https://linkedin.com/in/username'))
+    ->addField(HyperFields::makeField('url', 'twitter_profile', 'Twitter Profile')
+        ->set_placeholder('https://twitter.com/username'))
+    ->addField(HyperFields::makeField('textarea', 'bio', 'Bio')
+        ->set_help('Short biography or description'))
+    ->addField(HyperFields::makeField('select', 'skill_level', 'Skill Level')
+        ->set_options([
+            'beginner' => 'Beginner',
+            'intermediate' => 'Intermediate',
+            'advanced' => 'Advanced',
+            'expert' => 'Expert'
+        ])
+        ->set_default('intermediate'));
+
+// Author-specific fields with role restrictions
+$author_container = HyperFields::makeUserMeta('author_settings', 'Author Settings')
+    ->where('author')      // Only show for authors
+    ->where('editor');     // Also show for editors
+
+$author_container
+    ->addField(HyperFields::makeField('checkbox', 'show_author_box', 'Show Author Box')
+        ->set_help('Display author information box on posts'))
+    ->addField(HyperFields::makeField('image', 'author_avatar', 'Custom Avatar')
+        ->set_help('Custom avatar image (overrides Gravatar)'))
+    ->addField(HyperFields::makeField('textarea', 'author_signature', 'Author Signature')
+        ->set_help('Signature to append to posts'));
+```
+
+#### Retrieving Meta Values
+
+HyperFields integrates seamlessly with WordPress meta APIs:
+
+```php
+// Post meta
+$subtitle = get_post_meta(get_the_ID(), 'custom_subtitle', true);
+$priority = get_post_meta(get_the_ID(), 'post_priority', true);
+
+// Term meta
+$term_id = get_queried_object_id();
+$category_color = get_term_meta($term_id, 'category_color', true);
+$category_icon = get_term_meta($term_id, 'category_icon', true);
+
+// User meta
+$user_id = get_current_user_id();
+$job_title = get_user_meta($user_id, 'job_title', true);
+$skill_level = get_user_meta($user_id, 'skill_level', true);
+
+// Use in templates
+if ($subtitle) {
+    echo '<h2 class="post-subtitle">' . esc_html($subtitle) . '</h2>';
+}
+
+if ($category_color) {
+    echo '<div class="category-badge" style="background-color: ' . esc_attr($category_color) . ';">';
+    echo get_cat_name($term_id);
+    echo '</div>';
+}
+```
+
+### 🔀 Conditional Logic
+
+Create dynamic forms with fields that show/hide based on other field values. HyperFields provides conditional logic with support for complex AND/OR relations:
+
+#### Basic Conditional Logic
+
+```php
+// Show API key field only when API is enabled
+HyperFields::makeField('text', 'api_key', 'API Key')
+    ->set_conditional_logic([
+        'conditions' => [[
+            'field' => 'enable_api',
+            'operator' => '=',
+            'value' => 'yes'
+        ]]
+    ])
+    ->set_placeholder('Enter your API key');
+
+// Show custom CSS field only when layout is set to 'custom'
+HyperFields::makeField('textarea', 'custom_css', 'Custom CSS')
+    ->set_conditional_logic([
+        'conditions' => [[
+            'field' => 'post_layout',
+            'operator' => '=',
+            'value' => 'custom'
+        ]]
+    ])
+    ->set_help('Custom CSS for this post');
+```
+
+#### Advanced Conditional Logic with AND/OR Relations
+
+```php
+// Show advanced settings when user is admin AND feature is enabled
+HyperFields::makeField('text', 'admin_setting', 'Admin Setting')
+    ->set_conditional_logic([
+        'relation' => 'AND',
+        'conditions' => [
+            [
+                'field' => 'user_role',
+                'operator' => '=',
+                'value' => 'administrator'
+            ],
+            [
+                'field' => 'enable_advanced',
+                'operator' => '=',
+                'value' => true
+            ]
+        ]
+    ]);
+
+// Show payment fields when payment method is PayPal OR Stripe
+HyperFields::makeField('text', 'payment_key', 'Payment API Key')
+    ->set_conditional_logic([
+        'relation' => 'OR',
+        'conditions' => [
+            [
+                'field' => 'payment_method',
+                'operator' => '=',
+                'value' => 'paypal'
+            ],
+            [
+                'field' => 'payment_method',
+                'operator' => '=',
+                'value' => 'stripe'
+            ]
+        ]
+    ]);
+
+// Complex nested logic with IN and NOT IN operators
+HyperFields::makeField('select', 'advanced_option', 'Advanced Option')
+    ->set_conditional_logic([
+        'relation' => 'AND',
+        'conditions' => [
+            [
+                'field' => 'user_level',
+                'operator' => 'IN',
+                'value' => ['expert', 'professional']
+            ],
+            [
+                'field' => 'restricted_features',
+                'operator' => 'NOT IN',
+                'value' => ['disabled', 'limited']
+            ],
+            [
+                'field' => 'subscription_status',
+                'operator' => '!=',
+                'value' => 'expired'
+            ]
+        ]
+    ]);
+```
+
+#### Available Operators
+
+HyperFields supports the following operators:
+
+- **Equality**: `=`, `!=`
+- **Comparison**: `>`, `<`, `>=`, `<=`
+- **Array**: `IN`, `NOT IN`
+- **String**: `INCLUDES`, `EXCLUDES`
+
+#### Conditional Logic in Metaboxes
+
+Conditional logic works seamlessly in metaboxes:
+
+```php
+$post_container = HyperFields::makePostMeta('advanced_post_settings', 'Advanced Settings')
+    ->where('post')
+    ->setContext('normal')
+    ->setPriority('low');
+
+$post_container
+    ->addField(HyperFields::makeField('select', 'post_layout', 'Post Layout')
+        ->set_options([
+            'default' => 'Default',
+            'wide' => 'Wide',
+            'fullwidth' => 'Full Width',
+            'custom' => 'Custom'
+        ])
+        ->set_default('default'))
+
+    // Only show when custom layout is selected
+    ->addField(HyperFields::makeField('text', 'custom_css_class', 'Custom CSS Class')
+        ->set_conditional_logic([
+            'conditions' => [[
+                'field' => 'post_layout',
+                'operator' => '=',
+                'value' => 'custom'
+            ]]
+        ])
+        ->set_placeholder('custom-class-name'))
+
+    // Only show when custom layout is selected
+    ->addField(HyperFields::makeField('textarea', 'custom_css', 'Custom CSS')
+        ->set_conditional_logic([
+            'conditions' => [[
+                'field' => 'post_layout',
+                'operator' => '=',
+                'value' => 'custom'
+            ]]
+        ])
+        ->set_help('Custom CSS for this post'))
+
+    ->addField(HyperFields::makeField('checkbox', 'disable_comments', 'Disable Comments')
+        ->set_help('Override global comment settings for this post'))
+
+    ->addField(HyperFields::makeField('date', 'publish_date', 'Scheduled Publish Date')
+        ->set_help('Alternative publish date for scheduling'));
+```
+
+#### How Conditional Logic Works
+
+1. **Frontend JavaScript**: The `conditional-fields.js` script monitors form changes
+2. **Data Attributes**: Field wrappers get `data-hm-conditional-logic` attributes
+3. **Real-time Updates**: Fields show/hide instantly as users interact with the form
+4. **Performance Optimized**: Only evaluates conditions when relevant fields change
+
 ### 🎯 Simplified HyperFields API
 
 The HyperFields system now provides two simplified approaches for creating options pages and fields with minimal imports:

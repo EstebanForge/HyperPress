@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace HMApi\Fields;
 
+use HMApi\Fields\Container\ContainerFactory;
+
 /**
  * HyperFields Facade.
  *
@@ -205,5 +207,41 @@ class HyperFields
         $options = get_option($option_name, []);
         $options[$field_name] = $value;
         return update_option($option_name, $options);
+    }
+
+    /**
+     * Create a post meta container.
+     *
+     * @param string $id The container ID
+     * @param string $title The container title
+     * @return \HMApi\Fields\Container\PostMetaContainer
+     */
+    public static function makePostMeta(string $id, string $title): Container\PostMetaContainer
+    {
+        return ContainerFactory::makePostMeta($id, $title);
+    }
+
+    /**
+     * Create a term meta container.
+     *
+     * @param string $id The container ID
+     * @param string $title The container title
+     * @return \HMApi\Fields\Container\TermMetaContainer
+     */
+    public static function makeTermMeta(string $id, string $title): Container\TermMetaContainer
+    {
+        return ContainerFactory::makeTermMeta($id, $title);
+    }
+
+    /**
+     * Create a user meta container.
+     *
+     * @param string $id The container ID
+     * @param string $title The container title
+     * @return \HMApi\Fields\Container\UserMetaContainer
+     */
+    public static function makeUserMeta(string $id, string $title): Container\UserMetaContainer
+    {
+        return ContainerFactory::makeUserMeta($id, $title);
     }
 }
