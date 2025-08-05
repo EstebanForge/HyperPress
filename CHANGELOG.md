@@ -2,7 +2,7 @@
 
 # 2.1.0 / 2025-07-20
 - **NEW:** **HyperBlocks** - Revolutionary PHP-based block creation system with **two complementary approaches**
-  - **Fluent API**: Carbon Fields-style PHP-only block development (no JavaScript required)
+  - **Fluent API**: PHP-only block development (no JavaScript required)
   - **block.json**: WordPress-standard JSON blocks (no custom JavaScript required)
   - **Unified Editor**: Both approaches use the same React editor component for consistent UX
   - **Zero JavaScript**: Build complex Gutenberg blocks using only PHP
