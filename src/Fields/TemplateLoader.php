@@ -24,6 +24,14 @@ class TemplateLoader
         // Set the value in field data
         $field_data['value'] = $value;
 
+
+// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+$conditional_logic = $field_data['conditional_logic'] ?? null;
+$conditional_attr = '';
+if ($conditional_logic) {
+    $conditional_attr = ' data-hm-conditional-logic="' . esc_attr(json_encode($conditional_logic)) . '"';
+}
+
         // Store TabsField instances in global variable for template access
         if ($type === 'tabs' && isset($field_data['instance'])) {
             if (!isset($GLOBALS['hmapi_tabs_instances'])) {
@@ -44,8 +52,14 @@ class TemplateLoader
         $template_file = apply_filters('hmapi_field_template', $template_file, $type, $field_data);
 
         if (file_exists($template_file)) {
-            // Include template with field data
+
+// Include template with field data, and echo wrapper with conditional logic if present
+echo '<div class="hmapi-field-outer"' . $conditional_attr . '>';
+
             include $template_file;
+
+echo '</div>';
+
         } else {
             // Last resort fallback
             self::render_fallback($field_data);
@@ -147,7 +161,14 @@ class TemplateLoader
             HMAPI_VERSION
         );
 
-
+        // Enqueue conditional fields script for dynamic field visibility
+        wp_enqueue_script(
+            'hmapi-conditional-fields',
+            HMAPI_PLUGIN_URL . 'assets/js/conditional-fields.js',
+            [],
+            HMAPI_VERSION,
+            true
+        );
 
         // Localize script
         // Conditionally enqueue assets for specific field types
