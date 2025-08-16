@@ -12,9 +12,16 @@ $placeholder = $field_data['placeholder'] ?? '';
 $required = $field_data['required'] ?? false;
 $help = $field_data['help'] ?? '';
 $options = $field_data['options'] ?? [];
+
+// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+$conditional_logic = $field_data['conditional_logic'] ?? null;
+$conditional_attr = '';
+if ($conditional_logic) {
+    $conditional_attr = ' data-hm-conditional-logic="' . esc_attr(json_encode($conditional_logic)) . '"';
+}
 ?>
 
-<div class="hmapi-field-wrapper">
+<div class="hmapi-field-wrapper"<?php echo $conditional_attr; ?>>
     <div class="hmapi-field-row">
         <div class="hmapi-field-label">
             <label for="<?php echo esc_attr($name); ?>">
@@ -76,6 +83,33 @@ $options = $field_data['options'] ?? [];
                <?php echo $required ? 'required' : ''; ?>
                class="hmapi-color-picker">
         <?php break;
+    case 'date': ?>
+        <input type="date" 
+               id="<?php echo esc_attr($name); ?>" 
+               name="<?php echo esc_attr($name_attr); ?>" 
+               value="<?php echo esc_attr($value); ?>" 
+               placeholder="<?php echo esc_attr($placeholder); ?>" 
+               <?php echo $required ? 'required' : ''; ?>
+               class="regular-text">
+        <?php break;
+    case 'datetime': ?>
+        <input type="datetime-local" 
+               id="<?php echo esc_attr($name); ?>" 
+               name="<?php echo esc_attr($name_attr); ?>" 
+               value="<?php echo esc_attr($value); ?>" 
+               placeholder="<?php echo esc_attr($placeholder); ?>" 
+               <?php echo $required ? 'required' : ''; ?>
+               class="regular-text">
+        <?php break;
+    case 'time': ?>
+        <input type="time" 
+               id="<?php echo esc_attr($name); ?>" 
+               name="<?php echo esc_attr($name_attr); ?>" 
+               value="<?php echo esc_attr($value); ?>" 
+               placeholder="<?php echo esc_attr($placeholder); ?>" 
+               <?php echo $required ? 'required' : ''; ?>
+               class="regular-text">
+        <?php break;
     case 'select': ?>
         <select id="<?php echo esc_attr($name); ?>" 
                 name="<?php echo esc_attr($name_attr); ?>" 
@@ -83,6 +117,19 @@ $options = $field_data['options'] ?? [];
                 class="regular-text">
             <?php foreach ($options as $option_value => $option_label): ?>
                 <option value="<?php echo esc_attr($option_value); ?>" <?php selected($value, $option_value); ?>>
+                    <?php echo esc_html($option_label); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <?php break;
+    case 'multiselect': ?>
+        <select id="<?php echo esc_attr($name); ?>" 
+                name="<?php echo esc_attr($name_attr); ?>[]" 
+                multiple
+                <?php echo $required ? 'required' : ''; ?>
+                class="regular-text">
+            <?php foreach ($options as $option_value => $option_label): ?>
+                <option value="<?php echo esc_attr($option_value); ?>" <?php selected(is_array($value) && in_array($option_value, $value)); ?>>
                     <?php echo esc_html($option_label); ?>
                 </option>
             <?php endforeach; ?>
@@ -113,10 +160,35 @@ $options = $field_data['options'] ?? [];
             </label>
         <?php endforeach; ?>
         <?php break;
+    case 'hidden': ?>
+        <input type="hidden" 
+               id="<?php echo esc_attr($name); ?>" 
+               name="<?php echo esc_attr($name_attr); ?>" 
+               value="<?php echo esc_attr($value); ?>">
+        <?php break;
+    case 'html': ?>
+        <div class="hmapi-html-field">
+            <?php echo wp_kses_post($field_data['html_content'] ?? ''); ?>
+        </div>
+        <?php break;
+    case 'rich_text':
+    case 'wysiwyg':
+        wp_editor(
+            $value,
+            $name,
+            [
+                'textarea_name' => $name_attr,
+                'textarea_rows' => 10,
+                'media_buttons' => true,
+                'teeny' => true,
+            ]
+        );
+        ?>
+        <?php break;
     case 'image': ?>
         <div class="hmapi-image-field">
             <input type="hidden" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name_attr); ?>" value="<?php echo esc_attr($value); ?>">
-            <button type="button" class="button hmapi-upload-button" data-field="<?php echo esc_attr($name); ?>">
+            <button type="button" class="button hmapi-upload-button" data-field="<?php echo esc_attr($name); ?>" data-type="image">
                 <?php _e('Select Image', 'hmapi'); ?>
             </button>
             <div class="hmapi-image-preview">
@@ -138,18 +210,18 @@ $options = $field_data['options'] ?? [];
             </button>
         </div>
         <?php break;
-    case 'wysiwyg':
-        wp_editor(
-            $value,
-            $name,
-            [
-                'textarea_name' => $name_attr,
-                'textarea_rows' => 10,
-                'media_buttons' => true,
-                'teeny' => true,
-            ]
-        );
-        ?>
+    case 'set': ?>
+        <div class="hmapi-set-field">
+            <?php foreach ($options as $option_value => $option_label): ?>
+                <label>
+                    <input type="checkbox" 
+                           name="<?php echo esc_attr($name_attr); ?>[]" 
+                           value="<?php echo esc_attr($option_value); ?>" 
+                           <?php checked(is_array($value) && in_array($option_value, $value)); ?>>
+                    <?php echo esc_html($option_label); ?>
+                </label>
+            <?php endforeach; ?>
+        </div>
         <?php break;
 endswitch; ?>
 
