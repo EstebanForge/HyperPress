@@ -1,4 +1,12 @@
 <?php
+<?php
+// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+$conditional_logic = $field_data["conditional_logic"] ?? null;
+$conditional_attr = "";
+if ($conditional_logic) {
+    $conditional_attr = " data-hm-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
+}
+?>
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -31,7 +39,7 @@ if (!empty($render_callback) && is_callable($render_callback)) {
 } else {
     // Fallback to basic input
     ?>
-    <div class="hmapi-field-wrapper">
+    <div class="hmapi-field-wrapper"<?php echo $conditional_attr; ?>>
         <div class="hmapi-field-row">
             <div class="hmapi-field-label">
                 <label for="<?php echo esc_attr($name); ?>">

@@ -1,4 +1,12 @@
 <?php
+<?php
+// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+$conditional_logic = $field_data["conditional_logic"] ?? null;
+$conditional_attr = "";
+if ($conditional_logic) {
+    $conditional_attr = " data-hm-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
+}
+?>
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -22,7 +30,7 @@ $map_type = $map_options['type'] ?? 'roadmap';
 $api_key = $map_options['api_key'] ?? '';
 ?>
 
-<div class="hmapi-field-wrapper">
+<div class="hmapi-field-wrapper"<?php echo $conditional_attr; ?>>
     <label for="<?php echo esc_attr($name); ?>" class="hmapi-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>

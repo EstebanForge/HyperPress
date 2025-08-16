@@ -13,6 +13,13 @@ $options = $field_data['options'] ?? [];
 $post_type = $options['post_type'] ?? 'post';
 $multiple = $options['multiple'] ?? false;
 
+// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+$conditional_logic = $field_data['conditional_logic'] ?? null;
+$conditional_attr = '';
+if ($conditional_logic) {
+    $conditional_attr = ' data-hm-conditional-logic="' . esc_attr(json_encode($conditional_logic)) . '"';
+}
+
 // Get posts based on post type
 $posts = get_posts([
     'post_type' => $post_type,
@@ -23,7 +30,7 @@ $posts = get_posts([
 $value = is_array($value) ? $value : [$value];
 ?>
 
-<div class="hmapi-field-wrapper">
+<div class="hmapi-field-wrapper"<?php echo $conditional_attr; ?>>
     <label for="<?php echo esc_attr($name); ?>" class="hmapi-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
