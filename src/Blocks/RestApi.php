@@ -196,6 +196,39 @@ class RestApi
             }
 
             try {
+                // Sanitize and validate incoming attributes against HyperFields
+                $mergedFields = [];
+                foreach ($block->fields as $f) {
+                    $mergedFields[$f->name] = $f;
+                }
+                foreach ($block->field_groups as $groupId) {
+                    $group = $registry->getFieldGroup($groupId);
+                    if ($group) {
+                        foreach ($group->fields as $gf) {
+                            if (!isset($mergedFields[$gf->name])) {
+                                $mergedFields[$gf->name] = $gf;
+                            }
+                        }
+                    }
+                }
+
+                foreach ($mergedFields as $name => $field) {
+                    $adapter = \HMApi\Fields\BlockFieldAdapter::from_field($field->getHyperField(), $attributes);
+                    $incoming = $attributes[$name] ?? null;
+
+                    if ($incoming === null) {
+                        $attributes[$name] = $field->getHyperField()->get_default();
+                        continue;
+                    }
+
+                    $sanitized = $adapter->sanitize_for_block($incoming);
+                    if (!$adapter->validate_for_block($sanitized)) {
+                        $attributes[$name] = $field->getHyperField()->get_default();
+                    } else {
+                        $attributes[$name] = $sanitized;
+                    }
+                }
+
                 // Use the renderer to generate preview HTML
                 $renderer = new Renderer();
                 $html = $renderer->render($block->render_template, $attributes);

@@ -1,12 +1,4 @@
 <?php
-<?php
-// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
-$conditional_logic = $field_data["conditional_logic"] ?? null;
-$conditional_attr = "";
-if ($conditional_logic) {
-    $conditional_attr = " data-hm-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
-}
-?>
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -21,6 +13,13 @@ $help = $field_data['help'] ?? '';
 $options = $field_data['options'] ?? [];
 $layout = $field_data['layout'] ?? 'vertical';
 
+// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+$conditional_logic = $field_data['conditional_logic'] ?? null;
+$conditional_attr = '';
+if ($conditional_logic) {
+    $conditional_attr = ' data-hm-conditional-logic="' . esc_attr(json_encode($conditional_logic)) . '"';
+}
+
 $value = is_array($value) ? $value : [$value];
 $layout_class = 'hmapi-set-' . $layout;
 ?>
@@ -32,6 +31,8 @@ $layout_class = 'hmapi-set-' . $layout;
     </label>
 
     <div class="hmapi-field-input">
+        <!-- Hidden input to ensure the field is always sent in POST data even when none selected -->
+        <input type="hidden" name="<?php echo esc_attr($name_attr); ?>[]" value="__hm_empty__">
         
         <div class="<?php echo esc_attr($layout_class); ?>">
             <?php foreach ($options as $option_value => $option_label): ?>

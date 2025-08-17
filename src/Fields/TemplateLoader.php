@@ -13,6 +13,9 @@ class TemplateLoader
         self::$template_dir = __DIR__ . '/templates/';
         add_action('admin_enqueue_scripts', [__CLASS__, 'enqueue_assets']);
         add_action('wp_enqueue_scripts', [__CLASS__, 'enqueue_assets']);
+        // Enqueue type-specific assets after fields render (footer), so checks see rendered types
+        add_action('admin_print_footer_scripts', [__CLASS__, 'enqueue_late_assets']);
+        add_action('wp_print_footer_scripts', [__CLASS__, 'enqueue_late_assets']);
     }
 
     public static function render_field(array $field_data, mixed $value = null): void
@@ -134,22 +137,47 @@ class TemplateLoader
                 'hyperpress-admin',
                 HMAPI_PLUGIN_URL . 'assets/css/admin.css',
                 [],
-                defined('HYPERPRESS_VERSION') ? constant('HYPERPRESS_VERSION') : '2.0.7'
+                HMAPI_VERSION
             );
+            // In admin, enqueue base JS for HyperFields; CSS is covered by admin.css
+            wp_enqueue_script(
+                'hmapi-conditional-fields',
+                HMAPI_PLUGIN_URL . 'assets/js/conditional-fields.js',
+                [],
+                HMAPI_VERSION,
+                true
+            );
+
+            // Optional test script remains for debugging
+            wp_enqueue_script(
+                'hmapi-test-conditional-logic',
+                HMAPI_PLUGIN_URL . 'assets/js/test-conditional-logic.js',
+                [],
+                HMAPI_VERSION,
+                true
+            );
+
+            wp_localize_script('hmapi-conditional-fields', 'hmapiFields', [
+                'ajaxurl' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('hmapi_fields_nonce'),
+                'l10n' => [
+                    'selectImage' => __('Select Image', 'hmapi'),
+                    'selectFile' => __('Select File', 'hmapi'),
+                    'remove' => __('Remove', 'hmapi'),
+                    'addImages' => __('Add Images', 'hmapi'),
+                    'clearGallery' => __('Clear Gallery', 'hmapi'),
+                    'searchAddress' => __('Search for an address...', 'hmapi'),
+                ],
+            ]);
+
+            return; // Done for admin
         }
+
+        // Frontend: only enqueue when fields have been rendered on the page
         if (empty(self::$rendered_field_types)) {
             return;
         }
 
-        // Common field styles
-        wp_enqueue_style(
-            'hmapi-fields',
-            HMAPI_PLUGIN_URL . 'assets/css/fields.css',
-            [],
-            HMAPI_VERSION
-        );
-
-        // Enqueue conditional fields script for dynamic field visibility
         wp_enqueue_script(
             'hmapi-conditional-fields',
             HMAPI_PLUGIN_URL . 'assets/js/conditional-fields.js',
@@ -158,24 +186,7 @@ class TemplateLoader
             true
         );
 
-        // Enqueue test script for debugging conditional logic
-        wp_enqueue_script(
-            'hmapi-test-conditional-logic',
-            HMAPI_PLUGIN_URL . 'assets/js/test-conditional-logic.js',
-            [],
-            HMAPI_VERSION,
-            true
-        );
-
-        // Localize script
-        // Conditionally enqueue assets for specific field types
-        if (isset(self::$rendered_field_types['map'])) {
-            wp_enqueue_style('hmapi-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4');
-            wp_enqueue_script('hmapi-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true);
-            wp_enqueue_script('hmapi-map-field', HMAPI_PLUGIN_URL . 'assets/js/map-field.js', ['hmapi-leaflet'], HMAPI_VERSION, true);
-        }
-
-        wp_localize_script('hmapi-fields', 'hmapiFields', [
+        wp_localize_script('hmapi-conditional-fields', 'hmapiFields', [
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('hmapi_fields_nonce'),
             'l10n' => [
@@ -187,6 +198,16 @@ class TemplateLoader
                 'searchAddress' => __('Search for an address...', 'hmapi'),
             ],
         ]);
+    }
+
+    public static function enqueue_late_assets(): void
+    {
+        // Enqueue heavy/type-specific assets after fields have rendered (works for admin and frontend)
+        if (isset(self::$rendered_field_types['map'])) {
+            wp_enqueue_style('hmapi-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4');
+            wp_enqueue_script('hmapi-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true);
+            wp_enqueue_script('hmapi-map-field', HMAPI_PLUGIN_URL . 'assets/js/map-field.js', ['hmapi-leaflet'], HMAPI_VERSION, true);
+        }
     }
 
     public static function get_supported_field_types(): array

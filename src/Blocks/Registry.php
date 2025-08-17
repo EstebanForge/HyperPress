@@ -285,23 +285,22 @@ final class Registry
     {
         $attributes = [];
 
-        // Add attributes from block fields
+        // Add attributes from block fields using HyperFields adapter
         foreach ($block->fields as $field) {
-            $attributes[$field->name] = [
-                'type'    => $this->getAttributeType($field->type),
-                'default' => $field->default ?? '',
-            ];
+            // $field is HMApi\Blocks\Field wrapper; use underlying HyperField
+            $adapter = \HMApi\Fields\BlockFieldAdapter::from_field($field->getHyperField());
+            $attributes[$field->name] = $adapter->to_block_attribute();
         }
 
-        // Add attributes from attached field groups
+        // Add attributes from attached field groups (only if not already defined by block)
         foreach ($block->field_groups as $groupId) {
             $group = $this->getFieldGroup($groupId);
             if ($group) {
                 foreach ($group->fields as $field) {
-                    $attributes[$field->name] = [
-                        'type'    => $this->getAttributeType($field->type),
-                        'default' => $field->default ?? '',
-                    ];
+                    if (!array_key_exists($field->name, $attributes)) {
+                        $adapter = \HMApi\Fields\BlockFieldAdapter::from_field($field->getHyperField());
+                        $attributes[$field->name] = $adapter->to_block_attribute();
+                    }
                 }
             }
         }
@@ -609,6 +608,46 @@ final class Registry
         // Check if block has a render template
         if (empty($fluentBlock->render_template)) {
             return '<div class="hyperblocks-error">No render template defined for block: ' . esc_html($block->name) . '</div>';
+        }
+
+        // Sanitize and validate attributes via HyperFields before rendering
+        try {
+            // Build a merged map of field name => HMApi\Blocks\Field (block fields take precedence)
+            $mergedFields = [];
+            foreach ($fluentBlock->fields as $f) {
+                $mergedFields[$f->name] = $f;
+            }
+            foreach ($fluentBlock->field_groups as $groupId) {
+                $group = $this->getFieldGroup($groupId);
+                if ($group) {
+                    foreach ($group->fields as $gf) {
+                        if (!isset($mergedFields[$gf->name])) {
+                            $mergedFields[$gf->name] = $gf;
+                        }
+                    }
+                }
+            }
+
+            // Sanitize/validate incoming attributes; apply defaults when missing/invalid
+            foreach ($mergedFields as $name => $field) {
+                $adapter = \HMApi\Fields\BlockFieldAdapter::from_field($field->getHyperField(), $attributes);
+                $incoming = $attributes[$name] ?? null;
+
+                if ($incoming === null) {
+                    // Apply default when missing
+                    $attributes[$name] = $field->getHyperField()->get_default();
+                    continue;
+                }
+
+                $sanitized = $adapter->sanitize_for_block($incoming);
+                if (!$adapter->validate_for_block($sanitized)) {
+                    $attributes[$name] = $field->getHyperField()->get_default();
+                } else {
+                    $attributes[$name] = $sanitized;
+                }
+            }
+        } catch (\Throwable $e) {
+            // Fail soft: keep original attributes if sanitization fails unexpectedly
         }
 
         // Use the renderer to process the template

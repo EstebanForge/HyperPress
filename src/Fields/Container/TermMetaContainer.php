@@ -177,7 +177,7 @@ class TermMetaContainer extends Container
             $value = $_POST[$field_name] ?? $field->get_default();
 
             // Sanitize the value
-            $value = $this->sanitizeValue($value, $field->get_type());
+            $value = $field->sanitize_value($value);
 
             // Save as term meta
             update_term_meta($this->term_id, $field_name, $value);
@@ -257,28 +257,5 @@ class TermMetaContainer extends Container
         return false;
     }
 
-    /**
-     * Sanitize field value based on type.
-     */
-    protected function sanitizeValue($value, string $type)
-    {
-        switch ($type) {
-            case 'text':
-            case 'textarea':
-                return sanitize_textarea_field($value);
-            case 'email':
-                return sanitize_email($value);
-            case 'url':
-                return esc_url_raw($value);
-            case 'number':
-                return is_numeric($value) ? (float) $value : 0;
-            case 'checkbox':
-                return $value ? 1 : 0;
-            case 'select':
-            case 'radio':
-                return sanitize_text_field($value);
-            default:
-                return sanitize_text_field($value);
-        }
-    }
+    
 }
