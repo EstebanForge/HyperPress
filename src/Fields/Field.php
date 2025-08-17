@@ -387,8 +387,9 @@ if ($this->context === 'metabox') {
             case 'radio':
                 return $this->sanitize_select_value($value);
             case 'multiselect':
-            case 'checkbox_set':
                 return $this->sanitize_array_value($value);
+            case 'set':
+                return $this->sanitize_set_value($value);
             case 'checkbox':
                 return (bool) $value;
             case 'html':
@@ -414,6 +415,39 @@ if ($this->context === 'metabox') {
             default:
                 return apply_filters("hmapi_field_sanitize_{$this->type}", $value, $this->type);
         }
+    }
+
+    private function sanitize_set_value(mixed $value): array
+    {
+        if (!is_array($value)) {
+            return [];
+        }
+
+        // Sanitize and remove sentinel used to force POST on empty selections
+        $sanitized = array_map('sanitize_text_field', $value);
+        $sanitized = array_values(
+            array_filter(
+                $sanitized,
+                static function ($v) {
+                    return $v !== '__hm_empty__' && $v !== '' && $v !== null;
+                }
+            )
+        );
+
+        // If options are defined, keep only allowed keys
+        if (!empty($this->options)) {
+            $allowed = array_map('strval', array_keys($this->options));
+            $sanitized = array_values(
+                array_filter(
+                    $sanitized,
+                    static function ($v) use ($allowed) {
+                        return in_array((string) $v, $allowed, true);
+                    }
+                )
+            );
+        }
+
+        return $sanitized;
     }
 
     private function sanitize_array_value(mixed $value): array

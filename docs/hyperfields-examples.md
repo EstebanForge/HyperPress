@@ -4,6 +4,16 @@ This directory contains **example files** demonstrating HyperFields usage. These
 
 ## 📁 Files Overview
 
+### 🧰 **helper-functions-examples.php**
+Examples for the helper functions:
+- `hm_get_field()` to retrieve values
+- `hm_save_field()` to store values (alias of `hm_update_field()`)
+- `hm_delete_field()` to remove values
+
+Covers contexts: options, post meta, user meta, and term meta. Shows how to pass `type` to leverage `Field::sanitize_value()`.
+
+**Usage:** Include the file and hook any of the provided functions (e.g., `hyperfields_helper_examples_options`) via `add_action('init', '...')`.
+
 ### 🚀 **simple-example.php**
 Basic HyperFields metabox example showing:
 - Simple post metabox creation
@@ -111,3 +121,23 @@ See the main plugin README.md for complete HyperFields documentation, including:
 - Conditional logic
 - Options pages
 - Integration examples
+
+## 🚧 Optional: Compact Input for Options Pages
+
+To avoid hitting PHP's `max_input_vars` on complex options pages, HyperFields can compact all option inputs into a single POST variable.
+
+- Disabled by default.
+- Enable via constants (e.g. in `wp-config.php` or early plugin code):
+
+```php
+define('HMAPI_COMPACT_INPUT', true);
+define('HMAPI_COMPACT_INPUT_KEY', 'hmapi_compact_input'); // optional, default shown
+```
+
+When enabled, HyperFields will:
+- Render a hidden compact input on options pages.
+- Serialize the active tab's fields into JSON under the `HMAPI_COMPACT_INPUT_KEY`.
+- Remove original field `name` attributes before submit to drastically reduce POST vars.
+- Expand and sanitize the compacted input server-side in `OptionsPage::sanitize_options()`.
+
+No changes are needed to your field definitions. Existing helpers like `hm_get_field()` and `hm_save_field()` continue to work as before.

@@ -194,6 +194,12 @@ class OptionsPage
                 <input type="hidden" name="hmapi_active_tab" value="<?php echo esc_attr($active_tab); ?>" />
                 <?php
                 settings_fields($this->option_name);
+                if (defined('HMAPI_COMPACT_INPUT') && HMAPI_COMPACT_INPUT === true) {
+                    // Placeholder for the compacted JSON payload the JS will populate
+                    echo '<input type="hidden" name="' . esc_attr(defined('HMAPI_COMPACT_INPUT_KEY') ? HMAPI_COMPACT_INPUT_KEY : 'hmapi_compact_input') . '" value="" />';
+                    // Dummy field under the option array to ensure the Settings API processes this option
+                    echo '<input type="hidden" data-hm-keep-name="1" name="' . esc_attr($this->option_name) . '[_compact]" value="1" />';
+                }
                 // Only render the active tab's section
                 if (isset($this->sections[$active_tab])) {
                     $section = $this->sections[$active_tab];
@@ -228,6 +234,21 @@ class OptionsPage
     public function sanitize_options(?array $input): array
     {
         \HMApi\Log::debug('sanitize_options called: input=' . print_r($input, true) . ' option_name=' . $this->option_name);
+
+        // When compact input is enabled, reconstruct $input from the single compacted POST variable
+        if (defined('HMAPI_COMPACT_INPUT') && HMAPI_COMPACT_INPUT === true) {
+            $compact_key = defined('HMAPI_COMPACT_INPUT_KEY') ? HMAPI_COMPACT_INPUT_KEY : 'hmapi_compact_input';
+            if (isset($_POST[$compact_key])) {
+                $raw = wp_unslash($_POST[$compact_key]);
+                $decoded = json_decode((string) $raw, true);
+                if (is_array($decoded)) {
+                    if (isset($decoded[$this->option_name]) && is_array($decoded[$this->option_name])) {
+                        $input = $decoded[$this->option_name];
+                        \HMApi\Log::debug('sanitize_options compact input expanded for ' . $this->option_name . ': ' . print_r($input, true));
+                    }
+                }
+            }
+        }
         // Use the already loaded options to preserve values from other tabs
         $output = $this->option_values;
         \HMApi\Log::debug('sanitize_options existing_options (from property): ' . print_r($output, true) . ' option_name=' . $this->option_name);
@@ -301,6 +322,11 @@ class OptionsPage
 
         TemplateLoader::enqueue_assets();
 
+        // Require a valid plugin URL; skip in library mode where URL is unavailable
+        if (!defined('HMAPI_PLUGIN_URL') || empty(HMAPI_PLUGIN_URL)) {
+            return;
+        }
+
         // Enqueue admin options JS for HyperFields options pages
         wp_enqueue_script(
             'hmapi-admin-options',
@@ -312,6 +338,10 @@ class OptionsPage
         wp_localize_script('hmapi-admin-options', 'hmapiOptions', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('hmapi_options'),
+            'compactInput' => defined('HMAPI_COMPACT_INPUT') ? (bool) HMAPI_COMPACT_INPUT : false,
+            'compactInputKey' => defined('HMAPI_COMPACT_INPUT_KEY') ? HMAPI_COMPACT_INPUT_KEY : 'hmapi_compact_input',
+            'optionName' => $this->option_name,
+            'activeTab' => $this->get_active_tab(),
         ]);
     }
 }

@@ -342,7 +342,7 @@ function hm_ds_location(string $url): void
  * }
  * @return bool True if rate limited (blocked), false if request is allowed.
  */
-function hb_ds_is_rate_limited(array $options = []): bool
+function hm_ds_is_rate_limited(array $options = []): bool
 {
     // Default configuration
     $defaults = [
@@ -428,6 +428,8 @@ function hb_ds_is_rate_limited(array $options = []): bool
 
     return false; // Request allowed
 }
+
+ 
 
 /**
  * Create an OptionsPage instance.
@@ -612,4 +614,257 @@ function hxwp_validate_request($hxvals = null, $action = null)
     _deprecated_function(__FUNCTION__, '2.0.0', 'hm_validate_request');
 
     return hm_validate_request($hxvals, $action);
+}
+
+/**
+ * Resolve field context into a normalized structure.
+ *
+ * Supported $source values:
+ * - int|numeric-string: Post ID (post meta)
+ * - WP_Post: Post object
+ * - "user_{ID}" or WP_User: User meta
+ * - "term_{ID}" or WP_Term: Term meta
+ * - "option"|"options": Options API using group from args or default
+ * - array{type: post|user|term|option, id?: int, option_group?: string}
+ * - null: try current post ID (inside The Loop) else treat as option
+ */
+function hm_resolve_field_context($source = null, array $args = []): array
+{
+    $context = [
+        'type' => 'option',
+        'object_id' => 0,
+        'option_group' => $args['option_group'] ?? apply_filters('hmapi/helpers/default_option_group', 'hmapi_options'),
+    ];
+
+    if (is_array($source)) {
+        $context['type'] = $source['type'] ?? $context['type'];
+        if (isset($source['id'])) {
+            $context['object_id'] = (int) $source['id'];
+        }
+        if (isset($source['option_group'])) {
+            $context['option_group'] = (string) $source['option_group'];
+        }
+
+        return $context;
+    }
+
+    if ($source instanceof WP_Post) {
+        $context['type'] = 'post';
+        $context['object_id'] = (int) $source->ID;
+
+        return $context;
+    }
+
+    if ($source instanceof WP_User) {
+        $context['type'] = 'user';
+        $context['object_id'] = (int) $source->ID;
+
+        return $context;
+    }
+
+    if ($source instanceof WP_Term) {
+        $context['type'] = 'term';
+        $context['object_id'] = (int) $source->term_id;
+
+        return $context;
+    }
+
+    if (is_numeric($source)) {
+        $context['type'] = 'post';
+        $context['object_id'] = (int) $source;
+
+        return $context;
+    }
+
+    if (is_string($source)) {
+        if (strpos($source, 'user_') === 0) {
+            $context['type'] = 'user';
+            $context['object_id'] = (int) substr($source, 5);
+
+            return $context;
+        }
+        if (strpos($source, 'term_') === 0) {
+            $context['type'] = 'term';
+            $context['object_id'] = (int) substr($source, 5);
+
+            return $context;
+        }
+        if ($source === 'option' || $source === 'options') {
+            $context['type'] = 'option';
+
+            return $context;
+        }
+    }
+
+    // Fallbacks when $source is null or unrecognized
+    $post_id = get_the_ID();
+    if ($post_id) {
+        $context['type'] = 'post';
+        $context['object_id'] = (int) $post_id;
+
+        return $context;
+    }
+
+    return $context; // default is option
+}
+
+/**
+ * Optionally sanitize a value using Field::sanitize_value when a type is provided.
+ */
+function hm_maybe_sanitize_field_value(string $name, $value, array $args = [])
+{
+    $type = $args['type'] ?? null;
+    if (is_string($type) && $type !== '') {
+        try {
+            $field = \HMApi\Fields\Field::make($type, $name, $name);
+
+            return $field->sanitize_value($value);
+        } catch (Throwable $e) {
+            // Fall through to filters if Field cannot be created
+        }
+    }
+
+    // Allow external sanitization via filter when no type is provided
+    return apply_filters('hmapi/helpers/update_field_sanitize', $value, $name, $args);
+}
+
+/**
+ * Get a field value from post/user/term meta or options.
+ *
+ * @param string $name   Meta key / option key
+ * @param mixed  $source Context (see hm_resolve_field_context)
+ * @param array  $args   { option_group?, default? }
+ */
+function hm_get_field(string $name, $source = null, array $args = [])
+{
+    $ctx = hm_resolve_field_context($source, $args);
+
+    switch ($ctx['type']) {
+        case 'post':
+            if ($ctx['object_id'] > 0) {
+                $val = get_post_meta($ctx['object_id'], $name, true);
+
+                return $val !== '' ? $val : ($args['default'] ?? null);
+            }
+            break;
+        case 'user':
+            if ($ctx['object_id'] > 0) {
+                $val = get_user_meta($ctx['object_id'], $name, true);
+
+                return $val !== '' ? $val : ($args['default'] ?? null);
+            }
+            break;
+        case 'term':
+            if ($ctx['object_id'] > 0) {
+                $val = get_term_meta($ctx['object_id'], $name, true);
+
+                return $val !== '' ? $val : ($args['default'] ?? null);
+            }
+            break;
+        case 'option':
+        default:
+            $group = $ctx['option_group'];
+            $options = get_option($group, []);
+            if (is_array($options) && array_key_exists($name, $options)) {
+                return $options[$name];
+            }
+
+            return $args['default'] ?? null;
+    }
+
+    return $args['default'] ?? null;
+}
+
+/**
+ * Update (save) a field value into post/user/term meta or options.
+ *
+ * @param string $name
+ * @param mixed  $value
+ * @param mixed  $source Context (see hm_resolve_field_context)
+ * @param array  $args   { option_group?, type? }
+ */
+function hm_update_field(string $name, $value, $source = null, array $args = []): bool
+{
+    $ctx = hm_resolve_field_context($source, $args);
+    $sanitized = hm_maybe_sanitize_field_value($name, $value, $args);
+
+    switch ($ctx['type']) {
+        case 'post':
+            if ($ctx['object_id'] > 0) {
+                return (bool) update_post_meta($ctx['object_id'], $name, $sanitized);
+            }
+            break;
+        case 'user':
+            if ($ctx['object_id'] > 0) {
+                return (bool) update_user_meta($ctx['object_id'], $name, $sanitized);
+            }
+            break;
+        case 'term':
+            if ($ctx['object_id'] > 0) {
+                return (bool) update_term_meta($ctx['object_id'], $name, $sanitized);
+            }
+            break;
+        case 'option':
+        default:
+            $group = $ctx['option_group'];
+            $options = get_option($group, []);
+            if (!is_array($options)) {
+                $options = [];
+            }
+            $options[$name] = $sanitized;
+
+            return (bool) update_option($group, $options);
+    }
+
+    return false;
+}
+
+/**
+ * Delete a field value from post/user/term meta or options.
+ */
+function hm_delete_field(string $name, $source = null, array $args = []): bool
+{
+    $ctx = hm_resolve_field_context($source, $args);
+
+    switch ($ctx['type']) {
+        case 'post':
+            if ($ctx['object_id'] > 0) {
+                return (bool) delete_post_meta($ctx['object_id'], $name);
+            }
+            break;
+        case 'user':
+            if ($ctx['object_id'] > 0) {
+                return (bool) delete_user_meta($ctx['object_id'], $name);
+            }
+            break;
+        case 'term':
+            if ($ctx['object_id'] > 0) {
+                return (bool) delete_term_meta($ctx['object_id'], $name);
+            }
+            break;
+        case 'option':
+        default:
+            $group = $ctx['option_group'];
+            $options = get_option($group, []);
+            if (!is_array($options)) {
+                return false;
+            }
+            if (array_key_exists($name, $options)) {
+                unset($options[$name]);
+
+                return (bool) update_option($group, $options);
+            }
+
+            return false;
+    }
+
+    return false;
+}
+
+/**
+ * Alias of hm_update_field for parity with the initial TODO wording.
+ */
+function hm_save_field(string $name, $value, $source = null, array $args = []): bool
+{
+    return hm_update_field($name, $value, $source, $args);
 }

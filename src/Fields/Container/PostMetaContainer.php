@@ -297,7 +297,7 @@ class PostMetaContainer extends Container
             $value = $_POST[$field_name] ?? $field->get_default();
 
             // Sanitize the value
-            $value = $this->sanitizeValue($value, $field->get_type());
+            $value = $field->sanitize_value($value);
 
             // Save as post meta
             update_post_meta($this->post_id, $field_name, $value);
@@ -336,28 +336,5 @@ class PostMetaContainer extends Container
         wp_nonce_field('hyperfields_metabox_' . $this->id, '_hyperfields_metabox_nonce_' . $this->id);
     }
 
-    /**
-     * Sanitize field value based on type.
-     */
-    protected function sanitizeValue($value, string $type)
-    {
-        switch ($type) {
-            case 'text':
-            case 'textarea':
-                return sanitize_textarea_field($value);
-            case 'email':
-                return sanitize_email($value);
-            case 'url':
-                return esc_url_raw($value);
-            case 'number':
-                return is_numeric($value) ? (float) $value : 0;
-            case 'checkbox':
-                return $value ? 1 : 0;
-            case 'select':
-            case 'radio':
-                return sanitize_text_field($value);
-            default:
-                return sanitize_text_field($value);
-        }
-    }
+    
 }

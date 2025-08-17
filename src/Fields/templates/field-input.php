@@ -212,12 +212,15 @@ if ($conditional_logic) {
         <?php break;
     case 'set': ?>
         <div class="hmapi-set-field">
+            <!-- Hidden input to ensure the field is always sent in POST data even when none selected -->
+            <input type="hidden" name="<?php echo esc_attr($name_attr); ?>[]" value="__hm_empty__">
             <?php foreach ($options as $option_value => $option_label): ?>
                 <label>
                     <input type="checkbox" 
                            name="<?php echo esc_attr($name_attr); ?>[]" 
                            value="<?php echo esc_attr($option_value); ?>" 
-                           <?php checked(is_array($value) && in_array($option_value, $value)); ?>>
+                           <?php checked(is_array($value) && in_array($option_value, $value)); ?>
+                           <?php echo $required ? 'required' : ''; ?>>
                     <?php echo esc_html($option_label); ?>
                 </label>
             <?php endforeach; ?>

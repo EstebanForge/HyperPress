@@ -126,6 +126,37 @@ if (!function_exists('hmapi_run_initialization_logic')) {
         define('HMAPI_LEGACY_TEMPLATE_EXT', '.htmx.php');
         define('HMAPI_ENDPOINT_VERSION', 'v1');
 
+        // Optional: Compact input to mitigate max_input_vars on complex option pages
+        if (!defined('HMAPI_COMPACT_INPUT')) {
+            define('HMAPI_COMPACT_INPUT', false);
+        }
+        if (!defined('HMAPI_COMPACT_INPUT_KEY')) {
+            define('HMAPI_COMPACT_INPUT_KEY', 'hmapi_compact_input');
+        }
+
+        // Enqueue HyperBlocks editor integration script for Gutenberg inspector controls
+        add_action('enqueue_block_editor_assets', function () {
+            // Require a valid plugin URL; skip in library mode where URL is unavailable
+            if (!defined('HMAPI_PLUGIN_URL') || empty(HMAPI_PLUGIN_URL)) {
+                return;
+            }
+
+            wp_enqueue_script(
+                'hmapi-hyperblocks-editor',
+                HMAPI_PLUGIN_URL . 'assets/js/hyperblocks-editor.js',
+                [
+                    'wp-api-fetch',
+                    'wp-hooks',
+                    'wp-element',
+                    'wp-components',
+                    'wp-block-editor',
+                    'wp-editor',
+                ],
+                defined('HMAPI_VERSION') ? HMAPI_VERSION : false,
+                true
+            );
+        });
+
         if ((defined('DOING_CRON') && DOING_CRON === true) ||
              (defined('DOING_AJAX') && DOING_AJAX === true) ||
              (defined('REST_REQUEST') && REST_REQUEST === true) ||
