@@ -220,6 +220,34 @@ hyperblocks/
     └── old-block.hb.php
 ```
 
+### Manual Block Registration
+
+For developers who need to register blocks from outside the auto-discovery directories (e.g., from a separate plugin or a theme), HyperPress provides filters to manually add blocks.
+
+#### Registering a Fluent API Block
+
+Use the `hmapi/blocks/register_fluent_blocks` filter to add the absolute path to your `.hb.php` file.
+
+```php
+add_filter('hmapi/blocks/register_fluent_blocks', function ($blocks) {
+    // Path to the block file in your plugin/theme
+    $blocks[] = MY_PLUGIN_PATH . 'path/to/my-custom-fluent-block.hb.php';
+    return $blocks;
+});
+```
+
+#### Registering a `block.json` Block
+
+Use the `hmapi/blocks/register_json_blocks` filter to add the absolute path to your block's directory.
+
+```php
+add_filter('hmapi/blocks/register_json_blocks', function ($blocks) {
+    // Path to the block directory in your plugin/theme
+    $blocks[] = MY_PLUGIN_PATH . 'path/to/my-custom-json-block/';
+    return $blocks;
+});
+```
+
 ### When to Choose Which?
 
 Choose Fluent API when:

@@ -5,20 +5,18 @@ declare(strict_types=1);
 use HMApi\starfederation\datastar\ServerSentEventGenerator;
 
 // Exit if accessed directly.
-if (!defined('ABSPATH')) {
-    exit;
-}
+defined('ABSPATH') || exit;
 
 /**
  * Get the HyperPress API URL, with a template path if provided.
  *
- * @since 2.0.0
+ * @since 2.1.0
  *
  * @param string $template_path (optional)
  *
  * @return string
  */
-function hm_get_endpoint_url($template_path = '')
+function hp_get_endpoint_url($template_path = '')
 {
     $hmapi_api_url = home_url((defined('HMAPI_ENDPOINT') ? HMAPI_ENDPOINT : 'wp-html') . '/' . (defined('HMAPI_ENDPOINT_VERSION') ? HMAPI_ENDPOINT_VERSION : 'v1'));
 
@@ -32,15 +30,15 @@ function hm_get_endpoint_url($template_path = '')
 /**
  * Echo the HyperPress API URL, with a template path if provided.
  *
- * @since 2.0.0
+ * @since 2.1.0
  *
  * @param string $template_path (optional)
  *
- * @return string
+ * @return void
  */
-function hm_endpoint_url($template_path = '')
+function hp_endpoint_url($template_path = ''): void
 {
-    echo hm_get_endpoint_url($template_path);
+    echo hp_get_endpoint_url($template_path);
 }
 
 /**
@@ -48,18 +46,18 @@ function hm_endpoint_url($template_path = '')
  * To be used inside noswap templates
  * Sends HX-Trigger header with our response inside hmapiResponse.
  *
- * @since 2.0.0
+ * @since 2.1.0
  *
  * @param array $data status (success|error|silent-success), message, params => $hmvals, etc.
  * @param string $action WP action, optional, default value: none
  *
  * @return void
  */
-function hm_send_header_response($data = [], $action = null)
+function hp_send_header_response($data = [], $action = null)
 {
     // Use shared validation logic
-    if (!hm_validate_request()) {
-        hm_die(__('Nonce verification failed.', 'api-for-htmx'));
+    if (!hp_validate_request()) {
+        hp_die(__('Nonce verification failed.', 'api-for-htmx'));
     }
 
     if ($action === null) {
@@ -106,14 +104,14 @@ function hm_send_header_response($data = [], $action = null)
  * die, but with a 200 status code, so HTMX can show and display the error message
  * Also sends a custom header with the error message, to be used by HTMX if needed.
  *
- * @since 2.0.0
+ * @since 2.1.0
  *
  * @param string $message
  * @param bool $display_error
  *
  * @return void
  */
-function hm_die($message = '', $display_error = false)
+function hp_die($message = '', $display_error = false)
 {
     // Send our response
     if (!headers_sent()) {
@@ -139,14 +137,14 @@ function hm_die($message = '', $display_error = false)
  * Validate HTMX request (New HMAPI version)
  * Checks if the nonce is valid and optionally validates the action.
  *
- * @since 2.0.0
+ * @since 2.1.0
  *
  * @param array|null $hmvals The hypermedia values array (optional, will use $_REQUEST if not provided)
  * @param string|null $action The expected action (optional)
  *
  * @return bool
  */
-function hm_validate_request($hmvals = null, $action = null)
+function hp_validate_request($hmvals = null, $action = null): bool
 {
     // If hmvals not provided, get from $_REQUEST for backwards compatibility
     if ($hmvals === null) {
@@ -183,9 +181,10 @@ function hm_validate_request($hmvals = null, $action = null)
 /**
  * Detect if the plugin is running as a library (not as an active plugin).
  *
+ * @since 2.1.0
  * @return bool
  */
-function hm_is_library_mode(): bool
+function hp_is_library_mode(): bool
 {
     // Check if the plugin is in the active plugins list
     if (defined('HMAPI_BASENAME')) {
@@ -203,10 +202,10 @@ function hm_is_library_mode(): bool
 /**
  * Gets the ServerSentEventGenerator instance, creating it if it doesn't exist.
  *
- * @since 2.0.1
+ * @since 2.1.0
  * @return ServerSentEventGenerator|null The SSE generator instance or null if the SDK is not available.
  */
-function hm_ds_sse(): ?ServerSentEventGenerator
+function hp_ds_sse(): ?ServerSentEventGenerator
 {
     static $sse = null;
 
@@ -225,10 +224,10 @@ function hm_ds_sse(): ?ServerSentEventGenerator
 /**
  * Reads signals sent from the Datastar client.
  *
- * @since 2.0.1
+ * @since 2.1.0
  * @return array The signals array from the client.
  */
-function hm_ds_read_signals(): array
+function hp_ds_read_signals(): array
 {
     if (!class_exists(ServerSentEventGenerator::class)) {
         return [];
@@ -247,14 +246,14 @@ function hm_ds_read_signals(): array
 /**
  * Patches elements into the DOM.
  *
- * @since 2.0.1
+ * @since 2.1.0
  * @param string $html The HTML content to patch.
  * @param array $options Options for patching, including 'selector', 'mode', and 'useViewTransition'.
  * @return void
  */
-function hm_ds_patch_elements(string $html, array $options = []): void
+function hp_ds_patch_elements(string $html, array $options = []): void
 {
-    $sse = hm_ds_sse();
+    $sse = hp_ds_sse();
     if ($sse) {
         $sse->patchElements($html, $options);
     }
@@ -263,14 +262,14 @@ function hm_ds_patch_elements(string $html, array $options = []): void
 /**
  * Removes elements from the DOM.
  *
- * @since 2.0.1
+ * @since 2.1.0
  * @param string $selector The CSS selector for elements to remove.
  * @param array $options Options for removal, including 'useViewTransition'.
  * @return void
  */
-function hm_ds_remove_elements(string $selector, array $options = []): void
+function hp_ds_remove_elements(string $selector, array $options = []): void
 {
-    $sse = hm_ds_sse();
+    $sse = hp_ds_sse();
     if ($sse) {
         $sse->removeElements($selector, $options);
     }
@@ -279,14 +278,14 @@ function hm_ds_remove_elements(string $selector, array $options = []): void
 /**
  * Patches signals.
  *
- * @since 2.0.1
+ * @since 2.1.0
  * @param string|array $signals The signals to patch (JSON string or array).
  * @param array $options Options for patching, including 'onlyIfMissing'.
  * @return void
  */
-function hm_ds_patch_signals($signals, array $options = []): void
+function hp_ds_patch_signals($signals, array $options = []): void
 {
-    $sse = hm_ds_sse();
+    $sse = hp_ds_sse();
     if ($sse) {
         $sse->patchSignals($signals, $options);
     }
@@ -295,14 +294,14 @@ function hm_ds_patch_signals($signals, array $options = []): void
 /**
  * Executes a script in the browser.
  *
- * @since 2.0.1
+ * @since 2.1.0
  * @param string $script The JavaScript code to execute.
  * @param array $options Options for script execution.
  * @return void
  */
-function hm_ds_execute_script(string $script, array $options = []): void
+function hp_ds_execute_script(string $script, array $options = []): void
 {
-    $sse = hm_ds_sse();
+    $sse = hp_ds_sse();
     if ($sse) {
         $sse->executeScript($script, $options);
     }
@@ -311,13 +310,13 @@ function hm_ds_execute_script(string $script, array $options = []): void
 /**
  * Redirects the browser to a new URL.
  *
- * @since 2.0.1
+ * @since 2.1.0
  * @param string $url The URL to redirect to.
  * @return void
  */
-function hm_ds_location(string $url): void
+function hp_ds_location(string $url): void
 {
-    $sse = hm_ds_sse();
+    $sse = hp_ds_sse();
     if ($sse) {
         $sse->location($url);
     }
@@ -329,7 +328,7 @@ function hm_ds_location(string $url): void
  * Provides configurable rate limiting for SSE connections to prevent abuse
  * and protect server resources. Uses WordPress transients for persistence.
  *
- * @since 2.0.1
+ * @since 2.1.0
  * @param array $options {
  *     Rate limiting configuration options.
  *
@@ -342,7 +341,7 @@ function hm_ds_location(string $url): void
  * }
  * @return bool True if rate limited (blocked), false if request is allowed.
  */
-function hm_ds_is_rate_limited(array $options = []): bool
+function hp_ds_is_rate_limited(array $options = []): bool
 {
     // Default configuration
     $defaults = [
@@ -374,9 +373,9 @@ function hm_ds_is_rate_limited(array $options = []): bool
     // Check if rate limit exceeded
     if ($current_count >= $config['requests_per_window']) {
         // Rate limit exceeded
-        if ($config['send_sse_response'] && hm_ds_sse()) {
+        if ($config['send_sse_response'] && hp_ds_sse()) {
             // Send error response via SSE
-            hm_ds_patch_elements(
+            hp_ds_patch_elements(
                 '<div class="rate-limit-error error" style="color: #dc3545; background: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 4px; margin: 10px 0;">' .
                 esc_html($config['error_message']) .
                 '</div>',
@@ -384,14 +383,14 @@ function hm_ds_is_rate_limited(array $options = []): bool
             );
 
             // Update signals to indicate rate limit status
-            hm_ds_patch_signals([
+            hp_ds_patch_signals([
                 'rate_limited' => true,
                 'rate_limit_reset_in' => $config['time_window_seconds'],
                 'requests_remaining' => 0,
             ]);
 
             // Send rate limit info to client via script
-            hm_ds_execute_script("
+            hp_ds_execute_script("
                 console.warn('" . esc_js(__('Rate limit exceeded for Datastar SSE endpoint', 'api-for-htmx')) . "');
                 console.info('" . esc_js(sprintf(__('Requests allowed: %d per %d seconds', 'api-for-htmx'), $config['requests_per_window'], $config['time_window_seconds'])) . "');
             ");
@@ -405,10 +404,10 @@ function hm_ds_is_rate_limited(array $options = []): bool
     set_transient($config['identifier'], $new_count, $config['time_window_seconds']);
 
     // Send rate limit status via SSE if available
-    if ($config['send_sse_response'] && hm_ds_sse()) {
+    if ($config['send_sse_response'] && hp_ds_sse()) {
         $remaining_requests = $config['requests_per_window'] - $new_count;
 
-        hm_ds_patch_signals([
+        hp_ds_patch_signals([
             'rate_limited' => false,
             'requests_remaining' => $remaining_requests,
             'total_requests_allowed' => $config['requests_per_window'],
@@ -416,11 +415,11 @@ function hm_ds_is_rate_limited(array $options = []): bool
         ]);
 
         // Remove any existing rate limit error messages
-        hm_ds_remove_elements($config['error_selector'] . ' .rate-limit-error');
+        hp_ds_remove_elements($config['error_selector'] . ' .rate-limit-error');
 
         // Log remaining requests for debugging
         if ($remaining_requests <= 5) {
-            hm_ds_execute_script("
+            hp_ds_execute_script("
                 console.warn('" . esc_js(sprintf(__('Rate limit warning: %d requests remaining in this time window', 'api-for-htmx'), $remaining_requests)) . "');
             ");
         }
@@ -429,8 +428,6 @@ function hm_ds_is_rate_limited(array $options = []): bool
     return false; // Request allowed
 }
 
- 
-
 /**
  * Create an OptionsPage instance.
  *
@@ -438,7 +435,7 @@ function hm_ds_is_rate_limited(array $options = []): bool
  * @param string $menu_slug The slug for the menu
  * @return HMApi\Fields\OptionsPage
  */
-function hf_option_page(string $page_title, string $menu_slug): HMApi\Fields\OptionsPage
+function hp_create_option_page(string $page_title, string $menu_slug): HMApi\Fields\OptionsPage
 {
     return HMApi\Fields\OptionsPage::make($page_title, $menu_slug);
 }
@@ -446,12 +443,13 @@ function hf_option_page(string $page_title, string $menu_slug): HMApi\Fields\Opt
 /**
  * Create a Field instance.
  *
+ * @since 2.1.0
  * @param string $type The field type
  * @param string $name The field name
  * @param string $label The field label
  * @return HMApi\Fields\Field
  */
-function hf_field(string $type, string $name, string $label): HMApi\Fields\Field
+function hp_create_field(string $type, string $name, string $label): HMApi\Fields\Field
 {
     return HMApi\Fields\Field::make($type, $name, $label);
 }
@@ -459,11 +457,12 @@ function hf_field(string $type, string $name, string $label): HMApi\Fields\Field
 /**
  * Create a TabsField instance.
  *
+ * @since 2.1.0
  * @param string $name The field name
  * @param string $label The field label
  * @return HMApi\Fields\TabsField
  */
-function hf_tabs(string $name, string $label): HMApi\Fields\TabsField
+function hp_create_tabs(string $name, string $label): HMApi\Fields\TabsField
 {
     return HMApi\Fields\TabsField::make($name, $label);
 }
@@ -471,11 +470,12 @@ function hf_tabs(string $name, string $label): HMApi\Fields\TabsField
 /**
  * Create a RepeaterField instance.
  *
+ * @since 2.1.0
  * @param string $name The field name
  * @param string $label The field label
  * @return HMApi\Fields\RepeaterField
  */
-function hf_repeater(string $name, string $label): HMApi\Fields\RepeaterField
+function hp_create_repeater(string $name, string $label): HMApi\Fields\RepeaterField
 {
     return HMApi\Fields\RepeaterField::make($name, $label);
 }
@@ -483,142 +483,20 @@ function hf_repeater(string $name, string $label): HMApi\Fields\RepeaterField
 /**
  * Create an OptionsSection instance.
  *
+ * @since 2.1.0
  * @param string $id The section ID
  * @param string $title The section title
  * @return HMApi\Fields\OptionsSection
  */
-function hf_section(string $id, string $title): HMApi\Fields\OptionsSection
+function hp_create_section(string $id, string $title): HMApi\Fields\OptionsSection
 {
     return HMApi\Fields\OptionsSection::make($id, $title);
-}
-
-// ===================================================================
-// BACKWARD COMPATIBILITY ALIASES
-// ===================================================================
-
-/**
- * Helper to get the API URL.
- *
- * @since 2023-12-04
- * @deprecated 2.0.0 Use hm_get_endpoint_url() instead
- *
- * @param string $template_path (optional)
- *
- * @return string The full URL to the API endpoint for the given template.
- */
-function hxwp_api_url($template_path = '')
-{
-    // Set a global flag to indicate that a legacy function has been used.
-    $GLOBALS['hmapi_is_legacy_theme'] = true;
-
-    _deprecated_function(__FUNCTION__, '2.0.0', 'hm_get_endpoint_url');
-
-    return hm_get_endpoint_url($template_path);
-}
-
-/**
- * HTMX send header response and die() (Legacy HXWP version - deprecated)
- * To be used inside noswap templates
- * Sends HX-Trigger header with our response inside hxwpResponse.
- *
- * @since 2023-12-13
- * @deprecated 2.0.0 Use hm_send_header_response() instead
- *
- * @param array $data status (success|error|silent-success), message, params => $hxvals, etc.
- * @param string $action WP action, optional, default value: none
- *
- * @return void
- */
-function hxwp_send_header_response($data = [], $action = null)
-{
-    _deprecated_function(__FUNCTION__, '2.0.0', 'hm_send_header_response');
-
-    // Use shared validation logic
-    if (!hm_validate_request()) {
-        hxwp_die(__('Nonce verification failed.', 'api-for-htmx'));
-    }
-
-    if ($action === null) {
-        // Legacy: check if action is set inside $_POST['hxvals']['action']
-        $action = isset($_POST['hxvals']['action']) ? sanitize_text_field($_POST['hxvals']['action']) : '';
-    }
-
-    // Action still empty, null or not set?
-    if (empty($action)) {
-        $action = 'none';
-    }
-
-    // If success or silent-success, set code to 200
-    $code = $data['status'] == 'error' ? 400 : 200;
-
-    // Response array (keep legacy format for backward compatibility)
-    $response = [
-        'hxwpResponse' => [
-            'action'  => $action,
-            'status'  => $data['status'],
-            'data'    => $data,
-        ],
-    ];
-
-    // Headers already sent?
-    if (headers_sent()) {
-        wp_die(__('HXWP Error: Headers already sent.', 'api-for-htmx'));
-    }
-
-    // Filter our response (legacy filter)
-    $response = apply_filters('hxwp/header_response', $response, $action, $data['status'], $data);
-
-    // Send our response
-    status_header($code);
-    nocache_headers();
-    header('HX-Trigger: ' . wp_json_encode($response));
-
-    die(); // Don't use wp_die() here
-}
-
-/**
- * HTMX die helper (Legacy HXWP version - deprecated)
- * To be used inside templates
- * die, but with a 200 status code, so HTMX can show and display the error message
- * Also sends a custom header with the error message, to be used by HTMX if needed.
- *
- * @since 2023-12-15
- * @deprecated 2.0.0 Use hm_die() instead
- *
- * @param string $message
- * @param bool $display_error
- *
- * @return void
- */
-function hxwp_die($message = '', $display_error = false)
-{
-    _deprecated_function(__FUNCTION__, '2.0.0', 'hm_die');
-
-    hm_die($message, $display_error);
-}
-
-/**
- * Validate HTMX request (Legacy HXWP version - deprecated)
- * Checks if the nonce is valid and optionally validates the action.
- *
- * @since 2023-12-15
- * @deprecated 2.0.0 Use hm_validate_request() instead
- *
- * @param array|null $hxvals The HTMX values array (optional, will use $_REQUEST if not provided)
- * @param string|null $action The expected action (optional)
- *
- * @return bool
- */
-function hxwp_validate_request($hxvals = null, $action = null)
-{
-    _deprecated_function(__FUNCTION__, '2.0.0', 'hm_validate_request');
-
-    return hm_validate_request($hxvals, $action);
 }
 
 /**
  * Resolve field context into a normalized structure.
  *
+ * @since 2.1.0
  * Supported $source values:
  * - int|numeric-string: Post ID (post meta)
  * - WP_Post: Post object
@@ -628,7 +506,7 @@ function hxwp_validate_request($hxvals = null, $action = null)
  * - array{type: post|user|term|option, id?: int, option_group?: string}
  * - null: try current post ID (inside The Loop) else treat as option
  */
-function hm_resolve_field_context($source = null, array $args = []): array
+function hp_resolve_field_context($source = null, array $args = []): array
 {
     $context = [
         'type' => 'option',
@@ -710,8 +588,10 @@ function hm_resolve_field_context($source = null, array $args = []): array
 
 /**
  * Optionally sanitize a value using Field::sanitize_value when a type is provided.
+ *
+ * @since 2.1.0
  */
-function hm_maybe_sanitize_field_value(string $name, $value, array $args = [])
+function hp_maybe_sanitize_field_value(string $name, $value, array $args = [])
 {
     $type = $args['type'] ?? null;
     if (is_string($type) && $type !== '') {
@@ -731,13 +611,14 @@ function hm_maybe_sanitize_field_value(string $name, $value, array $args = [])
 /**
  * Get a field value from post/user/term meta or options.
  *
+ * @since 2.1.0
  * @param string $name   Meta key / option key
- * @param mixed  $source Context (see hm_resolve_field_context)
+ * @param mixed  $source Context (see hp_resolve_field_context)
  * @param array  $args   { option_group?, default? }
  */
-function hm_get_field(string $name, $source = null, array $args = [])
+function hp_get_field(string $name, $source = null, array $args = [])
 {
-    $ctx = hm_resolve_field_context($source, $args);
+    $ctx = hp_resolve_field_context($source, $args);
 
     switch ($ctx['type']) {
         case 'post':
@@ -778,15 +659,16 @@ function hm_get_field(string $name, $source = null, array $args = [])
 /**
  * Update (save) a field value into post/user/term meta or options.
  *
+ * @since 2.1.0
  * @param string $name
  * @param mixed  $value
- * @param mixed  $source Context (see hm_resolve_field_context)
+ * @param mixed  $source Context (see hp_resolve_field_context)
  * @param array  $args   { option_group?, type? }
  */
-function hm_update_field(string $name, $value, $source = null, array $args = []): bool
+function hp_update_field(string $name, $value, $source = null, array $args = []): bool
 {
-    $ctx = hm_resolve_field_context($source, $args);
-    $sanitized = hm_maybe_sanitize_field_value($name, $value, $args);
+    $ctx = hp_resolve_field_context($source, $args);
+    $sanitized = hp_maybe_sanitize_field_value($name, $value, $args);
 
     switch ($ctx['type']) {
         case 'post':
@@ -821,10 +703,12 @@ function hm_update_field(string $name, $value, $source = null, array $args = [])
 
 /**
  * Delete a field value from post/user/term meta or options.
+ *
+ * @since 2.1.0
  */
-function hm_delete_field(string $name, $source = null, array $args = []): bool
+function hp_delete_field(string $name, $source = null, array $args = []): bool
 {
-    $ctx = hm_resolve_field_context($source, $args);
+    $ctx = hp_resolve_field_context($source, $args);
 
     switch ($ctx['type']) {
         case 'post':
@@ -862,9 +746,18 @@ function hm_delete_field(string $name, $source = null, array $args = []): bool
 }
 
 /**
- * Alias of hm_update_field for parity with the initial TODO wording.
+ * Alias of hp_update_field for parity with the initial TODO wording.
+ *
+ * @since 2.1.0
  */
-function hm_save_field(string $name, $value, $source = null, array $args = []): bool
+function hp_save_field(string $name, $value, $source = null, array $args = []): bool
 {
-    return hm_update_field($name, $value, $source, $args);
+    return hp_update_field($name, $value, $source, $args);
 }
+
+/**
+ * Include deprecated functions.
+ *
+ * @since 2.1.0
+ */
+require_once HMAPI_ABSPATH . 'includes/deprecated.php';

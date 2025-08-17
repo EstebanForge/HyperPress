@@ -46,10 +46,10 @@ Then, you can use the new template path in your plugin like this, using a colon 
 
 ```php
 // Loads the template from: YOUR_PLUGIN_PATH/hypermedia/template-name.hm.php
-echo hm_get_endpoint_url( 'my-plugin:template-name' );
+echo hp_get_endpoint_url( 'my-plugin:template-name' );
 
 // Loads the template from: YOUR_PLUGIN_PATH/hypermedia/parts/header.hm.php
-echo hm_get_endpoint_url( 'my-plugin:parts/header' );
+echo hp_get_endpoint_url( 'my-plugin:parts/header' );
 ```
 
 This will output the URL for the template from the path associated with the `my-plugin` namespace. If the namespace is not registered, or the template file does not exist within that registered path (or is not allowed due to sanitization rules), the request will result in a 404 error. Templates requested with an explicit namespace do not fall back to the theme's default `hypermedia` directory.
@@ -58,10 +58,10 @@ For templates located directly in your active theme's `hypermedia` directory (or
 
 ```php
 // Loads: wp-content/themes/your-theme/hypermedia/live-search.hm.php
-echo hm_get_endpoint_url( 'live-search' );
+echo hp_get_endpoint_url( 'live-search' );
 
 // Loads: wp-content/themes/your-theme/hypermedia/subfolder/my-listing.hm.php
-echo hm_get_endpoint_url( 'subfolder/my-listing' );
+echo hp_get_endpoint_url( 'subfolder/my-listing' );
 ```
 
 ## Using as a Composer Library (Programmatic Configuration)
@@ -70,7 +70,7 @@ If you require this project as a Composer dependency, it will automatically be l
 
 ### Detecting Library Mode
 
-The plugin exposes a helper function `hm_is_library_mode()` to detect if it is running as a library (not as an active plugin). This is determined automatically based on whether the plugin is in the active plugins list and whether it is running in the admin area.
+The plugin exposes a helper function `hp_is_library_mode()` to detect if it is running as a library (not as an active plugin). This is determined automatically based on whether the plugin is in the active plugins list and whether it is running in the admin area.
 
 When in library mode, the plugin will not register its admin options/settings page in wp-admin.
 
@@ -380,7 +380,7 @@ function my_plugin_override_hypermedia_assets() {
 
 // Apply overrides only in library mode
 add_action('plugins_loaded', function() {
-    if (function_exists('hm_is_library_mode') && hm_is_library_mode()) {
+    if (function_exists('hp_is_library_mode') && hp_is_library_mode()) {
         my_plugin_override_hypermedia_assets();
     }
 });

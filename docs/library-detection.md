@@ -1,11 +1,11 @@
 # Library Detection Functions
 
-**`hm_is_library_mode(): bool`**
+**`hp_is_library_mode(): bool`**
 
 Detects whether the plugin is running as a WordPress plugin or as a Composer library. Useful for conditional functionality.
 
 ```php
-if (hm_is_library_mode()) {
+if (hp_is_library_mode()) {
     // Running as composer library - no admin interface
     // Configure via filters only
     add_filter('hmapi/default_options', function($defaults) {
@@ -18,7 +18,7 @@ if (hm_is_library_mode()) {
 }
 
 // Datastar-specific library mode configuration
-if (hm_is_library_mode()) {
+if (hp_is_library_mode()) {
     // Configure Datastar for production use as library
     add_filter('hmapi/default_options', function($defaults) {
         $defaults['active_library'] = 'datastar';
