@@ -1,11 +1,12 @@
 # Changelog
 
-# 2.1.0 / 2025-07-20
-- **NEW:** **HyperBlocks** - Revolutionary PHP-based block creation system with **two complementary approaches**
-  - **Fluent API**: PHP-only block development (no JavaScript required)
-  - **block.json**: WordPress-standard JSON blocks (no custom JavaScript required)
-  - **Unified Editor**: Both approaches use the same React editor component for consistent UX
-  - **Zero JavaScript**: Build complex Gutenberg blocks using only PHP
+# 2.5.0 / 2025-08-17
+- **NEW:** **HyperBlocks** - Sane PHP-based block creation system, no JavaScript required, with **two complementary approaches**
+  - **Fluent API**: PHP-only block development.
+  - **block.json**: WordPress-standard JSON blocks.
+  - **Unified Editor**: Both approaches use the same React editor component for consistent UX.
+  - **Zero JavaScript**: Build complex Gutenberg blocks using only PHP.
+- **NEW:** **HyperFields** - PHP-based field creation system, no JavaScript required, for use with Gutenberg blocks, metaboxes and custom option pages.
 - **NEW:** Auto-discovery system for blocks in `/hyperblocks/` directories
 - **NEW:** Server-side rendering engine with secure PHP template execution
 - **NEW:** Custom component system with `<RichText>` and `<InnerBlocks>` support

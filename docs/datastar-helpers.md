@@ -10,24 +10,24 @@ This is the smallest possible example to stream updates via SSE from a hypermedi
 // In your hypermedia template partial file, e.g., hypermedia/my-sse-endpoint.hm.php
 
 // Apply rate limiting
-if (hm_ds_is_rate_limited()) {
+if (hp_ds_is_rate_limited()) {
     return; // Rate limited
 }
 
 // Initialize SSE (headers are sent automatically)
-$sse = hm_ds_sse();
+$sse = hp_ds_sse();
 if (!$sse) {
-    hm_die('SSE not available');
+    hp_die('SSE not available');
 }
 
 // Read client signals
-$signals = hm_ds_read_signals();
+$signals = hp_ds_read_signals();
 $delay = $signals['delay'] ?? 0;
 $message = 'Hello, world!';
 
 // Stream message character by character
 for ($i = 0; $i < strlen($message); $i++) {
-    hm_ds_patch_elements('<div id="message">' . substr($message, 0, $i + 1) . '</div>');
+    hp_ds_patch_elements('<div id="message">' . substr($message, 0, $i + 1) . '</div>');
 
     // Sleep for the provided delay in milliseconds
     usleep($delay * 1000);
@@ -49,7 +49,7 @@ Frontend HTML to consume the SSE endpoint:
         <input data-bind-delay id="delay" type="number" step="100" min="0" />
     </div>
 
-    <button data-on-click="@get('<?php echo hm_get_endpoint_url('my-sse-endpoint'); ?>')">
+    <button data-on-click="@get('<?php echo hp_get_endpoint_url('my-sse-endpoint'); ?>')">
         Start
     </button>
 </div>
@@ -65,45 +65,45 @@ This demonstrates:
 
 The server receives the `delay` signal to control the stream speed while the `#message` div updates in real time.
 
-**`hm_ds_sse(): ?ServerSentEventGenerator`**
+**`hp_ds_sse(): ?ServerSentEventGenerator`**
 
 Gets or creates the ServerSentEventGenerator instance. Returns `null` if Datastar SDK is not available.
 
 ```php
-$sse = hm_ds_sse();
+$sse = hp_ds_sse();
 if ($sse) {
     // SSE is available, proceed with real-time updates
     $sse->patchElements('<div id="status">Connected</div>');
 }
 ```
 
-**`hm_ds_read_signals(): array`**
+**`hp_ds_read_signals(): array`**
 
 Reads signals sent from the Datastar client. Returns an empty array if Datastar SDK is not available.
 
 ```php
 // Read client signals
-$signals = hm_ds_read_signals();
+$signals = hp_ds_read_signals();
 $user_input = $signals['search_query'] ?? '';
 $page_number = $signals['page'] ?? 1;
 
 // Use signals for processing
 if (!empty($user_input)) {
     $results = search_posts($user_input, $page_number);
-    hm_ds_patch_elements($results_html, ['selector' => '#results']);
+    hp_ds_patch_elements($results_html, ['selector' => '#results']);
 }
 ```
 
-**`hm_ds_patch_elements(string $html, array $options = []): void`**
+**`hp_ds_patch_elements(string $html, array $options = []): void`**
 
 Patches HTML elements into the DOM via SSE. Supports various patching modes and view transitions.
 
 ```php
 // Basic element patching
-hm_ds_patch_elements('<div id="message">Hello World</div>');
+hp_ds_patch_elements('<div id="message">Hello World</div>');
 
 // Advanced patching with options
-hm_ds_patch_elements(
+hp_ds_patch_elements(
     '<div class="notification">Task completed</div>',
     [
         'selector' => '.notifications',
@@ -113,47 +113,47 @@ hm_ds_patch_elements(
 );
 ```
 
-**`hm_ds_remove_elements(string $selector, array $options = []): void`**
+**`hp_ds_remove_elements(string $selector, array $options = []): void`**
 
 Removes elements from the DOM via SSE.
 
 ```php
 // Remove specific element
-hm_ds_remove_elements('#temp-message');
+hp_ds_remove_elements('#temp-message');
 
 // Remove with view transition
-hm_ds_remove_elements('.expired-items', ['useViewTransition' => true]);
+hp_ds_remove_elements('.expired-items', ['useViewTransition' => true]);
 ```
 
-**`hm_ds_patch_signals(mixed $signals, array $options = []): void`**
+**`hp_ds_patch_signals(mixed $signals, array $options = []): void`**
 
 Updates Datastar signals on the client side. Accepts JSON string or array.
 
 ```php
 // Update single signal
-hm_ds_patch_signals(['user_count' => 42]);
+hp_ds_patch_signals(['user_count' => 42]);
 
 // Update multiple signals
-hm_ds_patch_signals([
+hp_ds_patch_signals([
     'loading' => false,
     'message' => 'Data loaded successfully',
     'timestamp' => time()
 ]);
 
 // Only patch if signal doesn't exist
-hm_ds_patch_signals(['default_theme' => 'dark'], ['onlyIfMissing' => true]);
+hp_ds_patch_signals(['default_theme' => 'dark'], ['onlyIfMissing' => true]);
 ```
 
-**`hm_ds_execute_script(string $script, array $options = []): void`**
+**`hp_ds_execute_script(string $script, array $options = []): void`**
 
 Executes JavaScript code on the client via SSE.
 
 ```php
 // Simple script execution
-hm_ds_execute_script('console.log("Server says hello!");');
+hp_ds_execute_script('console.log("Server says hello!");');
 
 // Complex client-side operations
-hm_ds_execute_script('
+hp_ds_execute_script('
     document.querySelector("#progress").style.width = "100%";
     setTimeout(() => {
         location.reload();
@@ -161,30 +161,30 @@ hm_ds_execute_script('
 ');
 ```
 
-**`hm_ds_location(string $url): void`**
+**`hp_ds_location(string $url): void`**
 
 Redirects the browser to a new URL via SSE.
 
 ```php
 // Redirect after processing
-hm_ds_location('/dashboard');
+hp_ds_location('/dashboard');
 
 // Redirect to external URL
-hm_ds_location('https://example.com/success');
+hp_ds_location('https://example.com/success');
 ```
 
-**`hm_ds_is_rate_limited(array $options = []): bool`**
+**`hp_ds_is_rate_limited(array $options = []): bool`**
 
 Checks if current request is rate limited for Datastar SSE endpoints to prevent abuse and protect server resources. Uses WordPress transients for persistence across requests.
 
 ```php
 // Basic rate limiting (10 requests per 60 seconds)
-if (hm_ds_is_rate_limited()) {
-    hm_die(__('Rate limit exceeded', 'api-for-htmx'));
+if (hp_ds_is_rate_limited()) {
+    hp_die(__('Rate limit exceeded', 'api-for-htmx'));
 }
 
 // Custom rate limiting configuration
-if (hm_ds_is_rate_limited([
+if (hp_ds_is_rate_limited([
     'requests_per_window' => 30,      // Allow 30 requests
     'time_window_seconds' => 120,     // Per 2 minutes
     'identifier' => 'search_' . get_current_user_id(), // Custom identifier
@@ -196,16 +196,16 @@ if (hm_ds_is_rate_limited([
 }
 
 // Strict rate limiting without SSE feedback
-if (hm_ds_is_rate_limited([
+if (hp_ds_is_rate_limited([
     'requests_per_window' => 10,
     'time_window_seconds' => 60,
     'send_sse_response' => false  // Don't send SSE feedback
 ])) {
-    hm_die(__('Too many requests', 'api-for-htmx'));
+    hp_die(__('Too many requests', 'api-for-htmx'));
 }
 
 // Different rate limits for different actions
-$action = hm_ds_read_signals()['action'] ?? '';
+$action = hp_ds_read_signals()['action'] ?? '';
 
 switch ($action) {
     case 'search':
@@ -218,7 +218,7 @@ switch ($action) {
         $rate_config = ['requests_per_window' => 30, 'time_window_seconds' => 60];
 }
 
-if (hm_ds_is_rate_limited($rate_config)) {
+if (hp_ds_is_rate_limited($rate_config)) {
     return; // Rate limited
 }
 ```
@@ -239,7 +239,7 @@ Here's a practical example combining multiple Datastar helpers:
 // hypermedia/process-upload.hm.php
 <?php
 // Apply strict rate limiting for uploads (5 uploads per 5 minutes)
-if (hm_ds_is_rate_limited([
+if (hp_ds_is_rate_limited([
     'requests_per_window' => 5,
     'time_window_seconds' => 300,
     'identifier' => 'file_upload_' . get_current_user_id(),
@@ -250,28 +250,28 @@ if (hm_ds_is_rate_limited([
 }
 
 // Initialize SSE
-$sse = hm_ds_sse();
+$sse = hp_ds_sse();
 if (!$sse) {
-    hm_die('SSE not available');
+    hp_die('SSE not available');
 }
 
 // Show progress
-hm_ds_patch_elements('<div id="status">Processing upload...</div>');
-hm_ds_patch_signals(['progress' => 0]);
+hp_ds_patch_elements('<div id="status">Processing upload...</div>');
+hp_ds_patch_signals(['progress' => 0]);
 
 // Simulate file processing
 for ($i = 1; $i <= 5; $i++) {
     sleep(1);
-    hm_ds_patch_signals(['progress' => $i * 20]);
-    hm_ds_patch_elements('<div id="status">Processing... ' . ($i * 20) . '%</div>');
+    hp_ds_patch_signals(['progress' => $i * 20]);
+    hp_ds_patch_elements('<div id="status">Processing... ' . ($i * 20) . '%</div>');
 }
 
 // Complete
-hm_ds_patch_elements('<div id="status" class="success">Upload complete!</div>');
-hm_ds_patch_signals(['progress' => 100, 'completed' => true]);
+hp_ds_patch_elements('<div id="status" class="success">Upload complete!</div>');
+hp_ds_patch_signals(['progress' => 100, 'completed' => true]);
 
 // Redirect after 2 seconds
-hm_ds_execute_script('setTimeout(() => { window.location.href = "/dashboard"; }, 2000);');
+hp_ds_execute_script('setTimeout(() => { window.location.href = "/dashboard"; }, 2000);');
 ?>
 ```
 
@@ -289,13 +289,13 @@ Here's a complete frontend-backend example showing how all helper functions work
     <input
         type="text"
         data-bind-query
-        data-on-input="@get('<?php hm_endpoint_url('search-users-validate'); ?>')"
+        data-on-input="@get('<?php hp_endpoint_url('search-users-validate'); ?>')"
         placeholder="Search users..."
     />
 
     <!-- Search button -->
     <button
-        data-on-click="@get('<?php hm_endpoint_url('search-users'); ?>')"
+        data-on-click="@get('<?php hp_endpoint_url('search-users'); ?>')"
         data-bind-disabled="loading"
     >
         <span data-show="!loading">Search</span>
@@ -318,27 +318,27 @@ Here's a complete frontend-backend example showing how all helper functions work
 ```php
 <?php
 // Apply rate limiting
-if (hm_ds_is_rate_limited()) {
+if (hp_ds_is_rate_limited()) {
     return; // Rate limited
 }
 
 // Get search query from signals
-$signals = hm_ds_read_signals();
+$signals = hp_ds_read_signals();
 $query = trim($signals['query'] ?? '');
 
 // Validate query length
 if (strlen($query) < 2 && strlen($query) > 0) {
-    hm_ds_patch_elements(
+    hp_ds_patch_elements(
         '<div class="validation-error">Please enter at least 2 characters</div>',
         ['selector' => '#search-validation']
     );
-    hm_ds_patch_signals(['query_valid' => false]);
+    hp_ds_patch_signals(['query_valid' => false]);
 } elseif (strlen($query) >= 2) {
-    hm_ds_remove_elements('#search-validation .validation-error');
-    hm_ds_patch_signals(['query_valid' => true]);
+    hp_ds_remove_elements('#search-validation .validation-error');
+    hp_ds_patch_signals(['query_valid' => true]);
 
     // Show search suggestion
-    hm_ds_patch_elements(
+    hp_ds_patch_elements(
         '<div class="search-hint">Press Enter or click Search to find users</div>',
         ['selector' => '#search-validation']
     );
@@ -350,7 +350,7 @@ if (strlen($query) < 2 && strlen($query) > 0) {
 ```php
 <?php
 // Apply rate limiting for search operations
-if (hm_ds_is_rate_limited([
+if (hp_ds_is_rate_limited([
     'requests_per_window' => 20,
     'time_window_seconds' => 60,
     'identifier' => 'user_search_' . get_current_user_id(),
@@ -362,12 +362,12 @@ if (hm_ds_is_rate_limited([
 }
 
 // Get search parameters
-$signals = hm_ds_read_signals();
+$signals = hp_ds_read_signals();
 $query = sanitize_text_field($signals['query'] ?? '');
 
 // Set loading state
-hm_ds_patch_signals(['loading' => true, 'results' => []]);
-hm_ds_patch_elements('<div class="loading">Searching users...</div>', ['selector' => '#search-results']);
+hp_ds_patch_signals(['loading' => true, 'results' => []]);
+hp_ds_patch_elements('<div class="loading">Searching users...</div>', ['selector' => '#search-results']);
 
 // Simulate search delay
 usleep(500000); // 0.5 seconds
@@ -398,7 +398,7 @@ foreach ($users as $user) {
         $user->ID,
         esc_html($user->display_name),
         esc_html($user->user_email),
-        hm_get_endpoint_url('user-details'),
+        hp_get_endpoint_url('user-details'),
         $user->ID
     );
 }
@@ -407,15 +407,15 @@ $results_html .= '</div>';
 
 // Update UI with results
 if (count($users) > 0) {
-    hm_ds_patch_elements($results_html, ['selector' => '#search-results']);
-    hm_ds_patch_signals([
+    hp_ds_patch_elements($results_html, ['selector' => '#search-results']);
+    hp_ds_patch_signals([
         'loading' => false,
         'results' => $results_data,
         'result_count' => count($users)
     ]);
 
     // Show success notification
-    hm_ds_execute_script("
+    hp_ds_execute_script("
         const notification = document.createElement('div');
         notification.className = 'notification success';
         notification.textContent = 'Found " . count($users) . " users';
@@ -423,8 +423,8 @@ if (count($users) > 0) {
         setTimeout(() => notification.remove(), 3000);
     ");
 } else {
-    hm_ds_patch_elements('<div class="no-results">No users found for \"' . esc_html($query) . '\"</div>', ['selector' => '#search-results']);
-    hm_ds_patch_signals(['loading' => false, 'results' => []]);
+    hp_ds_patch_elements('<div class="no-results">No users found for \"' . esc_html($query) . '\"</div>', ['selector' => '#search-results']);
+    hp_ds_patch_signals(['loading' => false, 'results' => []]);
 }
 ?>
 ```
@@ -432,7 +432,7 @@ if (count($users) > 0) {
 This example demonstrates:
 - **Frontend**: Datastar signals, reactive UI, and SSE endpoint integration
 - **Backend**: Real-time feedback, progressive enhancement, and signal processing
-- **Helper Usage**: `hm_ds_read_signals()`, `hm_get_endpoint_url()`, and all `hm_ds_*` functions
+- **Helper Usage**: `hp_ds_read_signals()`, `hp_get_endpoint_url()`, and all `hp_ds_*` functions
 - **Security**: Input sanitization and validation, plus rate limiting for SSE endpoints
 - **UX**: Loading states, real-time validation, and user feedback
 
@@ -460,14 +460,14 @@ Here's a complete example showing how to integrate rate limiting with user feedb
     <input
         type="text"
         data-bind-message
-        data-on-keyup.enter="@get('<?php hm_endpoint_url('send-message'); ?>')"
+        data-on-keyup.enter="@get('<?php hp_endpoint_url('send-message'); ?>')"
         data-bind-disabled="rate_limited"
         placeholder="Type your message..."
     />
 
     <!-- Send button -->
     <button
-        data-on-click="@get('<?php hm_endpoint_url('send-message'); ?>')"
+        data-on-click="@get('<?php hp_endpoint_url('send-message'); ?>')"
         data-bind-disabled="rate_limited"
     >
         Send Message
@@ -485,7 +485,7 @@ Here's a complete example showing how to integrate rate limiting with user feedb
 ```php
 <?php
 // Apply rate limiting for chat messages (10 messages per minute)
-if (hm_ds_is_rate_limited([
+if (hp_ds_is_rate_limited([
     'requests_per_window' => 10,
     'time_window_seconds' => 60,
     'identifier' => 'chat_' . get_current_user_id(),
@@ -498,12 +498,12 @@ if (hm_ds_is_rate_limited([
 }
 
 // Get message from signals
-$signals = hm_ds_read_signals();
+$signals = hp_ds_read_signals();
 $message = trim($signals['message'] ?? '');
 
 // Validate message
 if (empty($message)) {
-    hm_ds_patch_elements(
+    hp_ds_patch_elements(
         '<div class="error">' . esc_html__('Message cannot be empty', 'api-for-htmx') . '</div>',
         ['selector' => '#chat-errors']
     );
@@ -511,7 +511,7 @@ if (empty($message)) {
 }
 
 if (strlen($message) > 500) {
-    hm_ds_patch_elements(
+    hp_ds_patch_elements(
         '<div class="error">' . esc_html__('Message too long (max 500 characters)', 'api-for-htmx') . '</div>',
         ['selector' => '#chat-errors']
     );
@@ -519,7 +519,7 @@ if (strlen($message) > 500) {
 }
 
 // Clear any errors
-hm_ds_remove_elements('#chat-errors .error');
+hp_ds_remove_elements('#chat-errors .error');
 
 // Save message (example)
 $user = wp_get_current_user();
@@ -540,16 +540,16 @@ $message_html = sprintf(
     $chat_message['message']
 );
 
-hm_ds_patch_elements($message_html, [
+hp_ds_patch_elements($message_html, [
     'selector' => '#chat-messages',
     'mode' => 'append'
 ]);
 
 // Clear input field
-hm_ds_patch_signals(['message' => '']);
+hp_ds_patch_signals(['message' => '']);
 
 // Show success feedback
-hm_ds_execute_script("
+hp_ds_execute_script("
     // Scroll to bottom of chat
     const chatMessages = document.getElementById('chat-messages');
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -566,7 +566,7 @@ hm_ds_execute_script("
 ```
 
 This rate limiting example shows:
-- **Intuitive Function Naming**: `hm_ds_is_rate_limited()` returns true when blocked
+- **Intuitive Function Naming**: `hp_ds_is_rate_limited()` returns true when blocked
 - **Proactive Rate Limiting**: Applied before processing the request
 - **Automatic User Feedback**: Rate limit helper sends SSE responses with error messages
 - **Dynamic UI Updates**: Frontend reacts to rate limit signals automatically

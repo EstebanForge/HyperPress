@@ -21,50 +21,50 @@ If you are not familiar with how WordPress recommends handling data sanitization
 
 ## Nonce Validation and Request Validation
 
-Use `hm_validate_request(array $hmvals = null, string $action = null): bool` to validate Hypermedia requests across HTMX, Alpine Ajax, and Datastar forms.
+Use `hp_validate_request(array $hmvals = null, string $action = null): bool` to validate Hypermedia requests across HTMX, Alpine Ajax, and Datastar forms.
 
 - Supports both new (`hmapi_nonce`) and legacy (`hxwp_nonce`) nonce formats.
 - For SSE (Datastar) endpoints, validation differs because the connection model is not a standard form POST. Combine nonce checks with capability checks and rate limiting as appropriate.
 
 ```php
 // Basic nonce validation (works for all hypermedia libraries)
-if (!hm_validate_request()) {
-    hm_die('Security check failed');
+if (!hp_validate_request()) {
+    hp_die('Security check failed');
 }
 
 // Validate specific action
-if (!hm_validate_request($_REQUEST, 'delete_post')) {
-    hm_die('Invalid action');
+if (!hp_validate_request($_REQUEST, 'delete_post')) {
+    hp_die('Invalid action');
 }
 
 // Validate custom data array
 $custom_data = ['action' => 'save_settings', '_wpnonce' => $_POST['_wpnonce']];
-if (!hm_validate_request($custom_data, 'save_settings')) {
-    hm_die('Validation failed');
+if (!hp_validate_request($custom_data, 'save_settings')) {
+    hp_die('Validation failed');
 }
 
 // Datastar SSE endpoint with real-time validation
 // hypermedia/validate-form.hm.php
-$signals = hm_ds_read_signals();
+$signals = hp_ds_read_signals();
 $email = $signals['email'] ?? '';
 $password = $signals['password'] ?? '';
 
 // Validate email in real-time
 if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    hm_ds_patch_elements('<div class="error">Valid email required</div>', ['selector' => '#email-error']);
-    hm_ds_patch_signals(['email_valid' => false]);
+    hp_ds_patch_elements('<div class="error">Valid email required</div>', ['selector' => '#email-error']);
+    hp_ds_patch_signals(['email_valid' => false]);
 } else {
-    hm_ds_remove_elements('#email-error');
-    hm_ds_patch_signals(['email_valid' => true]);
+    hp_ds_remove_elements('#email-error');
+    hp_ds_patch_signals(['email_valid' => true]);
 }
 
 // Validate password strength
 if (strlen($password) < 8) {
-    hm_ds_patch_elements('<div class="error">Password must be 8+ characters</div>', ['selector' => '#password-error']);
-    hm_ds_patch_signals(['password_valid' => false]);
+    hp_ds_patch_elements('<div class="error">Password must be 8+ characters</div>', ['selector' => '#password-error']);
+    hp_ds_patch_signals(['password_valid' => false]);
 } else {
-    hm_ds_remove_elements('#password-error');
-    hm_ds_patch_signals(['password_valid' => true]);
+    hp_ds_remove_elements('#password-error');
+    hp_ds_patch_signals(['password_valid' => true]);
 }
 ```
 

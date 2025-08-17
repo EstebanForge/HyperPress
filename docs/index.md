@@ -37,6 +37,7 @@ Documentation for the HyperPress plugin, with its Hypermedia REST API, and its l
    - [Backward Compatibility](./helper-functions.md#backward-compatibility)
  - [Datastar Helper Functions](./datastar-helpers.md)
    - [Quick Start: Minimal SSE Example](./datastar-helpers.md#quick-start-minimal-sse-example)
+ - [HyperBlocks Examples](./hyperblocks-examples.md)
  - [HyperFields Examples](./hyperfields-examples.md)
  - [Options Page Compact Input](./options-compact-input.md)
 
