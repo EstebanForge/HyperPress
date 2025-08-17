@@ -1,6 +1,6 @@
 # How to use
 
-After installation, you can use hypermedia templates in any theme.
+After installation, you can use hypermedia template partials in any theme.
 
 This plugin will include the active hypermedia library by default, locally from the plugin folder. Libraries like HTMX, Alpine.js, Hyperscript, and Datastar are supported.
 
@@ -73,13 +73,13 @@ You can pass data to these templates the same way as regular templates. Alternat
 
 ## Helper Functions
 
-The plugin provides a comprehensive set of helper functions for developers to interact with hypermedia templates and manage responses. All functions are designed to work with HTMX, Alpine Ajax, and Datastar.
+The plugin provides a comprehensive set of helper functions for developers to interact with hypermedia template partials and manage responses. All functions are designed to work with HTMX, Alpine Ajax, and Datastar.
 
 ### URL Generation Functions
 
 **`hm_get_endpoint_url(string $template_path = ''): string`**
 
-Generates the full URL for your hypermedia templates. Automatically adds the `/wp-html/v1/` prefix and applies proper URL formatting. Always use this helper for endpoint URLs.
+Generates the full URL for your hypermedia template partials. Automatically adds the `/wp-html/v1/` prefix and applies proper URL formatting. Always use this helper for endpoint URLs.
 
 ```php
 // Basic usage

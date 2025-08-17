@@ -4,7 +4,7 @@
 
 HyperPress equips developers with a powerful toolkit, including:
 
-* A dedicated REST API endpoint (`/wp-html/v1/`) for serving hypermedia templates.
+* A dedicated REST API endpoint (`/wp-html/v1/`) for serving hypermedia template partials.
 * HyperFields: a streamlined PHP API for registering custom data fields.
 * HyperBlocks: a simple but powerful PHP API for building dynamic, render-on-the-fly Gutenberg blocks. Adiós JavaScript nonsense.
 

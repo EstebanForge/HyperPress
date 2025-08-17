@@ -15,7 +15,7 @@
 - **NEW:** Backward compatible with existing WordPress block ecosystem
 
 # 2.0.7 / 2025-08-02
-- **IMPROVEMENT:** Added a `hmapi/before_template_load` action hook that fires before each hypermedia template is loaded, providing a centralized point for common template preparation logic. Thanks @eduwass.
+- **IMPROVEMENT:** Added a `hmapi/before_template_load` action hook that fires before each hypermedia template partial is loaded, providing a centralized point for common template preparation logic. Thanks @eduwass.
 - **FIX:** Added `stripslashes_deep()` to the `hm_ds_read_signals()` function to remove WordPress "magic quotes" slashes from GET requests, ensuring proper JSON decoding for Datastar signals. Thanks @eduwass.
 - Updated Datastar JS library to the latest version.
 - Updated Datastar PHP SDK to the latest version.

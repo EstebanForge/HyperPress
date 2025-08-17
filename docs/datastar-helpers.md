@@ -4,10 +4,10 @@ These functions provide direct integration with Datastar's Server-Sent Events (S
 
 ## Quick Start: Minimal SSE Example
 
-This is the smallest possible example to stream updates via SSE from a hypermedia template and consume them on the frontend.
+This is the smallest possible example to stream updates via SSE from a hypermedia template partial and consume them on the frontend.
 
 ```php
-// In your hypermedia template file, e.g., hypermedia/my-sse-endpoint.hm.php
+// In your hypermedia template partial file, e.g., hypermedia/my-sse-endpoint.hm.php
 
 // Apply rate limiting
 if (hm_ds_is_rate_limited()) {

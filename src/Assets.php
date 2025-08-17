@@ -211,15 +211,8 @@ class Assets
         if ($is_admin) {
             $should_load_htmx = !empty($options['load_htmx_backend']);
         } else {
+            // Frontend: only load HTMX when it is the active library
             $should_load_htmx = ($active_library === 'htmx');
-            if (!$should_load_htmx) { // Check if any extension is enabled
-                foreach ($options as $key => $value) {
-                    if (strpos($key, 'load_extension_') === 0 && !empty($value)) {
-                        $should_load_htmx = true;
-                        break;
-                    }
-                }
-            }
         }
 
         if ($should_load_htmx) {
@@ -237,7 +230,7 @@ class Assets
         }
 
         // --- Hyperscript ---
-        if (!empty($options['load_hyperscript']) && ($is_admin ? !empty($options['load_htmx_backend']) : true)) { // Load if HTMX is likely active or backend HTMX is on
+        if (!empty($options['load_hyperscript']) && ($is_admin ? !empty($options['load_htmx_backend']) : ($active_library === 'htmx'))) { // Load only with HTMX or when backend HTMX is on
             $cdn_urls = $this->main->get_cdn_urls();
             $asset = $assets_config['hyperscript'];
             $url = $load_from_cdn ? $cdn_urls['hyperscript']['url'] : $asset['local_url'];
@@ -258,7 +251,7 @@ class Assets
             if ($active_library === 'alpinejs' && !empty($options['enable_alpinejs_core'])) {
                 $should_load_alpine_core = true;
             }
-            if (!empty($options['load_alpinejs_with_htmx'])) { // HTMX companion
+            if (!empty($options['load_alpinejs_with_htmx']) && $active_library === 'htmx') { // HTMX companion only when HTMX is active
                 $should_load_alpine_core = true;
             }
         }

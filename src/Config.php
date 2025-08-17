@@ -28,7 +28,8 @@ class Config
     private function get_options(): array
     {
         $default_options = [
-            'active_hypermedia_library' => 'htmx',
+            // Use the same key as Assets to avoid mismatch
+            'active_library' => 'htmx',
             'hmapi_meta_config_content' => '',
         ];
 
@@ -48,7 +49,8 @@ class Config
     public function insert_config_meta_tag(): void
     {
         $options = $this->get_options();
-        $active_library = $options['active_hypermedia_library'] ?? 'htmx'; // Default to htmx if not set
+        // Align with Assets.php option key
+        $active_library = $options['active_library'] ?? 'htmx'; // Default to htmx if not set
 
         // Only output htmx-config if HTMX is the active library
         if ('htmx' !== $active_library) {
