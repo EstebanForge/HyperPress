@@ -49,8 +49,6 @@ Documentation for the HyperPress plugin, with its Hypermedia REST API, and its l
    - [Customize Asset Loading](./developer-configuration.md#customize-asset-loading)
    - [Disable Admin Interface Completely](./developer-configuration.md#disable-admin-interface-completely)
  - [Library Detection](./library-detection.md)
- - [Security & Validation](./security-validation.md)
-
- - [Security Policy](./security.md)
+ - [Security & Validation](./security.md)
  - [FAQ](./faq.md)
  - [CHANGELOG](../CHANGELOG.md)
