@@ -209,7 +209,7 @@ class Main
      *
      * @example
      * // Get all CDN URLs
-     * $cdn_urls = $this->get_cdn_urls();
+     * $cdn_urls = $this->getCdnUrls();
      *
      * // Get HTMX core URL
      * $htmx_url = $cdn_urls['htmx']['url'];
@@ -225,7 +225,7 @@ class Main
      * @see Assets::enqueue_scripts_logic() For usage in script enqueuing
      * @see Admin\Options::get_htmx_extensions() For admin interface integration
      */
-    public function get_cdn_urls(): array
+    public function getCdnUrls(): array
     {
         return [
             'htmx' => [

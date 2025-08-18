@@ -225,7 +225,7 @@ class Registry
 
         switch ($context) {
             case 'post':
-                $post_field = PostField::for_post(get_the_ID(), $field->getType(), $field->getName(), $field->getLabel());
+                $post_field = PostField::forPost(get_the_ID(), $field->getType(), $field->getName(), $field->getLabel());
                 $value = $post_field->getValue();
                 break;
             case 'user':
@@ -280,7 +280,7 @@ class Registry
         foreach ($post_fields as $field) {
             $field_name = $field->getName();
             if (isset($_POST[$field_name])) {
-                $post_field = PostField::for_post($post_id, $field->getType(), $field_name, $field->getLabel());
+                $post_field = PostField::forPost($post_id, $field->getType(), $field_name, $field->getLabel());
                 $post_field->setValue($_POST[$field_name]);
             }
         }

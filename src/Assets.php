@@ -47,8 +47,8 @@ class Assets
     {
         $this->main = $main;
 
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_scripts']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_backend_scripts']);
+        add_action('wp_enqueue_scripts', $this->enqueueFrontendScripts(...));
+        add_action('admin_enqueue_scripts', $this->enqueueBackendScripts(...));
     }
 
     /**
@@ -77,7 +77,7 @@ class Assets
             ];
 
             // Add all HTMX extensions to the defaults
-            $htmx_extensions = $this->main->get_cdn_urls()['htmx_extensions'] ?? [];
+            $htmx_extensions = $this->main->getCdnUrls()['htmx_extensions'] ?? [];
             foreach (array_keys($htmx_extensions) as $extension_key) {
                 $default_options_fallback['load_extension_' . $extension_key] = 0;
             }
@@ -99,7 +99,7 @@ class Assets
      *
      * @return void
      */
-    public function enqueue_frontend_scripts()
+    public function enqueueFrontendScripts()
     {
         $this->enqueue_scripts_logic(false);
     }
@@ -112,7 +112,7 @@ class Assets
      *
      * @return void
      */
-    public function enqueue_backend_scripts()
+    public function enqueueBackendScripts()
     {
         $this->enqueue_scripts_logic(true);
     }
@@ -122,7 +122,7 @@ class Assets
      *
      * This method handles the intelligent loading of hypermedia libraries and HTMX extensions
      * based on user settings and CDN availability. It uses the centralized URL management
-     * system from Main::get_cdn_urls() to ensure consistent versioning and availability.
+     * system from Main::getCdnUrls() to ensure consistent versioning and availability.
      *
      * Key features:
      * - Dynamic CDN vs local file loading based on user preferences
@@ -132,7 +132,7 @@ class Assets
      * - Conditional loading based on active library and admin settings
      *
      * URL Management Flow:
-     * 1. Retrieve centralized CDN URLs and versions from Main::get_cdn_urls()
+     * 1. Retrieve centralized CDN URLs and versions from Main::getCdnUrls()
      * 2. Check user preference for CDN vs local loading
      * 3. For CDN: Use URL and version from centralized system
      * 4. For local: Use local file path with filemtime() for cache busting
@@ -145,7 +145,7 @@ class Assets
      *
      * @return void
      *
-     * @see Main::get_cdn_urls() For centralized URL and version management
+     * @see Main::getCdnUrls() For centralized URL and version management
      * @see Admin\Options::getOptions() For user configuration settings
      *
      * @example
@@ -216,7 +216,7 @@ class Assets
         }
 
         if ($should_load_htmx) {
-            $cdn_urls = $this->main->get_cdn_urls();
+            $cdn_urls = $this->main->getCdnUrls();
             $asset = $assets_config['htmx'];
             $url = $load_from_cdn ? $cdn_urls['htmx']['url'] : $asset['local_url'];
             $ver = $load_from_cdn ? $cdn_urls['htmx']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
@@ -231,7 +231,7 @@ class Assets
 
         // --- Hyperscript ---
         if (!empty($options['load_hyperscript']) && ($is_admin ? !empty($options['load_htmx_backend']) : ($active_library === 'htmx'))) { // Load only with HTMX or when backend HTMX is on
-            $cdn_urls = $this->main->get_cdn_urls();
+            $cdn_urls = $this->main->getCdnUrls();
             $asset = $assets_config['hyperscript'];
             $url = $load_from_cdn ? $cdn_urls['hyperscript']['url'] : $asset['local_url'];
             $ver = $load_from_cdn ? $cdn_urls['hyperscript']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
@@ -257,7 +257,7 @@ class Assets
         }
 
         if ($should_load_alpine_core) {
-            $cdn_urls = $this->main->get_cdn_urls();
+            $cdn_urls = $this->main->getCdnUrls();
             $asset = $assets_config['alpine_core'];
             $url = $load_from_cdn ? $cdn_urls['alpinejs']['url'] : $asset['local_url'];
             $ver = $load_from_cdn ? $cdn_urls['alpinejs']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
@@ -272,7 +272,7 @@ class Assets
 
         // --- Alpine Ajax (Frontend only, depends on Alpine Core) ---
         if (!$is_admin && $active_library === 'alpinejs' && $alpine_core_loaded && !empty($options['enable_alpine_ajax'])) {
-            $cdn_urls = $this->main->get_cdn_urls();
+            $cdn_urls = $this->main->getCdnUrls();
             $asset = $assets_config['alpine_ajax'];
             $url = '';
             $ver = $plugin_version;
@@ -303,7 +303,7 @@ class Assets
         }
 
         if ($should_load_datastar) {
-            $cdn_urls = $this->main->get_cdn_urls();
+            $cdn_urls = $this->main->getCdnUrls();
             $asset = $assets_config['datastar'];
             $url = $load_from_cdn ? $cdn_urls['datastar']['url'] : $asset['local_url'];
             $ver = $load_from_cdn ? $cdn_urls['datastar']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
@@ -324,7 +324,7 @@ class Assets
             // Filter: Allow developers to override HTMX extensions directory
             $extensions_dir_url = apply_filters('hyperpress/htmx_extensions_url', $extensions_dir_url, $extensions_dir_local, $plugin_url, $plugin_path, $is_library_mode);
 
-            $cdn_urls = $this->main->get_cdn_urls();
+            $cdn_urls = $this->main->getCdnUrls();
 
             foreach ($options as $option_key => $option_value) {
                 if (strpos($option_key, 'load_extension_') === 0 && !empty($option_value)) {

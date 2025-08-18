@@ -14,9 +14,9 @@ use HyperPress\Fields\HyperFields;
 
 // Example 1: Basic Plugin Options Page
 $plugin_options = HyperFields::makeOptionPage(__('My Plugin Settings', 'api-for-htmx'), 'my-plugin-settings')
-    ->set_menu_title(__('My Plugin', 'api-for-htmx'))
-    ->set_parent_slug('options-general.php')
-    ->set_footer_content('<span>' . __('Demo Footer: Powered by HyperFields', 'api-for-htmx') . '</span>');
+    ->setMenuTitle(__('My Plugin', 'api-for-htmx'))
+    ->setParentSlug('options-general.php')
+    ->setFooterContent('<span>' . __('Demo Footer: Powered by HyperFields', 'api-for-htmx') . '</span>');
 
 // Add sections and fields
 $general_section = $plugin_options->addSection('general', __('General Settings', 'api-for-htmx'), __('Configure basic plugin settings', 'api-for-htmx'));
@@ -151,9 +151,9 @@ $plugin_options->register();
 
 // Example 5: Theme Options Page
 $theme_options = HyperFields::makeOptionPage('Theme Settings', 'theme-settings')
-    ->set_menu_title('Theme Options')
-    ->set_parent_slug('themes.php')
-    ->set_icon_url('dashicons-admin-customizer');
+    ->setMenuTitle('Theme Options')
+    ->setParentSlug('themes.php')
+    ->setIconUrl('dashicons-admin-customizer');
 
 // Header settings
 $header_section = $theme_options->addSection('header', 'Header Configuration', 'Customize your theme header');
@@ -211,9 +211,9 @@ $theme_options->register();
 
 // Example 6: Custom Top-Level Menu
 $custom_menu = HyperFields::makeOptionPage('Custom Plugin', 'custom-plugin')
-    ->set_menu_title('Custom Plugin')
-    ->set_icon_url('dashicons-admin-generic')
-    ->set_position(30);
+    ->setMenuTitle('Custom Plugin')
+    ->setIconUrl('dashicons-admin-generic')
+    ->setPosition(30);
 
 // Dashboard section
 $dashboard_section = $custom_menu->addSection('dashboard', 'Dashboard', 'Welcome to your custom plugin dashboard');

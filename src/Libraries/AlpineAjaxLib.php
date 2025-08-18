@@ -40,7 +40,7 @@ class AlpineAjaxLib
      *
      * @return array An empty array.
      */
-    public function get_extensions(): array
+    public function getExtensions(): array
     {
         return [];
     }

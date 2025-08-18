@@ -12,7 +12,7 @@ use HyperPress\Fields\HyperFields;
 function hyperfields_conditional_logic_test() {
     $container = HyperFields::makeOptionPage('Conditional Logic Test', 'conditional-logic-test')
         ->set_icon('dashicons-admin-generic')
-        ->set_position(100);
+        ->setPosition(100);
 
     // Test Section
     $test_section = $container->addSection('test', 'Test Section', 'Test conditional logic functionality');

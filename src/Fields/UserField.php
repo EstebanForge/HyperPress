@@ -18,14 +18,14 @@ class UserField extends Field
         return $field;
     }
 
-    public function set_meta_key_prefix(string $prefix): self
+    public function setMetaKeyPrefix(string $prefix): self
     {
         $this->meta_key_prefix = $prefix;
 
         return $this;
     }
 
-    public function get_meta_key(): string
+    public function getMetaKey(): string
     {
         $key = $this->meta_key_prefix . $this->getName();
 
@@ -34,7 +34,7 @@ class UserField extends Field
 
     public function getValue(): mixed
     {
-        $value = get_user_meta($this->user_id, $this->get_meta_key(), true);
+        $value = get_user_meta($this->user_id, $this->getMetaKey(), true);
 
         if ($value === '' || $value === false) {
             $value = $this->getDefault();
@@ -51,15 +51,15 @@ class UserField extends Field
             return false;
         }
 
-        return update_user_meta($this->user_id, $this->get_meta_key(), $sanitized_value) !== false;
+        return update_user_meta($this->user_id, $this->getMetaKey(), $sanitized_value) !== false;
     }
 
     public function deleteValue(): bool
     {
-        return delete_user_meta($this->user_id, $this->get_meta_key()) !== false;
+        return delete_user_meta($this->user_id, $this->getMetaKey()) !== false;
     }
 
-    public function get_user_id(): int
+    public function getUserId(): int
     {
         return $this->user_id;
     }

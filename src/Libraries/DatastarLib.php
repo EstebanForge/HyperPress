@@ -55,9 +55,9 @@ class DatastarLib
      *     @type string $message Status message for logging/debugging.
      * }
      */
-    public function get_sdk_status(array $options): array
+    public function getSdkStatus(array $options): array
     {
-        $sdk_loaded = $this->is_sdk_loaded();
+        $sdk_loaded = $this->isSdkLoaded();
         $version = 'not available';
         $message = 'Datastar PHP SDK not found. Please run composer install.';
 
@@ -84,7 +84,7 @@ class DatastarLib
             $active_library = $options['active_library'] ?? 'htmx';
 
             if ($active_library === 'datastar') {
-                $sdk_loaded = self::load_sdk();
+                $sdk_loaded = self::loadSdk();
                 if ($sdk_loaded) {
                     $message = 'SDK loaded automatically for Datastar library';
                 } else {
@@ -138,7 +138,7 @@ class DatastarLib
      *
      * @return bool True if SDK is loaded and available, false otherwise.
      */
-    public static function load_sdk(): bool
+    public static function loadSdk(): bool
     {
         return class_exists('HyperPress\starfederation\datastar\Consts');
     }
@@ -148,7 +148,7 @@ class DatastarLib
      *
      * @return bool
      */
-    private function is_sdk_loaded(): bool
+    private function isSdkLoaded(): bool
     {
         return class_exists('HyperPress\starfederation\datastar\Consts');
     }

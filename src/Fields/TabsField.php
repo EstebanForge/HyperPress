@@ -70,7 +70,7 @@ class TabsField extends Field
         return $this->layout;
     }
 
-    public function get_active_tab(): string
+    public function getActiveTab(): string
     {
         return $this->active_tab;
     }
