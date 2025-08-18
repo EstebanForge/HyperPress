@@ -38,33 +38,33 @@ $api_key = $map_options['api_key'] ?? '';
 
     <div class="hyperpress-field-input">
         <div class="hyperpress-map-field">
-            <input type="text" 
-                   id="<?php echo esc_attr($name); ?>_address" 
-                   name="<?php echo esc_attr($name_attr); ?>[address]" 
-                   value="<?php echo esc_attr($address); ?>" 
-                   placeholder="<?php _e('Search for an address...', 'hyperpress'); ?>" 
+            <input type="text"
+                   id="<?php echo esc_attr($name); ?>_address"
+                   name="<?php echo esc_attr($name_attr); ?>[address]"
+                   value="<?php echo esc_attr($address); ?>"
+                   placeholder="<?php _e('Search for an address...', 'api-for-htmx'); ?>"
                    class="regular-text hyperpress-map-search">
-            
+
             <button type="button" class="button hyperpress-geocode-button" data-field="<?php echo esc_attr($name); ?>">
-                <?php _e('Search', 'hyperpress'); ?>
+                <?php _e('Search', 'api-for-htmx'); ?>
             </button>
-            
-            <div class="hyperpress-map-canvas" 
-                 data-field="<?php echo esc_attr($name); ?>" 
-                 data-lat="<?php echo esc_attr($lat); ?>" 
-                 data-lng="<?php echo esc_attr($lng); ?>" 
-                 data-zoom="<?php echo esc_attr($zoom); ?>" 
+
+            <div class="hyperpress-map-canvas"
+                 data-field="<?php echo esc_attr($name); ?>"
+                 data-lat="<?php echo esc_attr($lat); ?>"
+                 data-lng="<?php echo esc_attr($lng); ?>"
+                 data-zoom="<?php echo esc_attr($zoom); ?>"
                  style="height: 300px; margin-top: 10px; border: 1px solid #ccc;">
             </div>
-            
-            <input type="hidden" 
-                   id="<?php echo esc_attr($name); ?>_lat" 
-                   name="<?php echo esc_attr($name_attr); ?>[lat]" 
+
+            <input type="hidden"
+                   id="<?php echo esc_attr($name); ?>_lat"
+                   name="<?php echo esc_attr($name_attr); ?>[lat]"
                    value="<?php echo esc_attr($lat); ?>">
-            
-            <input type="hidden" 
-                   id="<?php echo esc_attr($name); ?>_lng" 
-                   name="<?php echo esc_attr($name_attr); ?>[lng]" 
+
+            <input type="hidden"
+                   id="<?php echo esc_attr($name); ?>_lng"
+                   name="<?php echo esc_attr($name_attr); ?>[lng]"
                    value="<?php echo esc_attr($lng); ?>">
         </div>
 

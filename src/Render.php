@@ -70,7 +70,7 @@ class Render
 
         // Check if nonce exists and is valid, only on POST requests
         if (!$this->validNonce() && $_SERVER['REQUEST_METHOD'] === 'POST') {
-            wp_die(esc_html__('Invalid nonce', 'hyperpress'), esc_html__('Error', 'hyperpress'), ['response' => 403]);
+            wp_die(esc_html__('Invalid nonce', 'api-for-htmx'), esc_html__('Error', 'api-for-htmx'), ['response' => 403]);
         }
 
         // Sanitize template name using the determined endpoint key

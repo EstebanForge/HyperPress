@@ -217,7 +217,7 @@ class OptionsPage
             echo '</div>';
         }
         submit_button(
-            esc_html__('Save Changes', 'hyperpress'),
+                    esc_html__('Save Changes', 'api-for-htmx'),
             'primary'
         );
         ?>

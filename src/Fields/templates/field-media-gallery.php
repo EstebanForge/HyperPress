@@ -38,13 +38,13 @@ foreach ($value as $attachment_id) {
     <div class="hyperpress-field-input">
         <div class="hyperpress-media-gallery-field">
             <input type="hidden" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name_attr); ?>" value="<?php echo esc_attr(implode(',', $value)); ?>">
-            
+
             <button type="button" class="button hyperpress-gallery-button" data-field="<?php echo esc_attr($name); ?>" data-multiple="<?php echo $multiple ? 'true' : 'false'; ?>">
-                <?php _e('Add Images', 'hyperpress'); ?>
+                <?php _e('Add Images', 'api-for-htmx'); ?>
             </button>
-            
+
             <button type="button" class="button hyperpress-clear-gallery-button" data-field="<?php echo esc_attr($name); ?>" style="display: <?php echo !empty($attachments) ? 'inline-block' : 'none'; ?>">
-                <?php _e('Clear Gallery', 'hyperpress'); ?>
+                <?php _e('Clear Gallery', 'api-for-htmx'); ?>
             </button>
 
             <div class="hyperpress-gallery-preview" style="margin-top: 10px;">
@@ -53,7 +53,7 @@ foreach ($value as $attachment_id) {
                         <div class="hyperpress-gallery-item" data-id="<?php echo esc_attr($attachment->ID); ?>" style="display: inline-block; margin: 0 10px 10px 0;">
                             <?php echo wp_get_attachment_image($attachment->ID, 'thumbnail', false, ['style' => 'max-width: 100px; max-height: 100px;']); ?>
                             <button type="button" class="hyperpress-remove-image" data-id="<?php echo esc_attr($attachment->ID); ?>" style="display: block; margin-top: 5px;">
-                                <?php _e('Remove', 'hyperpress'); ?>
+                                <?php _e('Remove', 'api-for-htmx'); ?>
                             </button>
                         </div>
                     <?php endforeach; ?>

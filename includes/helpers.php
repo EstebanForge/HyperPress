@@ -57,7 +57,7 @@ function hp_send_header_response($data = [], $action = null)
 {
     // Use shared validation logic
     if (!hp_validate_request()) {
-        hp_die(__('Nonce verification failed.', 'hyperpress'));
+        hp_die(__('Nonce verification failed.', 'api-for-htmx'));
     }
 
     if ($action === null) {
@@ -90,7 +90,7 @@ function hp_send_header_response($data = [], $action = null)
 
     // Headers already sent?
     if (headers_sent()) {
-        wp_die(__('HyperPress Error: Headers already sent.', 'hyperpress'));
+        wp_die(__('HyperPress Error: Headers already sent.', 'api-for-htmx'));
     }
 
     // Filter our response
@@ -355,7 +355,7 @@ function hp_ds_is_rate_limited(array $options = []): bool
         'time_window_seconds' => 60,
         'identifier' => '',
         'send_sse_response' => true,
-        'error_message' => __('Rate limit exceeded. Please wait before making more requests.', 'hyperpress'),
+        'error_message' => __('Rate limit exceeded. Please wait before making more requests.', 'api-for-htmx'),
         'error_selector' => '#rate-limit-error',
     ];
 
@@ -397,8 +397,8 @@ function hp_ds_is_rate_limited(array $options = []): bool
 
             // Send rate limit info to client via script
             hp_ds_execute_script("
-                console.warn('" . esc_js(__('Rate limit exceeded for Datastar SSE endpoint', 'hyperpress')) . "');
-                console.info('" . esc_js(sprintf(__('Requests allowed: %d per %d seconds', 'hyperpress'), $config['requests_per_window'], $config['time_window_seconds'])) . "');
+                console.warn('" . esc_js(__('Rate limit exceeded for Datastar SSE endpoint', 'api-for-htmx')) . "');
+                console.info('" . esc_js(sprintf(__('Requests allowed: %d per %d seconds', 'api-for-htmx'), $config['requests_per_window'], $config['time_window_seconds'])) . "');
             ");
         }
 
@@ -426,7 +426,7 @@ function hp_ds_is_rate_limited(array $options = []): bool
         // Log remaining requests for debugging
         if ($remaining_requests <= 5) {
             hp_ds_execute_script("
-                console.warn('" . esc_js(sprintf(__('Rate limit warning: %d requests remaining in this time window', 'hyperpress'), $remaining_requests)) . "');
+                console.warn('" . esc_js(sprintf(__('Rate limit warning: %d requests remaining in this time window', 'api-for-htmx'), $remaining_requests)) . "');
             ");
         }
     }

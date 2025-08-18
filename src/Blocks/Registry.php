@@ -579,9 +579,26 @@ final class Registry
         }
 
         // Fallback for library mode - construct URL from plugin path
-        $pluginUrl = plugins_url('', $this->pluginPath . 'hyperpress.php');
+        // Support both legacy 'api-for-htmx.php' and current 'hyperpress.php'
+        $basePath = function_exists('trailingslashit') ? trailingslashit($this->pluginPath) : rtrim($this->pluginPath, '/\\') . '/';
+        $entryCandidates = [
+            $basePath . 'hyperpress.php',
+            $basePath . 'api-for-htmx.php',
+        ];
+        $entryFile = null;
+        foreach ($entryCandidates as $candidate) {
+            if (file_exists($candidate)) {
+                $entryFile = $candidate;
+                break;
+            }
+        }
+        // If no entry file found, use bootstrap.php so plugins_url can resolve the base
+        $entryFile = $entryFile ?: ($basePath . 'bootstrap.php');
 
-        return $pluginUrl . '/' . $assetPath;
+        $pluginUrl = plugins_url('', $entryFile);
+        $pluginUrl = rtrim($pluginUrl, '/');
+
+        return $pluginUrl . '/' . ltrim($assetPath, '/');
     }
 
     /**

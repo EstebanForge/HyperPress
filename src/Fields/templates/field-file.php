@@ -29,15 +29,15 @@ $help = $field_data['help'] ?? '';
 
     <div class="hyperpress-field-input">
         <div class="hyperpress-file-field">
-            <input type="url" 
-                   id="<?php echo esc_attr($name); ?>" 
-                   name="<?php echo esc_attr($name_attr); ?>" 
-                   value="<?php echo esc_attr($value); ?>" 
-                   placeholder="<?php echo esc_attr($placeholder); ?>" 
+            <input type="url"
+                   id="<?php echo esc_attr($name); ?>"
+                   name="<?php echo esc_attr($name_attr); ?>"
+                   value="<?php echo esc_attr($value); ?>"
+                   placeholder="<?php echo esc_attr($placeholder); ?>"
                    <?php echo $required ? 'required' : ''; ?>
                    class="regular-text hyperpress-file-url">
             <button type="button" class="button hyperpress-upload-button" data-field="<?php echo esc_attr($name); ?>" data-type="file">
-                <?php _e('Select File', 'hyperpress'); ?>
+                <?php _e('Select File', 'api-for-htmx'); ?>
             </button>
         </div>
 

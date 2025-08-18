@@ -99,12 +99,12 @@ class DatastarLib
         if ($sdk_loaded) {
             $status_class = 'notice-success';
             $status_icon = '✅';
-            $status_text = esc_html__('Available', 'hyperpress');
+            $status_text = esc_html__('Available', 'api-for-htmx');
             $version_text = $version ? sprintf(' (v%s)', esc_html($version)) : '';
         } else {
             $status_class = 'notice-warning';
             $status_icon = '⚠️';
-            $status_text = esc_html__('Not Available', 'hyperpress');
+            $status_text = esc_html__('Not Available', 'api-for-htmx');
             $version_text = '';
         }
 
@@ -113,7 +113,7 @@ class DatastarLib
         $html .= $status_icon . ' <strong>' . $status_text . '</strong>' . $version_text;
 
         if (!$sdk_loaded) {
-            $html .= '<br><small>' . esc_html__('Run "composer require starfederation/datastar-php" in the plugin directory to install the SDK.', 'hyperpress') . '</small>';
+            $html .= '<br><small>' . esc_html__('Run "composer require starfederation/datastar-php" in the plugin directory to install the SDK.', 'api-for-htmx') . '</small>';
         } else {
             $html .= '<br><small>' . esc_html($message) . '</small>';
         }

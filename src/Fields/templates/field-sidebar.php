@@ -27,7 +27,7 @@ uksort($sidebars, function ($a, $b) use ($sidebars) {
 });
 
 // Add default option
-$sidebars = ['' => ['name' => __('— Select —', 'hyperpress')]] + $sidebars;
+$sidebars = ['' => ['name' => __('— Select —', 'api-for-htmx')]] + $sidebars;
 ?>
 
 <div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
@@ -37,8 +37,8 @@ $sidebars = ['' => ['name' => __('— Select —', 'hyperpress')]] + $sidebars;
     </label>
 
     <div class="hyperpress-field-input">
-        <select id="<?php echo esc_attr($name); ?>" 
-                name="<?php echo esc_attr($name); ?>" 
+        <select id="<?php echo esc_attr($name); ?>"
+                name="<?php echo esc_attr($name); ?>"
                 <?php echo $required ? 'required' : ''; ?>
                 class="regular-text">
             <?php foreach ($sidebars as $sidebar_id => $sidebar): ?>

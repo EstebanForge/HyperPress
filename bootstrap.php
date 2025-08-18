@@ -36,7 +36,7 @@ if (file_exists(__DIR__ . '/vendor-dist/autoload.php')) {
 } else {
     // Display an admin notice if the autoloader is missing.
     add_action('admin_notices', function () {
-        echo '<div class="error"><p>' . esc_html__('HyperPress: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'hyperpress') . '</p></div>';
+        echo '<div class="error"><p>' . esc_html__('HyperPress: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'api-for-htmx') . '</p></div>';
     });
 
     return;
@@ -46,12 +46,23 @@ if (file_exists(__DIR__ . '/vendor-dist/autoload.php')) {
 // This ensures that no matter how the plugin is loaded, this code runs only once.
 
 // Get this instance's version and real path (resolving symlinks)
-$plugin_file_path = __DIR__ . '/hyperpress.php';
+// Support both legacy 'api-for-htmx.php' and current 'hyperpress.php' entry points
+$plugin_file_candidates = [
+    __DIR__ . '/hyperpress.php',
+    __DIR__ . '/api-for-htmx.php',
+];
+$plugin_file_path = null;
+foreach ($plugin_file_candidates as $candidate) {
+    if (file_exists($candidate)) {
+        $plugin_file_path = $candidate;
+        break;
+    }
+}
 $current_hyperpress_instance_version = '0.0.0';
 $current_hyperpress_instance_path = null;
 
-// Check if we're running as a plugin (api-for-htmx.php exists) or as a library
-if (file_exists($plugin_file_path)) {
+// Check if we're running as a plugin (one of the entry files exists) or as a library
+if ($plugin_file_path && file_exists($plugin_file_path)) {
     // Plugin mode: read version from the main plugin file
     $hyperpress_plugin_data = get_file_data($plugin_file_path, ['Version' => 'Version'], false);
     $current_hyperpress_instance_version = $hyperpress_plugin_data['Version'] ?? '0.0.0';
@@ -101,8 +112,9 @@ if (!function_exists('hyperpress_run_initialization_logic')) {
         define('HYPERPRESS_INSTANCE_LOADED_PATH', $plugin_file_path);
         define('HYPERPRESS_VERSION', $plugin_version);
 
-        // Determine if we're in library mode vs plugin mode
-        $is_library_mode = !str_ends_with($plugin_file_path, 'hyperpress.php');
+        // Determine if we're in library mode vs plugin mode (support legacy entry file)
+        $basename = $plugin_file_path ? basename($plugin_file_path) : '';
+        $is_library_mode = !in_array($basename, ['hyperpress.php', 'api-for-htmx.php'], true);
 
         if ($is_library_mode) {
             // Library mode: use the directory containing the bootstrap/plugin file
