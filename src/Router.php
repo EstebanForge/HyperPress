@@ -2,12 +2,12 @@
 
 /**
  * Handles the API endpoints for HyperPress for WordPress.
- * Registers both the primary (HMAPI_ENDPOINT) and legacy (HMAPI_LEGACY_ENDPOINT) routes.
+ * Registers both the primary (HYPERPRESS_ENDPOINT) and legacy (HYPERPRESS_LEGACY_ENDPOINT) routes.
  *
  * @since   2023-11-22
  */
 
-namespace HMApi;
+namespace HyperPress;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -30,13 +30,13 @@ class Router
     public function register_main_route(): void
     {
         // Register the new primary endpoint (e.g., /wp-html/v1/)
-        if (defined('HMAPI_ENDPOINT') && defined('HMAPI_ENDPOINT_VERSION')) {
-            add_rewrite_endpoint(HMAPI_ENDPOINT . '/' . HMAPI_ENDPOINT_VERSION, EP_ROOT, HMAPI_ENDPOINT);
+        if (defined('HYPERPRESS_ENDPOINT') && defined('HYPERPRESS_ENDPOINT_VERSION')) {
+            add_rewrite_endpoint(HYPERPRESS_ENDPOINT . '/' . HYPERPRESS_ENDPOINT_VERSION, EP_ROOT, HYPERPRESS_ENDPOINT);
         }
 
         // Register the legacy endpoint for backward compatibility (e.g., /wp-htmx/v1/)
-        if (defined('HMAPI_LEGACY_ENDPOINT') && defined('HMAPI_ENDPOINT_VERSION')) {
-            add_rewrite_endpoint(HMAPI_LEGACY_ENDPOINT . '/' . HMAPI_ENDPOINT_VERSION, EP_ROOT, HMAPI_LEGACY_ENDPOINT);
+        if (defined('HYPERPRESS_LEGACY_ENDPOINT') && defined('HYPERPRESS_ENDPOINT_VERSION')) {
+            add_rewrite_endpoint(HYPERPRESS_LEGACY_ENDPOINT . '/' . HYPERPRESS_ENDPOINT_VERSION, EP_ROOT, HYPERPRESS_LEGACY_ENDPOINT);
         }
     }
 
@@ -50,11 +50,11 @@ class Router
      */
     public function register_query_vars(array $vars): array
     {
-        if (defined('HMAPI_ENDPOINT')) {
-            $vars[] = HMAPI_ENDPOINT;
+        if (defined('HYPERPRESS_ENDPOINT')) {
+            $vars[] = HYPERPRESS_ENDPOINT;
         }
-        if (defined('HMAPI_LEGACY_ENDPOINT')) {
-            $vars[] = HMAPI_LEGACY_ENDPOINT;
+        if (defined('HYPERPRESS_LEGACY_ENDPOINT')) {
+            $vars[] = HYPERPRESS_LEGACY_ENDPOINT;
         }
 
         return $vars;

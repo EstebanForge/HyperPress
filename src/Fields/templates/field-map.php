@@ -1,10 +1,10 @@
 <?php
 <?php
-// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+// Support for conditional_logic: pass as data-hp-conditional-logic attribute for JS
 $conditional_logic = $field_data["conditional_logic"] ?? null;
 $conditional_attr = "";
 if ($conditional_logic) {
-    $conditional_attr = " data-hm-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
+    $conditional_attr = " data-hp-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
 }
 ?>
 if (!defined('ABSPATH')) {
@@ -30,26 +30,26 @@ $map_type = $map_options['type'] ?? 'roadmap';
 $api_key = $map_options['api_key'] ?? '';
 ?>
 
-<div class="hmapi-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label for="<?php echo esc_attr($name); ?>" class="hmapi-field-label">
+<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hmapi-field-input">
-        <div class="hmapi-map-field">
+    <div class="hyperpress-field-input">
+        <div class="hyperpress-map-field">
             <input type="text" 
                    id="<?php echo esc_attr($name); ?>_address" 
                    name="<?php echo esc_attr($name_attr); ?>[address]" 
                    value="<?php echo esc_attr($address); ?>" 
-                   placeholder="<?php _e('Search for an address...', 'hmapi'); ?>" 
-                   class="regular-text hmapi-map-search">
+                   placeholder="<?php _e('Search for an address...', 'hyperpress'); ?>" 
+                   class="regular-text hyperpress-map-search">
             
-            <button type="button" class="button hmapi-geocode-button" data-field="<?php echo esc_attr($name); ?>">
-                <?php _e('Search', 'hmapi'); ?>
+            <button type="button" class="button hyperpress-geocode-button" data-field="<?php echo esc_attr($name); ?>">
+                <?php _e('Search', 'hyperpress'); ?>
             </button>
             
-            <div class="hmapi-map-canvas" 
+            <div class="hyperpress-map-canvas" 
                  data-field="<?php echo esc_attr($name); ?>" 
                  data-lat="<?php echo esc_attr($lat); ?>" 
                  data-lng="<?php echo esc_attr($lng); ?>" 

@@ -10,59 +10,59 @@
 declare(strict_types=1);
 
 // Simplified import - just one class instead of multiple imports
-use HMApi\Fields\HyperFields;
+use HyperPress\Fields\HyperFields;
 
 // Example 1: Basic Plugin Options Page
-$plugin_options = HyperFields::makeOptionPage(__('My Plugin Settings', 'api-for-htmx'), 'my-plugin-settings')
-    ->set_menu_title(__('My Plugin', 'api-for-htmx'))
+$plugin_options = HyperFields::makeOptionPage(__('My Plugin Settings', 'hyperpress'), 'my-plugin-settings')
+    ->set_menu_title(__('My Plugin', 'hyperpress'))
     ->set_parent_slug('options-general.php')
-    ->set_footer_content('<span>' . __('Demo Footer: Powered by HyperFields', 'api-for-htmx') . '</span>');
+    ->set_footer_content('<span>' . __('Demo Footer: Powered by HyperFields', 'hyperpress') . '</span>');
 
 // Add sections and fields
-$general_section = $plugin_options->add_section('general', __('General Settings', 'api-for-htmx'), __('Configure basic plugin settings', 'api-for-htmx'));
+$general_section = $plugin_options->add_section('general', __('General Settings', 'hyperpress'), __('Configure basic plugin settings', 'hyperpress'));
 $general_section->add_field(
-    HyperFields::makeField('text', 'plugin_title', __('Plugin Title', 'api-for-htmx'))
-        ->set_default(__('My Awesome Plugin', 'api-for-htmx'))
-        ->set_placeholder(__('Enter plugin title...', 'api-for-htmx'))
+    HyperFields::makeField('text', 'plugin_title', __('Plugin Title', 'hyperpress'))
+        ->set_default(__('My Awesome Plugin', 'hyperpress'))
+        ->set_placeholder(__('Enter plugin title...', 'hyperpress'))
 );
 
 $general_section->add_field(
-    HyperFields::makeField('textarea', 'plugin_description', __('Plugin Description', 'api-for-htmx'))
-        ->set_placeholder(__('Describe your plugin...', 'api-for-htmx'))
-        ->set_help(__('This description will appear in the plugin header.', 'api-for-htmx'))
+    HyperFields::makeField('textarea', 'plugin_description', __('Plugin Description', 'hyperpress'))
+        ->set_placeholder(__('Describe your plugin...', 'hyperpress'))
+        ->set_help(__('This description will appear in the plugin header.', 'hyperpress'))
 );
 
 $general_section->add_field(
-    HyperFields::makeField('color', 'primary_color', __('Primary Color', 'api-for-htmx'))
+    HyperFields::makeField('color', 'primary_color', __('Primary Color', 'hyperpress'))
         ->set_default('#007cba')
-        ->set_help(__('Choose the primary color for your plugin interface', 'api-for-htmx'))
+        ->set_help(__('Choose the primary color for your plugin interface', 'hyperpress'))
 );
 
 $general_section->add_field(
-    HyperFields::makeField('image', 'plugin_logo', __('Plugin Logo', 'api-for-htmx'))
-        ->set_help(__('Recommended size: 300x100px', 'api-for-htmx'))
+    HyperFields::makeField('image', 'plugin_logo', __('Plugin Logo', 'hyperpress'))
+        ->set_help(__('Recommended size: 300x100px', 'hyperpress'))
 );
 
 $general_section->add_field(
-    HyperFields::makeField('checkbox', 'enable_feature_x', __('Enable Feature X', 'api-for-htmx'))
+    HyperFields::makeField('checkbox', 'enable_feature_x', __('Enable Feature X', 'hyperpress'))
         ->set_default(true)
-        ->set_help(__('Turn on the advanced Feature X functionality', 'api-for-htmx'))
+        ->set_help(__('Turn on the advanced Feature X functionality', 'hyperpress'))
 );
 
 // API Endpoint field using helper
-$api_url = hm_get_endpoint_url();
+$api_url = hp_get_endpoint_url();
 
 $general_section->add_field(
-    HyperFields::makeField('html', 'api_endpoint', __('API Endpoint', 'api-for-htmx'))
+    HyperFields::makeField('html', 'api_endpoint', __('API Endpoint', 'hyperpress'))
         ->set_html_content('<div><input type="text" readonly value="' . esc_attr($api_url) . '" style="width:100%" /></div>')
-        ->set_help(__('This is the base API endpoint for your integration.', 'api-for-htmx'))
+        ->set_help(__('This is the base API endpoint for your integration.', 'hyperpress'))
 );
 
 // HTML/script field demo
 $general_section->add_field(
-    HyperFields::makeField('html', 'custom_script', __('Custom Script Demo', 'api-for-htmx'))
-        ->set_html_content('<button id="demo-btn">' . esc_html__('Click Me', 'api-for-htmx') . '</button><script>document.getElementById("demo-btn").onclick=function(){alert("' . esc_js(__('Hello from HyperFields!', 'api-for-htmx')) . '");}</script>')
-        ->set_help(__('Demo of HTML field with script.', 'api-for-htmx'))
+    HyperFields::makeField('html', 'custom_script', __('Custom Script Demo', 'hyperpress'))
+        ->set_html_content('<button id="demo-btn">' . esc_html__('Click Me', 'hyperpress') . '</button><script>document.getElementById("demo-btn").onclick=function(){alert("' . esc_js(__('Hello from HyperFields!', 'hyperpress')) . '");}</script>')
+        ->set_help(__('Demo of HTML field with script.', 'hyperpress'))
 );
 
 // Example 2: Advanced Settings with Tabs

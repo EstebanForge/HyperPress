@@ -23,7 +23,7 @@ If you are not familiar with how WordPress recommends handling data sanitization
 
 Use `hp_validate_request(array $hmvals = null, string $action = null): bool` to validate Hypermedia requests across HTMX, Alpine Ajax, and Datastar forms.
 
-- Supports both new (`hmapi_nonce`) and legacy (`hxwp_nonce`) nonce formats.
+- Supports both new (`hyperpress_nonce`) and legacy (`hxwp_nonce`) nonce formats.
 - For SSE (Datastar) endpoints, validation differs because the connection model is not a standard form POST. Combine nonce checks with capability checks and rate limiting as appropriate.
 
 ```php
@@ -74,7 +74,7 @@ The plugin will perform basic sanitization of calls to the new REST endpoint, `w
 
 The parameters and their values passed to the endpoint via GET or POST will be sanitized with `sanitize_key()` and `sanitize_text_field()`, respectively.
 
-Filters `hmapi/sanitize_param_key` and `hmapi/sanitize_param_value` are available to modify the sanitization process if needed. For backward compatibility, the old filters `hxwp/sanitize_param_key` and `hxwp/sanitize_param_value` are still supported but deprecated.
+Filters `hyperpress/sanitize_param_key` and `hyperpress/sanitize_param_value` are available to modify the sanitization process if needed. For backward compatibility, the old filters `hxwp/sanitize_param_key` and `hxwp/sanitize_param_value` are still supported but deprecated.
 
 Do your due diligence and ensure you are not returning unsanitized data back to the user or using it in a way that could pose a security issue for your site. Hypermedia requires that you validate and sanitize any data you receive from the user. Don't forget that.
 

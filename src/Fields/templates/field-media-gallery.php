@@ -1,10 +1,10 @@
 <?php
 <?php
-// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+// Support for conditional_logic: pass as data-hp-conditional-logic attribute for JS
 $conditional_logic = $field_data["conditional_logic"] ?? null;
 $conditional_attr = "";
 if ($conditional_logic) {
-    $conditional_attr = " data-hm-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
+    $conditional_attr = " data-hp-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
 }
 ?>
 if (!defined('ABSPATH')) {
@@ -29,31 +29,31 @@ foreach ($value as $attachment_id) {
 }
 ?>
 
-<div class="hmapi-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label for="<?php echo esc_attr($name); ?>" class="hmapi-field-label">
+<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hmapi-field-input">
-        <div class="hmapi-media-gallery-field">
+    <div class="hyperpress-field-input">
+        <div class="hyperpress-media-gallery-field">
             <input type="hidden" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name_attr); ?>" value="<?php echo esc_attr(implode(',', $value)); ?>">
             
-            <button type="button" class="button hmapi-gallery-button" data-field="<?php echo esc_attr($name); ?>" data-multiple="<?php echo $multiple ? 'true' : 'false'; ?>">
-                <?php _e('Add Images', 'hmapi'); ?>
+            <button type="button" class="button hyperpress-gallery-button" data-field="<?php echo esc_attr($name); ?>" data-multiple="<?php echo $multiple ? 'true' : 'false'; ?>">
+                <?php _e('Add Images', 'hyperpress'); ?>
             </button>
             
-            <button type="button" class="button hmapi-clear-gallery-button" data-field="<?php echo esc_attr($name); ?>" style="display: <?php echo !empty($attachments) ? 'inline-block' : 'none'; ?>">
-                <?php _e('Clear Gallery', 'hmapi'); ?>
+            <button type="button" class="button hyperpress-clear-gallery-button" data-field="<?php echo esc_attr($name); ?>" style="display: <?php echo !empty($attachments) ? 'inline-block' : 'none'; ?>">
+                <?php _e('Clear Gallery', 'hyperpress'); ?>
             </button>
 
-            <div class="hmapi-gallery-preview" style="margin-top: 10px;">
+            <div class="hyperpress-gallery-preview" style="margin-top: 10px;">
                 <?php if (!empty($attachments)): ?>
                     <?php foreach ($attachments as $attachment): ?>
-                        <div class="hmapi-gallery-item" data-id="<?php echo esc_attr($attachment->ID); ?>" style="display: inline-block; margin: 0 10px 10px 0;">
+                        <div class="hyperpress-gallery-item" data-id="<?php echo esc_attr($attachment->ID); ?>" style="display: inline-block; margin: 0 10px 10px 0;">
                             <?php echo wp_get_attachment_image($attachment->ID, 'thumbnail', false, ['style' => 'max-width: 100px; max-height: 100px;']); ?>
-                            <button type="button" class="hmapi-remove-image" data-id="<?php echo esc_attr($attachment->ID); ?>" style="display: block; margin-top: 5px;">
-                                <?php _e('Remove', 'hmapi'); ?>
+                            <button type="button" class="hyperpress-remove-image" data-id="<?php echo esc_attr($attachment->ID); ?>" style="display: block; margin-top: 5px;">
+                                <?php _e('Remove', 'hyperpress'); ?>
                             </button>
                         </div>
                     <?php endforeach; ?>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields\Container;
+namespace HyperPress\Fields\Container;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -256,6 +256,4 @@ class TermMetaContainer extends Container
 
         return false;
     }
-
-    
 }

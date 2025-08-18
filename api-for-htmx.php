@@ -3,13 +3,13 @@
 /**
  * Plugin Name: HyperPress: Modern Hypermedia for WordPress
  * Plugin URI: https://github.com/EstebanForge/HyperPress
- * Description: Adds API endpoints and integration for hypermedia libraries like HTMX, AlpineJS, and Datastar.
- * Version: 2.1.0
+ * Description: Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.
+ * Version: 3.0.0
  * Author: Esteban Cuevas
  * Author URI: https://actitud.xyz
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: api-for-htmx
+ * Text Domain: hyperpress
  * Domain Path: /languages
  * Requires at least: 6.5
  * Tested up to: 6.9
@@ -17,9 +17,8 @@
  */
 
 // Exit if accessed directly.
-if (!defined('ABSPATH')) {
-    exit;
-}
+defined('ABSPATH') || exit;
 
 // Load the shared bootstrap file.
 require_once __DIR__ . '/bootstrap.php';
+

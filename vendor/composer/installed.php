@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'estebanforge/hyperpress',
-        'pretty_version' => '2.0.7',
-        'version' => '2.0.7.0',
+        'pretty_version' => '3.0.0',
+        'version' => '3.0.0.0',
         'reference' => null,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'estebanforge/hyperpress' => array(
-            'pretty_version' => '2.0.7',
-            'version' => '2.0.7.0',
+            'pretty_version' => '3.0.0',
+            'version' => '3.0.0.0',
             'reference' => null,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',

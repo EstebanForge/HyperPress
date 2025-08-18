@@ -12,10 +12,10 @@ This directory contains example snippets demonstrating HyperBlocks usage. These 
 ## 🚀 Fluent API: Minimal Block Example
 
 ```php
-use HMApi\Blocks\Block;
-use HMApi\Blocks\FieldGroup;
-use HMApi\Blocks\Registry;
-use HMApi\Fields\HyperFields; // for field definitions
+use HyperPress\Blocks\Block;
+use HyperPress\Blocks\FieldGroup;
+use HyperPress\Blocks\Registry;
+use HyperPress\Fields\HyperFields; // for field definitions
 
 add_action('init', function () {
     // Define a field group (reusable)
@@ -48,9 +48,9 @@ add_action('init', function () {
 ## 🗂️ Fluent API: File Template Example
 
 ```php
-use HMApi\Blocks\Block;
-use HMApi\Blocks\Registry;
-use HMApi\Fields\HyperFields;
+use HyperPress\Blocks\Block;
+use HyperPress\Blocks\Registry;
+use HyperPress\Fields\HyperFields;
 
 add_action('init', function () {
     $block = new Block('hyper/hero');
@@ -65,7 +65,7 @@ add_action('init', function () {
 });
 ```
 
-Example `render.php` (relative to plugin root `HMAPI_ABSPATH`):
+Example `render.php` (relative to plugin root `HYPERPRESS_ABSPATH`):
 
 ```php
 <section class="hero">
@@ -77,8 +77,8 @@ Example `render.php` (relative to plugin root `HMAPI_ABSPATH`):
 ```
 
 Notes:
-- File paths must be prefixed with `file:` and resolve under `WP_CONTENT_DIR` or `HMAPI_ABSPATH`.
-- Relative paths are resolved against `HMAPI_ABSPATH`. See `HMApi\Blocks\Renderer::validateTemplatePath()`.
+- File paths must be prefixed with `file:` and resolve under `WP_CONTENT_DIR` or `HYPERPRESS_ABSPATH`.
+- Relative paths are resolved against `HYPERPRESS_ABSPATH`. See `HyperPress\Blocks\Renderer::validateTemplatePath()`.
 
 ## 🔤 Using RichText and InnerBlocks in Templates
 
@@ -131,15 +131,15 @@ hyperblocks/
 
 Auto-discovery:
 - Place block folders under `hyperblocks/` with a `block.json`.
-- `HMApi\Blocks\Registry` will auto-register and SSR using `render.php`.
+- `HyperPress\Blocks\Registry` will auto-register and SSR using `render.php`.
 
 ## 👥 Reusable Field Groups on Blocks
 
 ```php
-use HMApi\Blocks\FieldGroup;
-use HMApi\Blocks\Block;
-use HMApi\Blocks\Registry;
-use HMApi\Fields\HyperFields;
+use HyperPress\Blocks\FieldGroup;
+use HyperPress\Blocks\Block;
+use HyperPress\Blocks\Registry;
+use HyperPress\Fields\HyperFields;
 
 add_action('init', function () {
     $media = new FieldGroup('media');

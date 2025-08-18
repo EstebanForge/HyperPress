@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use HMApi\Fields\HyperFields;
+use HyperPress\Fields\HyperFields;
 
 /**
  * Demo: Target specific post by ID.

@@ -8,13 +8,13 @@ class ComposerAutoloaderInit8fdab5c4c154ad8745577288bf43f397
 
     public static function loadClassLoader($class)
     {
-        if ('HMApi\Composer\Autoload\ClassLoader' === $class) {
+        if ('HyperPress\Composer\Autoload\ClassLoader' === $class) {
             require __DIR__ . '/ClassLoader.php';
         }
     }
 
     /**
-     * @return \HMApi\Composer\Autoload\ClassLoader
+     * @return \HyperPress\Composer\Autoload\ClassLoader
      */
     public static function getLoader()
     {
@@ -25,16 +25,16 @@ class ComposerAutoloaderInit8fdab5c4c154ad8745577288bf43f397
         require __DIR__ . '/platform_check.php';
 
         spl_autoload_register(array('ComposerAutoloaderInit8fdab5c4c154ad8745577288bf43f397', 'loadClassLoader'), true, true);
-        self::$loader = $loader = new \HMApi\Composer\Autoload\ClassLoader(\dirname(__DIR__));
+        self::$loader = $loader = new \HyperPress\Composer\Autoload\ClassLoader(\dirname(__DIR__));
         spl_autoload_unregister(array('ComposerAutoloaderInit8fdab5c4c154ad8745577288bf43f397', 'loadClassLoader'));
 
         require __DIR__ . '/autoload_static.php';
-        call_user_func(\HMApi\Composer\Autoload\ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::getInitializer($loader));
+        call_user_func(\HyperPress\Composer\Autoload\ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::getInitializer($loader));
 
         $loader->setClassMapAuthoritative(true);
         $loader->register(true);
 
-        $filesToLoad = \HMApi\Composer\Autoload\ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::$files;
+        $filesToLoad = \HyperPress\Composer\Autoload\ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::$files;
         $requireFile = \Closure::bind(static function ($fileIdentifier, $file) {
             if (empty($GLOBALS['__composer_autoload_files'][$fileIdentifier])) {
                 $GLOBALS['__composer_autoload_files'][$fileIdentifier] = true;

@@ -1,8 +1,8 @@
 <?php
 
-namespace HMApi\starfederation\datastar;
+namespace HyperPress\starfederation\datastar;
 
-use HMApi\starfederation\datastar\enums\ElementPatchMode;
+use HyperPress\starfederation\datastar\enums\ElementPatchMode;
 
 class Consts
 {

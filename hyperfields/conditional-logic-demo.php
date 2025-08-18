@@ -7,7 +7,7 @@
  * in HyperFields metaboxes.
  */
 
-use HMApi\Fields\HyperFields;
+use HyperPress\Fields\HyperFields;
 
 // Create a demo metabox with conditional fields
 function hyperfields_metabox_conditional_logic_demo() {

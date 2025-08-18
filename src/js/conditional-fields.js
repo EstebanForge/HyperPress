@@ -23,13 +23,13 @@ class HyperFieldsConditional {
   setup() {
     // Find all fields with conditional logic
     const conditionalFields = document.querySelectorAll(
-      "[data-hm-conditional-logic]",
+      "[data-hyperpress-conditional-logic]",
     );
 
     conditionalFields.forEach((fieldWrapper) => {
       try {
         const logicData = JSON.parse(
-          fieldWrapper.getAttribute("data-hm-conditional-logic"),
+          fieldWrapper.getAttribute("data-hyperpress-conditional-logic"),
         );
         const fieldName = this.getFieldName(fieldWrapper);
 
@@ -268,10 +268,10 @@ class HyperFieldsConditional {
   toggleField(element, show) {
     if (show) {
       element.style.display = "";
-      element.classList.remove("hmapi-field-hidden");
+      element.classList.remove("hyperpress-field-hidden");
     } else {
       element.style.display = "none";
-      element.classList.add("hmapi-field-hidden");
+      element.classList.add("hyperpress-field-hidden");
     }
   }
 }

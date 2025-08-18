@@ -48,8 +48,8 @@ Two endpoints back the editor integration and server-side previews:
 
 ### Discovery paths for JSON blocks
 
-- Scans `HMAPI_ABSPATH . '/hyperblocks'`.
-- Additional paths can be provided via filter: `hmapi/blocks/register_json_paths`.
+- Scans `HYPERPRESS_ABSPATH . '/hyperblocks'`.
+- Additional paths can be provided via filter: `hyperpress/blocks/register_json_paths`.
 
 ### Notes on sanitization and security
 
@@ -79,8 +79,8 @@ Pure PHP, rapid development - Single file approach
 ```php
 <?php
 // hyperblocks/hero-banner.hb.php - Complete implementation in one file
-use HMApi\Blocks\Block;
-use HMApi\Blocks\Field;
+use HyperPress\Blocks\Block;
+use HyperPress\Blocks\Field;
 
 $heroBlock = Block::make('Hero Banner')
     ->setIcon('format-image')
@@ -226,10 +226,10 @@ For developers who need to register blocks from outside the auto-discovery direc
 
 #### Registering a Fluent API Block
 
-Use the `hmapi/blocks/register_fluent_blocks` filter to add the absolute path to your `.hb.php` file.
+Use the `hyperpress/blocks/register_fluent_blocks` filter to add the absolute path to your `.hb.php` file.
 
 ```php
-add_filter('hmapi/blocks/register_fluent_blocks', function ($blocks) {
+add_filter('hyperpress/blocks/register_fluent_blocks', function ($blocks) {
     // Path to the block file in your plugin/theme
     $blocks[] = MY_PLUGIN_PATH . 'path/to/my-custom-fluent-block.hb.php';
     return $blocks;
@@ -238,10 +238,10 @@ add_filter('hmapi/blocks/register_fluent_blocks', function ($blocks) {
 
 #### Registering a `block.json` Block
 
-Use the `hmapi/blocks/register_json_blocks` filter to add the absolute path to your block's directory.
+Use the `hyperpress/blocks/register_json_blocks` filter to add the absolute path to your block's directory.
 
 ```php
-add_filter('hmapi/blocks/register_json_blocks', function ($blocks) {
+add_filter('hyperpress/blocks/register_json_blocks', function ($blocks) {
     // Path to the block directory in your plugin/theme
     $blocks[] = MY_PLUGIN_PATH . 'path/to/my-custom-json-block/';
     return $blocks;
@@ -266,7 +266,7 @@ Choose block.json when:
 ### Technical Details
 
 Both approaches use:
-- Same Rendering Engine: `HMApi\Blocks\Renderer`
+- Same Rendering Engine: `HyperPress\Blocks\Renderer`
 - Same REST API: `/hyperblocks/v1/block-fields`, `/hyperblocks/v1/render-preview`
 - Same Custom Components: `<RichText>`, `<InnerBlocks>`, `<MediaUpload>`
 - Same Field Types: `text`, `textarea`, `color`, `url`, `media`, `repeater`, `tabs` (field organization)
@@ -287,5 +287,5 @@ To test:
 3. Compare identical functionality between approaches
 
 ## Notes
-- Use plugin constants (e.g., `HMAPI_PLUGIN_URL`, `HMAPI_VERSION`) when enqueueing any assets.
+- Use plugin constants (e.g., `HYPERPRESS_PLUGIN_URL`, `HYPERPRESS_VERSION`) when enqueueing any assets.
 - Capability checks and nonces apply when persisting block data via HyperFields.

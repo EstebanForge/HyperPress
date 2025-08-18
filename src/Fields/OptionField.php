@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields;
+namespace HyperPress\Fields;
 
 class OptionField extends Field
 {
     private string $option_name;
-    private string $option_group = 'hmapi_fields';
+    private string $option_group = 'hyperpress_fields';
 
     public static function for_option(string $option_name, string $type, string $name, string $label): self
     {
@@ -28,7 +28,7 @@ class OptionField extends Field
 
     public function get_option_name(): string
     {
-        return apply_filters('hmapi_option_field_name', $this->option_name, $this->get_name());
+        return apply_filters('hyperpress_option_field_name', $this->option_name, $this->get_name());
     }
 
     public function get_option_group(): string

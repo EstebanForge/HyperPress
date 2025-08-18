@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Core rendering engine for blocks.
  */
 
-namespace HMApi\Blocks;
+namespace HyperPress\Blocks;
 
 // Prevent direct file access.
 if (!defined('ABSPATH')) {
@@ -142,7 +142,7 @@ class Renderer
 
         // Ensure path is within WordPress content directory or plugin directory
         $contentDir = defined('WP_CONTENT_DIR') ? WP_CONTENT_DIR : ABSPATH . 'wp-content';
-        $pluginDir = defined('HMAPI_ABSPATH') ? HMAPI_ABSPATH : dirname(__DIR__, 2);
+        $pluginDir = defined('HYPERPRESS_ABSPATH') ? HYPERPRESS_ABSPATH : dirname(__DIR__, 2);
 
         // If path is relative, make it absolute
         if (!file_exists($templatePath) && !str_starts_with($templatePath, '/')) {
@@ -165,8 +165,8 @@ class Renderer
         $realPluginDir = realpath($pluginDir);
 
         // Check if path is within allowed directories
-        if ($realContentDir && !str_starts_with($realPath, $realContentDir) &&
-            $realPluginDir && !str_starts_with($realPath, $realPluginDir)) {
+        if ($realContentDir && !str_starts_with($realPath, $realContentDir)
+            && $realPluginDir && !str_starts_with($realPath, $realPluginDir)) {
             throw new \Exception("Template path outside allowed directories: {$templatePath}");
         }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields;
+namespace HyperPress\Fields;
 
 /**
  * @method self add_arg(string $key, mixed $value)

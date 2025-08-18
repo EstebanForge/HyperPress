@@ -1,10 +1,9 @@
 <?php
-<?php
-// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+// Support for conditional_logic: pass as data-hp-conditional-logic attribute for JS
 $conditional_logic = $field_data["conditional_logic"] ?? null;
 $conditional_attr = "";
 if ($conditional_logic) {
-    $conditional_attr = " data-hm-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
+    $conditional_attr = " data-hp-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
 }
 ?>
 if (!defined('ABSPATH')) {
@@ -31,10 +30,10 @@ if (isset($_GET['tab']) && isset($tabs[$_GET['tab']])) {
     $active_tab = sanitize_text_field($_GET['tab']);
 }
 
-$layout_class = 'hmapi-tabs-' . $layout;
+$layout_class = 'hyperpress-tabs-' . $layout;
 ?>
 
-<div class="hmapi-tabs-wrapper <?php echo esc_attr($layout_class); ?>">
+<div class="hyperpress-tabs-wrapper <?php echo esc_attr($layout_class); ?>">
     <h2 class="nav-tab-wrapper">
         <?php foreach ($tabs as $tab_id => $tab):
             $is_active = $tab_id === $active_tab;
@@ -46,13 +45,13 @@ $layout_class = 'hmapi-tabs-' . $layout;
         <?php endforeach; ?>
     </h2>
 
-    <div class="hmapi-tabs-content">
+    <div class="hyperpress-tabs-content">
         <?php
         // Render only the active tab's content
         if (isset($tabs[$active_tab])) {
             $active_tab_data = $tabs[$active_tab];
             if (!empty($active_tab_data['fields'])) {
-                echo '<div class="hmapi-tab-fields-wrapper">';
+                echo '<div class="hyperpress-tab-fields-wrapper">';
                 foreach ($active_tab_data['fields'] as $field) {
                     if (is_object($field) && method_exists($field, 'render')) {
                         $field->render();

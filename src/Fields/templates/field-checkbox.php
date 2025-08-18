@@ -11,22 +11,22 @@ $value = $field_data['value'] ?? false;
 $required = $field_data['required'] ?? false;
 $help = $field_data['help'] ?? '';
 
-// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+// Support for conditional_logic: pass as data-hp-conditional-logic attribute for JS
 $conditional_logic = $field_data['conditional_logic'] ?? null;
 $conditional_attr = '';
 if ($conditional_logic) {
-    $conditional_attr = ' data-hm-conditional-logic="' . esc_attr(json_encode($conditional_logic)) . '"';
+    $conditional_attr = ' data-hp-conditional-logic="' . esc_attr(json_encode($conditional_logic)) . '"';
 }
 ?>
 
-<div class="hmapi-field-wrapper"<?php echo $conditional_attr; ?>>
-    <div class="hmapi-field-row">
-        <div class="hmapi-field-label">
+<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <div class="hyperpress-field-row">
+        <div class="hyperpress-field-label">
             <label for="<?php echo esc_attr($name); ?>">
                 <?php echo esc_html($label); ?>
             </label>
         </div>
-        <div class="hmapi-field-input-wrapper">
+        <div class="hyperpress-field-input-wrapper">
             <!-- Hidden input to ensure the field is always sent in POST data -->
             <input type="hidden" name="<?php echo esc_attr($name_attr); ?>" value="0">
             <label>

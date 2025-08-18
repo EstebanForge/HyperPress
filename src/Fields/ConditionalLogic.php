@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields;
+namespace HyperPress\Fields;
 
 class ConditionalLogic
 {
@@ -189,7 +189,7 @@ class ConditionalLogic
             case 'NOT EMPTY':
                 return !empty($field_value);
             default:
-                return apply_filters('hmapi_conditional_logic_evaluate', false, $field_value, $operator, $compare_value);
+                return apply_filters('hyperpress_conditional_logic_evaluate', false, $field_value, $operator, $compare_value);
         }
     }
 

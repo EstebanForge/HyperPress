@@ -3,19 +3,19 @@
 // No direct access.
 defined('ABSPATH') || exit('Direct access not allowed.');
 
-if (!hm_validate_request($hmvals, 'htmx_do_something')) {
-    hm_die('Invalid request.');
+if (!hp_validate_request($hp_vals, 'htmx_do_something')) {
+    hp_die('Invalid request.');
 }
 
-// Do some server-side processing with the received $hmvals
+// Do some server-side processing with the received $hp_vals
 sleep(5);
 
-hm_send_header_response(
-    wp_create_nonce('hmapi_nonce'),
+hp_send_header_response(
+    wp_create_nonce('hyperpress_nonce'),
     [
         'status'  => 'success',
-        'nonce'   => wp_create_nonce('hmapi_nonce'),
+        'nonce'   => wp_create_nonce('hyperpress_nonce'),
         'message' => 'Server-side processing done.',
-        'params'  => $hmvals,
+        'params'  => $hp_vals,
     ]
 );

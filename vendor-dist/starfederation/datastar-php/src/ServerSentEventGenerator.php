@@ -3,15 +3,15 @@
  * @copyright Copyright (c) PutYourLightsOn
  */
 
-namespace HMApi\starfederation\datastar;
+namespace HyperPress\starfederation\datastar;
 
-use HMApi\starfederation\datastar\enums\ElementPatchMode;
-use HMApi\starfederation\datastar\events\EventInterface;
-use HMApi\starfederation\datastar\events\ExecuteScript;
-use HMApi\starfederation\datastar\events\Location;
-use HMApi\starfederation\datastar\events\PatchElements;
-use HMApi\starfederation\datastar\events\PatchSignals;
-use HMApi\starfederation\datastar\events\RemoveElements;
+use HyperPress\starfederation\datastar\enums\ElementPatchMode;
+use HyperPress\starfederation\datastar\events\EventInterface;
+use HyperPress\starfederation\datastar\events\ExecuteScript;
+use HyperPress\starfederation\datastar\events\Location;
+use HyperPress\starfederation\datastar\events\PatchElements;
+use HyperPress\starfederation\datastar\events\PatchSignals;
+use HyperPress\starfederation\datastar\events\RemoveElements;
 
 class ServerSentEventGenerator
 {

@@ -1,10 +1,10 @@
 <?php
 <?php
-// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+// Support for conditional_logic: pass as data-hp-conditional-logic attribute for JS
 $conditional_logic = $field_data["conditional_logic"] ?? null;
 $conditional_attr = "";
 if ($conditional_logic) {
-    $conditional_attr = " data-hm-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
+    $conditional_attr = " data-hp-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
 }
 ?>
 if (!defined('ABSPATH')) {
@@ -21,25 +21,25 @@ $help = $field_data['help'] ?? '';
 $media_library = $field_data['media_library'] ?? true;
 ?>
 
-<div class="hmapi-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label for="<?php echo esc_attr($name); ?>" class="hmapi-field-label">
+<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hmapi-field-input">
-        <div class="hmapi-image-field">
+    <div class="hyperpress-field-input">
+        <div class="hyperpress-image-field">
             <input type="hidden" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name_attr); ?>" value="<?php echo esc_attr($value); ?>">
             
-            <button type="button" class="button hmapi-upload-button" data-field="<?php echo esc_attr($name); ?>" data-type="image">
-                <?php _e('Select Image', 'hmapi'); ?>
+            <button type="button" class="button hyperpress-upload-button" data-field="<?php echo esc_attr($name); ?>" data-type="image">
+                <?php _e('Select Image', 'hyperpress'); ?>
             </button>
             
-            <button type="button" class="button hmapi-remove-button" data-field="<?php echo esc_attr($name); ?>" style="display: <?php echo $value ? 'inline-block' : 'none'; ?>;">
-                <?php _e('Remove Image', 'hmapi'); ?>
+            <button type="button" class="button hyperpress-remove-button" data-field="<?php echo esc_attr($name); ?>" style="display: <?php echo $value ? 'inline-block' : 'none'; ?>;">
+                <?php _e('Remove Image', 'hyperpress'); ?>
             </button>
 
-            <div class="hmapi-image-preview" style="margin-top: 10px;">
+            <div class="hyperpress-image-preview" style="margin-top: 10px;">
                 <?php if ($value): ?>
                     <img src="<?php echo esc_url(wp_get_attachment_url($value)); ?>" alt="" style="max-width: 150px; max-height: 150px;">
                 <?php endif; ?>

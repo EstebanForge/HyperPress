@@ -8,18 +8,18 @@
  * @license https://github.com/adbario/php-dot-notation/blob/3.x/LICENSE.md (MIT License)
  */
 
-use HMApi\Adbar\Dot;
+use HyperPress\Adbar\Dot;
 
-if (! function_exists('hmapi_dot')) {
+if (! function_exists('hyperpress_dot')) {
     /**
      * Create a new Dot object with the given items
      *
      * @param  mixed  $items
      * @param  bool  $parse
      * @param  non-empty-string  $delimiter
-     * @return \HMApi\Adbar\Dot<array-key, mixed>
+     * @return \HyperPress\Adbar\Dot<array-key, mixed>
      */
-    function hmapi_dot($items, $parse = false, $delimiter = ".")
+    function hyperpress_dot($items, $parse = false, $delimiter = ".")
     {
         return new Dot($items, $parse, $delimiter);
     }

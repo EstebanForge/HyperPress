@@ -7,7 +7,7 @@
  * in HyperFields options pages.
  */
 
-use HMApi\Fields\HyperFields;
+use HyperPress\Fields\HyperFields;
 
 // Create a demo options page with conditional fields
 function hyperfields_conditional_logic_demo() {

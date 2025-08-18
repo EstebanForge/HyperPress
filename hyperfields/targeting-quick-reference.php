@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use HMApi\Fields\HyperFields;
+use HyperPress\Fields\HyperFields;
 
 /**
  * Quick Reference: All targeting methods.

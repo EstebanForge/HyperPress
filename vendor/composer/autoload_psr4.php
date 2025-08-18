@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'HMApi\\' => array($baseDir . '/src'),
+    'HyperPress\\' => array($baseDir . '/src'),
 );

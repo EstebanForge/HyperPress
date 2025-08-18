@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Admin;
+namespace HyperPress\Admin;
 
-use HMApi\Main;
+use HyperPress\Main;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -19,8 +19,8 @@ if (!defined('ABSPATH')) {
  */
 class OptionsMigration
 {
-    private string $old_option_name = 'hmapi_options';
-    private string $migration_version_key = 'hmapi_migration_version';
+    private string $old_option_name = 'hyperpress_options';
+    private string $migration_version_key = 'hyperpress_migration_version';
     private Main $main;
 
     public function __construct(Main $main)

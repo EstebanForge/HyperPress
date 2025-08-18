@@ -6,7 +6,7 @@
  * @since   2024-02-21
  */
 
-namespace HMApi;
+namespace HyperPress;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -25,7 +25,7 @@ class Compatibility
     {
         add_filter('the_content', [$this, 'woocommerce'], PHP_INT_MAX);
 
-        do_action('hxwp/compatibility/run');
+        do_action('hyperpress/compatibility/run');
     }
 
     /**
@@ -34,7 +34,7 @@ class Compatibility
      */
     public function woocommerce($content)
     {
-        do_action('hxwp/compatibility/woocommerce');
+        do_action('hyperpress/compatibility/woocommerce');
 
         if (function_exists('is_woocommerce') && is_woocommerce()) {
             $content = str_ireplace('<div class="woocommerce', '<div hx-boost="false" class="woocommerce', $content);

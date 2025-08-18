@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use HMApi\Fields\HyperFields;
+use HyperPress\Fields\HyperFields;
 
 /**
  * Post Meta Example

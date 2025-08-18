@@ -22,13 +22,13 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use HMApi\Fields\HyperFields;
+use HyperPress\Fields\HyperFields;
 
 /**
  * Test 1: Post targeting by ID
  * Will show only on post ID 1.
  */
-function hf_test_post_by_id(): void
+function hp_test_post_by_id(): void
 {
     $container = HyperFields::makePostMeta('test_post_id', 'Test: Post ID Targeting')
         ->wherePostId(1) // Change this to an existing post ID
@@ -45,7 +45,7 @@ function hf_test_post_by_id(): void
  * Test 2: Post targeting by slug
  * Will show only on posts with specific slugs.
  */
-function hf_test_post_by_slug(): void
+function hp_test_post_by_slug(): void
 {
     $container = HyperFields::makePostMeta('test_post_slug', 'Test: Post Slug Targeting')
         ->wherePostSlug('hello-world') // Default WordPress post
@@ -63,7 +63,7 @@ function hf_test_post_by_slug(): void
  * Test 3: Post targeting by type
  * Will show on all posts and pages.
  */
-function hf_test_post_by_type(): void
+function hp_test_post_by_type(): void
 {
     $container = HyperFields::makePostMeta('test_post_type', 'Test: Post Type Targeting')
         ->where('post')
@@ -87,7 +87,7 @@ function hf_test_post_by_type(): void
  * Test 4: User targeting by role
  * Will show for administrators and editors.
  */
-function hf_test_user_by_role(): void
+function hp_test_user_by_role(): void
 {
     $container = HyperFields::makeUserMeta('test_user_role', 'Test: User Role Targeting')
         ->where('administrator')
@@ -105,7 +105,7 @@ function hf_test_user_by_role(): void
  * Test 5: User targeting by ID
  * Will show only for user ID 1 (usually the first admin).
  */
-function hf_test_user_by_id(): void
+function hp_test_user_by_id(): void
 {
     $container = HyperFields::makeUserMeta('test_user_id', 'Test: User ID Targeting')
         ->whereUserId(1); // Change this to an existing user ID
@@ -121,7 +121,7 @@ function hf_test_user_by_id(): void
  * Test 6: Term targeting by taxonomy
  * Will show for all categories and tags.
  */
-function hf_test_term_by_taxonomy(): void
+function hp_test_term_by_taxonomy(): void
 {
     $container = HyperFields::makeTermMeta('test_term_taxonomy', 'Test: Term Taxonomy Targeting')
         ->where('category')
@@ -139,7 +139,7 @@ function hf_test_term_by_taxonomy(): void
  * Test 7: Term targeting by ID
  * Will show only for term ID 1 (usually "Uncategorized").
  */
-function hf_test_term_by_id(): void
+function hp_test_term_by_id(): void
 {
     $container = HyperFields::makeTermMeta('test_term_id', 'Test: Term ID Targeting')
         ->where('category')
@@ -155,7 +155,7 @@ function hf_test_term_by_id(): void
  * Test 8: Term targeting by slug
  * Will show only for terms with specific slugs.
  */
-function hf_test_term_by_slug(): void
+function hp_test_term_by_slug(): void
 {
     $container = HyperFields::makeTermMeta('test_term_slug', 'Test: Term Slug Targeting')
         ->where('category')
@@ -171,7 +171,7 @@ function hf_test_term_by_slug(): void
  * Test 9: Complex targeting with conditional logic
  * Multiple targeting methods combined.
  */
-function hf_test_complex_targeting(): void
+function hp_test_complex_targeting(): void
 {
     $container = HyperFields::makePostMeta('test_complex', 'Test: Complex Targeting')
         ->where('post')
@@ -213,7 +213,7 @@ function hf_test_complex_targeting(): void
 /**
  * Test 10: Multiple posts by IDs array.
  */
-function hf_test_multiple_posts(): void
+function hp_test_multiple_posts(): void
 {
     $container = HyperFields::makePostMeta('test_multiple_posts', 'Test: Multiple Posts')
         ->wherePostIds([1, 2, 3, 4, 5]) // Multiple specific posts
@@ -237,22 +237,22 @@ function hf_test_multiple_posts(): void
 function hyperfields_activate_targeting_tests(): void
 {
     // Post targeting tests
-    hf_test_post_by_id();
-    hf_test_post_by_slug();
-    hf_test_post_by_type();
-    hf_test_multiple_posts();
+    hp_test_post_by_id();
+    hp_test_post_by_slug();
+    hp_test_post_by_type();
+    hp_test_multiple_posts();
 
     // User targeting tests
-    hf_test_user_by_role();
-    hf_test_user_by_id();
+    hp_test_user_by_role();
+    hp_test_user_by_id();
 
     // Term targeting tests
-    hf_test_term_by_taxonomy();
-    hf_test_term_by_id();
-    hf_test_term_by_slug();
+    hp_test_term_by_taxonomy();
+    hp_test_term_by_id();
+    hp_test_term_by_slug();
 
     // Complex targeting test
-    hf_test_complex_targeting();
+    hp_test_complex_targeting();
 }
 
 // Activate all tests - UNCOMMENT THE LINE BELOW TO TEST
@@ -269,7 +269,7 @@ TESTING INSTRUCTIONS
 
 2. POST TESTING:
    - Go to Posts → All Posts
-   - Edit post ID 1 (or change the ID in hf_test_post_by_id())
+   - Edit post ID 1 (or change the ID in hp_test_post_by_id())
    - You should see "Test: Post ID Targeting" metabox on the right side
    - Edit a post with slug 'hello-world' or 'sample-page'
    - You should see "Test: Post Slug Targeting" metabox
@@ -279,7 +279,7 @@ TESTING INSTRUCTIONS
    - Go to Users → All Users
    - Edit any administrator or editor account
    - You should see "Test: User Role Targeting" fields in the profile
-   - Edit user ID 1 (or change the ID in hf_test_user_by_id())
+   - Edit user ID 1 (or change the ID in hp_test_user_by_id())
    - You should see "Test: User ID Targeting" fields
 
 4. TERM TESTING:

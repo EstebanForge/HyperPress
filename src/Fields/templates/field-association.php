@@ -13,11 +13,11 @@ $options = $field_data['options'] ?? [];
 $post_type = $options['post_type'] ?? 'post';
 $multiple = $options['multiple'] ?? false;
 
-// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+// Support for conditional_logic: pass as data-hp-conditional-logic attribute for JS
 $conditional_logic = $field_data['conditional_logic'] ?? null;
 $conditional_attr = '';
 if ($conditional_logic) {
-    $conditional_attr = ' data-hm-conditional-logic="' . esc_attr(json_encode($conditional_logic)) . '"';
+    $conditional_attr = ' data-hp-conditional-logic="' . esc_attr(json_encode($conditional_logic)) . '"';
 }
 
 // Get posts based on post type
@@ -30,19 +30,19 @@ $posts = get_posts([
 $value = is_array($value) ? $value : [$value];
 ?>
 
-<div class="hmapi-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label for="<?php echo esc_attr($name); ?>" class="hmapi-field-label">
+<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hmapi-field-input">
+    <div class="hyperpress-field-input">
         <select id="<?php echo esc_attr($name); ?>" 
                 name="<?php echo esc_attr($name); ?><?php echo $multiple ? '[]' : ''; ?>" 
                 <?php echo $multiple ? 'multiple' : ''; ?>
                 <?php echo $required ? 'required' : ''; ?>
                 class="regular-text">
-            <option value=""><?php _e('Select...', 'hmapi'); ?></option>
+            <option value=""><?php _e('Select...', 'hyperpress'); ?></option>
             <?php foreach ($posts as $post): ?>
                 <option value="<?php echo esc_attr($post->ID); ?>" 
                         <?php selected(in_array($post->ID, $value)); ?>>

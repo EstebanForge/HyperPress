@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Handles REST API endpoint registration.
  */
 
-namespace HMApi\Blocks;
+namespace HyperPress\Blocks;
 
 // Prevent direct file access.
 if (!defined('ABSPATH')) {
@@ -213,7 +213,7 @@ class RestApi
                 }
 
                 foreach ($mergedFields as $name => $field) {
-                    $adapter = \HMApi\Fields\BlockFieldAdapter::from_field($field->getHyperField(), $attributes);
+                    $adapter = \HyperPress\Fields\BlockFieldAdapter::from_field($field->getHyperField(), $attributes);
                     $incoming = $attributes[$name] ?? null;
 
                     if ($incoming === null) {
@@ -317,15 +317,15 @@ class RestApi
         $scanPaths = [];
 
         // Always scan our plugin's hyperblocks directory
-        if (defined('HMAPI_ABSPATH')) {
-            $pluginHyperblocksPath = HMAPI_ABSPATH . '/hyperblocks';
+        if (defined('HYPERPRESS_ABSPATH')) {
+            $pluginHyperblocksPath = HYPERPRESS_ABSPATH . '/hyperblocks';
             if (is_dir($pluginHyperblocksPath)) {
                 $scanPaths[] = $pluginHyperblocksPath;
             }
         }
 
         // Allow 3rd party devs to add their paths via filter
-        $additionalPaths = apply_filters('hmapi/blocks/register_json_paths', []);
+        $additionalPaths = apply_filters('hyperpress/blocks/register_json_paths', []);
         $scanPaths = array_merge($scanPaths, $additionalPaths);
 
         foreach ($scanPaths as $basePath) {

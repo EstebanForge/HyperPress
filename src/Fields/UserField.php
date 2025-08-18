@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields;
+namespace HyperPress\Fields;
 
 class UserField extends Field
 {
@@ -29,7 +29,7 @@ class UserField extends Field
     {
         $key = $this->meta_key_prefix . $this->get_name();
 
-        return apply_filters('hmapi_user_field_meta_key', $key, $this->get_name(), $this->user_id);
+        return apply_filters('hyperpress_user_field_meta_key', $key, $this->get_name(), $this->user_id);
     }
 
     public function get_value(): mixed

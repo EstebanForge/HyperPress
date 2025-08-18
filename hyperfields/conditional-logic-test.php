@@ -6,7 +6,7 @@
  * Simple test to verify field-level conditional logic functionality in metaboxes.
  */
 
-use HMApi\Fields\HyperFields;
+use HyperPress\Fields\HyperFields;
 
 // Create a test metabox with conditional fields
 function hyperfields_metabox_conditional_logic_test() {
