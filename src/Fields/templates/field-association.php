@@ -17,7 +17,8 @@ $multiple = $options['multiple'] ?? false;
 $conditional_logic = $field_data['conditional_logic'] ?? null;
 $conditional_attr = '';
 if ($conditional_logic) {
-    $conditional_attr = ' data-hp-conditional-logic="' . esc_attr(json_encode($conditional_logic)) . '"';
+    $json = wp_json_encode($conditional_logic);
+    $conditional_attr = ' data-hp-conditional-logic=\'' . esc_attr((string) $json) . '\'';
 }
 
 // Get posts based on post type
