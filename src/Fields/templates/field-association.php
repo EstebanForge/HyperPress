@@ -30,22 +30,22 @@ $posts = get_posts([
 $value = is_array($value) ? $value : [$value];
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+<div class="hyperpress-field-wrapper" <?php echo $conditional_attr; ?>>
     <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
     <div class="hyperpress-field-input">
-        <select id="<?php echo esc_attr($name); ?>" 
-                name="<?php echo esc_attr($name); ?><?php echo $multiple ? '[]' : ''; ?>" 
-                <?php echo $multiple ? 'multiple' : ''; ?>
-                <?php echo $required ? 'required' : ''; ?>
-                class="regular-text">
-            <option value=""><?php _e('Select...', 'hyperpress'); ?></option>
+        <select id="<?php echo esc_attr($name); ?>"
+            name="<?php echo esc_attr($name); ?><?php echo $multiple ? '[]' : ''; ?>"
+            <?php echo $multiple ? 'multiple' : ''; ?>
+            <?php echo $required ? 'required' : ''; ?>
+            class="regular-text">
+            <option value=""><?php _e('Select...', 'api-for-htmx'); ?></option>
             <?php foreach ($posts as $post): ?>
-                <option value="<?php echo esc_attr($post->ID); ?>" 
-                        <?php selected(in_array($post->ID, $value)); ?>>
+                <option value="<?php echo esc_attr($post->ID); ?>"
+                    <?php selected(in_array($post->ID, $value)); ?>>
                     <?php echo esc_html($post->post_title); ?>
                 </option>
             <?php endforeach; ?>

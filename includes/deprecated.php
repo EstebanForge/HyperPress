@@ -276,7 +276,7 @@ function hxwp_send_header_response($data = [], $action = null)
 
     // Use shared validation logic
     if (!hp_validate_request()) {
-        hxwp_die(__('Nonce verification failed.', 'hyperpress'));
+        hxwp_die(__('Nonce verification failed.', 'api-for-htmx'));
     }
 
     if ($action === null) {
@@ -303,7 +303,7 @@ function hxwp_send_header_response($data = [], $action = null)
 
     // Headers already sent?
     if (headers_sent()) {
-        wp_die(__('HXWP Error: Headers already sent.', 'hyperpress'));
+        wp_die(__('HXWP Error: Headers already sent.', 'api-for-htmx'));
     }
 
     // Filter our response (legacy filter)

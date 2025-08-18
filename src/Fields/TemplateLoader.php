@@ -151,12 +151,12 @@ class TemplateLoader
                 'ajaxurl' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('hyperpress_fields_nonce'),
                 'l10n' => [
-                    'selectImage' => __('Select Image', 'hyperpress'),
-                    'selectFile' => __('Select File', 'hyperpress'),
-                    'remove' => __('Remove', 'hyperpress'),
-                    'addImages' => __('Add Images', 'hyperpress'),
-                    'clearGallery' => __('Clear Gallery', 'hyperpress'),
-                    'searchAddress' => __('Search for an address...', 'hyperpress'),
+                    'selectImage' => __('Select Image', 'api-for-htmx'),
+                    'selectFile' => __('Select File', 'api-for-htmx'),
+                    'remove' => __('Remove', 'api-for-htmx'),
+                    'addImages' => __('Add Images', 'api-for-htmx'),
+                    'clearGallery' => __('Clear Gallery', 'api-for-htmx'),
+                    'searchAddress' => __('Search for an address...', 'api-for-htmx'),
                 ],
             ]);
 
@@ -180,12 +180,12 @@ class TemplateLoader
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('hyperpress_fields_nonce'),
             'l10n' => [
-                'selectImage' => __('Select Image', 'hyperpress'),
-                'selectFile' => __('Select File', 'hyperpress'),
-                'remove' => __('Remove', 'hyperpress'),
-                'addImages' => __('Add Images', 'hyperpress'),
-                'clearGallery' => __('Clear Gallery', 'hyperpress'),
-                'searchAddress' => __('Search for an address...', 'hyperpress'),
+                'selectImage' => __('Select Image', 'api-for-htmx'),
+                'selectFile' => __('Select File', 'api-for-htmx'),
+                'remove' => __('Remove', 'api-for-htmx'),
+                'addImages' => __('Add Images', 'api-for-htmx'),
+                'clearGallery' => __('Clear Gallery', 'api-for-htmx'),
+                'searchAddress' => __('Search for an address...', 'api-for-htmx'),
             ],
         ]);
     }

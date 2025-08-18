@@ -30,13 +30,13 @@ $media_library = $field_data['media_library'] ?? true;
     <div class="hyperpress-field-input">
         <div class="hyperpress-image-field">
             <input type="hidden" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name_attr); ?>" value="<?php echo esc_attr($value); ?>">
-            
+
             <button type="button" class="button hyperpress-upload-button" data-field="<?php echo esc_attr($name); ?>" data-type="image">
-                <?php _e('Select Image', 'hyperpress'); ?>
+                <?php _e('Select Image', 'api-for-htmx'); ?>
             </button>
-            
+
             <button type="button" class="button hyperpress-remove-button" data-field="<?php echo esc_attr($name); ?>" style="display: <?php echo $value ? 'inline-block' : 'none'; ?>;">
-                <?php _e('Remove Image', 'hyperpress'); ?>
+                <?php _e('Remove Image', 'api-for-htmx'); ?>
             </button>
 
             <div class="hyperpress-image-preview" style="margin-top: 10px;">

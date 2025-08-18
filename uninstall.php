@@ -14,8 +14,18 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 
 // Nonce?: https://core.trac.wordpress.org/ticket/38661
 
-if (isset($_REQUEST['plugin']) && $_REQUEST['plugin'] != 'hyperpress/hyperpress.php' && $_REQUEST['action'] != 'delete-plugin') {
-	wp_die('Error uninstalling: wrong plugin.');
+// Validate the request to ensure the correct plugin is being uninstalled
+$plugin = isset($_REQUEST['plugin']) ? sanitize_text_field(wp_unslash((string) $_REQUEST['plugin'])) : '';
+$action = isset($_REQUEST['action']) ? sanitize_text_field(wp_unslash((string) $_REQUEST['action'])) : '';
+
+$validPlugins = [
+  'hyperpress/hyperpress.php',
+  'hyperpress/api-for-htmx.php', // legacy entry point
+  'api-for-htmx/api-for-htmx.php', // legacy entry point
+];
+
+if ($action !== 'delete-plugin' || !in_array($plugin, $validPlugins, true)) {
+  wp_die('Error uninstalling: wrong plugin.');
 }
 
 // Clears HTMX API for WP options

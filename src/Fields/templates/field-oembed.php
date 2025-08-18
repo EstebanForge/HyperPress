@@ -28,16 +28,16 @@ $help = $field_data['help'] ?? '';
     </label>
 
     <div class="hyperpress-field-input">
-        <input type="url" 
-               id="<?php echo esc_attr($name); ?>" 
-               name="<?php echo esc_attr($name_attr); ?>" 
-               value="<?php echo esc_attr($value); ?>" 
-               placeholder="<?php echo esc_attr($placeholder); ?>" 
+        <input type="url"
+               id="<?php echo esc_attr($name); ?>"
+               name="<?php echo esc_attr($name_attr); ?>"
+               value="<?php echo esc_attr($value); ?>"
+               placeholder="<?php echo esc_attr($placeholder); ?>"
                <?php echo $required ? 'required' : ''; ?>
                class="regular-text hyperpress-oembed-input">
-        
+
         <button type="button" class="button hyperpress-embed-preview-button" data-field="<?php echo esc_attr($name); ?>">
-            <?php _e('Preview', 'hyperpress'); ?>
+            <?php _e('Preview', 'api-for-htmx'); ?>
         </button>
 
         <div class="hyperpress-embed-preview" style="margin-top: 10px;">
