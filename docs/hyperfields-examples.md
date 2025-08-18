@@ -10,7 +10,7 @@ Examples for the helper functions:
 - `hp_save_field()` to store values (alias of `hp_update_field()`)
 - `hp_delete_field()` to remove values
 
-Covers contexts: options, post meta, user meta, and term meta. Shows how to pass `type` to leverage `Field::sanitize_value()`.
+Covers contexts: options, post meta, user meta, and term meta. Shows how to pass `type` to leverage `Field::sanitizeValue()`.
 
 **Usage:** Include the file and hook any of the provided functions (e.g., `hyperfields_helper_examples_options`) via `add_action('init', '...')`.
 

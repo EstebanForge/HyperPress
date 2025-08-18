@@ -27,11 +27,11 @@ class Options
     public function __construct(Main $main)
     {
         $this->main = $main;
-        // Initialize the options page using HyperFields system
-        add_action('init', [$this, 'init_options_page']);
+
+        add_action('init', $this->initOptionsPage(...));
     }
 
-    public function init_options_page(): void
+    public function initOptionsPage(): void
     {
         $options = HyperFields::getOptions($this->option_name, []);
 
@@ -282,7 +282,7 @@ class Options
         global $wp_version;
 
         $options = HyperFields::getOptions($this->option_name, []);
-        $plugin_version = defined('HPRESS_VERSION') ? HPRESS_VERSION : '2.0.7';
+        $plugin_version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7';
         $php_version = PHP_VERSION;
         $wp_ver = $wp_version ?? get_bloginfo('version');
 
@@ -297,7 +297,7 @@ class Options
 
     private function get_footer_content(): string
     {
-        $plugin_version = defined('HPRESS_VERSION') ? HPRESS_VERSION : '2.0.7';
+        $plugin_version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7';
 
         return '<span>' . __('Active Instance: Plugin v', 'api-for-htmx') . esc_html($plugin_version) . '</span><br />'
             . __('Proudly brought to you by', 'api-for-htmx')

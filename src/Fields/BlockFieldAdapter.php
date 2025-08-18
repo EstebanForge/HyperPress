@@ -20,15 +20,15 @@ class BlockFieldAdapter
         return new self($field, $block_attributes);
     }
 
-    public function get_value(): mixed
+    public function getValue(): mixed
     {
-        $field_name = $this->field->get_name();
-        $default = $this->field->get_default();
+        $field_name = $this->field->getName();
+        $default = $this->field->getDefault();
 
         return $this->block_attributes[$field_name] ?? $default;
     }
 
-    public function set_value(mixed $value): void
+    public function setValue(mixed $value): void
     {
         // Block attributes are handled by Gutenberg, not stored directly
         // This method exists for interface consistency
@@ -41,13 +41,13 @@ class BlockFieldAdapter
 
     public function get_attribute_name(): string
     {
-        return $this->field->get_name();
+        return $this->field->getName();
     }
 
     public function to_block_attribute(): array
     {
-        $field_type = $this->field->get_type();
-        $default = $this->field->get_default();
+        $field_type = $this->field->getType();
+        $default = $this->field->getDefault();
 
         // Map field types to WordPress block attribute types
         $type_map = [
@@ -77,11 +77,11 @@ class BlockFieldAdapter
 
     public function sanitize_for_block(mixed $value): mixed
     {
-        return $this->field->sanitize_value($value);
+        return $this->field->sanitizeValue($value);
     }
 
     public function validate_for_block(mixed $value): bool
     {
-        return $this->field->validate_value($value);
+        return $this->field->validateValue($value);
     }
 }

@@ -85,12 +85,12 @@ class OptionsPage
         return $this;
     }
 
-    public function get_option_name(): string
+    public function getOptionName(): string
     {
         return $this->option_name;
     }
 
-    public function add_section(string $id, string $title, string $description = ''): OptionsSection
+    public function addSection(string $id, string $title, string $description = ''): OptionsSection
     {
         $section = new OptionsSection($id, $title, $description);
         $this->sections[$id] = $section;
@@ -98,34 +98,34 @@ class OptionsPage
         return $section;
     }
 
-    public function add_section_object(OptionsSection $section): self
+    public function addSectionObject(OptionsSection $section): self
     {
-        $this->sections[$section->get_id()] = $section;
+        $this->sections[$section->getId()] = $section;
 
         // Collect default values from the fields in this section
-        foreach ($section->get_fields() as $field) {
-            $this->default_values[$field->get_name()] = $field->get_default();
+        foreach ($section->getFields() as $field) {
+            $this->default_values[$field->getName()] = $field->getDefault();
         }
 
         return $this;
     }
 
-    public function add_field(Field $field): self
+    public function addField(Field $field): self
     {
-        $this->fields[$field->get_name()] = $field;
+        $this->fields[$field->getName()] = $field;
 
         return $this;
     }
 
     public function register(): void
     {
-        $this->load_options();
-        add_action('admin_menu', [$this, 'add_menu_page']);
-        add_action('admin_init', [$this, 'register_settings']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_assets']);
+        $this->loadOptions();
+        add_action('admin_menu', $this->add_menu_page(...));
+        add_action('admin_init', $this->register_settings(...));
+        add_action('admin_enqueue_scripts', $this->enqueue_assets(...));
     }
 
-    private function load_options(): void
+    private function loadOptions(): void
     {
         $saved_options = get_option($this->option_name, []);
         $this->option_values = array_merge($this->default_values, $saved_options);
@@ -170,14 +170,14 @@ class OptionsPage
             add_settings_section($section_id, '', '__return_false', $this->option_name);
 
             // Set option values for all fields in all sections
-            foreach ($section->get_fields() as $field) {
-                $field->set_option_values($this->option_values, $this->option_name);
+            foreach ($section->getFields() as $field) {
+                $field->setOptionValues($this->option_values, $this->option_name);
             }
 
             // Only register settings fields for the active tab
             if ($section_id === $active_tab) {
-                foreach ($section->get_fields() as $field) {
-                    add_settings_field($field->get_name(), '', [$field, 'render'], $this->option_name, $section_id, $field->get_args());
+                foreach ($section->getFields() as $field) {
+                    add_settings_field($field->getName(), '', [$field, 'render'], $this->option_name, $section_id, $field->getArgs());
                 }
             }
         }
@@ -203,13 +203,13 @@ class OptionsPage
         // Only render the active tab's section
         if (isset($this->sections[$active_tab])) {
             $section = $this->sections[$active_tab];
-            // Render section title
-            if ($section->get_title()) {
-                echo '<h2>' . esc_html($section->get_title()) . '</h2>';
+                    // Render section title
+                    if ($section->getTitle()) {
+                        echo '<h2>' . esc_html($section->getTitle()) . '</h2>';
             }
-            // Render section description
-            if ($section->get_description()) {
-                echo '<p>' . esc_html($section->get_description()) . '</p>';
+                    // Render section description
+                    if ($section->getDescription()) {
+                        echo '<p>' . esc_html($section->getDescription()) . '</p>';
             }
             // Render fields for this section
             echo '<div class="hyperpress-fields-group">';
@@ -260,11 +260,11 @@ class OptionsPage
         if (isset($this->sections[$active_tab])) {
             $section = $this->sections[$active_tab];
             // Only update fields for the current tab, preserve all others
-            foreach ($section->get_fields() as $field) {
-                $field_name = $field->get_name();
+            foreach ($section->getFields() as $field) {
+                $field_name = $field->getName();
                 if (isset($input[$field_name])) {
-                    $output[$field_name] = $field->sanitize_value($input[$field_name]);
-                } elseif ($field->get_type() === 'checkbox') {
+                    $output[$field_name] = $field->sanitizeValue($input[$field_name]);
+                } elseif ($field->getType() === 'checkbox') {
                     // If checkbox not present, means unchecked
                     $output[$field_name] = '0';
                 } else {
@@ -307,7 +307,7 @@ class OptionsPage
             $class = ($active_tab === $tab_id) ? 'nav-tab-active' : '';
             $url_base = $this->parent_slug === 'options-general.php' ? 'options-general.php' : 'admin.php';
             $url = add_query_arg(['page' => $this->menu_slug, 'tab' => $tab_id], admin_url($url_base));
-            echo '<a href="' . esc_url($url) . '" class="nav-tab ' . esc_attr($class) . '">' . esc_html($this->sections[$tab_id]->get_title()) . '</a>';
+            echo '<a href="' . esc_url($url) . '" class="nav-tab ' . esc_attr($class) . '">' . esc_html($this->sections[$tab_id]->getTitle()) . '</a>';
         }
         echo '</h2>';
     }

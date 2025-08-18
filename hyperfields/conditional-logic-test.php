@@ -17,14 +17,14 @@ function hyperfields_metabox_conditional_logic_test() {
 
     $container
         ->addField(HyperFields::makeField('select', 'show_extra_fields', 'Show Extra Fields?')
-            ->set_options([
+        ->setOptions([
                 'no' => 'No',
                 'yes' => 'Yes'
             ])
-            ->set_default('no'))
+        ->setDefault('no'))
 
         ->addField(HyperFields::makeField('text', 'extra_text_field', 'Extra Text Field')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'relation' => 'AND',
                 'conditions' => [[
                     'field' => 'show_extra_fields',
@@ -32,10 +32,10 @@ function hyperfields_metabox_conditional_logic_test() {
                     'value' => 'yes'
                 ]]
             ])
-            ->set_placeholder('This field is shown conditionally'))
+        ->setPlaceholder('This field is shown conditionally'))
 
         ->addField(HyperFields::makeField('textarea', 'extra_textarea_field', 'Extra Textarea Field')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'relation' => 'AND',
                 'conditions' => [[
                     'field' => 'show_extra_fields',
@@ -43,7 +43,7 @@ function hyperfields_metabox_conditional_logic_test() {
                     'value' => 'yes'
                 ]]
             ])
-            ->set_placeholder('Another conditionally shown field'));
+            ->setPlaceholder('Another conditionally shown field'));
 
     // Register the container
     $container->register();

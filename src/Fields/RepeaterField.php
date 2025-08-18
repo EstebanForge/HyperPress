@@ -15,7 +15,7 @@ class RepeaterField extends Field
 
     public function add_sub_field(Field $field): self
     {
-        $this->sub_fields[$field->get_name()] = $field;
+        $this->sub_fields[$field->getName()] = $field;
 
         return $this;
     }
@@ -50,14 +50,14 @@ class RepeaterField extends Field
         return $this;
     }
 
-    public function set_min_rows(int $min): self
+    public function setMinRows(int $min): self
     {
         $this->min_rows = max(0, $min);
 
         return $this;
     }
 
-    public function set_max_rows(int $max): self
+    public function setMaxRows(int $max): self
     {
         $this->max_rows = max(0, $max);
 
@@ -69,7 +69,7 @@ class RepeaterField extends Field
         return $this->sub_fields;
     }
 
-    public function get_label_template(): string
+    public function getLabelTemplate(): string
     {
         return $this->label_template;
     }
@@ -94,7 +94,7 @@ class RepeaterField extends Field
         return $this->max_rows;
     }
 
-    public function sanitize_value(mixed $value): mixed
+    public function sanitizeValue(mixed $value): mixed
     {
         if (!is_array($value)) {
             return [];
@@ -109,7 +109,7 @@ class RepeaterField extends Field
             $sanitized_row = [];
             foreach ($this->sub_fields as $field_name => $field) {
                 $field_value = $row[$field_name] ?? null;
-                $sanitized_row[$field_name] = $field->sanitize_value($field_value);
+                $sanitized_row[$field_name] = $field->sanitizeValue($field_value);
             }
             $sanitized[] = $sanitized_row;
         }
@@ -117,7 +117,7 @@ class RepeaterField extends Field
         return $sanitized;
     }
 
-    public function validate_value(mixed $value): bool
+    public function validateValue(mixed $value): bool
     {
         if (!is_array($value)) {
             return false;
@@ -136,10 +136,10 @@ class RepeaterField extends Field
         return true;
     }
 
-    public function to_array(): array
+    public function toArray(): array
     {
-        return array_merge(parent::to_array(), [
-            'sub_fields' => array_map(fn ($field) => $field->to_array(), $this->sub_fields),
+        return array_merge(parent::toArray(), [
+            'sub_fields' => array_map(fn($field) => $field->toArray(), $this->sub_fields),
             'label_template' => $this->label_template,
             'collapsible' => $this->collapsible,
             'collapsed' => $this->collapsed,

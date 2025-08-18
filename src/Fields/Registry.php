@@ -53,7 +53,7 @@ class Registry
         return $this->field_groups[$name] ?? null;
     }
 
-    public function get_fields_by_context(string $context): array
+    public function getFieldsByContext(string $context): array
     {
         return $this->fields[$context] ?? [];
     }
@@ -165,7 +165,7 @@ class Registry
 
     public function register_post_meta_boxes(): void
     {
-        $post_fields = $this->get_fields_by_context('post');
+        $post_fields = $this->getFieldsByContext('post');
         if (empty($post_fields)) {
             return;
         }
@@ -182,7 +182,7 @@ class Registry
 
     public function render_post_meta_box(): void
     {
-        $post_fields = $this->get_fields_by_context('post');
+        $post_fields = $this->getFieldsByContext('post');
         if (empty($post_fields)) {
             return;
         }
@@ -196,7 +196,7 @@ class Registry
 
     public function render_user_fields(): void
     {
-        $user_fields = $this->get_fields_by_context('user');
+        $user_fields = $this->getFieldsByContext('user');
         if (empty($user_fields)) {
             return;
         }
@@ -208,7 +208,7 @@ class Registry
 
     public function render_term_fields(): void
     {
-        $term_fields = $this->get_fields_by_context('term');
+        $term_fields = $this->getFieldsByContext('term');
         if (empty($term_fields)) {
             return;
         }
@@ -221,20 +221,20 @@ class Registry
     private function render_field_input(Field $field): void
     {
         $value = '';
-        $context = $field->get_context();
+        $context = $field->getContext();
 
         switch ($context) {
             case 'post':
-                $post_field = PostField::for_post(get_the_ID(), $field->get_type(), $field->get_name(), $field->get_label());
-                $value = $post_field->get_value();
+                $post_field = PostField::for_post(get_the_ID(), $field->getType(), $field->getName(), $field->getLabel());
+                $value = $post_field->getValue();
                 break;
             case 'user':
                 $user_id = get_current_user_id();
                 if (isset($_GET['user_id'])) {
                     $user_id = intval($_GET['user_id']);
                 }
-                $user_field = UserField::for_user($user_id, $field->get_type(), $field->get_name(), $field->get_label());
-                $value = $user_field->get_value();
+                $user_field = UserField::for_user($user_id, $field->getType(), $field->getName(), $field->getLabel());
+                $value = $user_field->getValue();
                 break;
             case 'term':
                 $term_id = 0;
@@ -242,17 +242,17 @@ class Registry
                     $term_id = intval($_GET['tag_ID']);
                 }
                 if ($term_id > 0) {
-                    $term_field = TermField::for_term($term_id, $field->get_type(), $field->get_name(), $field->get_label());
-                    $value = $term_field->get_value();
+                    $term_field = TermField::for_term($term_id, $field->getType(), $field->getName(), $field->getLabel());
+                    $value = $term_field->getValue();
                 }
                 break;
             case 'option':
-                $option_field = OptionField::for_option($field->get_name(), $field->get_type(), $field->get_name(), $field->get_label());
-                $value = $option_field->get_value();
+                $option_field = OptionField::forOption($field->getName(), $field->getType(), $field->getName(), $field->getLabel());
+                $value = $option_field->getValue();
                 break;
         }
 
-        $field_data = $field->to_array();
+        $field_data = $field->toArray();
         $field_data['value'] = $value;
 
         include __DIR__ . '/templates/field-input.php';
@@ -276,12 +276,12 @@ class Registry
             return;
         }
 
-        $post_fields = $this->get_fields_by_context('post');
+        $post_fields = $this->getFieldsByContext('post');
         foreach ($post_fields as $field) {
-            $field_name = $field->get_name();
+            $field_name = $field->getName();
             if (isset($_POST[$field_name])) {
-                $post_field = PostField::for_post($post_id, $field->get_type(), $field_name, $field->get_label());
-                $post_field->set_value($_POST[$field_name]);
+                $post_field = PostField::for_post($post_id, $field->getType(), $field_name, $field->getLabel());
+                $post_field->setValue($_POST[$field_name]);
             }
         }
     }
@@ -292,12 +292,12 @@ class Registry
             return;
         }
 
-        $user_fields = $this->get_fields_by_context('user');
+        $user_fields = $this->getFieldsByContext('user');
         foreach ($user_fields as $field) {
-            $field_name = $field->get_name();
+            $field_name = $field->getName();
             if (isset($_POST[$field_name])) {
-                $user_field = UserField::for_user($user_id, $field->get_type(), $field_name, $field->get_label());
-                $user_field->set_value($_POST[$field_name]);
+                $user_field = UserField::for_user($user_id, $field->getType(), $field_name, $field->getLabel());
+                $user_field->setValue($_POST[$field_name]);
             }
         }
     }
@@ -308,12 +308,12 @@ class Registry
             return;
         }
 
-        $term_fields = $this->get_fields_by_context('term');
+        $term_fields = $this->getFieldsByContext('term');
         foreach ($term_fields as $field) {
-            $field_name = $field->get_name();
+            $field_name = $field->getName();
             if (isset($_POST[$field_name])) {
-                $term_field = TermField::for_term($term_id, $field->get_type(), $field_name, $field->get_label());
-                $term_field->set_value($_POST[$field_name]);
+                $term_field = TermField::for_term($term_id, $field->getType(), $field_name, $field->getLabel());
+                $term_field->setValue($_POST[$field_name]);
             }
         }
     }

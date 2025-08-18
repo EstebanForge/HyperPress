@@ -49,7 +49,7 @@ class HyperFields
                     continue;
                 }
 
-                $section = $options_page->add_section($section_config['id'], $section_config['title'], $section_config['description'] ?? '');
+                $section = $options_page->addSection($section_config['id'], $section_config['title'], $section_config['description'] ?? '');
 
                 if (isset($section_config['fields']) && is_array($section_config['fields'])) {
                     foreach ($section_config['fields'] as $field_config) {
@@ -60,22 +60,22 @@ class HyperFields
                         $field = self::makeField($field_config['type'], $field_config['name'], $field_config['label'] ?? '');
 
                         if (isset($field_config['default'])) {
-                            $field->set_default($field_config['default']);
+                            $field->setDefault($field_config['default']);
                         }
                         if (isset($field_config['placeholder'])) {
-                            $field->set_placeholder($field_config['placeholder']);
+                            $field->setPlaceholder($field_config['placeholder']);
                         }
                         if (isset($field_config['help'])) {
-                            $field->set_help($field_config['help']);
+                            $field->setHelp($field_config['help']);
                         }
                         if (isset($field_config['options'])) {
-                            $field->set_options($field_config['options']);
+                            $field->setOptions($field_config['options']);
                         }
                         if (isset($field_config['html_content'])) {
-                            $field->set_html_content($field_config['html_content']);
+                            $field->setHtmlContent($field_config['html_content']);
                         }
 
-                        $section->add_field($field);
+                        $section->addField($field);
                     }
                 }
             }

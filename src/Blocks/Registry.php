@@ -56,6 +56,14 @@ final class Registry
     }
 
     /**
+     * Initialize the registry and hook into WordPress.
+     */
+    public function init(): void
+    {
+        add_action('init', $this->registerAll(...));
+    }
+
+    /**
      * Get the single instance of the Registry.
      *
      * @return self
@@ -652,13 +660,13 @@ final class Registry
 
                 if ($incoming === null) {
                     // Apply default when missing
-                    $attributes[$name] = $field->getHyperField()->get_default();
+                    $attributes[$name] = $field->getHyperField()->getDefault();
                     continue;
                 }
 
                 $sanitized = $adapter->sanitize_for_block($incoming);
                 if (!$adapter->validate_for_block($sanitized)) {
-                    $attributes[$name] = $field->getHyperField()->get_default();
+                    $attributes[$name] = $field->getHyperField()->getDefault();
                 } else {
                     $attributes[$name] = $sanitized;
                 }
@@ -671,13 +679,5 @@ final class Registry
         $renderer = new Renderer();
 
         return $renderer->render($fluentBlock->render_template, $attributes);
-    }
-
-    /**
-     * Initialize the registry and hook into WordPress.
-     */
-    public function init(): void
-    {
-        add_action('init', [$this, 'registerAll']);
     }
 }

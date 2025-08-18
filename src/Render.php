@@ -54,10 +54,10 @@ class Render
 
         // Determine which endpoint is being accessed (primary or legacy)
         $actual_endpoint_key = null;
-        if (defined('HPRESS_ENDPOINT') && isset($wp_query->query_vars[HPRESS_ENDPOINT])) {
-            $actual_endpoint_key = HPRESS_ENDPOINT;
-        } elseif (defined('HPRESS_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HPRESS_LEGACY_ENDPOINT])) {
-            $actual_endpoint_key = HPRESS_LEGACY_ENDPOINT;
+        if (defined('HYPERPRESS_ENDPOINT') && isset($wp_query->query_vars[HYPERPRESS_ENDPOINT])) {
+            $actual_endpoint_key = HYPERPRESS_ENDPOINT;
+        } elseif (defined('HYPERPRESS_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HYPERPRESS_LEGACY_ENDPOINT])) {
+            $actual_endpoint_key = HYPERPRESS_LEGACY_ENDPOINT;
         }
 
         // Don't go further if this is not a request for one of our endpoints
@@ -124,7 +124,7 @@ class Render
         }
 
         // To help developers know when template files were loaded via our plugin
-        define('HPRESS_REQUEST', true);
+        define('HYPERPRESS_REQUEST', true);
 
         // Run actions before loading the template
         do_action('hyperpress/before_template_load', $template_name, $hp_vals);
@@ -156,21 +156,21 @@ class Render
         $current_endpoint = '';
         $endpoint_version = '';
 
-        if (defined('HPRESS_ENDPOINT') && isset($wp_query->query_vars[HPRESS_ENDPOINT])) {
-            $current_endpoint = HPRESS_ENDPOINT;
-            $endpoint_version = defined('HPRESS_ENDPOINT_VERSION') ? HPRESS_ENDPOINT_VERSION : 'v1';
-        } elseif (defined('HPRESS_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HPRESS_LEGACY_ENDPOINT])) {
-            $current_endpoint = HPRESS_LEGACY_ENDPOINT;
-            $endpoint_version = defined('HPRESS_ENDPOINT_VERSION') ? HPRESS_ENDPOINT_VERSION : 'v1';
+        if (defined('HYPERPRESS_ENDPOINT') && isset($wp_query->query_vars[HYPERPRESS_ENDPOINT])) {
+            $current_endpoint = HYPERPRESS_ENDPOINT;
+            $endpoint_version = defined('HYPERPRESS_ENDPOINT_VERSION') ? HYPERPRESS_ENDPOINT_VERSION : 'v1';
+        } elseif (defined('HYPERPRESS_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HYPERPRESS_LEGACY_ENDPOINT])) {
+            $current_endpoint = HYPERPRESS_LEGACY_ENDPOINT;
+            $endpoint_version = defined('HYPERPRESS_ENDPOINT_VERSION') ? HYPERPRESS_ENDPOINT_VERSION : 'v1';
         }
 
         $base_url = home_url($current_endpoint . '/' . $endpoint_version);
-        $plugin_name = defined('HPRESS_PLUGIN_NAME') ? HPRESS_PLUGIN_NAME : 'HyperPress: Modern Hypermedia for WordPress';
+        $plugin_name = 'HyperPress';
 
         // Only show debug info if WP_DEBUG is enabled or user can manage options
         $show_debug = defined('WP_DEBUG') && WP_DEBUG || current_user_can('manage_options');
 
-        ?>
+?>
         <!DOCTYPE html>
         <html <?php language_attributes(); ?>>
 
@@ -326,7 +326,7 @@ class Render
                     <ul>
                         <li><strong>Theme:</strong> <code><?php echo esc_html(get_template_directory()); ?>/hypermedia/</code></li>
                         <li><strong>Child Theme:</strong> <code><?php echo esc_html(get_stylesheet_directory()); ?>/hypermedia/</code></li>
-                        <li><strong>Plugin:</strong> <code><?php echo esc_html(dirname(HPRESS_INSTANCE_LOADED_PATH)); ?>/hypermedia/</code></li>
+                        <li><strong>Plugin:</strong> <code><?php echo esc_html(dirname(HYPERPRESS_INSTANCE_LOADED_PATH)); ?>/hypermedia/</code></li>
                     </ul>
                 </div>
 
@@ -354,7 +354,7 @@ class Render
                                 <code>Requested Template:</code> <?php echo esc_html($template_name); ?><br>
                             <?php endif; ?>
                             <code>WordPress Version:</code> <?php echo esc_html(get_bloginfo('version')); ?><br>
-                            <code>Plugin Version:</code> <?php echo esc_html(defined('HPRESS_LOADED_VERSION') ? HPRESS_LOADED_VERSION : 'Unknown'); ?>
+                            <code>Plugin Version:</code> <?php echo esc_html(defined('HYPERPRESS_LOADED_VERSION') ? HYPERPRESS_LOADED_VERSION : 'Unknown'); ?>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -367,7 +367,7 @@ class Render
 
         </html>
 <?php
-                die();
+        die();
     }
 
     /**
@@ -382,13 +382,13 @@ class Render
 
         // Check if the request URI matches our base endpoints
         $base_endpoints = [];
-        if (defined('HPRESS_ENDPOINT')) {
-            $base_endpoints[] = '/' . HPRESS_ENDPOINT . '/';
-            $base_endpoints[] = '/' . HPRESS_ENDPOINT;
+        if (defined('HYPERPRESS_ENDPOINT')) {
+            $base_endpoints[] = '/' . HYPERPRESS_ENDPOINT . '/';
+            $base_endpoints[] = '/' . HYPERPRESS_ENDPOINT;
         }
-        if (defined('HPRESS_LEGACY_ENDPOINT')) {
-            $base_endpoints[] = '/' . HPRESS_LEGACY_ENDPOINT . '/';
-            $base_endpoints[] = '/' . HPRESS_LEGACY_ENDPOINT;
+        if (defined('HYPERPRESS_LEGACY_ENDPOINT')) {
+            $base_endpoints[] = '/' . HYPERPRESS_LEGACY_ENDPOINT . '/';
+            $base_endpoints[] = '/' . HYPERPRESS_LEGACY_ENDPOINT;
         }
 
         foreach ($base_endpoints as $endpoint) {
@@ -629,8 +629,8 @@ class Render
     {
         // Define the extensions to check, with primary first.
         $extensions = [
-            HPRESS_TEMPLATE_EXT,        // Primary: .hp.php
-            HPRESS_LEGACY_TEMPLATE_EXT, // Legacy: .htmx.php
+            HYPERPRESS_TEMPLATE_EXT,        // Primary: .hp.php
+            HYPERPRESS_LEGACY_TEMPLATE_EXT, // Legacy: .htmx.php
         ];
 
         foreach ($extensions as $extension) {
@@ -687,8 +687,8 @@ class Render
         } else {
             // No colon found (or invalid colon format). Treat as a theme-relative path.
             $default_paths = [
-                $this->getThemePath() . HPRESS_TEMPLATE_DIR . '/',
-                $this->getThemePath() . HPRESS_LEGACY_TEMPLATE_DIR . '/',
+                $this->getThemePath() . HYPERPRESS_TEMPLATE_DIR . '/',
+                $this->getThemePath() . HYPERPRESS_LEGACY_TEMPLATE_DIR . '/',
             ];
 
             $default_templates_paths_array = apply_filters('hyperpress/get_template_file/templates_path', $default_paths);

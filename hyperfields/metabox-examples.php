@@ -37,22 +37,22 @@ function hyperfields_demo_post_meta(): void
 
     $post_container
         ->addField(HyperFields::makeField('text', 'custom_subtitle', 'Subtitle')
-            ->set_placeholder('Enter a subtitle for this post'))
+        ->setPlaceholder('Enter a subtitle for this post'))
         ->addField(HyperFields::makeField('textarea', 'custom_excerpt', 'Custom Excerpt')
-            ->set_help('Override the default excerpt'))
+        ->setHelp('Override the default excerpt'))
         ->addField(HyperFields::makeField('select', 'post_priority', 'Priority')
-            ->set_options([
+        ->setOptions([
                 'low' => 'Low',
                 'normal' => 'Normal',
                 'high' => 'High',
                 'urgent' => 'Urgent',
             ])
-            ->set_default('normal'))
+        ->setDefault('normal'))
         ->addField(HyperFields::makeField('checkbox', 'featured_post', 'Featured Post')
-            ->set_help('Mark this post as featured'))
+        ->setHelp('Mark this post as featured'))
         ->addField(HyperFields::makeField('url', 'external_link', 'External Link')
-            ->set_placeholder('https://example.com')
-            ->set_help('Link to external source'));
+            ->setPlaceholder('https://example.com')
+            ->setHelp('Link to external source'));
 }
 
 /**
@@ -66,14 +66,14 @@ function hyperfields_demo_term_meta(): void
 
     $term_container
         ->addField(HyperFields::makeField('text', 'category_subtitle', 'Category Subtitle')
-            ->set_placeholder('Short description for this category'))
+        ->setPlaceholder('Short description for this category'))
         ->addField(HyperFields::makeField('textarea', 'category_description', 'Extended Description')
-            ->set_help('Detailed description for this category'))
+        ->setHelp('Detailed description for this category'))
         ->addField(HyperFields::makeField('color', 'category_color', 'Category Color')
-            ->set_default('#007cba')
-            ->set_help('Color associated with this category'))
+        ->setDefault('#007cba')
+        ->setHelp('Color associated with this category'))
         ->addField(HyperFields::makeField('image', 'category_icon', 'Category Icon')
-            ->set_help('Icon image for this category'));
+            ->setHelp('Icon image for this category'));
 
     // Tag meta example
     $tag_container = HyperFields::makeTermMeta('tag_details', 'Tag Details')
@@ -81,14 +81,14 @@ function hyperfields_demo_term_meta(): void
 
     $tag_container
         ->addField(HyperFields::makeField('text', 'tag_synonym', 'Synonym')
-            ->set_placeholder('Alternative name for this tag'))
+        ->setPlaceholder('Alternative name for this tag'))
         ->addField(HyperFields::makeField('select', 'tag_importance', 'Importance')
-            ->set_options([
+        ->setOptions([
                 'low' => 'Low',
                 'medium' => 'Medium',
                 'high' => 'High',
             ])
-            ->set_default('medium'));
+            ->setDefault('medium'));
 }
 
 /**
@@ -101,23 +101,23 @@ function hyperfields_demo_user_meta(): void
 
     $user_container
         ->addField(HyperFields::makeField('text', 'job_title', 'Job Title')
-            ->set_placeholder('e.g., Senior Developer'))
+        ->setPlaceholder('e.g., Senior Developer'))
         ->addField(HyperFields::makeField('text', 'company', 'Company')
-            ->set_placeholder('Company name'))
+        ->setPlaceholder('Company name'))
         ->addField(HyperFields::makeField('url', 'linkedin_profile', 'LinkedIn Profile')
-            ->set_placeholder('https://linkedin.com/in/username'))
+        ->setPlaceholder('https://linkedin.com/in/username'))
         ->addField(HyperFields::makeField('url', 'twitter_profile', 'Twitter Profile')
-            ->set_placeholder('https://twitter.com/username'))
+        ->setPlaceholder('https://twitter.com/username'))
         ->addField(HyperFields::makeField('textarea', 'bio', 'Bio')
-            ->set_help('Short biography or description'))
+        ->setHelp('Short biography or description'))
         ->addField(HyperFields::makeField('select', 'skill_level', 'Skill Level')
-            ->set_options([
+        ->setOptions([
                 'beginner' => 'Beginner',
                 'intermediate' => 'Intermediate',
                 'advanced' => 'Advanced',
                 'expert' => 'Expert',
             ])
-            ->set_default('intermediate'));
+            ->setDefault('intermediate'));
 
     // Author-specific fields
     $author_container = HyperFields::makeUserMeta('author_settings', 'Author Settings')
@@ -126,11 +126,11 @@ function hyperfields_demo_user_meta(): void
 
     $author_container
         ->addField(HyperFields::makeField('checkbox', 'show_author_box', 'Show Author Box')
-            ->set_help('Display author information box on posts'))
+        ->setHelp('Display author information box on posts'))
         ->addField(HyperFields::makeField('image', 'author_avatar', 'Custom Avatar')
-            ->set_help('Custom avatar image (overrides Gravatar)'))
+        ->setHelp('Custom avatar image (overrides Gravatar)'))
         ->addField(HyperFields::makeField('textarea', 'author_signature', 'Author Signature')
-            ->set_help('Signature to append to posts'));
+            ->setHelp('Signature to append to posts'));
 }
 
 /**
@@ -146,35 +146,35 @@ function hyperfields_demo_conditional_metabox(): void
 
     $advanced_container
         ->addField(HyperFields::makeField('select', 'post_layout', 'Post Layout')
-            ->set_options([
+        ->setOptions([
                 'default' => 'Default',
                 'wide' => 'Wide',
                 'fullwidth' => 'Full Width',
                 'custom' => 'Custom',
             ])
-            ->set_default('default'))
+        ->setDefault('default'))
         ->addField(HyperFields::makeField('text', 'custom_css_class', 'Custom CSS Class')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'conditions' => [[
                     'field' => 'post_layout',
                     'operator' => '=',
                     'value' => 'custom',
                 ]],
             ])
-            ->set_placeholder('custom-class-name'))
+        ->setPlaceholder('custom-class-name'))
         ->addField(HyperFields::makeField('textarea', 'custom_css', 'Custom CSS')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'conditions' => [[
                     'field' => 'post_layout',
                     'operator' => '=',
                     'value' => 'custom',
                 ]],
             ])
-            ->set_help('Custom CSS for this post'))
+        ->setHelp('Custom CSS for this post'))
         ->addField(HyperFields::makeField('checkbox', 'disable_comments', 'Disable Comments')
-            ->set_help('Override global comment settings for this post'))
+        ->setHelp('Override global comment settings for this post'))
         ->addField(HyperFields::makeField('date', 'publish_date', 'Scheduled Publish Date')
-            ->set_help('Alternative publish date for scheduling'));
+            ->setHelp('Alternative publish date for scheduling'));
 }
 
 /**

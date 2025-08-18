@@ -101,7 +101,7 @@ abstract class Container
 
         foreach ($this->fields as $field) {
             // Set the meta key context for the field
-            $field->set_context('metabox');
+            $field->setContext('metabox');
             $field->render();
         }
 

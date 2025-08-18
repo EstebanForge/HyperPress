@@ -60,7 +60,7 @@ class Assets
      *
      * @return array Plugin options with defaults.
      */
-    public function get_options()
+    public function getOptions()
     {
         if ($this->options === null) {
             $default_options_fallback = [
@@ -146,7 +146,7 @@ class Assets
      * @return void
      *
      * @see Main::get_cdn_urls() For centralized URL and version management
-     * @see Admin\Options::get_options() For user configuration settings
+     * @see Admin\Options::getOptions() For user configuration settings
      *
      * @example
      * // Frontend script loading
@@ -157,7 +157,7 @@ class Assets
      */
     private function enqueue_scripts_logic(bool $is_admin)
     {
-        $options = $this->get_options();
+        $options = $this->getOptions();
         $load_from_cdn = !empty($options['load_from_cdn']);
         $active_library = $options['active_library'] ?? 'htmx';
 
@@ -166,10 +166,10 @@ class Assets
         $alpine_ajax_loaded = false;
         $datastar_loaded = false;
 
-        // Define base URLs and paths - ensure HPRESS_PLUGIN_URL and HPRESS_ABSPATH are defined
-        $plugin_url = defined('HPRESS_PLUGIN_URL') ? HPRESS_PLUGIN_URL : '';
-        $plugin_path = defined('HPRESS_ABSPATH') ? HPRESS_ABSPATH : '';
-        $plugin_version = defined('HPRESS_VERSION') ? HPRESS_VERSION : null;
+        // Define base URLs and paths - ensure HYPERPRESS_PLUGIN_URL and HYPERPRESS_ABSPATH are defined
+        $plugin_url = defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : '';
+        $plugin_path = defined('HYPERPRESS_ABSPATH') ? HYPERPRESS_ABSPATH : '';
+        $plugin_version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : null;
 
         // Detect library mode (when plugin URL is empty)
         $is_library_mode = empty($plugin_url);

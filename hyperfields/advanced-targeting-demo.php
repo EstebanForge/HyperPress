@@ -35,9 +35,9 @@ function hyperfields_target_post_by_id(): void
 
     $container
         ->addField(HyperFields::makeField('text', 'special_post_note', 'Special Note')
-            ->set_placeholder('This field only appears on post ID 1'))
+        ->setPlaceholder('This field only appears on post ID 1'))
         ->addField(HyperFields::makeField('textarea', 'admin_comments', 'Admin Comments')
-            ->set_help('Internal notes for this specific post'));
+            ->setHelp('Internal notes for this specific post'));
 }
 
 /**
@@ -52,9 +52,9 @@ function hyperfields_target_post_by_slug(): void
 
     $container
         ->addField(HyperFields::makeField('checkbox', 'featured_on_homepage', 'Featured on Homepage')
-            ->set_help('Show this content prominently'))
+        ->setHelp('Show this content prominently'))
         ->addField(HyperFields::makeField('color', 'homepage_accent_color', 'Accent Color')
-            ->set_default('#007cba'));
+            ->setDefault('#007cba'));
 }
 
 /**
@@ -69,15 +69,15 @@ function hyperfields_target_multiple_posts(): void
 
     $container
         ->addField(HyperFields::makeField('select', 'vip_priority', 'VIP Priority')
-            ->set_options([
+        ->setOptions([
                 'low' => 'Low Priority',
                 'medium' => 'Medium Priority',
                 'high' => 'High Priority',
                 'urgent' => 'Urgent',
             ])
-            ->set_default('medium'))
+        ->setDefault('medium'))
         ->addField(HyperFields::makeField('text', 'vip_contact', 'VIP Contact')
-            ->set_placeholder('Special contact for this content'));
+            ->setPlaceholder('Special contact for this content'));
 }
 
 /**
@@ -92,19 +92,19 @@ function hyperfields_target_post_type(): void
 
     $container
         ->addField(HyperFields::makeField('number', 'product_price', 'Price')
-            ->set_validation(['min' => 0])
-            ->set_placeholder('0.00'))
+        ->setValidation(['min' => 0])
+        ->setPlaceholder('0.00'))
         ->addField(HyperFields::makeField('text', 'product_sku', 'SKU')
-            ->set_placeholder('Enter product SKU'))
+        ->setPlaceholder('Enter product SKU'))
         ->addField(HyperFields::makeField('checkbox', 'product_featured', 'Featured Product'))
         ->addField(HyperFields::makeField('select', 'product_status', 'Availability')
-            ->set_options([
+        ->setOptions([
                 'in_stock' => 'In Stock',
                 'out_of_stock' => 'Out of Stock',
                 'pre_order' => 'Pre-Order',
                 'discontinued' => 'Discontinued',
             ])
-            ->set_default('in_stock'));
+            ->setDefault('in_stock'));
 }
 
 /**
@@ -118,9 +118,9 @@ function hyperfields_target_user_by_role(): void
 
     $container
         ->addField(HyperFields::makeField('text', 'admin_phone', 'Admin Phone')
-            ->set_placeholder('Emergency contact number'))
+        ->setPlaceholder('Emergency contact number'))
         ->addField(HyperFields::makeField('textarea', 'admin_notes', 'Admin Notes')
-            ->set_help('Internal administrative notes'))
+        ->setHelp('Internal administrative notes'))
         ->addField(HyperFields::makeField('checkbox', 'receive_alerts', 'Receive System Alerts'));
 }
 
@@ -135,7 +135,7 @@ function hyperfields_target_user_by_id(): void
 
     $container
         ->addField(HyperFields::makeField('text', 'super_admin_key', 'Super Admin Key')
-            ->set_placeholder('Special access key'))
+        ->setPlaceholder('Special access key'))
         ->addField(HyperFields::makeField('url', 'emergency_contact_url', 'Emergency Contact URL'))
         ->addField(HyperFields::makeField('checkbox', 'system_maintenance_mode', 'Can Enable Maintenance Mode'));
 }
@@ -150,11 +150,11 @@ function hyperfields_target_multiple_users(): void
 
     $container
         ->addField(HyperFields::makeField('text', 'team_name', 'Team Name')
-            ->set_placeholder('Name of the team you lead'))
+        ->setPlaceholder('Name of the team you lead'))
         ->addField(HyperFields::makeField('number', 'team_size', 'Team Size')
-            ->set_validation(['min' => 1, 'max' => 50]))
+        ->setValidation(['min' => 1, 'max' => 50]))
         ->addField(HyperFields::makeField('textarea', 'team_goals', 'Team Goals')
-            ->set_help('Current team objectives and goals'));
+            ->setHelp('Current team objectives and goals'));
 }
 
 /**
@@ -168,9 +168,9 @@ function hyperfields_target_term_by_id(): void
 
     $container
         ->addField(HyperFields::makeField('color', 'featured_color', 'Featured Color')
-            ->set_default('#ff6b35'))
+        ->setDefault('#ff6b35'))
         ->addField(HyperFields::makeField('image', 'featured_banner', 'Featured Banner')
-            ->set_help('Special banner for this featured category'))
+        ->setHelp('Special banner for this featured category'))
         ->addField(HyperFields::makeField('checkbox', 'show_in_homepage', 'Show on Homepage'));
 }
 
@@ -186,16 +186,16 @@ function hyperfields_target_term_by_slug(): void
 
     $container
         ->addField(HyperFields::makeField('text', 'special_badge_text', 'Badge Text')
-            ->set_placeholder('Featured, Trending, etc.'))
+        ->setPlaceholder('Featured, Trending, etc.'))
         ->addField(HyperFields::makeField('select', 'badge_style', 'Badge Style')
-            ->set_options([
+        ->setOptions([
                 'primary' => 'Primary',
                 'secondary' => 'Secondary',
                 'success' => 'Success',
                 'warning' => 'Warning',
                 'danger' => 'Danger',
             ])
-            ->set_default('primary'));
+            ->setDefault('primary'));
 }
 
 /**
@@ -208,13 +208,13 @@ function hyperfields_target_custom_taxonomy(): void
 
     $container
         ->addField(HyperFields::makeField('image', 'category_icon', 'Category Icon')
-            ->set_help('Icon for this product category'))
+        ->setHelp('Icon for this product category'))
         ->addField(HyperFields::makeField('textarea', 'category_description', 'Extended Description')
-            ->set_help('Detailed description for SEO and display'))
+        ->setHelp('Detailed description for SEO and display'))
         ->addField(HyperFields::makeField('number', 'sort_order', 'Sort Order')
-            ->set_validation(['min' => 0])
-            ->set_default(0)
-            ->set_help('Order for displaying categories'));
+            ->setValidation(['min' => 0])
+            ->setDefault(0)
+            ->setHelp('Order for displaying categories'));
 }
 
 /**
@@ -228,14 +228,14 @@ function hyperfields_target_multiple_terms(): void
 
     $container
         ->addField(HyperFields::makeField('select', 'tag_priority', 'Priority Level')
-            ->set_options([
+        ->setOptions([
                 'low' => 'Low Priority',
                 'medium' => 'Medium Priority',
                 'high' => 'High Priority',
             ])
-            ->set_default('medium'))
+        ->setDefault('medium'))
         ->addField(HyperFields::makeField('color', 'tag_color', 'Tag Color')
-            ->set_default('#6c757d'));
+            ->setDefault('#6c757d'));
 }
 
 /**
@@ -252,38 +252,38 @@ function hyperfields_complex_targeting_demo(): void
 
     $container
         ->addField(HyperFields::makeField('select', 'post_layout', 'Layout Type')
-            ->set_options([
+        ->setOptions([
                 'default' => 'Default Layout',
                 'custom' => 'Custom Layout',
                 'landing' => 'Landing Page',
                 'fullwidth' => 'Full Width',
             ])
-            ->set_default('default'))
+        ->setDefault('default'))
 
         // Show custom CSS field only when custom layout is selected
         ->addField(HyperFields::makeField('textarea', 'custom_css', 'Custom CSS')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'conditions' => [[
                     'field' => 'post_layout',
                     'operator' => '=',
                     'value' => 'custom',
                 ]],
             ])
-            ->set_help('Custom CSS for this post'))
+        ->setHelp('Custom CSS for this post'))
 
         // Show landing page fields only for landing layout
         ->addField(HyperFields::makeField('text', 'landing_headline', 'Landing Headline')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'conditions' => [[
                     'field' => 'post_layout',
                     'operator' => '=',
                     'value' => 'landing',
                 ]],
             ])
-            ->set_placeholder('Compelling headline for landing page'))
+        ->setPlaceholder('Compelling headline for landing page'))
 
         ->addField(HyperFields::makeField('url', 'cta_url', 'Call-to-Action URL')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'conditions' => [[
                     'field' => 'post_layout',
                     'operator' => '=',

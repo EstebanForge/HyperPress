@@ -55,7 +55,7 @@ class Field
             throw new \InvalidArgumentException("Unsupported field type: {$type}. Supported types: " . implode(', ', self::FIELD_TYPES));
         }
 
-        $this->hyper_field = HyperField::make($type, $name, $label);
+        $this->hyperField = HyperField::make($type, $name, $label);
     }
 
     /**
@@ -79,7 +79,7 @@ class Field
      */
     public function setDefault($default): self
     {
-        $this->hyper_field->set_default($default);
+        $this->hyperField->setDefault($default);
 
         return $this;
     }
@@ -92,7 +92,7 @@ class Field
      */
     public function setPlaceholder(string $placeholder): self
     {
-        $this->hyper_field->set_placeholder($placeholder);
+        $this->hyperField->setPlaceholder($placeholder);
 
         return $this;
     }
@@ -105,7 +105,7 @@ class Field
      */
     public function setRequired(bool $required = true): self
     {
-        $this->hyper_field->set_required($required);
+        $this->hyperField->setRequired($required);
 
         return $this;
     }
@@ -118,7 +118,7 @@ class Field
      */
     public function setHelp(string $help): self
     {
-        $this->hyper_field->set_help($help);
+        $this->hyperField->setHelp($help);
 
         return $this;
     }
@@ -130,7 +130,7 @@ class Field
      */
     public function toArray(): array
     {
-        return $this->hyper_field->to_array();
+        return $this->hyperField->toArray();
     }
 
     /**
@@ -140,7 +140,7 @@ class Field
      */
     public function getHyperField(): HyperField
     {
-        return $this->hyper_field;
+        return $this->hyperField;
     }
 
     /**
@@ -153,19 +153,19 @@ class Field
     {
         switch ($name) {
             case 'type':
-                return $this->hyper_field->get_type();
+                return $this->hyperField->getType();
             case 'name':
-                return $this->hyper_field->get_name();
+                return $this->hyperField->getName();
             case 'label':
-                return $this->hyper_field->get_label();
+                return $this->hyperField->getLabel();
             case 'default':
-                return $this->hyper_field->get_default();
+                return $this->hyperField->getDefault();
             case 'placeholder':
-                return $this->hyper_field->get_placeholder();
+                return $this->hyperField->getPlaceholder();
             case 'required':
-                return $this->hyper_field->is_required();
+                return $this->hyperField->isRequired();
             case 'help':
-                return $this->hyper_field->get_help();
+                return $this->hyperField->getHelp();
             default:
                 return null;
         }
@@ -186,16 +186,16 @@ class Field
                 // These are immutable after construction
                 break;
             case 'default':
-                $this->hyper_field->set_default($value);
+                $this->hyperField->setDefault($value);
                 break;
             case 'placeholder':
-                $this->hyper_field->set_placeholder($value);
+                $this->hyperField->setPlaceholder($value);
                 break;
             case 'required':
-                $this->hyper_field->set_required((bool) $value);
+                $this->hyperField->setRequired((bool) $value);
                 break;
             case 'help':
-                $this->hyper_field->set_help($value);
+                $this->hyperField->setHelp($value);
                 break;
         }
     }

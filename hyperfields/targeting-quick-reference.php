@@ -135,7 +135,7 @@ function hyperfields_targeting_quick_reference(): void
     // Add sample fields to demonstrate
     $styled_container
         ->addField(HyperFields::makeField('text', 'sample_field', 'Sample Field')
-            ->set_placeholder('This is a sample field'))
+        ->setPlaceholder('This is a sample field'))
         ->addField(HyperFields::makeField('checkbox', 'sample_checkbox', 'Sample Checkbox'));
 
     // ============================================================================
@@ -151,7 +151,7 @@ function hyperfields_targeting_quick_reference(): void
 
     $vip_container->addField(
         HyperFields::makeField('checkbox', 'is_vip_content', 'VIP Content')
-            ->set_help('Mark as VIP content for special treatment')
+            ->setHelp('Mark as VIP content for special treatment')
     );
 
     // Example 2: Staff directory
@@ -171,7 +171,7 @@ function hyperfields_targeting_quick_reference(): void
 
     $featured_categories->addField(
         HyperFields::makeField('color', 'featured_color', 'Featured Color')
-            ->set_default('#007cba')
+            ->setDefault('#007cba')
     );
 }
 

@@ -593,7 +593,7 @@ function hp_resolve_field_context($source = null, array $args = []): array
 }
 
 /**
- * Optionally sanitize a value using Field::sanitize_value when a type is provided.
+ * Optionally sanitize a value using Field::sanitizeValue when a type is provided.
  *
  * @since 2.1.0
  */
@@ -604,7 +604,7 @@ function hp_maybe_sanitize_field_value(string $name, $value, array $args = [])
         try {
             $field = HyperPress\Fields\Field::make($type, $name, $name);
 
-            return $field->sanitize_value($value);
+            return $field->sanitizeValue($value);
         } catch (Throwable $e) {
             // Fall through to filters if Field cannot be created
         }

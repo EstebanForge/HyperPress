@@ -33,7 +33,7 @@ class OptionsMigration
      *
      * @return bool True if migration is needed, false otherwise.
      */
-    public function needs_migration(): bool
+    public function needsMigration(): bool
     {
         $current_version = get_option($this->migration_version_key, '0');
 
@@ -47,7 +47,7 @@ class OptionsMigration
      */
     public function migrate(): bool
     {
-        if (!$this->needs_migration()) {
+        if (!$this->needsMigration()) {
             return true;
         }
 
@@ -57,17 +57,17 @@ class OptionsMigration
 
             if (empty($old_options)) {
                 // No existing data, just mark as migrated
-                return $this->mark_migration_complete();
+                return $this->markMigrationComplete();
             }
 
             // Validate and sanitize existing data
-            $sanitized_options = $this->sanitize_existing_data($old_options);
+            $sanitized_options = $this->sanitizeExistingData($old_options);
 
             // Update to new format (already compatible)
             update_option($this->old_option_name, $sanitized_options);
 
             // Mark migration as complete
-            return $this->mark_migration_complete();
+            return $this->markMigrationComplete();
         } catch (\Exception $e) {
             return false;
         }
@@ -79,12 +79,12 @@ class OptionsMigration
      * @param array $old_options Existing options data.
      * @return array Sanitized options.
      */
-    private function sanitize_existing_data(array $old_options): array
+    private function sanitizeExistingData(array $old_options): array
     {
         $sanitized = [];
 
         // Core settings
-        $sanitized['active_library'] = $this->sanitize_active_library($old_options['active_library'] ?? 'htmx');
+        $sanitized['active_library'] = $this->sanitizeActiveLibrary($old_options['active_library'] ?? 'htmx');
         $sanitized['load_from_cdn'] = isset($old_options['load_from_cdn']) ? (bool) $old_options['load_from_cdn'] : false;
 
         // HTMX settings
@@ -100,7 +100,7 @@ class OptionsMigration
         $sanitized['load_datastar_backend'] = isset($old_options['load_datastar_backend']) ? (bool) $old_options['load_datastar_backend'] : false;
 
         // HTMX extensions
-        $extensions = $this->get_htmx_extension_keys();
+        $extensions = $this->getHtmxExtensionKeys();
         foreach ($extensions as $key) {
             $sanitized['load_extension_' . $key] = isset($old_options['load_extension_' . $key]) ? (bool) $old_options['load_extension_' . $key] : false;
         }
@@ -114,7 +114,7 @@ class OptionsMigration
      * @param mixed $value Active library value.
      * @return string Sanitized value.
      */
-    private function sanitize_active_library($value): string
+    private function sanitizeActiveLibrary($value): string
     {
         $valid_libraries = ['htmx', 'alpinejs', 'datastar'];
         $value = sanitize_text_field((string) $value);
@@ -127,7 +127,7 @@ class OptionsMigration
      *
      * @return array Extension keys.
      */
-    private function get_htmx_extension_keys(): array
+    private function getHtmxExtensionKeys(): array
     {
         return [
             'sse',
@@ -152,7 +152,7 @@ class OptionsMigration
      *
      * @return bool True if successful.
      */
-    private function mark_migration_complete(): bool
+    private function markMigrationComplete(): bool
     {
         return update_option($this->migration_version_key, '2.1.0');
     }
@@ -162,7 +162,7 @@ class OptionsMigration
      *
      * @return array Backup data.
      */
-    public function create_backup(): array
+    public function createBackup(): array
     {
         $current_options = get_option($this->old_option_name, []);
         $backup_key = $this->old_option_name . '_backup_' . time();
@@ -181,7 +181,7 @@ class OptionsMigration
      * @param string $backup_key Backup option key.
      * @return bool True if restored successfully.
      */
-    public function restore_from_backup(string $backup_key): bool
+    public function restoreFromBackup(string $backup_key): bool
     {
         $backup_data = get_option($backup_key, []);
 
@@ -197,7 +197,7 @@ class OptionsMigration
      *
      * @return int Number of backups removed.
      */
-    public function cleanup_backups(): int
+    public function cleanupBackups(): int
     {
         global $wpdb;
 
@@ -215,15 +215,15 @@ class OptionsMigration
      *
      * @return array Migration status information.
      */
-    public function get_migration_status(): array
+    public function getMigrationStatus(): array
     {
         $current_version = get_option($this->migration_version_key, '0');
-        $needs_migration = $this->needs_migration();
+        $needsMigration = $this->needsMigration();
         $current_options = get_option($this->old_option_name, []);
 
         return [
             'current_version' => $current_version,
-            'needs_migration' => $needs_migration,
+            'needsMigration' => $needsMigration,
             'has_data' => !empty($current_options),
             'data_keys' => array_keys($current_options),
         ];

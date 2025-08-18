@@ -74,7 +74,7 @@ hp_delete_field(string $name, $source = null, array $args = []): bool
 ```
 
 - Works with post/user/term meta and options, resolved by `hp_resolve_field_context()`.
-- Pass `['type' => '...']` to `hp_update_field()` to enable sanitization via `Field::sanitize_value()`.
+- Pass `['type' => '...']` to `hp_update_field()` to enable sanitization via `Field::sanitizeValue()`.
 
 ## Backward Compatibility
 
