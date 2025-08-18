@@ -1,17 +1,16 @@
 <?php
-<?php
-// Support for conditional_logic: pass as data-hp-conditional-logic attribute for JS
-$conditional_logic = $field_data["conditional_logic"] ?? null;
-$conditional_attr = "";
-if ($conditional_logic) {
-    $conditional_attr = " data-hp-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
-}
-?>
 if (!defined('ABSPATH')) {
     exit;
 }
 
-$type = $field_data['type'] ?? 'file';
+        $conditional_logic = $field_data['conditional_logic'] ?? null;
+        $conditional_attr = '';
+        if ($conditional_logic) {
+            $json = wp_json_encode($conditional_logic);
+            $conditional_attr = ' data-hp-conditional-logic=\'' . esc_attr((string) $json) . '\'';
+        }
+
+        $type = $field_data['type'] ?? 'file';
 $name = $field_data['name'] ?? '';
 $name_attr = $field_data['name_attr'] ?? $name;
 $label = $field_data['label'] ?? '';
