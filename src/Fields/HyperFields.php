@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields;
+namespace HyperPress\Fields;
 
-use HMApi\Fields\Container\ContainerFactory;
+use HyperPress\Fields\Container\ContainerFactory;
 
 /**
  * HyperFields Facade.
@@ -191,6 +191,7 @@ class HyperFields
     public static function getFieldValue(string $option_name, string $field_name, mixed $default = null): mixed
     {
         $options = get_option($option_name, []);
+
         return $options[$field_name] ?? $default;
     }
 
@@ -206,6 +207,7 @@ class HyperFields
     {
         $options = get_option($option_name, []);
         $options[$field_name] = $value;
+
         return update_option($option_name, $options);
     }
 
@@ -214,7 +216,7 @@ class HyperFields
      *
      * @param string $id The container ID
      * @param string $title The container title
-     * @return \HMApi\Fields\Container\PostMetaContainer
+     * @return Container\PostMetaContainer
      */
     public static function makePostMeta(string $id, string $title): Container\PostMetaContainer
     {
@@ -226,7 +228,7 @@ class HyperFields
      *
      * @param string $id The container ID
      * @param string $title The container title
-     * @return \HMApi\Fields\Container\TermMetaContainer
+     * @return Container\TermMetaContainer
      */
     public static function makeTermMeta(string $id, string $title): Container\TermMetaContainer
     {
@@ -238,7 +240,7 @@ class HyperFields
      *
      * @param string $id The container ID
      * @param string $title The container title
-     * @return \HMApi\Fields\Container\UserMetaContainer
+     * @return Container\UserMetaContainer
      */
     public static function makeUserMeta(string $id, string $title): Container\UserMetaContainer
     {

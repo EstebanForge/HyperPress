@@ -3,10 +3,10 @@
  * @copyright Copyright (c) PutYourLightsOn
  */
 
-namespace HMApi\starfederation\datastar\events;
+namespace HyperPress\starfederation\datastar\events;
 
-use HMApi\starfederation\datastar\Consts;
-use HMApi\starfederation\datastar\enums\EventType;
+use HyperPress\starfederation\datastar\Consts;
+use HyperPress\starfederation\datastar\enums\EventType;
 
 class PatchSignals implements EventInterface
 {

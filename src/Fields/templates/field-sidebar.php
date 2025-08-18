@@ -1,10 +1,10 @@
 <?php
 <?php
-// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+// Support for conditional_logic: pass as data-hp-conditional-logic attribute for JS
 $conditional_logic = $field_data["conditional_logic"] ?? null;
 $conditional_attr = "";
 if ($conditional_logic) {
-    $conditional_attr = " data-hm-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
+    $conditional_attr = " data-hp-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
 }
 ?>
 if (!defined('ABSPATH')) {
@@ -27,16 +27,16 @@ uksort($sidebars, function ($a, $b) use ($sidebars) {
 });
 
 // Add default option
-$sidebars = ['' => ['name' => __('— Select —', 'hmapi')]] + $sidebars;
+$sidebars = ['' => ['name' => __('— Select —', 'hyperpress')]] + $sidebars;
 ?>
 
-<div class="hmapi-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label for="<?php echo esc_attr($name); ?>" class="hmapi-field-label">
+<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hmapi-field-input">
+    <div class="hyperpress-field-input">
         <select id="<?php echo esc_attr($name); ?>" 
                 name="<?php echo esc_attr($name); ?>" 
                 <?php echo $required ? 'required' : ''; ?>

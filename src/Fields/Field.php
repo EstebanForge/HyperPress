@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields;
+namespace HyperPress\Fields;
 
-use HMApi\Log;
+use HyperPress\Log;
 
 class Field
 {
@@ -249,11 +249,12 @@ class Field
 
     public function set_option_values(array $values, ?string $option_group = null): self
     {
-        Log::debug("Field {$this->name} setting option values: " . print_r($values, true), ['source' => 'hmapi-fields']);
+        Log::debug("Field {$this->name} setting option values: " . print_r($values, true), ['source' => 'hyperpress-fields']);
         $this->option_name = $values; // Holds the values array for pre-loading
         if ($option_group !== null) {
             $this->option_group = $option_group;
         }
+
         return $this;
     }
 
@@ -266,7 +267,7 @@ class Field
     {
         // If option_name is an array, it means the OptionsPage has pre-loaded the values.
         if (is_array($this->option_name)) {
-            Log::debug("Field {$this->name} using pre-loaded values. Value: " . print_r($this->option_name[$this->name] ?? 'NOT SET', true), ['source' => 'hmapi-fields']);
+            Log::debug("Field {$this->name} using pre-loaded values. Value: " . print_r($this->option_name[$this->name] ?? 'NOT SET', true), ['source' => 'hyperpress-fields']);
 
             return $this->option_name[$this->name] ?? $this->default;
         }
@@ -275,13 +276,13 @@ class Field
         if ($this->option_name) {
             $options = get_option($this->option_name);
             if (is_array($options)) {
-                Log::debug("Field {$this->name} using get_option. Value: " . print_r($options[$this->name] ?? 'NOT SET', true), ['source' => 'hmapi-fields']);
+                Log::debug("Field {$this->name} using get_option. Value: " . print_r($options[$this->name] ?? 'NOT SET', true), ['source' => 'hyperpress-fields']);
 
                 return $options[$this->name] ?? $this->default;
             }
         }
 
-        Log::debug("Field {$this->name} using default value: " . print_r($this->default, true), ['source' => 'hmapi-fields']);
+        Log::debug("Field {$this->name} using default value: " . print_r($this->default, true), ['source' => 'hyperpress-fields']);
 
         return $this->default;
     }
@@ -315,10 +316,10 @@ class Field
     public function get_name_attr(): string
     {
 
-// For metabox context, use just the field name (meta key)
-if ($this->context === 'metabox') {
-    return $this->name;
-}
+        // For metabox context, use just the field name (meta key)
+        if ($this->context === 'metabox') {
+            return $this->name;
+        }
 
         // Always use option_group[field_name] for options pages
         if ($this->option_group) {
@@ -328,6 +329,7 @@ if ($this->context === 'metabox') {
             // Fallback for legacy/other usages
             return $this->name;
         }
+
         return $this->option_name ? sprintf('%s[%s]', $this->option_name, $this->name) : $this->name;
     }
 
@@ -413,7 +415,7 @@ if ($this->context === 'metabox') {
             case 'gravity_form':
                 return absint($value);
             default:
-                return apply_filters("hmapi_field_sanitize_{$this->type}", $value, $this->type);
+                return apply_filters("hyperpress_field_sanitize_{$this->type}", $value, $this->type);
         }
     }
 
@@ -545,7 +547,7 @@ if ($this->context === 'metabox') {
             case 'float':
                 return filter_var($value, FILTER_VALIDATE_FLOAT) !== false;
             default:
-                return apply_filters("hmapi_field_validation_{$rule}", true, $value, $param, $this);
+                return apply_filters("hyperpress_field_validation_{$rule}", true, $value, $param, $this);
         }
     }
 }

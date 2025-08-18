@@ -31,7 +31,7 @@ hp_validate_request(array $hmvals = null, string $action = null): bool
 ```
 
 - Validates nonce from header or request and optional action.
-- Supports both new (`hmapi_nonce`) and legacy (`hxwp_nonce`) nonces.
+- Supports both new (`hyperpress_nonce`) and legacy (`hxwp_nonce`) nonces.
 
 ## Library Mode
 

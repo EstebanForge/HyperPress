@@ -3,9 +3,9 @@
  * @copyright Copyright (c) PutYourLightsOn
  */
 
-namespace HMApi\starfederation\datastar\events;
+namespace HyperPress\starfederation\datastar\events;
 
-use HMApi\starfederation\datastar\enums\EventType;
+use HyperPress\starfederation\datastar\enums\EventType;
 
 interface EventInterface
 {

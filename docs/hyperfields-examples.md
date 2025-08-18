@@ -130,13 +130,13 @@ To avoid hitting PHP's `max_input_vars` on complex options pages, HyperFields ca
 - Enable via constants (e.g. in `wp-config.php` or early plugin code):
 
 ```php
-define('HMAPI_COMPACT_INPUT', true);
-define('HMAPI_COMPACT_INPUT_KEY', 'hmapi_compact_input'); // optional, default shown
+define('HYPERPRESS_COMPACT_INPUT', true);
+define('HYPERPRESS_COMPACT_INPUT_KEY', 'hyperpress_compact_input'); // optional, default shown
 ```
 
 When enabled, HyperFields will:
 - Render a hidden compact input on options pages.
-- Serialize the active tab's fields into JSON under the `HMAPI_COMPACT_INPUT_KEY`.
+- Serialize the active tab's fields into JSON under the `HYPERPRESS_COMPACT_INPUT_KEY`.
 - Remove original field `name` attributes before submit to drastically reduce POST vars.
 - Expand and sanitize the compacted input server-side in `OptionsPage::sanitize_options()`.
 

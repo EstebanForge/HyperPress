@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields;
+namespace HyperPress\Fields;
 
 class TermField extends Field
 {
@@ -29,7 +29,7 @@ class TermField extends Field
     {
         $key = $this->meta_key_prefix . $this->get_name();
 
-        return apply_filters('hmapi_term_field_meta_key', $key, $this->get_name(), $this->term_id);
+        return apply_filters('hyperpress_term_field_meta_key', $key, $this->get_name(), $this->term_id);
     }
 
     public function get_value(): mixed

@@ -21,12 +21,12 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use HMApi\Fields\HyperFields;
+use HyperPress\Fields\HyperFields;
 
 /**
  * Simple post meta example.
  */
-function hyperfields_simple_example(): void
+function hyperfields_simple_metabox_test(): void
 {
     $container = HyperFields::makePostMeta('test_meta', 'Test Fields')
         ->where('post')
@@ -38,4 +38,4 @@ function hyperfields_simple_example(): void
         ->addField(HyperFields::makeField('checkbox', 'test_checkbox', 'Test Checkbox'));
 }
 
-// Activate with: add_action('init', 'hyperfields_simple_example');
+// Activate with: add_action('init', 'hyperfields_simple_metabox_test');

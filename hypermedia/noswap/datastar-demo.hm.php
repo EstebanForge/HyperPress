@@ -4,19 +4,19 @@
 defined('ABSPATH') || exit('Direct access not allowed.');
 
 // Rate limiting check
-if (hm_ds_is_rate_limited()) {
+if (hp_ds_is_rate_limited()) {
     return;
 }
 
-if (!hm_validate_request($hmvals, 'datastar_do_something')) {
-    hm_die('Invalid request.');
+if (!hp_validate_request($hp_vals, 'datastar_do_something')) {
+    hp_die('Invalid request.');
 }
 
-// Do some server-side processing with the received $hmvals
+// Do some server-side processing with the received $hp_vals
 sleep(1); // Simulate processing time
 
 // Different responses based on demo type
-$demo_type = $hmvals['demo_type'] ?? 'default';
+$demo_type = $hp_vals['demo_type'] ?? 'default';
 $message = '';
 $status = 'success';
 $extra_data = [];
@@ -26,12 +26,12 @@ switch ($demo_type) {
         $message = 'Datastar GET request processed successfully!';
         break;
     case 'post_with_data':
-        $user_data = $hmvals['user_data'] ?? 'No data';
+        $user_data = $hp_vals['user_data'] ?? 'No data';
         $message = 'Datastar POST processed. You sent: ' . esc_html($user_data);
         break;
     case 'form_submission':
-        $name = $hmvals['name'] ?? 'Unknown';
-        $email = $hmvals['email'] ?? 'No email';
+        $name = $hp_vals['name'] ?? 'Unknown';
+        $email = $hp_vals['email'] ?? 'No email';
         $message = 'Form submitted successfully! Name: ' . esc_html($name) . ', Email: ' . esc_html($email);
         // Reset form data
         $extra_data['formData'] = ['name' => '', 'email' => ''];
@@ -48,10 +48,10 @@ switch ($demo_type) {
 // For Datastar, we need to send the response in a format that can be merged into the store
 $response_data = [
     'status'    => $status,
-    'nonce'     => wp_create_nonce('hmapi_nonce'),
+    'nonce'     => wp_create_nonce('hyperpress_nonce'),
     'message'   => $message,
     'demo_type' => $demo_type,
-    'params'    => $hmvals,
+    'params'    => $hp_vals,
     'timestamp' => current_time('mysql'),
 ];
 
@@ -67,8 +67,8 @@ if (!headers_sent()) {
     echo 'data: merge ' . wp_json_encode($response_data) . "\n\n";
 } else {
     // Fallback to standard response
-    hm_send_header_response(
-        wp_create_nonce('hmapi_nonce'),
+    hp_send_header_response(
+        wp_create_nonce('hyperpress_nonce'),
         $response_data
     );
 }

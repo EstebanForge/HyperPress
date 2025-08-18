@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields;
+namespace HyperPress\Fields;
 
 class OptionsPage
 {
@@ -15,7 +15,7 @@ class OptionsPage
     private ?int $position;
     private array $sections = [];
     private array $fields = [];
-    private string $option_name = 'hmapi_options';
+    private string $option_name = 'hyperpress_options';
     private array $option_values = [];
     private array $default_values = [];
     private ?string $footer_content = null;
@@ -191,39 +191,39 @@ class OptionsPage
             <h1><?php echo esc_html($this->page_title); ?></h1>
             <?php $this->render_tabs(); ?>
             <form method="post" action="options.php">
-                <input type="hidden" name="hmapi_active_tab" value="<?php echo esc_attr($active_tab); ?>" />
+                <input type="hidden" name="hyperpress_active_tab" value="<?php echo esc_attr($active_tab); ?>" />
                 <?php
                 settings_fields($this->option_name);
-                if (defined('HMAPI_COMPACT_INPUT') && HMAPI_COMPACT_INPUT === true) {
-                    // Placeholder for the compacted JSON payload the JS will populate
-                    echo '<input type="hidden" name="' . esc_attr(defined('HMAPI_COMPACT_INPUT_KEY') ? HMAPI_COMPACT_INPUT_KEY : 'hmapi_compact_input') . '" value="" />';
-                    // Dummy field under the option array to ensure the Settings API processes this option
-                    echo '<input type="hidden" data-hm-keep-name="1" name="' . esc_attr($this->option_name) . '[_compact]" value="1" />';
-                }
-                // Only render the active tab's section
-                if (isset($this->sections[$active_tab])) {
-                    $section = $this->sections[$active_tab];
-                    // Render section title
-                    if ($section->get_title()) {
-                        echo '<h2>' . esc_html($section->get_title()) . '</h2>';
-                    }
-                    // Render section description
-                    if ($section->get_description()) {
-                        echo '<p>' . esc_html($section->get_description()) . '</p>';
-                    }
-                    // Render fields for this section
-                    echo '<div class="hmapi-fields-group">';
-                    do_settings_fields($this->option_name, $active_tab);
-                    echo '</div>';
-                }
-                submit_button(
-                    esc_html__('Save Changes', 'api-for-htmx'),
-                    'primary'
-                );
-                ?>
+        if (defined('HYPERPRESS_COMPACT_INPUT') && HYPERPRESS_COMPACT_INPUT === true) {
+            // Placeholder for the compacted JSON payload the JS will populate
+            echo '<input type="hidden" name="' . esc_attr(defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input') . '" value="" />';
+            // Dummy field under the option array to ensure the Settings API processes this option
+            echo '<input type="hidden" data-hp-keep-name="1" name="' . esc_attr($this->option_name) . '[_compact]" value="1" />';
+        }
+        // Only render the active tab's section
+        if (isset($this->sections[$active_tab])) {
+            $section = $this->sections[$active_tab];
+            // Render section title
+            if ($section->get_title()) {
+                echo '<h2>' . esc_html($section->get_title()) . '</h2>';
+            }
+            // Render section description
+            if ($section->get_description()) {
+                echo '<p>' . esc_html($section->get_description()) . '</p>';
+            }
+            // Render fields for this section
+            echo '<div class="hyperpress-fields-group">';
+            do_settings_fields($this->option_name, $active_tab);
+            echo '</div>';
+        }
+        submit_button(
+            esc_html__('Save Changes', 'hyperpress'),
+            'primary'
+        );
+        ?>
             </form>
             <?php if ($this->footer_content): ?>
-                <div class="hmapi-options-footer">
+                <div class="hyperpress-options-footer">
                     <?php echo wp_kses_post($this->footer_content); ?>
                 </div>
             <?php endif; ?>
@@ -233,29 +233,29 @@ class OptionsPage
 
     public function sanitize_options(?array $input): array
     {
-        \HMApi\Log::debug('sanitize_options called: input=' . print_r($input, true) . ' option_name=' . $this->option_name);
+        \HyperPress\Log::debug('sanitize_options called: input=' . print_r($input, true) . ' option_name=' . $this->option_name);
 
         // When compact input is enabled, reconstruct $input from the single compacted POST variable
-        if (defined('HMAPI_COMPACT_INPUT') && HMAPI_COMPACT_INPUT === true) {
-            $compact_key = defined('HMAPI_COMPACT_INPUT_KEY') ? HMAPI_COMPACT_INPUT_KEY : 'hmapi_compact_input';
+        if (defined('HYPERPRESS_COMPACT_INPUT') && HYPERPRESS_COMPACT_INPUT === true) {
+            $compact_key = defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input';
             if (isset($_POST[$compact_key])) {
                 $raw = wp_unslash($_POST[$compact_key]);
                 $decoded = json_decode((string) $raw, true);
                 if (is_array($decoded)) {
                     if (isset($decoded[$this->option_name]) && is_array($decoded[$this->option_name])) {
                         $input = $decoded[$this->option_name];
-                        \HMApi\Log::debug('sanitize_options compact input expanded for ' . $this->option_name . ': ' . print_r($input, true));
+                        \HyperPress\Log::debug('sanitize_options compact input expanded for ' . $this->option_name . ': ' . print_r($input, true));
                     }
                 }
             }
         }
         // Use the already loaded options to preserve values from other tabs
         $output = $this->option_values;
-        \HMApi\Log::debug('sanitize_options existing_options (from property): ' . print_r($output, true) . ' option_name=' . $this->option_name);
+        \HyperPress\Log::debug('sanitize_options existing_options (from property): ' . print_r($output, true) . ' option_name=' . $this->option_name);
 
         // Only process fields from the active tab
         $active_tab = $this->get_active_tab();
-        \HMApi\Log::debug('sanitize_options active_tab: ' . $active_tab);
+        \HyperPress\Log::debug('sanitize_options active_tab: ' . $active_tab);
 
         if (isset($this->sections[$active_tab])) {
             $section = $this->sections[$active_tab];
@@ -273,15 +273,16 @@ class OptionsPage
                 }
             }
         }
-        \HMApi\Log::debug('sanitize_options output: ' . print_r($output, true) . ' option_name=' . $this->option_name);
+        \HyperPress\Log::debug('sanitize_options output: ' . print_r($output, true) . ' option_name=' . $this->option_name);
+
         return $output;
     }
 
     private function get_active_tab(): string
     {
         // On POST (save), check for hidden field
-        if (!empty($_POST['hmapi_active_tab']) && isset($this->sections[$_POST['hmapi_active_tab']])) {
-            return $_POST['hmapi_active_tab'];
+        if (!empty($_POST['hyperpress_active_tab']) && isset($this->sections[$_POST['hyperpress_active_tab']])) {
+            return $_POST['hyperpress_active_tab'];
         }
         // On GET (view), check query param
         $tab = $_GET['tab'] ?? null;
@@ -314,8 +315,8 @@ class OptionsPage
     public function enqueue_assets(string $hook_suffix): void
     {
         if (
-            $hook_suffix !== 'settings_page_' . $this->menu_slug &&
-            $hook_suffix !== $this->parent_slug . '_page_' . $this->menu_slug
+            $hook_suffix !== 'settings_page_' . $this->menu_slug
+            && $hook_suffix !== $this->parent_slug . '_page_' . $this->menu_slug
         ) {
             return;
         }
@@ -323,23 +324,23 @@ class OptionsPage
         TemplateLoader::enqueue_assets();
 
         // Require a valid plugin URL; skip in library mode where URL is unavailable
-        if (!defined('HMAPI_PLUGIN_URL') || empty(HMAPI_PLUGIN_URL)) {
+        if (!defined('HYPERPRESS_PLUGIN_URL') || empty(HYPERPRESS_PLUGIN_URL)) {
             return;
         }
 
         // Enqueue admin options JS for HyperFields options pages
         wp_enqueue_script(
-            'hmapi-admin-options',
-            defined('HMAPI_PLUGIN_URL') ? HMAPI_PLUGIN_URL . 'assets/js/admin-options.js' : '',
+            'hyperpress-admin-options',
+            defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL . 'assets/js/admin-options.js' : '',
             ['jquery'],
-            defined('HMAPI_VERSION') ? HMAPI_VERSION : '2.0.7',
+            defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7',
             true
         );
-        wp_localize_script('hmapi-admin-options', 'hmapiOptions', [
+        wp_localize_script('hyperpress-admin-options', 'hyperpressOptions', [
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('hmapi_options'),
-            'compactInput' => defined('HMAPI_COMPACT_INPUT') ? (bool) HMAPI_COMPACT_INPUT : false,
-            'compactInputKey' => defined('HMAPI_COMPACT_INPUT_KEY') ? HMAPI_COMPACT_INPUT_KEY : 'hmapi_compact_input',
+            'nonce' => wp_create_nonce('hyperpress_options'),
+            'compactInput' => defined('HYPERPRESS_COMPACT_INPUT') ? (bool) HYPERPRESS_COMPACT_INPUT : false,
+            'compactInputKey' => defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input',
             'optionName' => $this->option_name,
             'activeTab' => $this->get_active_tab(),
         ]);

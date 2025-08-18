@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use HMApi\starfederation\datastar\ServerSentEventGenerator;
+use HyperPress\starfederation\datastar\ServerSentEventGenerator;
 
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
@@ -18,13 +18,13 @@ defined('ABSPATH') || exit;
  */
 function hp_get_endpoint_url($template_path = '')
 {
-    $hmapi_api_url = home_url((defined('HMAPI_ENDPOINT') ? HMAPI_ENDPOINT : 'wp-html') . '/' . (defined('HMAPI_ENDPOINT_VERSION') ? HMAPI_ENDPOINT_VERSION : 'v1'));
+    $hyperpress_api_url = home_url((defined('HYPERPRESS_ENDPOINT') ? HYPERPRESS_ENDPOINT : 'wp-html') . '/' . (defined('HYPERPRESS_ENDPOINT_VERSION') ? HYPERPRESS_ENDPOINT_VERSION : 'v1'));
 
     if (!empty($template_path)) {
-        $hmapi_api_url .= '/' . ltrim($template_path, '/');
+        $hyperpress_api_url .= '/' . ltrim($template_path, '/');
     }
 
-    return apply_filters('hmapi/api_url', $hmapi_api_url);
+    return apply_filters('hyperpress/api_url', $hyperpress_api_url);
 }
 
 /**
@@ -42,9 +42,9 @@ function hp_endpoint_url($template_path = ''): void
 }
 
 /**
- * HTMX send header response and die() (New HMAPI version)
+ * HTMX send header response and die()
  * To be used inside noswap templates
- * Sends HX-Trigger header with our response inside hmapiResponse.
+ * Sends HX-Trigger header with our response inside hyperpressResponse.
  *
  * @since 2.1.0
  *
@@ -57,12 +57,18 @@ function hp_send_header_response($data = [], $action = null)
 {
     // Use shared validation logic
     if (!hp_validate_request()) {
-        hp_die(__('Nonce verification failed.', 'api-for-htmx'));
+        hp_die(__('Nonce verification failed.', 'hyperpress'));
     }
 
     if ($action === null) {
-        // Legacy: check if action is set inside $_POST['hmvals']['action']
-        $action = isset($_POST['hmvals']['action']) ? sanitize_text_field($_POST['hmvals']['action']) : '';
+        // Check if action is set inside $_POST['hp_vals']['action'] or directly in $_POST['action']
+        if (isset($_POST['hp_vals']['action'])) {
+            $action = sanitize_text_field($_POST['hp_vals']['action']);
+        } elseif (isset($_POST['action'])) {
+            $action = sanitize_text_field($_POST['action']);
+        } else {
+            $action = '';
+        }
     }
 
     // Action still empty, null or not set?
@@ -75,7 +81,7 @@ function hp_send_header_response($data = [], $action = null)
 
     // Response array
     $response = [
-        'hmapiResponse' => [
+        'hyperpressResponse' => [
             'action'  => $action,
             'status'  => $data['status'],
             'data'    => $data,
@@ -84,11 +90,11 @@ function hp_send_header_response($data = [], $action = null)
 
     // Headers already sent?
     if (headers_sent()) {
-        wp_die(__('HMAPI Error: Headers already sent.', 'api-for-htmx'));
+        wp_die(__('HyperPress Error: Headers already sent.', 'hyperpress'));
     }
 
     // Filter our response
-    $response = apply_filters('hmapi/header_response', $response, $action, $data['status'], $data);
+    $response = apply_filters('hyperpress/header_response', $response, $action, $data['status'], $data);
 
     // Send our response
     status_header($code);
@@ -99,7 +105,7 @@ function hp_send_header_response($data = [], $action = null)
 }
 
 /**
- * HTMX die helper (New HMAPI version)
+ * HTMX die helper
  * To be used inside templates
  * die, but with a 200 status code, so HTMX can show and display the error message
  * Also sends a custom header with the error message, to be used by HTMX if needed.
@@ -134,21 +140,21 @@ function hp_die($message = '', $display_error = false)
 }
 
 /**
- * Validate HTMX request (New HMAPI version)
+ * Validate HTMX request
  * Checks if the nonce is valid and optionally validates the action.
  *
  * @since 2.1.0
  *
- * @param array|null $hmvals The hypermedia values array (optional, will use $_REQUEST if not provided)
+ * @param array|null $hp_vals The hypermedia values array (optional, will use $_REQUEST if not provided)
  * @param string|null $action The expected action (optional)
  *
  * @return bool
  */
-function hp_validate_request($hmvals = null, $action = null): bool
+function hp_validate_request($hp_vals = null, $action = null): bool
 {
-    // If hmvals not provided, get from $_REQUEST for backwards compatibility
-    if ($hmvals === null) {
-        $hmvals = $_REQUEST;
+    // If hp_vals not provided, get from $_REQUEST for backwards compatibility
+    if ($hp_vals === null) {
+        $hp_vals = $_REQUEST;
     }
 
     // Secure it - check both request parameter and header for nonce
@@ -160,7 +166,7 @@ function hp_validate_request($hmvals = null, $action = null): bool
     }
 
     // Check if nonce is valid (try both new and old nonce names for compatibility).
-    $is_valid_new = wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hmapi_nonce');
+    $is_valid_new = wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hyperpress_nonce');
     $is_valid_legacy = wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hxwp_nonce');
 
     if (!$is_valid_new && !$is_valid_legacy) {
@@ -169,7 +175,7 @@ function hp_validate_request($hmvals = null, $action = null): bool
 
     // Check if action is set and matches the expected action (if provided)
     if ($action !== null) {
-        if (!isset($hmvals['action']) || $hmvals['action'] !== $action) {
+        if (!isset($hp_vals['action']) || $hp_vals['action'] !== $action) {
             return false;
         }
     }
@@ -187,9 +193,9 @@ function hp_validate_request($hmvals = null, $action = null): bool
 function hp_is_library_mode(): bool
 {
     // Check if the plugin is in the active plugins list
-    if (defined('HMAPI_BASENAME')) {
+    if (defined('HYPERPRESS_BASENAME')) {
         $active_plugins = apply_filters('active_plugins', get_option('active_plugins', []));
-        if (in_array(HMAPI_BASENAME, $active_plugins, true)) {
+        if (in_array(HYPERPRESS_BASENAME, $active_plugins, true)) {
             return false; // Plugin is active, not in library mode
         }
     }
@@ -349,7 +355,7 @@ function hp_ds_is_rate_limited(array $options = []): bool
         'time_window_seconds' => 60,
         'identifier' => '',
         'send_sse_response' => true,
-        'error_message' => __('Rate limit exceeded. Please wait before making more requests.', 'api-for-htmx'),
+        'error_message' => __('Rate limit exceeded. Please wait before making more requests.', 'hyperpress'),
         'error_selector' => '#rate-limit-error',
     ];
 
@@ -359,9 +365,9 @@ function hp_ds_is_rate_limited(array $options = []): bool
     if (empty($config['identifier'])) {
         $user_id = get_current_user_id();
         $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-        $config['identifier'] = 'hmds_rate_limit_' . md5($ip_address . '_' . $user_id);
+        $config['identifier'] = 'hpds_rate_limit_' . md5($ip_address . '_' . $user_id);
     } else {
-        $config['identifier'] = 'hmds_rate_limit_' . md5($config['identifier']);
+        $config['identifier'] = 'hpds_rate_limit_' . md5($config['identifier']);
     }
 
     // Get current request count from transient
@@ -376,9 +382,9 @@ function hp_ds_is_rate_limited(array $options = []): bool
         if ($config['send_sse_response'] && hp_ds_sse()) {
             // Send error response via SSE
             hp_ds_patch_elements(
-                '<div class="rate-limit-error error" style="color: #dc3545; background: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 4px; margin: 10px 0;">' .
-                esc_html($config['error_message']) .
-                '</div>',
+                '<div class="rate-limit-error error" style="color: #dc3545; background: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 4px; margin: 10px 0;">'
+                . esc_html($config['error_message'])
+                . '</div>',
                 ['selector' => $config['error_selector']]
             );
 
@@ -391,8 +397,8 @@ function hp_ds_is_rate_limited(array $options = []): bool
 
             // Send rate limit info to client via script
             hp_ds_execute_script("
-                console.warn('" . esc_js(__('Rate limit exceeded for Datastar SSE endpoint', 'api-for-htmx')) . "');
-                console.info('" . esc_js(sprintf(__('Requests allowed: %d per %d seconds', 'api-for-htmx'), $config['requests_per_window'], $config['time_window_seconds'])) . "');
+                console.warn('" . esc_js(__('Rate limit exceeded for Datastar SSE endpoint', 'hyperpress')) . "');
+                console.info('" . esc_js(sprintf(__('Requests allowed: %d per %d seconds', 'hyperpress'), $config['requests_per_window'], $config['time_window_seconds'])) . "');
             ");
         }
 
@@ -420,7 +426,7 @@ function hp_ds_is_rate_limited(array $options = []): bool
         // Log remaining requests for debugging
         if ($remaining_requests <= 5) {
             hp_ds_execute_script("
-                console.warn('" . esc_js(sprintf(__('Rate limit warning: %d requests remaining in this time window', 'api-for-htmx'), $remaining_requests)) . "');
+                console.warn('" . esc_js(sprintf(__('Rate limit warning: %d requests remaining in this time window', 'hyperpress'), $remaining_requests)) . "');
             ");
         }
     }
@@ -433,11 +439,11 @@ function hp_ds_is_rate_limited(array $options = []): bool
  *
  * @param string $page_title The title of the page
  * @param string $menu_slug The slug for the menu
- * @return HMApi\Fields\OptionsPage
+ * @return HyperPress\Fields\OptionsPage
  */
-function hp_create_option_page(string $page_title, string $menu_slug): HMApi\Fields\OptionsPage
+function hp_create_option_page(string $page_title, string $menu_slug): HyperPress\Fields\OptionsPage
 {
-    return HMApi\Fields\OptionsPage::make($page_title, $menu_slug);
+    return HyperPress\Fields\OptionsPage::make($page_title, $menu_slug);
 }
 
 /**
@@ -447,11 +453,11 @@ function hp_create_option_page(string $page_title, string $menu_slug): HMApi\Fie
  * @param string $type The field type
  * @param string $name The field name
  * @param string $label The field label
- * @return HMApi\Fields\Field
+ * @return HyperPress\Fields\Field
  */
-function hp_create_field(string $type, string $name, string $label): HMApi\Fields\Field
+function hp_create_field(string $type, string $name, string $label): HyperPress\Fields\Field
 {
-    return HMApi\Fields\Field::make($type, $name, $label);
+    return HyperPress\Fields\Field::make($type, $name, $label);
 }
 
 /**
@@ -460,11 +466,11 @@ function hp_create_field(string $type, string $name, string $label): HMApi\Field
  * @since 2.1.0
  * @param string $name The field name
  * @param string $label The field label
- * @return HMApi\Fields\TabsField
+ * @return HyperPress\Fields\TabsField
  */
-function hp_create_tabs(string $name, string $label): HMApi\Fields\TabsField
+function hp_create_tabs(string $name, string $label): HyperPress\Fields\TabsField
 {
-    return HMApi\Fields\TabsField::make($name, $label);
+    return HyperPress\Fields\TabsField::make($name, $label);
 }
 
 /**
@@ -473,11 +479,11 @@ function hp_create_tabs(string $name, string $label): HMApi\Fields\TabsField
  * @since 2.1.0
  * @param string $name The field name
  * @param string $label The field label
- * @return HMApi\Fields\RepeaterField
+ * @return HyperPress\Fields\RepeaterField
  */
-function hp_create_repeater(string $name, string $label): HMApi\Fields\RepeaterField
+function hp_create_repeater(string $name, string $label): HyperPress\Fields\RepeaterField
 {
-    return HMApi\Fields\RepeaterField::make($name, $label);
+    return HyperPress\Fields\RepeaterField::make($name, $label);
 }
 
 /**
@@ -486,11 +492,11 @@ function hp_create_repeater(string $name, string $label): HMApi\Fields\RepeaterF
  * @since 2.1.0
  * @param string $id The section ID
  * @param string $title The section title
- * @return HMApi\Fields\OptionsSection
+ * @return HyperPress\Fields\OptionsSection
  */
-function hp_create_section(string $id, string $title): HMApi\Fields\OptionsSection
+function hp_create_section(string $id, string $title): HyperPress\Fields\OptionsSection
 {
-    return HMApi\Fields\OptionsSection::make($id, $title);
+    return HyperPress\Fields\OptionsSection::make($id, $title);
 }
 
 /**
@@ -511,7 +517,7 @@ function hp_resolve_field_context($source = null, array $args = []): array
     $context = [
         'type' => 'option',
         'object_id' => 0,
-        'option_group' => $args['option_group'] ?? apply_filters('hmapi/helpers/default_option_group', 'hmapi_options'),
+        'option_group' => $args['option_group'] ?? apply_filters('hyperpress/helpers/default_option_group', 'hyperpress_options'),
     ];
 
     if (is_array($source)) {
@@ -596,7 +602,7 @@ function hp_maybe_sanitize_field_value(string $name, $value, array $args = [])
     $type = $args['type'] ?? null;
     if (is_string($type) && $type !== '') {
         try {
-            $field = \HMApi\Fields\Field::make($type, $name, $name);
+            $field = HyperPress\Fields\Field::make($type, $name, $name);
 
             return $field->sanitize_value($value);
         } catch (Throwable $e) {
@@ -605,7 +611,7 @@ function hp_maybe_sanitize_field_value(string $name, $value, array $args = [])
     }
 
     // Allow external sanitization via filter when no type is provided
-    return apply_filters('hmapi/helpers/update_field_sanitize', $value, $name, $args);
+    return apply_filters('hyperpress/helpers/update_field_sanitize', $value, $name, $args);
 }
 
 /**
@@ -760,4 +766,4 @@ function hp_save_field(string $name, $value, $source = null, array $args = []): 
  *
  * @since 2.1.0
  */
-require_once HMAPI_ABSPATH . 'includes/deprecated.php';
+require_once HYPERPRESS_ABSPATH . 'includes/deprecated.php';

@@ -6,7 +6,7 @@
  * @since   2023-11-22
  */
 
-namespace HMApi; // Updated namespace
+namespace HyperPress; // Updated namespace
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -83,9 +83,9 @@ class Assets
             }
 
             // Apply filter to allow programmatic configuration
-            $default_options_fallback = apply_filters('hmapi/default_options', $default_options_fallback);
+            $default_options_fallback = apply_filters('hyperpress/default_options', $default_options_fallback);
 
-            $this->options = get_option('hmapi_options', $default_options_fallback);
+            $this->options = get_option('hyperpress_options', $default_options_fallback);
         }
 
         return $this->options;
@@ -166,10 +166,10 @@ class Assets
         $alpine_ajax_loaded = false;
         $datastar_loaded = false;
 
-        // Define base URLs and paths - ensure HMAPI_PLUGIN_URL and HMAPI_ABSPATH are defined
-        $plugin_url = defined('HMAPI_PLUGIN_URL') ? HMAPI_PLUGIN_URL : '';
-        $plugin_path = defined('HMAPI_ABSPATH') ? HMAPI_ABSPATH : '';
-        $plugin_version = defined('HMAPI_VERSION') ? HMAPI_VERSION : null;
+        // Define base URLs and paths - ensure HPRESS_PLUGIN_URL and HPRESS_ABSPATH are defined
+        $plugin_url = defined('HPRESS_PLUGIN_URL') ? HPRESS_PLUGIN_URL : '';
+        $plugin_path = defined('HPRESS_ABSPATH') ? HPRESS_ABSPATH : '';
+        $plugin_version = defined('HPRESS_VERSION') ? HPRESS_VERSION : null;
 
         // Detect library mode (when plugin URL is empty)
         $is_library_mode = empty($plugin_url);
@@ -204,7 +204,7 @@ class Assets
         ];
 
         // Filter: Allow developers to completely override asset configuration
-        $assets_config = apply_filters('hmapi/assets_config', $assets_config, $plugin_url, $plugin_path, $is_library_mode, $load_from_cdn);
+        $assets_config = apply_filters('hyperpress/assets_config', $assets_config, $plugin_url, $plugin_path, $is_library_mode, $load_from_cdn);
 
         // --- HTMX ---
         $should_load_htmx = false;
@@ -222,10 +222,10 @@ class Assets
             $ver = $load_from_cdn ? $cdn_urls['htmx']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
 
             // Filter: Allow developers to override HTMX library URL
-            $url = apply_filters('hmapi/assets/htmx_url', $url, $load_from_cdn, $asset, $is_library_mode);
-            $ver = apply_filters('hmapi/assets/htmx_version', $ver, $load_from_cdn, $asset, $is_library_mode);
+            $url = apply_filters('hyperpress/assets/htmx_url', $url, $load_from_cdn, $asset, $is_library_mode);
+            $ver = apply_filters('hyperpress/assets/htmx_version', $ver, $load_from_cdn, $asset, $is_library_mode);
 
-            wp_enqueue_script('hmapi-htmx', $url, [], $ver, true);
+            wp_enqueue_script('hyperpress-htmx', $url, [], $ver, true);
             $htmx_loaded = true;
         }
 
@@ -237,10 +237,10 @@ class Assets
             $ver = $load_from_cdn ? $cdn_urls['hyperscript']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
 
             // Filter: Allow developers to override Hyperscript library URL
-            $url = apply_filters('hmapi/assets/hyperscript_url', $url, $load_from_cdn, $asset, $is_library_mode);
-            $ver = apply_filters('hmapi/assets/hyperscript_version', $ver, $load_from_cdn, $asset, $is_library_mode);
+            $url = apply_filters('hyperpress/assets/hyperscript_url', $url, $load_from_cdn, $asset, $is_library_mode);
+            $ver = apply_filters('hyperpress/assets/hyperscript_version', $ver, $load_from_cdn, $asset, $is_library_mode);
 
-            wp_enqueue_script('hmapi-hyperscript', $url, ($htmx_loaded ? ['hmapi-htmx'] : []), $ver, true);
+            wp_enqueue_script('hyperpress-hyperscript', $url, ($htmx_loaded ? ['hyperpress-htmx'] : []), $ver, true);
         }
 
         // --- Alpine.js Core ---
@@ -263,10 +263,10 @@ class Assets
             $ver = $load_from_cdn ? $cdn_urls['alpinejs']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
 
             // Filter: Allow developers to override Alpine.js library URL
-            $url = apply_filters('hmapi/assets/alpinejs_url', $url, $load_from_cdn, $asset, $is_library_mode);
-            $ver = apply_filters('hmapi/assets/alpinejs_version', $ver, $load_from_cdn, $asset, $is_library_mode);
+            $url = apply_filters('hyperpress/assets/alpinejs_url', $url, $load_from_cdn, $asset, $is_library_mode);
+            $ver = apply_filters('hyperpress/assets/alpinejs_version', $ver, $load_from_cdn, $asset, $is_library_mode);
 
-            wp_enqueue_script('hmapi-alpinejs-core', $url, [], $ver, true);
+            wp_enqueue_script('hyperpress-alpinejs-core', $url, [], $ver, true);
             $alpine_core_loaded = true;
         }
 
@@ -285,11 +285,11 @@ class Assets
             } // If local not found and CDN not selected, it won't load.
 
             // Filter: Allow developers to override Alpine Ajax library URL
-            $url = apply_filters('hmapi/assets/alpine_ajax_url', $url, $load_from_cdn, $asset, $is_library_mode);
-            $ver = apply_filters('hmapi/assets/alpine_ajax_version', $ver, $load_from_cdn, $asset, $is_library_mode);
+            $url = apply_filters('hyperpress/assets/alpine_ajax_url', $url, $load_from_cdn, $asset, $is_library_mode);
+            $ver = apply_filters('hyperpress/assets/alpine_ajax_version', $ver, $load_from_cdn, $asset, $is_library_mode);
 
             if ($url) {
-                wp_enqueue_script('hmapi-alpine-ajax', $url, ['hmapi-alpinejs-core'], $ver, true);
+                wp_enqueue_script('hyperpress-alpine-ajax', $url, ['hyperpress-alpinejs-core'], $ver, true);
                 $alpine_ajax_loaded = true;
             }
         }
@@ -309,10 +309,10 @@ class Assets
             $ver = $load_from_cdn ? $cdn_urls['datastar']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
 
             // Filter: Allow developers to override Datastar library URL
-            $url = apply_filters('hmapi/assets/datastar_url', $url, $load_from_cdn, $asset, $is_library_mode);
-            $ver = apply_filters('hmapi/assets/datastar_version', $ver, $load_from_cdn, $asset, $is_library_mode);
+            $url = apply_filters('hyperpress/assets/datastar_url', $url, $load_from_cdn, $asset, $is_library_mode);
+            $ver = apply_filters('hyperpress/assets/datastar_version', $ver, $load_from_cdn, $asset, $is_library_mode);
 
-            wp_enqueue_script_module('hmapi-datastar', $url, [], $ver);
+            wp_enqueue_script_module('hyperpress-datastar', $url, [], $ver);
             $datastar_loaded = true;
         }
 
@@ -322,7 +322,7 @@ class Assets
             $extensions_dir_url = $plugin_url . 'assets/libs/htmx-extensions/';
 
             // Filter: Allow developers to override HTMX extensions directory
-            $extensions_dir_url = apply_filters('hmapi/htmx_extensions_url', $extensions_dir_url, $extensions_dir_local, $plugin_url, $plugin_path, $is_library_mode);
+            $extensions_dir_url = apply_filters('hyperpress/htmx_extensions_url', $extensions_dir_url, $extensions_dir_local, $plugin_url, $plugin_path, $is_library_mode);
 
             $cdn_urls = $this->main->get_cdn_urls();
 
@@ -349,11 +349,11 @@ class Assets
                     }
 
                     // Filter: Allow developers to override HTMX extension URLs
-                    $ext_url = apply_filters('hmapi/assets/htmx_extension_url', $ext_url, $ext_slug, $load_from_cdn, $is_library_mode);
-                    $ext_ver = apply_filters('hmapi/assets/htmx_extension_version', $ext_ver, $ext_slug, $load_from_cdn, $is_library_mode);
+                    $ext_url = apply_filters('hyperpress/assets/htmx_extension_url', $ext_url, $ext_slug, $load_from_cdn, $is_library_mode);
+                    $ext_ver = apply_filters('hyperpress/assets/htmx_extension_version', $ext_ver, $ext_slug, $load_from_cdn, $is_library_mode);
 
                     if ($ext_url) {
-                        wp_enqueue_script('hmapi-htmx-ext-' . $ext_slug, $ext_url, ['hmapi-htmx'], $ext_ver, true);
+                        wp_enqueue_script('hyperpress-htmx-ext-' . $ext_slug, $ext_url, ['hyperpress-htmx'], $ext_ver, true);
                     }
                 }
             }
@@ -363,9 +363,9 @@ class Assets
         $this->configure_hypermedia_libraries($htmx_loaded, $alpine_ajax_loaded, $datastar_loaded, $is_admin, $options);
 
         if ($is_admin) {
-            do_action('hmapi/enqueue/backend_scripts_end', $options);
+            do_action('hyperpress/enqueue/backend_scripts_end', $options);
         } else {
-            do_action('hmapi/enqueue/frontend_scripts_end', $options);
+            do_action('hyperpress/enqueue/frontend_scripts_end', $options);
         }
     }
 
@@ -474,11 +474,11 @@ class Assets
         // Determine which script to attach the configuration to
         $primary_script_handle = '';
         if ($htmx_loaded) {
-            $primary_script_handle = 'hmapi-htmx';
+            $primary_script_handle = 'hyperpress-htmx';
         } elseif ($alpine_ajax_loaded) {
-            $primary_script_handle = 'hmapi-alpine-ajax';
+            $primary_script_handle = 'hyperpress-alpine-ajax';
         } elseif ($datastar_loaded) {
-            $primary_script_handle = 'hmapi-datastar';
+            $primary_script_handle = 'hyperpress-datastar';
         }
 
         if (empty($primary_script_handle)) {
@@ -486,14 +486,14 @@ class Assets
         }
 
         // Localize script with shared parameters for all libraries
-        wp_localize_script($primary_script_handle, 'hmapi_params', [
+        wp_localize_script($primary_script_handle, 'hyperpress_params', [
             'ajax_url' => admin_url('admin-ajax.php'),
-            'api_url' => hm_get_endpoint_url(),
+            'api_url' => hp_get_endpoint_url(),
             'legacy_api_url' => @hxwp_api_url(),
-            'nonce' => wp_create_nonce('hmapi_nonce'),
+            'nonce' => wp_create_nonce('hyperpress_nonce'),
             'rest_url' => rest_url(),
             'legacy_nonce' => wp_create_nonce('hxwp_nonce'),
-            'is_legacy_theme' => !empty($GLOBALS['hmapi_is_legacy_theme']),
+            'is_legacy_theme' => !empty($GLOBALS['hyperpress_is_legacy_theme']),
             'libraries_loaded' => [
                 'htmx' => $htmx_loaded,
                 'alpine_ajax' => $alpine_ajax_loaded,
@@ -511,9 +511,9 @@ class Assets
     'use strict';
 
     // Helper function to get the appropriate nonce
-    function getHmapiNonce() {
-        if (typeof hmapi_params !== 'undefined' && hmapi_params) {
-            return hmapi_params.is_legacy_theme ? hmapi_params.legacy_nonce : hmapi_params.nonce;
+    function getHyperPressNonce() {
+        if (typeof hyperpress_params !== 'undefined' && hyperpress_params) {
+            return hyperpress_params.is_legacy_theme ? hyperpress_params.legacy_nonce : hyperpress_params.nonce;
         }
         return null;
     }";
@@ -524,7 +524,7 @@ class Assets
     // HTMX: Auto-configure nonces for all requests
     if (typeof htmx !== 'undefined') {
         document.body.addEventListener('htmx:configRequest', function(evt) {
-            const nonce = getHmapiNonce();
+            const nonce = getHyperPressNonce();
             if (nonce) {
                 evt.detail.headers['X-WP-Nonce'] = nonce;
             }
@@ -552,7 +552,7 @@ class Assets
     document.addEventListener('alpine:init', function() {
         if (typeof Alpine !== 'undefined' && Alpine.ajaxConfig) {
             // Use Alpine Ajax's official global configuration
-            const nonce = getHmapiNonce();
+            const nonce = getHyperPressNonce();
             if (nonce) {
                 Alpine.ajaxConfig({
                     headers: {
@@ -571,7 +571,7 @@ class Assets
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof window.ds !== 'undefined') {
             // Set global fetch headers for all Datastar requests
-            const nonce = getHmapiNonce();
+            const nonce = getHyperPressNonce();
             if (nonce) {
                 // Use Datastar's official method to set default headers
                 window.ds.store.upsertSignal('fetchHeaders', {
@@ -590,7 +590,7 @@ class Assets
         $complete_inline_script = implode('', $inline_script_parts);
 
         // Apply filters for extensibility
-        $complete_inline_script = apply_filters('hmapi/hypermedia/inline_script', $complete_inline_script, [
+        $complete_inline_script = apply_filters('hyperpress/hypermedia/inline_script', $complete_inline_script, [
             'htmx_loaded' => $htmx_loaded,
             'alpine_ajax_loaded' => $alpine_ajax_loaded,
             'datastar_loaded' => $datastar_loaded,
@@ -600,7 +600,7 @@ class Assets
 
         // Legacy filter for backward compatibility
         if ($htmx_loaded) {
-            $complete_inline_script = apply_filters('hmapi/htmx/inline_script', $complete_inline_script, $options);
+            $complete_inline_script = apply_filters('hyperpress/htmx/inline_script', $complete_inline_script, $options);
         }
 
         // Add the inline script

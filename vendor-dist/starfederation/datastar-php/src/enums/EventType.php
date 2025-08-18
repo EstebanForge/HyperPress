@@ -1,6 +1,6 @@
 <?php
 
-namespace HMApi\starfederation\datastar\enums;
+namespace HyperPress\starfederation\datastar\enums;
 
 enum EventType: string
 {

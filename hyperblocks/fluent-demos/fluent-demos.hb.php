@@ -7,7 +7,7 @@ declare(strict_types=1);
  * 
  * This file demonstrates creating blocks using the Fluent API approach.
  * 
- * @package HMApi
+ * @package HyperPress
  */
 
 // Prevent direct file access.
@@ -15,10 +15,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use HMApi\Blocks\Registry;
-use HMApi\Blocks\Block;
-use HMApi\Blocks\Field;
-use HMApi\Blocks\FieldGroup;
+use HyperPress\Blocks\Registry;
+use HyperPress\Blocks\Block;
+use HyperPress\Blocks\Field;
+use HyperPress\Blocks\FieldGroup;
 
 $registry = Registry::getInstance();
 

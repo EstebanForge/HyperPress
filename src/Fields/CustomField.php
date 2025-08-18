@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields;
+namespace HyperPress\Fields;
 
 class CustomField extends Field
 {
@@ -11,7 +11,7 @@ class CustomField extends Field
     private string $validate_callback = '';
     private array $assets = [];
 
-    public static function make(string $name, string $label): self
+    public static function build(string $name, string $label): self
     {
         return new self('custom', $name, $label);
     }

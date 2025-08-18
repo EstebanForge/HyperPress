@@ -8,7 +8,7 @@ declare(strict_types=1);
  * This is the exact same template as the Fluent API version,
  * demonstrating identical output from both approaches.
  * 
- * @package HMApi
+ * @package HyperPress
  */
 
 // Prevent direct file access.

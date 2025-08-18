@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Libraries;
+namespace HyperPress\Libraries;
 
-use HMApi\Main;
+use HyperPress\Main;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

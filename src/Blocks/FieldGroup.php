@@ -6,7 +6,7 @@ declare(strict_types=1);
  * FieldGroup class for the fluent API.
  */
 
-namespace HMApi\Blocks;
+namespace HyperPress\Blocks;
 
 // Prevent direct file access.
 if (!defined('ABSPATH')) {

@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Registry for blocks and field groups.
  */
 
-namespace HMApi\Blocks;
+namespace HyperPress\Blocks;
 
 // Prevent direct file access.
 if (!defined('ABSPATH')) {
@@ -129,19 +129,19 @@ final class Registry
         $jsonBlocks = [];
 
         // Always scan our plugin's hyperblocks directory
-        if (defined('HMAPI_ABSPATH')) {
-            $pluginHyperblocksPath = HMAPI_ABSPATH . '/hyperblocks';
+        if (defined('HYPERPRESS_ABSPATH')) {
+            $pluginHyperblocksPath = HYPERPRESS_ABSPATH . '/hyperblocks';
             if (is_dir($pluginHyperblocksPath)) {
                 $scanPaths[] = $pluginHyperblocksPath;
             }
         }
 
         // Allow 3rd party devs to add their paths via filter
-        $additionalPaths = apply_filters('hmapi/blocks/register_json_paths', []);
+        $additionalPaths = apply_filters('hyperpress/blocks/register_json_paths', []);
         $scanPaths = array_merge($scanPaths, $additionalPaths);
 
         // Allow 3rd party devs to add individual block directories
-        $additionalBlocks = apply_filters('hmapi/blocks/register_json_blocks', []);
+        $additionalBlocks = apply_filters('hyperpress/blocks/register_json_blocks', []);
 
         // Collect all JSON blocks
         foreach ($scanPaths as $basePath) {
@@ -186,19 +186,19 @@ final class Registry
         $scanPaths = [];
 
         // Always scan our plugin's hyperblocks directory
-        if (defined('HMAPI_ABSPATH')) {
-            $pluginHyperblocksPath = HMAPI_ABSPATH . '/hyperblocks';
+        if (defined('HYPERPRESS_ABSPATH')) {
+            $pluginHyperblocksPath = HYPERPRESS_ABSPATH . '/hyperblocks';
             if (is_dir($pluginHyperblocksPath)) {
                 $scanPaths[] = $pluginHyperblocksPath;
             }
         }
 
         // Allow 3rd party devs to add their paths via filter
-        $additionalPaths = apply_filters('hmapi/blocks/register_fluent_paths', []);
+        $additionalPaths = apply_filters('hyperpress/blocks/register_fluent_paths', []);
         $scanPaths = array_merge($scanPaths, $additionalPaths);
 
         // Allow 3rd party devs to add individual fluent block files
-        $additionalFiles = apply_filters('hmapi/blocks/register_fluent_blocks', []);
+        $additionalFiles = apply_filters('hyperpress/blocks/register_fluent_blocks', []);
 
         // Load fluent blocks from discovered paths
         foreach ($scanPaths as $basePath) {
@@ -287,8 +287,8 @@ final class Registry
 
         // Add attributes from block fields using HyperFields adapter
         foreach ($block->fields as $field) {
-            // $field is HMApi\Blocks\Field wrapper; use underlying HyperField
-            $adapter = \HMApi\Fields\BlockFieldAdapter::from_field($field->getHyperField());
+            // $field is HyperPress\Blocks\Field wrapper; use underlying HyperField
+            $adapter = \HyperPress\Fields\BlockFieldAdapter::from_field($field->getHyperField());
             $attributes[$field->name] = $adapter->to_block_attribute();
         }
 
@@ -298,7 +298,7 @@ final class Registry
             if ($group) {
                 foreach ($group->fields as $field) {
                     if (!array_key_exists($field->name, $attributes)) {
-                        $adapter = \HMApi\Fields\BlockFieldAdapter::from_field($field->getHyperField());
+                        $adapter = \HyperPress\Fields\BlockFieldAdapter::from_field($field->getHyperField());
                         $attributes[$field->name] = $adapter->to_block_attribute();
                     }
                 }
@@ -389,15 +389,15 @@ final class Registry
         $scanPaths = [];
 
         // Always scan our plugin's hyperblocks directory
-        if (defined('HMAPI_ABSPATH')) {
-            $pluginHyperblocksPath = HMAPI_ABSPATH . '/hyperblocks';
+        if (defined('HYPERPRESS_ABSPATH')) {
+            $pluginHyperblocksPath = HYPERPRESS_ABSPATH . '/hyperblocks';
             if (is_dir($pluginHyperblocksPath)) {
                 $scanPaths[] = $pluginHyperblocksPath;
             }
         }
 
         // Allow 3rd party devs to add their paths via filter
-        $additionalPaths = apply_filters('hmapi/blocks/register_json_paths', []);
+        $additionalPaths = apply_filters('hyperpress/blocks/register_json_paths', []);
         $scanPaths = array_merge($scanPaths, $additionalPaths);
 
         foreach ($scanPaths as $basePath) {
@@ -522,15 +522,15 @@ final class Registry
 
         // Find the block directory by scanning known paths
         $scanPaths = [];
-        if (defined('HMAPI_ABSPATH')) {
-            $pluginHyperblocksPath = HMAPI_ABSPATH . '/hyperblocks';
+        if (defined('HYPERPRESS_ABSPATH')) {
+            $pluginHyperblocksPath = HYPERPRESS_ABSPATH . '/hyperblocks';
             if (is_dir($pluginHyperblocksPath)) {
                 $scanPaths[] = $pluginHyperblocksPath;
             }
         }
 
         // Allow 3rd party devs to add their paths via filter
-        $additionalPaths = apply_filters('hmapi/blocks/register_json_paths', []);
+        $additionalPaths = apply_filters('hyperpress/blocks/register_json_paths', []);
         $scanPaths = array_merge($scanPaths, $additionalPaths);
 
         foreach ($scanPaths as $basePath) {
@@ -574,12 +574,12 @@ final class Registry
      */
     private function getAssetUrl(string $assetPath): string
     {
-        if (defined('HMAPI_PLUGIN_URL') && !empty(HMAPI_PLUGIN_URL)) {
-            return HMAPI_PLUGIN_URL . $assetPath;
+        if (defined('HYPERPRESS_PLUGIN_URL') && !empty(HYPERPRESS_PLUGIN_URL)) {
+            return HYPERPRESS_PLUGIN_URL . $assetPath;
         }
 
         // Fallback for library mode - construct URL from plugin path
-        $pluginUrl = plugins_url('', $this->pluginPath . '/api-for-htmx.php');
+        $pluginUrl = plugins_url('', $this->pluginPath . 'hyperpress.php');
 
         return $pluginUrl . '/' . $assetPath;
     }
@@ -612,7 +612,7 @@ final class Registry
 
         // Sanitize and validate attributes via HyperFields before rendering
         try {
-            // Build a merged map of field name => HMApi\Blocks\Field (block fields take precedence)
+            // Build a merged map of field name => HyperPress\Blocks\Field (block fields take precedence)
             $mergedFields = [];
             foreach ($fluentBlock->fields as $f) {
                 $mergedFields[$f->name] = $f;
@@ -630,7 +630,7 @@ final class Registry
 
             // Sanitize/validate incoming attributes; apply defaults when missing/invalid
             foreach ($mergedFields as $name => $field) {
-                $adapter = \HMApi\Fields\BlockFieldAdapter::from_field($field->getHyperField(), $attributes);
+                $adapter = \HyperPress\Fields\BlockFieldAdapter::from_field($field->getHyperField(), $attributes);
                 $incoming = $attributes[$name] ?? null;
 
                 if ($incoming === null) {

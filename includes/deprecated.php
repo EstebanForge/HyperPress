@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use HMApi\Fields\Field;
-use HMApi\Fields\OptionsPage;
-use HMApi\Fields\OptionsSection;
-use HMApi\Fields\RepeaterField;
-use HMApi\Fields\TabsField;
-use HMApi\starfederation\datastar\ServerSentEventGenerator;
+use HyperPress\Fields\Field;
+use HyperPress\Fields\OptionsPage;
+use HyperPress\Fields\OptionsSection;
+use HyperPress\Fields\RepeaterField;
+use HyperPress\Fields\TabsField;
+use starfederation\datastar\ServerSentEventGenerator;
 
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
@@ -17,8 +17,9 @@ defined('ABSPATH') || exit;
  */
 function hm_get_endpoint_url($template_path = '')
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_get_endpoint_url');
-	return hp_get_endpoint_url($template_path);
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_get_endpoint_url');
+
+    return hp_get_endpoint_url($template_path);
 }
 
 /**
@@ -26,8 +27,8 @@ function hm_get_endpoint_url($template_path = '')
  */
 function hm_endpoint_url($template_path = ''): void
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_endpoint_url');
-	hp_endpoint_url($template_path);
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_endpoint_url');
+    hp_endpoint_url($template_path);
 }
 
 /**
@@ -35,8 +36,8 @@ function hm_endpoint_url($template_path = ''): void
  */
 function hm_send_header_response($data = [], $action = null)
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_send_header_response');
-	hp_send_header_response($data, $action);
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_send_header_response');
+    hp_send_header_response($data, $action);
 }
 
 /**
@@ -44,8 +45,8 @@ function hm_send_header_response($data = [], $action = null)
  */
 function hm_die($message = '', $display_error = false)
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_die');
-	hp_die($message, $display_error);
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_die');
+    hp_die($message, $display_error);
 }
 
 /**
@@ -53,8 +54,9 @@ function hm_die($message = '', $display_error = false)
  */
 function hm_validate_request($hmvals = null, $action = null): bool
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_validate_request');
-	return hp_validate_request($hmvals, $action);
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_validate_request');
+
+    return hp_validate_request($hmvals, $action);
 }
 
 /**
@@ -62,8 +64,9 @@ function hm_validate_request($hmvals = null, $action = null): bool
  */
 function hm_is_library_mode(): bool
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_is_library_mode');
-	return hp_is_library_mode();
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_is_library_mode');
+
+    return hp_is_library_mode();
 }
 
 /**
@@ -71,8 +74,9 @@ function hm_is_library_mode(): bool
  */
 function hm_ds_sse(): ?ServerSentEventGenerator
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_sse');
-	return hp_ds_sse();
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_sse');
+
+    return hp_ds_sse();
 }
 
 /**
@@ -80,8 +84,9 @@ function hm_ds_sse(): ?ServerSentEventGenerator
  */
 function hm_ds_read_signals(): array
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_read_signals');
-	return hp_ds_read_signals();
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_read_signals');
+
+    return hp_ds_read_signals();
 }
 
 /**
@@ -89,8 +94,8 @@ function hm_ds_read_signals(): array
  */
 function hm_ds_patch_elements(string $html, array $options = []): void
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_patch_elements');
-	hp_ds_patch_elements($html, $options);
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_patch_elements');
+    hp_ds_patch_elements($html, $options);
 }
 
 /**
@@ -98,8 +103,8 @@ function hm_ds_patch_elements(string $html, array $options = []): void
  */
 function hm_ds_remove_elements(string $selector, array $options = []): void
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_remove_elements');
-	hp_ds_remove_elements($selector, $options);
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_remove_elements');
+    hp_ds_remove_elements($selector, $options);
 }
 
 /**
@@ -107,8 +112,8 @@ function hm_ds_remove_elements(string $selector, array $options = []): void
  */
 function hm_ds_patch_signals($signals, array $options = []): void
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_patch_signals');
-	hp_ds_patch_signals($signals, $options);
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_patch_signals');
+    hp_ds_patch_signals($signals, $options);
 }
 
 /**
@@ -116,8 +121,8 @@ function hm_ds_patch_signals($signals, array $options = []): void
  */
 function hm_ds_execute_script(string $script, array $options = []): void
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_execute_script');
-	hp_ds_execute_script($script, $options);
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_execute_script');
+    hp_ds_execute_script($script, $options);
 }
 
 /**
@@ -125,8 +130,8 @@ function hm_ds_execute_script(string $script, array $options = []): void
  */
 function hm_ds_location(string $url): void
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_location');
-	hp_ds_location($url);
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_location');
+    hp_ds_location($url);
 }
 
 /**
@@ -134,8 +139,9 @@ function hm_ds_location(string $url): void
  */
 function hm_ds_is_rate_limited(array $options = []): bool
 {
-	_deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_is_rate_limited');
-	return hp_ds_is_rate_limited($options);
+    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_ds_is_rate_limited');
+
+    return hp_ds_is_rate_limited($options);
 }
 
 /**
@@ -144,6 +150,7 @@ function hm_ds_is_rate_limited(array $options = []): bool
 function hf_option_page(string $page_title, string $menu_slug): OptionsPage
 {
     _deprecated_function(__FUNCTION__, '2.1.0', 'hp_create_option_page');
+
     return hp_create_option_page($page_title, $menu_slug);
 }
 
@@ -153,6 +160,7 @@ function hf_option_page(string $page_title, string $menu_slug): OptionsPage
 function hf_field(string $type, string $name, string $label): Field
 {
     _deprecated_function(__FUNCTION__, '2.1.0', 'hp_create_field');
+
     return hp_create_field($type, $name, $label);
 }
 
@@ -162,6 +170,7 @@ function hf_field(string $type, string $name, string $label): Field
 function hf_tabs(string $name, string $label): TabsField
 {
     _deprecated_function(__FUNCTION__, '2.1.0', 'hp_create_tabs');
+
     return hp_create_tabs($name, $label);
 }
 
@@ -171,6 +180,7 @@ function hf_tabs(string $name, string $label): TabsField
 function hf_repeater(string $name, string $label): RepeaterField
 {
     _deprecated_function(__FUNCTION__, '2.1.0', 'hp_create_repeater');
+
     return hp_create_repeater($name, $label);
 }
 
@@ -180,6 +190,7 @@ function hf_repeater(string $name, string $label): RepeaterField
 function hf_section(string $id, string $title): OptionsSection
 {
     _deprecated_function(__FUNCTION__, '2.1.0', 'hp_create_section');
+
     return hp_create_section($id, $title);
 }
 
@@ -189,6 +200,7 @@ function hf_section(string $id, string $title): OptionsSection
 function hf_resolve_field_context($source = null, array $args = []): array
 {
     _deprecated_function(__FUNCTION__, '2.1.0', 'hp_resolve_field_context');
+
     return hp_resolve_field_context($source, $args);
 }
 
@@ -198,6 +210,7 @@ function hf_resolve_field_context($source = null, array $args = []): array
 function hf_maybe_sanitize_field_value(string $name, $value, array $args = [])
 {
     _deprecated_function(__FUNCTION__, '2.1.0', 'hp_maybe_sanitize_field_value');
+
     return hp_maybe_sanitize_field_value($name, $value, $args);
 }
 
@@ -207,6 +220,7 @@ function hf_maybe_sanitize_field_value(string $name, $value, array $args = [])
 function hf_get_field(string $name, $source = null, array $args = [])
 {
     _deprecated_function(__FUNCTION__, '2.1.0', 'hp_get_field');
+
     return hp_get_field($name, $source, $args);
 }
 
@@ -216,6 +230,7 @@ function hf_get_field(string $name, $source = null, array $args = [])
 function hf_update_field(string $name, $value, $source = null, array $args = []): bool
 {
     _deprecated_function(__FUNCTION__, '2.1.0', 'hp_update_field');
+
     return hp_update_field($name, $value, $source, $args);
 }
 
@@ -225,6 +240,7 @@ function hf_update_field(string $name, $value, $source = null, array $args = [])
 function hf_delete_field(string $name, $source = null, array $args = []): bool
 {
     _deprecated_function(__FUNCTION__, '2.1.0', 'hp_delete_field');
+
     return hp_delete_field($name, $source, $args);
 }
 
@@ -234,9 +250,9 @@ function hf_delete_field(string $name, $source = null, array $args = []): bool
 function hf_save_field(string $name, $value, $source = null, array $args = []): bool
 {
     _deprecated_function(__FUNCTION__, '2.1.0', 'hp_save_field');
+
     return hp_save_field($name, $value, $source, $args);
 }
-
 
 /**
  * @deprecated 2.1.0 Use hp_get_endpoint_url() instead
@@ -244,7 +260,7 @@ function hf_save_field(string $name, $value, $source = null, array $args = []): 
 function hxwp_api_url($template_path = '')
 {
     // Set a global flag to indicate that a legacy function has been used.
-    $GLOBALS['hmapi_is_legacy_theme'] = true;
+    $GLOBALS['hyperpress_is_legacy_theme'] = true;
 
     _deprecated_function(__FUNCTION__, '2.1.0', 'hp_get_endpoint_url');
 
@@ -260,7 +276,7 @@ function hxwp_send_header_response($data = [], $action = null)
 
     // Use shared validation logic
     if (!hp_validate_request()) {
-        hxwp_die(__('Nonce verification failed.', 'api-for-htmx'));
+        hxwp_die(__('Nonce verification failed.', 'hyperpress'));
     }
 
     if ($action === null) {
@@ -287,7 +303,7 @@ function hxwp_send_header_response($data = [], $action = null)
 
     // Headers already sent?
     if (headers_sent()) {
-        wp_die(__('HXWP Error: Headers already sent.', 'api-for-htmx'));
+        wp_die(__('HXWP Error: Headers already sent.', 'hyperpress'));
     }
 
     // Filter our response (legacy filter)

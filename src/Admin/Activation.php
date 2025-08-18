@@ -6,7 +6,7 @@
  * @since   2023
  */
 
-namespace HMApi\Admin;
+namespace HyperPress\Admin;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

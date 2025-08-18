@@ -1,6 +1,6 @@
 <?php
 
-namespace HMApi\Fields;
+namespace HyperPress\Fields;
 
 class TemplateLoader
 {
@@ -27,13 +27,12 @@ class TemplateLoader
         // Set the value in field data
         $field_data['value'] = $value;
 
-
         // Store TabsField instances in global variable for template access
         if ($type === 'tabs' && isset($field_data['instance'])) {
-            if (!isset($GLOBALS['hmapi_tabs_instances'])) {
-                $GLOBALS['hmapi_tabs_instances'] = [];
+            if (!isset($GLOBALS['hyperpress_tabs_instances'])) {
+                $GLOBALS['hyperpress_tabs_instances'] = [];
             }
-            $GLOBALS['hmapi_tabs_instances'][$name] = $field_data['instance'];
+            $GLOBALS['hyperpress_tabs_instances'][$name] = $field_data['instance'];
         }
 
         // Get the appropriate template file
@@ -45,7 +44,7 @@ class TemplateLoader
         }
 
         // Allow template override via filter
-        $template_file = apply_filters('hmapi_field_template', $template_file, $type, $field_data);
+        $template_file = apply_filters('hyperpress_field_template', $template_file, $type, $field_data);
 
         if (file_exists($template_file)) {
 
@@ -73,7 +72,7 @@ class TemplateLoader
         }
 
         // Check for type-specific templates in theme
-        $theme_template = get_template_directory() . '/hmapi/fields/field-' . $type . '.php';
+        $theme_template = get_template_directory() . '/hyperpress/fields/field-' . $type . '.php';
         if (file_exists($theme_template)) {
             self::$template_cache[$type] = $theme_template;
 
@@ -82,7 +81,7 @@ class TemplateLoader
 
         // Check child theme
         if (is_child_theme()) {
-            $child_template = get_stylesheet_directory() . '/hmapi/fields/field-' . $type . '.php';
+            $child_template = get_stylesheet_directory() . '/hyperpress/fields/field-' . $type . '.php';
             if (file_exists($child_template)) {
                 self::$template_cache[$type] = $child_template;
 
@@ -106,13 +105,13 @@ class TemplateLoader
         $help = $field_data['help'] ?? '';
         ?>
 
-        <div class="hmapi-field-wrapper">
-            <label for="<?php echo esc_attr($name); ?>" class="hmapi-field-label">
+        <div class="hyperpress-field-wrapper">
+            <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
                 <?php echo esc_html($label); ?>
                 <?php if ($required): ?><span class="required">*</span><?php endif; ?>
             </label>
 
-            <div class="hmapi-field-input">
+            <div class="hyperpress-field-input">
                 <input type="<?php echo esc_attr($type); ?>"
                     id="<?php echo esc_attr($name); ?>"
                     name="<?php echo esc_attr($name); ?>"
@@ -135,38 +134,29 @@ class TemplateLoader
         if (is_admin()) {
             wp_enqueue_style(
                 'hyperpress-admin',
-                HMAPI_PLUGIN_URL . 'assets/css/admin.css',
+                HYPERPRESS_PLUGIN_URL . 'assets/css/admin.css',
                 [],
-                HMAPI_VERSION
+                HYPERPRESS_VERSION
             );
             // In admin, enqueue base JS for HyperFields; CSS is covered by admin.css
             wp_enqueue_script(
-                'hmapi-conditional-fields',
-                HMAPI_PLUGIN_URL . 'assets/js/conditional-fields.js',
+                'hyperpress-conditional-fields',
+                HYPERPRESS_PLUGIN_URL . 'assets/js/conditional-fields.js',
                 [],
-                HMAPI_VERSION,
+                HYPERPRESS_VERSION,
                 true
             );
 
-            // Optional test script remains for debugging
-            wp_enqueue_script(
-                'hmapi-test-conditional-logic',
-                HMAPI_PLUGIN_URL . 'assets/js/test-conditional-logic.js',
-                [],
-                HMAPI_VERSION,
-                true
-            );
-
-            wp_localize_script('hmapi-conditional-fields', 'hmapiFields', [
+            wp_localize_script('hyperpress-conditional-fields', 'hyperpressFields', [
                 'ajaxurl' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('hmapi_fields_nonce'),
+                'nonce' => wp_create_nonce('hyperpress_fields_nonce'),
                 'l10n' => [
-                    'selectImage' => __('Select Image', 'hmapi'),
-                    'selectFile' => __('Select File', 'hmapi'),
-                    'remove' => __('Remove', 'hmapi'),
-                    'addImages' => __('Add Images', 'hmapi'),
-                    'clearGallery' => __('Clear Gallery', 'hmapi'),
-                    'searchAddress' => __('Search for an address...', 'hmapi'),
+                    'selectImage' => __('Select Image', 'hyperpress'),
+                    'selectFile' => __('Select File', 'hyperpress'),
+                    'remove' => __('Remove', 'hyperpress'),
+                    'addImages' => __('Add Images', 'hyperpress'),
+                    'clearGallery' => __('Clear Gallery', 'hyperpress'),
+                    'searchAddress' => __('Search for an address...', 'hyperpress'),
                 ],
             ]);
 
@@ -179,23 +169,23 @@ class TemplateLoader
         }
 
         wp_enqueue_script(
-            'hmapi-conditional-fields',
-            HMAPI_PLUGIN_URL . 'assets/js/conditional-fields.js',
+            'hyperpress-conditional-fields',
+            HYPERPRESS_PLUGIN_URL . 'assets/js/conditional-fields.js',
             [],
-            HMAPI_VERSION,
+            HYPERPRESS_VERSION,
             true
         );
 
-        wp_localize_script('hmapi-conditional-fields', 'hmapiFields', [
+        wp_localize_script('hyperpress-conditional-fields', 'hyperpressFields', [
             'ajaxurl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('hmapi_fields_nonce'),
+            'nonce' => wp_create_nonce('hyperpress_fields_nonce'),
             'l10n' => [
-                'selectImage' => __('Select Image', 'hmapi'),
-                'selectFile' => __('Select File', 'hmapi'),
-                'remove' => __('Remove', 'hmapi'),
-                'addImages' => __('Add Images', 'hmapi'),
-                'clearGallery' => __('Clear Gallery', 'hmapi'),
-                'searchAddress' => __('Search for an address...', 'hmapi'),
+                'selectImage' => __('Select Image', 'hyperpress'),
+                'selectFile' => __('Select File', 'hyperpress'),
+                'remove' => __('Remove', 'hyperpress'),
+                'addImages' => __('Add Images', 'hyperpress'),
+                'clearGallery' => __('Clear Gallery', 'hyperpress'),
+                'searchAddress' => __('Search for an address...', 'hyperpress'),
             ],
         ]);
     }
@@ -204,9 +194,9 @@ class TemplateLoader
     {
         // Enqueue heavy/type-specific assets after fields have rendered (works for admin and frontend)
         if (isset(self::$rendered_field_types['map'])) {
-            wp_enqueue_style('hmapi-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4');
-            wp_enqueue_script('hmapi-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true);
-            wp_enqueue_script('hmapi-map-field', HMAPI_PLUGIN_URL . 'assets/js/map-field.js', ['hmapi-leaflet'], HMAPI_VERSION, true);
+            wp_enqueue_style('hyperpress-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4');
+            wp_enqueue_script('hyperpress-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true);
+            wp_enqueue_script('hyperpress-map-field', HYPERPRESS_PLUGIN_URL . 'assets/js/map-field.js', ['hyperpress-leaflet'], HYPERPRESS_VERSION, true);
         }
     }
 
@@ -244,6 +234,6 @@ class TemplateLoader
             'custom',
         ];
 
-        return apply_filters('hmapi_supported_field_types', $types);
+        return apply_filters('hyperpress_supported_field_types', $types);
     }
 }

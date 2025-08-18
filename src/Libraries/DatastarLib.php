@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Libraries;
+namespace HyperPress\Libraries;
 
-use HMApi\Main;
+use HyperPress\Main;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -43,7 +43,7 @@ class DatastarLib
      * for display in the admin interface. Also handles automatic loading when
      * Datastar is selected as the active library.
      *
-     * @since 2.0.2 Adapted from HMApi\Admin\Options
+     * @since 2.0.2 Adapted from HyperPress\Admin\Options
      *
      * @param string $option_name WordPress option name for storing plugin settings.
      * @return array {
@@ -66,7 +66,7 @@ class DatastarLib
         }
 
         // Check Composer's installed.json for the package version.
-        $composer_installed_path = HMAPI_ABSPATH . '/vendor/composer/installed.json';
+        $composer_installed_path = HYPERPRESS_ABSPATH . '/vendor/composer/installed.json';
         if (file_exists($composer_installed_path)) {
             $installed_data = json_decode(file_get_contents($composer_installed_path), true);
             if (isset($installed_data['packages'])) {
@@ -99,12 +99,12 @@ class DatastarLib
         if ($sdk_loaded) {
             $status_class = 'notice-success';
             $status_icon = '✅';
-            $status_text = esc_html__('Available', 'api-for-htmx');
+            $status_text = esc_html__('Available', 'hyperpress');
             $version_text = $version ? sprintf(' (v%s)', esc_html($version)) : '';
         } else {
             $status_class = 'notice-warning';
             $status_icon = '⚠️';
-            $status_text = esc_html__('Not Available', 'api-for-htmx');
+            $status_text = esc_html__('Not Available', 'hyperpress');
             $version_text = '';
         }
 
@@ -113,7 +113,7 @@ class DatastarLib
         $html .= $status_icon . ' <strong>' . $status_text . '</strong>' . $version_text;
 
         if (!$sdk_loaded) {
-            $html .= '<br><small>' . esc_html__('Run "composer require starfederation/datastar-php" in the plugin directory to install the SDK.', 'api-for-htmx') . '</small>';
+            $html .= '<br><small>' . esc_html__('Run "composer require starfederation/datastar-php" in the plugin directory to install the SDK.', 'hyperpress') . '</small>';
         } else {
             $html .= '<br><small>' . esc_html($message) . '</small>';
         }
@@ -134,13 +134,13 @@ class DatastarLib
      * Attempts to load the Datastar PHP SDK through Composer autoloader.
      * Only loads if not already available to prevent conflicts.
      *
-     * @since 2.0.2 Adapted from HMApi\Admin\Options
+     * @since 2.0.2 Adapted from HyperPress\Admin\Options
      *
      * @return bool True if SDK is loaded and available, false otherwise.
      */
     public static function load_sdk(): bool
     {
-        return class_exists('HMApi\starfederation\datastar\Consts');
+        return class_exists('HyperPress\starfederation\datastar\Consts');
     }
 
     /**
@@ -150,6 +150,6 @@ class DatastarLib
      */
     private function is_sdk_loaded(): bool
     {
-        return class_exists('HMApi\starfederation\datastar\Consts');
+        return class_exists('HyperPress\starfederation\datastar\Consts');
     }
 }

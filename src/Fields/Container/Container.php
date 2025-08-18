@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields\Container;
+namespace HyperPress\Fields\Container;
 
-use HMApi\Fields\Field;
+use HyperPress\Fields\Field;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

@@ -8,7 +8,7 @@
  * @license https://github.com/adbario/php-dot-notation/blob/3.x/LICENSE.md (MIT License)
  */
 
-namespace HMApi\Adbar;
+namespace HyperPress\Adbar;
 
 use Countable;
 use ArrayAccess;
@@ -39,7 +39,7 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
     protected $items = [];
 
     /**
-     * The character to use as a delimiter, defaults to hmapi_dot (.)
+     * The character to use as a delimiter, defaults to hyperpress_dot (.)
      *
      * @var non-empty-string
      */

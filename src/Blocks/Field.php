@@ -5,13 +5,13 @@ declare(strict_types=1);
 /**
  * HyperField class for the fluent API.
  *
- * This class is now a wrapper around the hyper HMApi\Fields\Field class,
+ * This class is now a wrapper around the hyper HyperPress\Fields\Field class,
  * providing backward compatibility for the HyperBlocks API.
  */
 
-namespace HMApi\Blocks;
+namespace HyperPress\Blocks;
 
-use HMApi\Fields\Field as HyperField;
+use HyperPress\Fields\Field as HyperField;
 
 // Prevent direct file access.
 if (!defined('ABSPATH')) {

@@ -6,7 +6,7 @@
  * Simple test to verify field-level conditional logic functionality.
  */
 
-use HMApi\Fields\HyperFields;
+use HyperPress\Fields\HyperFields;
 
 // Create a test options page with conditional fields
 function hyperfields_conditional_logic_test() {

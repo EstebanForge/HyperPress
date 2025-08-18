@@ -1,10 +1,10 @@
 <?php
 <?php
-// Support for conditional_logic: pass as data-hm-conditional-logic attribute for JS
+// Support for conditional_logic: pass as data-hp-conditional-logic attribute for JS
 $conditional_logic = $field_data["conditional_logic"] ?? null;
 $conditional_attr = "";
 if ($conditional_logic) {
-    $conditional_attr = " data-hm-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
+    $conditional_attr = " data-hp-conditional-logic="" . esc_attr(json_encode($conditional_logic)) . """;
 }
 ?>
 if (!defined('ABSPATH')) {
@@ -21,19 +21,19 @@ $help = $field_data['help'] ?? '';
 $options = $field_data['options'] ?? [];
 $layout = $field_data['layout'] ?? 'horizontal';
 
-$layout_class = 'hmapi-radio-image-' . $layout;
+$layout_class = 'hyperpress-radio-image-' . $layout;
 ?>
 
-<div class="hmapi-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label class="hmapi-field-label">
+<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label class="hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hmapi-field-input">
+    <div class="hyperpress-field-input">
         <div class="<?php echo esc_attr($layout_class); ?>">
             <?php foreach ($options as $option_value => $option_image): ?>
-                <label class="hmapi-radio-image-label">
+                <label class="hyperpress-radio-image-label">
                     <input type="radio" 
                            name="<?php echo esc_attr($name_attr); ?>" 
                            value="<?php echo esc_attr($option_value); ?>" 
@@ -41,7 +41,7 @@ $layout_class = 'hmapi-radio-image-' . $layout;
                            <?php echo $required ? 'required' : ''; ?>>
                     <img src="<?php echo esc_url($option_image); ?>" 
                          alt="<?php echo esc_attr($option_value); ?>" 
-                         class="hmapi-radio-image"
+                         class="hyperpress-radio-image"
                          style="max-width: 100px; max-height: 100px; cursor: pointer;">
                 </label>
             <?php endforeach; ?>

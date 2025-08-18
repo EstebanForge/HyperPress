@@ -16,7 +16,7 @@ Source: `src/plugins/HyperPress/includes/helpers.php`
 Use the helpers to interact with various storage contexts.
 
 ```php
-// Get from options (default group 'hmapi_options')
+// Get from options (default group 'hyperpress_options')
 $tagline = hp_get_field('site_tagline', 'options', [
     'default' => ''
 ]);
@@ -24,7 +24,7 @@ $tagline = hp_get_field('site_tagline', 'options', [
 // Save to options (with type for sanitization)
 hp_update_field('site_tagline', 'Hello World', 'options', [
     'type' => 'text',            // Enables Field::sanitize_value()
-    'option_group' => 'hmapi_options'
+    'option_group' => 'hyperpress_options'
 ]);
 
 // Get post meta by ID

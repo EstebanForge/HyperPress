@@ -3,44 +3,44 @@
 defined('ABSPATH') || exit('Direct access not allowed.');
 
 // Secure it.
-$hmapi_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
+$hp_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
 
 // Check if nonce is valid.
-if (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($hmapi_nonce)), 'hmapi_nonce')) {
-    hm_die('Nonce verification failed.');
+if (!isset($hp_nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($hp_nonce)), 'hyperpress_nonce')) {
+    hp_die('Nonce verification failed.');
 }
 
 // Action = htmx_do_something
-if (!isset($hmvals['action']) || $hmvals['action'] != 'htmx_do_something') {
-    hm_die('Invalid action.');
+if (!isset($hp_vals['action']) || $hp_vals['action'] != 'htmx_do_something') {
+    hp_die('Invalid action.');
 }
 
 // Process different demo types
-$demo_type = $hmvals['demo_type'] ?? 'default';
+$demo_type = $hp_vals['demo_type'] ?? 'default';
 $processed_message = '';
 
 switch ($demo_type) {
     case 'simple_get':
-        $processed_message = __('HTMX GET request processed successfully!', 'api-for-htmx');
+        $processed_message = __('HTMX GET request processed successfully!', 'hyperpress');
         break;
     case 'post_with_data':
-        $user_data = $hmvals['user_data'] ?? __('No data', 'api-for-htmx');
-        $processed_message = sprintf(__('HTMX POST processed. You sent: %s', 'api-for-htmx'), esc_html($user_data));
+        $user_data = $hp_vals['user_data'] ?? __('No data', 'hyperpress');
+        $processed_message = sprintf(__('HTMX POST processed. You sent: %s', 'hyperpress'), esc_html($user_data));
         break;
     case 'form_submission':
-        $name = $hmvals['name'] ?? __('Unknown', 'api-for-htmx');
-        $email = $hmvals['email'] ?? __('No email', 'api-for-htmx');
-        $processed_message = sprintf(__('Form submitted successfully! Name: %s, Email: %s', 'api-for-htmx'), esc_html($name), esc_html($email));
+        $name = $hp_vals['name'] ?? __('Unknown', 'hyperpress');
+        $email = $hp_vals['email'] ?? __('No email', 'hyperpress');
+        $processed_message = sprintf(__('Form submitted successfully! Name: %s, Email: %s', 'hyperpress'), esc_html($name), esc_html($email));
         break;
     default:
-        $processed_message = __('HTMX demo template processed.', 'api-for-htmx');
+        $processed_message = __('HTMX demo template processed.', 'hyperpress');
 }
 ?>
 
-<div class="hmapi-demo-container">
-	<h3><?php esc_html_e('Hello HTMX!', 'api-for-htmx'); ?></h3>
+<div class="hyperpress-demo-container">
+	<h3><?php esc_html_e('Hello HTMX!', 'hyperpress'); ?></h3>
 
-	<p><?php esc_html_e('Demo template loaded from', 'api-for-htmx'); ?> <code>plugins/HyperPress/<?php echo esc_html(HMAPI_TEMPLATE_DIR); ?>/htmx-demo.hm.php</code></p>
+	<p><?php esc_html_e('Demo template loaded from', 'hyperpress'); ?> <code>plugins/HyperPress/<?php echo esc_html(HPRESS_TEMPLATE_DIR); ?>/htmx-demo.hm.php</code></p>
 
 	<?php if (!empty($processed_message)): ?>
 		<div class="notice notice-success">
@@ -49,74 +49,74 @@ switch ($demo_type) {
 	<?php endif; ?>
 
 	<div class="htmx-examples">
-		<h4><?php esc_html_e('HTMX Examples:', 'api-for-htmx'); ?></h4>
+		<h4><?php esc_html_e('HTMX Examples:', 'hyperpress'); ?></h4>
 
 		<!-- Example 1: Simple GET request -->
 		<div class="example-section">
-			<h5><?php esc_html_e('Example 1: GET Request', 'api-for-htmx'); ?></h5>
-			<button hx-get="<?php echo hm_get_endpoint_url('htmx-demo'); ?>?action=htmx_do_something&demo_type=simple_get&timestamp=' + Date.now()"
+			<h5><?php esc_html_e('Example 1: GET Request', 'hyperpress'); ?></h5>
+			<button hx-get="<?php echo hp_get_endpoint_url('htmx-demo'); ?>?action=htmx_do_something&demo_type=simple_get&timestamp=' + Date.now()"
 					hx-target="#htmx-response-1"
 					hx-indicator="#htmx-loading-1"
 					class="button button-primary">
-				<?php esc_html_e('Simple GET Request', 'api-for-htmx'); ?>
+				<?php esc_html_e('Simple GET Request', 'hyperpress'); ?>
 			</button>
-			<span id="htmx-loading-1" class="htmx-indicator" style="display:none;"><?php esc_html_e('Loading...', 'api-for-htmx'); ?></span>
+			<span id="htmx-loading-1" class="htmx-indicator" style="display:none;"><?php esc_html_e('Loading...', 'hyperpress'); ?></span>
 			<div id="htmx-response-1" class="response-area"></div>
 		</div>
 
 		<!-- Example 2: POST request with data -->
 		<div class="example-section">
-			<h5><?php esc_html_e('Example 2: POST Request with Data', 'api-for-htmx'); ?></h5>
-			<input type="text" id="htmx-post-data" placeholder="<?php esc_attr_e('Enter some data', 'api-for-htmx'); ?>" class="regular-text" value="Hello from HTMX!">
-			<button hx-post="<?php echo hm_get_endpoint_url('htmx-demo'); ?>"
+			<h5><?php esc_html_e('Example 2: POST Request with Data', 'hyperpress'); ?></h5>
+			<input type="text" id="htmx-post-data" placeholder="<?php esc_attr_e('Enter some data', 'hyperpress'); ?>" class="regular-text" value="Hello from HTMX!">
+			<button hx-post="<?php echo hp_get_endpoint_url('htmx-demo'); ?>"
 					hx-vals='{"action": "htmx_do_something", "demo_type": "post_with_data", "user_data": htmxDemoData.postData}'
 					hx-target="#htmx-response-2"
 					hx-indicator="#htmx-loading-2"
 					class="button button-primary">
-				<?php esc_html_e('POST with Data', 'api-for-htmx'); ?>
+				<?php esc_html_e('POST with Data', 'hyperpress'); ?>
 			</button>
-			<span id="htmx-loading-2" class="htmx-indicator" style="display:none;"><?php esc_html_e('Posting...', 'api-for-htmx'); ?></span>
+			<span id="htmx-loading-2" class="htmx-indicator" style="display:none;"><?php esc_html_e('Posting...', 'hyperpress'); ?></span>
 			<div id="htmx-response-2" class="response-area"></div>
 		</div>
 
 		<!-- Example 3: Form submission -->
 		<div class="example-section">
-			<h5><?php esc_html_e('Example 3: Form Submission', 'api-for-htmx'); ?></h5>
-			<form hx-post="<?php echo hm_get_endpoint_url('htmx-demo'); ?>"
+			<h5><?php esc_html_e('Example 3: Form Submission', 'hyperpress'); ?></h5>
+			<form hx-post="<?php echo hp_get_endpoint_url('htmx-demo'); ?>"
 				  hx-target="#htmx-response-3"
 				  hx-indicator="#htmx-loading-3">
 				<input type="hidden" name="action" value="htmx_do_something">
 				<input type="hidden" name="demo_type" value="form_submission">
 				<p>
-					<label for="htmx-demo-name"><?php esc_html_e('Name:', 'api-for-htmx'); ?></label>
+					<label for="htmx-demo-name"><?php esc_html_e('Name:', 'hyperpress'); ?></label>
 					<input type="text" id="htmx-demo-name" name="name" required class="regular-text">
 				</p>
 				<p>
-					<label for="htmx-demo-email"><?php esc_html_e('Email:', 'api-for-htmx'); ?></label>
+					<label for="htmx-demo-email"><?php esc_html_e('Email:', 'hyperpress'); ?></label>
 					<input type="email" id="htmx-demo-email" name="email" required class="regular-text">
 				</p>
 				<button type="submit" class="button button-primary">
-					<?php esc_html_e('Submit Form', 'api-for-htmx'); ?>
+					<?php esc_html_e('Submit Form', 'hyperpress'); ?>
 				</button>
-				<span id="htmx-loading-3" class="htmx-indicator" style="display:none;"><?php esc_html_e('Submitting...', 'api-for-htmx'); ?></span>
+				<span id="htmx-loading-3" class="htmx-indicator" style="display:none;"><?php esc_html_e('Submitting...', 'hyperpress'); ?></span>
 			</form>
 			<div id="htmx-response-3" class="response-area"></div>
 		</div>
 
 		<!-- Example 4: Auto-refresh content -->
 		<div class="example-section">
-			<h5><?php esc_html_e('Example 4: Auto-refresh Content', 'api-for-htmx'); ?></h5>
-			<div hx-get="<?php echo hm_get_endpoint_url('htmx-demo'); ?>?action=htmx_do_something&demo_type=simple_get&auto_refresh=true"
+			<h5><?php esc_html_e('Example 4: Auto-refresh Content', 'hyperpress'); ?></h5>
+			<div hx-get="<?php echo hp_get_endpoint_url('htmx-demo'); ?>?action=htmx_do_something&demo_type=simple_get&auto_refresh=true"
 				 hx-trigger="every 10s"
 				 hx-target="this"
 				 class="response-area">
-				<p><?php esc_html_e('This content will auto-refresh every 10 seconds', 'api-for-htmx'); ?></p>
+				<p><?php esc_html_e('This content will auto-refresh every 10 seconds', 'hyperpress'); ?></p>
 			</div>
 		</div>
 	</div>
 
-	<h5><?php esc_html_e('Received params ($hmvals):', 'api-for-htmx'); ?></h5>
-	<pre><?php var_dump($hmvals); ?></pre>
+	<h5><?php esc_html_e('Received params ($hp_vals):', 'hyperpress'); ?></h5>
+	<pre><?php var_dump($hp_vals); ?></pre>
 
 	<script>
 		// Simple data store for HTMX examples

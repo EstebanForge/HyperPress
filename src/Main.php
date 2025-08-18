@@ -6,11 +6,11 @@
  * @since      2023
  */
 
-namespace HMApi;
+namespace HyperPress;
 
-use HMApi\Admin\Activation;
-use HMApi\Admin\Options;
-use HMApi\Admin\OptionsMigration;
+use HyperPress\Admin\Activation;
+use HyperPress\Admin\Options;
+use HyperPress\Admin\OptionsMigration;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -135,7 +135,7 @@ class Main
             'datastar_load_in_admin' => false,
         ];
 
-        $options = get_option('hmapi_options', $defaults);
+        $options = get_option('hyperpress_options', $defaults);
 
         return wp_parse_args($options, $defaults);
     }
@@ -342,7 +342,7 @@ class Main
     }
 
     /**
-     * Main HMApi Instance.
+     * Main HyperPress Instance.
      * Initializes and registers all WordPress hooks and actions for the plugin.
      *
      * This method serves as the main entry point for plugin initialization.

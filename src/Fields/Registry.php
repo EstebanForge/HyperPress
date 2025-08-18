@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields;
+namespace HyperPress\Fields;
 
 class Registry
 {
@@ -141,7 +141,7 @@ class Registry
 
     public function register_all(): void
     {
-        do_action('hmapi_fields_register');
+        do_action('hyperpress_fields_register');
         $this->register_admin_hooks();
     }
 
@@ -171,7 +171,7 @@ class Registry
         }
 
         add_meta_box(
-            'hmapi_post_fields',
+            'hyperpress_post_fields',
             'Custom Fields',
             [$this, 'render_post_meta_box'],
             null,
@@ -187,7 +187,7 @@ class Registry
             return;
         }
 
-        wp_nonce_field('hmapi_post_fields', 'hmapi_post_fields_nonce');
+        wp_nonce_field('hyperpress_post_fields', 'hyperpress_post_fields_nonce');
 
         foreach ($post_fields as $field) {
             $this->render_field_input($field);
@@ -260,11 +260,11 @@ class Registry
 
     public function save_post_fields(int $post_id): void
     {
-        if (!isset($_POST['hmapi_post_fields_nonce'])) {
+        if (!isset($_POST['hyperpress_post_fields_nonce'])) {
             return;
         }
 
-        if (!wp_verify_nonce($_POST['hmapi_post_fields_nonce'], 'hmapi_post_fields')) {
+        if (!wp_verify_nonce($_POST['hyperpress_post_fields_nonce'], 'hyperpress_post_fields')) {
             return;
         }
 

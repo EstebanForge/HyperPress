@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'b4e0b991acd5ddad926ebc747d73282f' => $baseDir . '/bootstrap.php',
+    '2803859e227f0e3ceb34ed7862ddd1d0' => $baseDir . '/includes/backward-compatibility.php',
 );

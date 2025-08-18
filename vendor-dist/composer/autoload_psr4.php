@@ -6,6 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'HMApi\\starfederation\\datastar\\' => array($vendorDir . '/starfederation/datastar-php/src'),
-    'HMApi\\' => array($baseDir . '/src'),
+    'HyperPress\\starfederation\\datastar\\' => array($vendorDir . '/starfederation/datastar-php/src'),
+    'HyperPress\\' => array($baseDir . '/src'),
 );

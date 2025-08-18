@@ -3,28 +3,28 @@
 defined('ABSPATH') || exit('Direct access not allowed.');
 
 // Secure it.
-$hmapi_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
+$hp_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
 
 // Check if nonce is valid.
-if (!isset($hmapi_nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($hmapi_nonce)), 'hmapi_nonce')) {
-    hm_die('Nonce verification failed.');
+if (!isset($hp_nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($hp_nonce)), 'hyperpress_nonce')) {
+    hp_die('Nonce verification failed.');
 }
 
 // Action = alpine_ajax_do_something
-if (!isset($hmvals['action']) || $hmvals['action'] != 'alpine_ajax_do_something') {
-    hm_die('Invalid action.');
+if (!isset($hp_vals['action']) || $hp_vals['action'] != 'alpine_ajax_do_something') {
+    hp_die('Invalid action.');
 }
 ?>
 
-<div class="hmapi-demo-container">
+<div class="hyperpress-demo-container">
 	<h3>Hello Alpine Ajax!</h3>
 
-	<p>Demo template loaded from <code>plugins/HyperPress/<?php echo esc_html(HMAPI_TEMPLATE_DIR); ?>/alpine-ajax-demo.hm.php</code></p>
+	<p>Demo template loaded from <code>plugins/HyperPress/<?php echo esc_html(HPRESS_TEMPLATE_DIR); ?>/alpine-ajax-demo.hm.php</code></p>
 
-	<p>Received params ($hmvals):</p>
+	<p>Received params ($hp_vals):</p>
 
 	<pre>
-		<?php var_dump($hmvals); ?>
+		<?php var_dump($hp_vals); ?>
 	</pre>
 
 	<div class="alpine-ajax-examples" x-data="alpineAjaxDemo()">
@@ -77,7 +77,7 @@ if (!isset($hmvals['action']) || $hmvals['action'] != 'alpine_ajax_do_something'
 
 				async simpleGet() {
 					try {
-						const response = await this.$ajax('<?php echo hm_get_endpoint_url('alpine-ajax-demo'); ?>', {
+						const response = await this.$ajax('<?php echo hp_get_endpoint_url('alpine-ajax-demo'); ?>', {
 							method: 'GET',
 							params: {
 								action: 'alpine_ajax_do_something',
@@ -85,7 +85,7 @@ if (!isset($hmvals['action']) || $hmvals['action'] != 'alpine_ajax_do_something'
 								timestamp: Date.now()
 							},
 							headers: {
-								'X-WP-Nonce': hmapi_params.nonce
+								'X-WP-Nonce': hyperpress_params.nonce
 							}
 						});
 						this.response1 = response;
@@ -96,7 +96,7 @@ if (!isset($hmvals['action']) || $hmvals['action'] != 'alpine_ajax_do_something'
 
 				async postWithData() {
 					try {
-						const response = await this.$ajax('<?php echo hm_get_endpoint_url('alpine-ajax-demo'); ?>', {
+						const response = await this.$ajax('<?php echo hp_get_endpoint_url('alpine-ajax-demo'); ?>', {
 							method: 'POST',
 							body: {
 								action: 'alpine_ajax_do_something',
@@ -105,7 +105,7 @@ if (!isset($hmvals['action']) || $hmvals['action'] != 'alpine_ajax_do_something'
 								timestamp: Date.now()
 							},
 							headers: {
-								'X-WP-Nonce': hmapi_params.nonce
+								'X-WP-Nonce': hyperpress_params.nonce
 							}
 						});
 						this.response2 = response;
@@ -120,11 +120,11 @@ if (!isset($hmvals['action']) || $hmvals['action'] != 'alpine_ajax_do_something'
 						formData.append('action', 'alpine_ajax_do_something');
 						formData.append('demo_type', 'form_submission');
 
-						const response = await this.$ajax('<?php echo hm_get_endpoint_url('alpine-ajax-demo'); ?>', {
+						const response = await this.$ajax('<?php echo hp_get_endpoint_url('alpine-ajax-demo'); ?>', {
 							method: 'POST',
 							body: formData,
 							headers: {
-								'X-WP-Nonce': hmapi_params.nonce
+								'X-WP-Nonce': hyperpress_params.nonce
 							}
 						});
 						this.response3 = response;

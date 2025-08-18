@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Fields\Container;
+namespace HyperPress\Fields\Container;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -226,6 +226,4 @@ class UserMetaContainer extends Container
         // Add nonce field
         wp_nonce_field('hyperfields_metabox_' . $this->id, '_hyperfields_metabox_nonce_' . $this->id);
     }
-
-    
 }

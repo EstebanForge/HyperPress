@@ -6,7 +6,7 @@
  * @since   2023-11-22
  */
 
-namespace HMApi;
+namespace HyperPress;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -40,7 +40,7 @@ class Render
      *
      * @var array|false
      */
-    protected $hmVals = false;
+    protected $hpVals = false;
 
     /**
      * Render the template.
@@ -54,10 +54,10 @@ class Render
 
         // Determine which endpoint is being accessed (primary or legacy)
         $actual_endpoint_key = null;
-        if (defined('HMAPI_ENDPOINT') && isset($wp_query->query_vars[HMAPI_ENDPOINT])) {
-            $actual_endpoint_key = HMAPI_ENDPOINT;
-        } elseif (defined('HMAPI_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HMAPI_LEGACY_ENDPOINT])) {
-            $actual_endpoint_key = HMAPI_LEGACY_ENDPOINT;
+        if (defined('HPRESS_ENDPOINT') && isset($wp_query->query_vars[HPRESS_ENDPOINT])) {
+            $actual_endpoint_key = HPRESS_ENDPOINT;
+        } elseif (defined('HPRESS_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HPRESS_LEGACY_ENDPOINT])) {
+            $actual_endpoint_key = HPRESS_LEGACY_ENDPOINT;
         }
 
         // Don't go further if this is not a request for one of our endpoints
@@ -70,25 +70,22 @@ class Render
 
         // Check if nonce exists and is valid, only on POST requests
         if (!$this->validNonce() && $_SERVER['REQUEST_METHOD'] === 'POST') {
-            wp_die(esc_html__('Invalid nonce', 'api-for-htmx'), esc_html__('Error', 'api-for-htmx'), ['response' => 403]);
+            wp_die(esc_html__('Invalid nonce', 'hyperpress'), esc_html__('Error', 'hyperpress'), ['response' => 403]);
         }
 
         // Sanitize template name using the determined endpoint key
         $template_name = $this->sanitizePath($wp_query->query_vars[$actual_endpoint_key]);
 
-        // Get hmvals from $_REQUEST and sanitize them
-        $hmvals = $_REQUEST; // Nonce is validated in valid_nonce()
-        if (!isset($hmvals) || empty($hmvals)) {
-            $hmvals = false;
+        // Get hp_vals from $_REQUEST and sanitize them
+        $hp_vals = $_REQUEST; // Nonce is validated in valid_nonce()
+        if (!isset($hp_vals) || empty($hp_vals)) {
+            $hp_vals = false;
         } else {
-            $hmvals = $this->sanitizeParams($hmvals);
+            $hp_vals = $this->sanitizeParams($hp_vals);
         }
 
-        // For backward compatibility
-        $hxvals = $hmvals;
-
         // Load the requested template or fail with a 404
-        $this->renderOrFail($template_name, $hmvals);
+        $this->renderOrFail($template_name, $hp_vals);
         die(); // No wp_die() here, we don't want to show the complete WP error page
     }
 
@@ -102,7 +99,7 @@ class Render
      *
      * @return void
      */
-    protected function renderOrFail($template_name = '', $hmvals = false)
+    protected function renderOrFail($template_name = '', $hp_vals = false)
     {
         if (empty($template_name)) {
             $this->showDeveloperInfoPage('missing-template-name');
@@ -127,13 +124,10 @@ class Render
         }
 
         // To help developers know when template files were loaded via our plugin
-        define('HMAPI_REQUEST', true);
-
-        // For backward compatibility
-        $hxvals = $hmvals;
+        define('HPRESS_REQUEST', true);
 
         // Run actions before loading the template
-        do_action('hmapi/before_template_load', $template_name, $hmvals);
+        do_action('hyperpress/before_template_load', $template_name, $hp_vals);
 
         // Load the template
         require_once $template_path;
@@ -162,16 +156,16 @@ class Render
         $current_endpoint = '';
         $endpoint_version = '';
 
-        if (defined('HMAPI_ENDPOINT') && isset($wp_query->query_vars[HMAPI_ENDPOINT])) {
-            $current_endpoint = HMAPI_ENDPOINT;
-            $endpoint_version = defined('HMAPI_ENDPOINT_VERSION') ? HMAPI_ENDPOINT_VERSION : 'v1';
-        } elseif (defined('HMAPI_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HMAPI_LEGACY_ENDPOINT])) {
-            $current_endpoint = HMAPI_LEGACY_ENDPOINT;
-            $endpoint_version = defined('HMAPI_ENDPOINT_VERSION') ? HMAPI_ENDPOINT_VERSION : 'v1';
+        if (defined('HPRESS_ENDPOINT') && isset($wp_query->query_vars[HPRESS_ENDPOINT])) {
+            $current_endpoint = HPRESS_ENDPOINT;
+            $endpoint_version = defined('HPRESS_ENDPOINT_VERSION') ? HPRESS_ENDPOINT_VERSION : 'v1';
+        } elseif (defined('HPRESS_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HPRESS_LEGACY_ENDPOINT])) {
+            $current_endpoint = HPRESS_LEGACY_ENDPOINT;
+            $endpoint_version = defined('HPRESS_ENDPOINT_VERSION') ? HPRESS_ENDPOINT_VERSION : 'v1';
         }
 
         $base_url = home_url($current_endpoint . '/' . $endpoint_version);
-        $plugin_name = defined('HMAPI_PLUGIN_NAME') ? HMAPI_PLUGIN_NAME : 'HyperPress: Modern Hypermedia for WordPress';
+        $plugin_name = defined('HPRESS_PLUGIN_NAME') ? HPRESS_PLUGIN_NAME : 'HyperPress: Modern Hypermedia for WordPress';
 
         // Only show debug info if WP_DEBUG is enabled or user can manage options
         $show_debug = defined('WP_DEBUG') && WP_DEBUG || current_user_can('manage_options');
@@ -320,30 +314,30 @@ class Render
                 <div class="success-box">
                     <p><strong>Correct endpoint usage:</strong></p>
                     <ul>
-                        <li><code class="endpoint-url"><?php echo esc_url(hm_get_endpoint_url('my-template')); ?></code> - Loads template file <code>my-template.hm.php</code></li>
-                        <li><code class="endpoint-url"><?php echo esc_url(hm_get_endpoint_url('folder/template')); ?></code> - Loads <code>folder/template.hm.php</code></li>
-                        <li><code class="endpoint-url"><?php echo esc_url(hm_get_endpoint_url('noswap/header-update')); ?></code> - Loads <code>noswap/header-update.hm.php</code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('my-template')); ?></code> - Loads template file <code>my-template.hp.php</code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('folder/template')); ?></code> - Loads <code>folder/template.hp.php</code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('noswap/header-update')); ?></code> - Loads <code>noswap/header-update.hp.php</code></li>
                     </ul>
                 </div>
 
                 <h2>Template File Locations</h2>
                 <div class="info-box">
-                    <p>Template files (<code>.hm.php</code>) should be placed in:</p>
+                    <p>Template files (<code>.hp.php</code>) should be placed in:</p>
                     <ul>
                         <li><strong>Theme:</strong> <code><?php echo esc_html(get_template_directory()); ?>/hypermedia/</code></li>
                         <li><strong>Child Theme:</strong> <code><?php echo esc_html(get_stylesheet_directory()); ?>/hypermedia/</code></li>
-                        <li><strong>Plugin:</strong> <code><?php echo esc_html(dirname(HMAPI_INSTANCE_LOADED_PATH)); ?>/hypermedia/</code></li>
+                        <li><strong>Plugin:</strong> <code><?php echo esc_html(dirname(HPRESS_INSTANCE_LOADED_PATH)); ?>/hypermedia/</code></li>
                     </ul>
                 </div>
 
                 <h2>Available Helper Functions</h2>
                 <div class="info-box">
                     <ul>
-                        <li><code>hm_validate_request()</code> - Validate nonce and request</li>
-                        <li><code>hm_send_header_response($data, $action)</code> - Send header-only response</li>
-                        <li><code>hm_die($message)</code> - Die gracefully with error message</li>
-                        <li><code>hm_get_endpoint_url($template)</code> - Get URL for template</li>
-                        <li><code>hm_endpoint_url($template)</code> - Echoes endpoint URL for template</li>
+                        <li><code>hp_validate_request()</code> - Validate nonce and request</li>
+                        <li><code>hp_send_header_response($data, $action)</code> - Send header-only response</li>
+                        <li><code>hp_die($message)</code> - Die gracefully with error message</li>
+                        <li><code>hp_get_endpoint_url($template)</code> - Get URL for template</li>
+                        <li><code>hp_endpoint_url($template)</code> - Echoes endpoint URL for template</li>
                     </ul>
                 </div>
 
@@ -360,7 +354,7 @@ class Render
                                 <code>Requested Template:</code> <?php echo esc_html($template_name); ?><br>
                             <?php endif; ?>
                             <code>WordPress Version:</code> <?php echo esc_html(get_bloginfo('version')); ?><br>
-                            <code>Plugin Version:</code> <?php echo esc_html(defined('HMAPI_LOADED_VERSION') ? HMAPI_LOADED_VERSION : 'Unknown'); ?>
+                            <code>Plugin Version:</code> <?php echo esc_html(defined('HPRESS_LOADED_VERSION') ? HPRESS_LOADED_VERSION : 'Unknown'); ?>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -388,13 +382,13 @@ class Render
 
         // Check if the request URI matches our base endpoints
         $base_endpoints = [];
-        if (defined('HMAPI_ENDPOINT')) {
-            $base_endpoints[] = '/' . HMAPI_ENDPOINT . '/';
-            $base_endpoints[] = '/' . HMAPI_ENDPOINT;
+        if (defined('HPRESS_ENDPOINT')) {
+            $base_endpoints[] = '/' . HPRESS_ENDPOINT . '/';
+            $base_endpoints[] = '/' . HPRESS_ENDPOINT;
         }
-        if (defined('HMAPI_LEGACY_ENDPOINT')) {
-            $base_endpoints[] = '/' . HMAPI_LEGACY_ENDPOINT . '/';
-            $base_endpoints[] = '/' . HMAPI_LEGACY_ENDPOINT;
+        if (defined('HPRESS_LEGACY_ENDPOINT')) {
+            $base_endpoints[] = '/' . HPRESS_LEGACY_ENDPOINT . '/';
+            $base_endpoints[] = '/' . HPRESS_LEGACY_ENDPOINT;
         }
 
         foreach ($base_endpoints as $endpoint) {
@@ -409,7 +403,7 @@ class Render
 
     /**
      * Check if nonce exists and is valid
-     * nonce: hmapi_nonce.
+     * nonce: hyperpress_nonce.
      *
      * @since 2023-11-30
      *
@@ -433,11 +427,9 @@ class Render
             return false;
         }
 
-        // Check for the new nonce first, then fall back to the legacy nonce.
-        $is_valid_new = wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hmapi_nonce');
-        $is_valid_legacy = wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hxwp_nonce');
+        $is_valid = wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hyperpress_nonce');
 
-        if (!$is_valid_new && !$is_valid_legacy) {
+        if (!$is_valid) {
             return false;
         }
 
@@ -556,51 +548,51 @@ class Render
     }
 
     /**
-     * Sanitize request parameters (hmvals).
+     * Sanitize request parameters (hp_vals).
      * Applies WordPress sanitization functions to all request parameters and removes nonces.
      * Supports both single values and arrays (for multi-value form elements).
      *
      * @since 2023-11-30
      *
-     * @param array $hmvals Raw request parameters to sanitize.
+     * @param array $hp_vals Raw request parameters to sanitize.
      *
      * @return array|false Sanitized parameters array, or false if input is empty.
      */
-    private function sanitizeParams($hmvals = [])
+    private function sanitizeParams($hp_vals = [])
     {
-        if (empty($hmvals)) {
+        if (empty($hp_vals)) {
             return false;
         }
 
         // Sanitize each param
-        foreach ($hmvals as $key => $value) {
+        foreach ($hp_vals as $key => $value) {
             // Sanitize key
-            $key = apply_filters('hmapi/sanitize_param_key', sanitize_key($key), $key);
+            $key = apply_filters('hyperpress/sanitize_param_key', sanitize_key($key), $key);
 
             // For form elements with multiple values
             // https://github.com/EstebanForge/HTMX-API-WP/discussions/8
             if (is_array($value)) {
                 // Sanitize each value
-                $value = apply_filters('hmapi/sanitize_param_array_value', array_map('sanitize_text_field', $value), $key);
+                $value = apply_filters('hyperpress/sanitize_param_array_value', array_map('sanitize_text_field', $value), $key);
             } else {
                 // Sanitize single value
-                $value = apply_filters('hmapi/sanitize_param_value', sanitize_text_field($value), $key);
+                $value = apply_filters('hyperpress/sanitize_param_value', sanitize_text_field($value), $key);
             }
 
             // Update param
-            $hmvals[$key] = $value;
+            $hp_vals[$key] = $value;
         }
 
         // Remove nonce if exists
-        if (isset($hmvals['_wpnonce'])) { // Standard WordPress nonce key in $_REQUEST
-            unset($hmvals['_wpnonce']);
+        if (isset($hp_vals['_wpnonce'])) { // Standard WordPress nonce key in $_REQUEST
+            unset($hp_vals['_wpnonce']);
         }
         // Also unset our specific nonce if it was passed as a regular param, though primary check is _wpnonce
-        if (isset($hmvals['hmapi_nonce'])) {
-            unset($hmvals['hmapi_nonce']);
+        if (isset($hp_vals['hyperpress_nonce'])) {
+            unset($hp_vals['hyperpress_nonce']);
         }
 
-        return $hmvals;
+        return $hp_vals;
     }
 
     /**
@@ -637,8 +629,8 @@ class Render
     {
         // Define the extensions to check, with primary first.
         $extensions = [
-            HMAPI_TEMPLATE_EXT,        // Primary: .hm.php
-            HMAPI_LEGACY_TEMPLATE_EXT, // Legacy: .htmx.php
+            HPRESS_TEMPLATE_EXT,        // Primary: .hp.php
+            HPRESS_LEGACY_TEMPLATE_EXT, // Legacy: .htmx.php
         ];
 
         foreach ($extensions as $extension) {
@@ -659,7 +651,7 @@ class Render
 
     /**
      * Determine our template file.
-     * It first checks for templates in paths registered via 'hmapi/register_template_path'.
+     * It first checks for templates in paths registered via 'hyperpress/register_template_path'.
      * If a namespaced template is requested (e.g., "namespace:template-name") and found, it's used.
      * If an explicit namespace is used but not found, it will fail (no fallback).
      * Otherwise (no namespace in request), it falls back to the default theme's template directory.
@@ -675,7 +667,7 @@ class Render
             return false;
         }
 
-        $namespaced_paths = apply_filters('hmapi/register_template_path', []);
+        $namespaced_paths = apply_filters('hyperpress/register_template_path', []);
         $parsed_template_data = $this->parseNamespacedTemplate($templateName);
 
         if ($parsed_template_data !== false) {
@@ -695,13 +687,11 @@ class Render
         } else {
             // No colon found (or invalid colon format). Treat as a theme-relative path.
             $default_paths = [
-                $this->getThemePath() . HMAPI_TEMPLATE_DIR . '/',
-                $this->getThemePath() . HMAPI_LEGACY_TEMPLATE_DIR . '/',
+                $this->getThemePath() . HPRESS_TEMPLATE_DIR . '/',
+                $this->getThemePath() . HPRESS_LEGACY_TEMPLATE_DIR . '/',
             ];
 
-            // Apply modern and legacy filters for backward compatibility.
-            $modern_paths = apply_filters('hmapi/get_template_file/templates_path', $default_paths);
-            $default_templates_paths_array = apply_filters('hxwp/get_template_file/templates_path', $modern_paths);
+            $default_templates_paths_array = apply_filters('hyperpress/get_template_file/templates_path', $default_paths);
 
             foreach ((array) $default_templates_paths_array as $default_path_item_base) {
                 if (empty($default_path_item_base)) {
