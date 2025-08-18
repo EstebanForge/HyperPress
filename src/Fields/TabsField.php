@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace HyperPress\Fields;
 
 /**
- * @method self add_arg(string $key, mixed $value)
+ * @method self addArg(string $key, mixed $value)
  */
 class TabsField extends Field
 {
@@ -85,14 +85,14 @@ class TabsField extends Field
         return new self($type, $name, $label);
     }
 
-    public function sanitize_value(mixed $value): mixed
+    public function sanitizeValue(mixed $value): mixed
     {
         return is_string($value) ? sanitize_text_field($value) : '';
     }
 
-    public function to_array(): array
+    public function toArray(): array
     {
-        return array_merge(parent::to_array(), [
+        return array_merge(parent::toArray(), [
             'tabs' => $this->tabs,
             'layout' => $this->layout,
             'active_tab' => $this->active_tab,

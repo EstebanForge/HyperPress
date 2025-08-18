@@ -293,11 +293,11 @@ class PostMetaContainer extends Container
         }
 
         foreach ($this->fields as $field) {
-            $field_name = $field->get_name();
-            $value = $_POST[$field_name] ?? $field->get_default();
+            $field_name = $field->getName();
+            $value = $_POST[$field_name] ?? $field->getDefault();
 
             // Sanitize the value
-            $value = $field->sanitize_value($value);
+            $value = $field->sanitizeValue($value);
 
             // Save as post meta
             update_post_meta($this->post_id, $field_name, $value);
@@ -322,11 +322,11 @@ class PostMetaContainer extends Container
 
         foreach ($this->fields as $field) {
             // Get post meta value
-            $meta_value = get_post_meta($this->post_id, $field->get_name(), true);
-            $value = $meta_value !== '' ? $meta_value : $field->get_default();
+            $meta_value = get_post_meta($this->post_id, $field->getName(), true);
+            $value = $meta_value !== '' ? $meta_value : $field->getDefault();
 
             // Set context and render
-            $field->set_context('metabox');
+            $field->setContext('metabox');
             $field->render(['value' => $value]);
         }
 

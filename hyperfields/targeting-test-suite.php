@@ -36,8 +36,8 @@ function hp_test_post_by_id(): void
 
     $container->addField(
         HyperFields::makeField('text', 'test_post_id_field', 'Post ID Test')
-            ->set_placeholder('This only shows on post ID 1')
-            ->set_help('Testing post ID targeting')
+            ->setPlaceholder('This only shows on post ID 1')
+            ->setHelp('Testing post ID targeting')
     );
 }
 
@@ -54,8 +54,8 @@ function hp_test_post_by_slug(): void
 
     $container->addField(
         HyperFields::makeField('textarea', 'test_post_slug_field', 'Post Slug Test')
-            ->set_placeholder('This shows on hello-world or sample-page')
-            ->set_help('Testing post slug targeting')
+            ->setPlaceholder('This shows on hello-world or sample-page')
+            ->setHelp('Testing post slug targeting')
     );
 }
 
@@ -73,14 +73,14 @@ function hp_test_post_by_type(): void
 
     $container
         ->addField(HyperFields::makeField('checkbox', 'test_post_type_checkbox', 'Post Type Test')
-            ->set_help('This shows on all posts and pages'))
+        ->setHelp('This shows on all posts and pages'))
         ->addField(HyperFields::makeField('select', 'test_priority', 'Test Priority')
-            ->set_options([
+        ->setOptions([
                 'low' => 'Low',
                 'medium' => 'Medium',
                 'high' => 'High',
             ])
-            ->set_default('medium'));
+            ->setDefault('medium'));
 }
 
 /**
@@ -95,10 +95,10 @@ function hp_test_user_by_role(): void
 
     $container
         ->addField(HyperFields::makeField('text', 'test_user_role_field', 'User Role Test')
-            ->set_placeholder('This shows for admins and editors')
-            ->set_help('Testing user role targeting'))
+        ->setPlaceholder('This shows for admins and editors')
+        ->setHelp('Testing user role targeting'))
         ->addField(HyperFields::makeField('checkbox', 'test_admin_access', 'Admin Access')
-            ->set_help('Special admin-level access'));
+            ->setHelp('Special admin-level access'));
 }
 
 /**
@@ -112,8 +112,8 @@ function hp_test_user_by_id(): void
 
     $container->addField(
         HyperFields::makeField('textarea', 'test_user_id_field', 'User ID Test')
-            ->set_placeholder('This only shows for user ID 1')
-            ->set_help('Testing user ID targeting')
+            ->setPlaceholder('This only shows for user ID 1')
+            ->setHelp('Testing user ID targeting')
     );
 }
 
@@ -129,10 +129,10 @@ function hp_test_term_by_taxonomy(): void
 
     $container
         ->addField(HyperFields::makeField('color', 'test_term_color', 'Term Color Test')
-            ->set_default('#007cba')
-            ->set_help('This shows for all categories and tags'))
+        ->setDefault('#007cba')
+        ->setHelp('This shows for all categories and tags'))
         ->addField(HyperFields::makeField('text', 'test_term_note', 'Term Note')
-            ->set_placeholder('Testing taxonomy targeting'));
+            ->setPlaceholder('Testing taxonomy targeting'));
 }
 
 /**
@@ -147,7 +147,7 @@ function hp_test_term_by_id(): void
 
     $container->addField(
         HyperFields::makeField('image', 'test_term_id_field', 'Term ID Test')
-            ->set_help('This only shows for term ID 1 (usually Uncategorized)')
+            ->setHelp('This only shows for term ID 1 (usually Uncategorized)')
     );
 }
 
@@ -163,7 +163,7 @@ function hp_test_term_by_slug(): void
 
     $container->addField(
         HyperFields::makeField('checkbox', 'test_term_slug_field', 'Term Slug Test')
-            ->set_help('This only shows for "uncategorized" category')
+            ->setHelp('This only shows for "uncategorized" category')
     );
 }
 
@@ -180,34 +180,34 @@ function hp_test_complex_targeting(): void
 
     $container
         ->addField(HyperFields::makeField('select', 'test_layout_type', 'Layout Type')
-            ->set_options([
+        ->setOptions([
                 'default' => 'Default',
                 'custom' => 'Custom',
                 'special' => 'Special',
             ])
-            ->set_default('default'))
+        ->setDefault('default'))
 
         // Conditional field - only shows when custom layout is selected
         ->addField(HyperFields::makeField('textarea', 'test_custom_css', 'Custom CSS')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'conditions' => [[
                     'field' => 'test_layout_type',
                     'operator' => '=',
                     'value' => 'custom',
                 ]],
             ])
-            ->set_help('This field only appears when Custom layout is selected'))
+        ->setHelp('This field only appears when Custom layout is selected'))
 
         // Another conditional field
         ->addField(HyperFields::makeField('text', 'test_special_title', 'Special Title')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'conditions' => [[
                     'field' => 'test_layout_type',
                     'operator' => '=',
                     'value' => 'special',
                 ]],
             ])
-            ->set_placeholder('Special title for special layout'));
+            ->setPlaceholder('Special title for special layout'));
 }
 
 /**
@@ -221,8 +221,8 @@ function hp_test_multiple_posts(): void
 
     $container->addField(
         HyperFields::makeField('text', 'test_multiple_field', 'Multiple Posts Test')
-            ->set_placeholder('This shows on posts 1, 2, 3, 4, and 5')
-            ->set_help('Testing multiple post ID targeting')
+            ->setPlaceholder('This shows on posts 1, 2, 3, 4, and 5')
+            ->setHelp('Testing multiple post ID targeting')
     );
 }
 

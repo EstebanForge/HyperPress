@@ -18,37 +18,37 @@ class OptionsSection
         $this->description = $description;
     }
 
-    public function set_description(string $description): self
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-    public function get_id(): string
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function get_title(): string
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function get_description(): string
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function add_field(Field $field): self
+    public function addField(Field $field): self
     {
-        $this->fields[$field->get_name()] = $field;
-        $field->set_context('option');
+        $this->fields[$field->getName()] = $field;
+        $field->setContext('option');
 
         return $this;
     }
 
-    public function get_fields(): array
+    public function getFields(): array
     {
         return $this->fields;
     }

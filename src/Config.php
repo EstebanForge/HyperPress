@@ -25,7 +25,7 @@ class Config
      * @since 2.0.0
      * @return array
      */
-    private function get_options(): array
+    private function getOptions(): array
     {
         $default_options = [
             // Use the same key as Assets to avoid mismatch
@@ -48,7 +48,7 @@ class Config
      */
     public function insert_config_meta_tag(): void
     {
-        $options = $this->get_options();
+        $options = $this->getOptions();
         // Align with Assets.php option key
         $active_library = $options['active_library'] ?? 'htmx'; // Default to htmx if not set
 

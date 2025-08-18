@@ -193,7 +193,7 @@ class ConditionalLogic
         }
     }
 
-    public function to_array(): array
+    public function toArray(): array
     {
         $conditions = $this->conditions;
 

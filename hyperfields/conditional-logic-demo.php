@@ -18,15 +18,15 @@ function hyperfields_metabox_conditional_logic_demo() {
 
     $container
         ->addField(HyperFields::makeField('select', 'post_layout', 'Layout Type')
-            ->set_options([
+        ->setOptions([
                 'default' => 'Default Layout',
                 'custom' => 'Custom Layout',
                 'landing' => 'Landing Page'
             ])
-            ->set_default('default'))
+        ->setDefault('default'))
 
         ->addField(HyperFields::makeField('textarea', 'custom_css', 'Custom CSS')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'relation' => 'AND',
                 'conditions' => [[
                     'field' => 'post_layout',
@@ -34,10 +34,10 @@ function hyperfields_metabox_conditional_logic_demo() {
                     'value' => 'custom'
                 ]]
             ])
-            ->set_help('Add custom CSS for your custom layout'))
+        ->setHelp('Add custom CSS for your custom layout'))
 
         ->addField(HyperFields::makeField('text', 'landing_headline', 'Landing Headline')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'relation' => 'AND',
                 'conditions' => [[
                     'field' => 'post_layout',
@@ -45,10 +45,10 @@ function hyperfields_metabox_conditional_logic_demo() {
                     'value' => 'landing'
                 ]]
             ])
-            ->set_placeholder('Enter a compelling headline'))
+        ->setPlaceholder('Enter a compelling headline'))
 
         ->addField(HyperFields::makeField('url', 'cta_url', 'Call-to-Action URL')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'relation' => 'AND',
                 'conditions' => [[
                     'field' => 'post_layout',
@@ -56,13 +56,13 @@ function hyperfields_metabox_conditional_logic_demo() {
                     'value' => 'landing'
                 ]]
             ])
-            ->set_placeholder('https://example.com'))
+        ->setPlaceholder('https://example.com'))
 
         ->addField(HyperFields::makeField('checkbox', 'enable_advanced', 'Enable Advanced Features')
-            ->set_help('Toggle advanced features on/off'))
+        ->setHelp('Toggle advanced features on/off'))
 
         ->addField(HyperFields::makeField('number', 'cache_timeout', 'Cache Timeout (minutes)')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'relation' => 'AND',
                 'conditions' => [[
                     'field' => 'enable_advanced',
@@ -70,11 +70,11 @@ function hyperfields_metabox_conditional_logic_demo() {
                     'value' => true
                 ]]
             ])
-            ->set_default(60)
-            ->set_help('How long to cache data in minutes'))
+        ->setDefault(60)
+        ->setHelp('How long to cache data in minutes'))
 
         ->addField(HyperFields::makeField('select', 'debug_mode', 'Debug Mode')
-            ->set_conditional_logic([
+        ->setConditionalLogic([
                 'relation' => 'AND',
                 'conditions' => [[
                     'field' => 'enable_advanced',
@@ -82,13 +82,13 @@ function hyperfields_metabox_conditional_logic_demo() {
                     'value' => true
                 ]]
             ])
-            ->set_options([
+        ->setOptions([
                 'none' => 'None',
                 'basic' => 'Basic',
                 'verbose' => 'Verbose'
             ])
-            ->set_default('none')
-            ->set_help('Set the level of debug information'));
+            ->setDefault('none')
+            ->setHelp('Set the level of debug information'));
 }
 
 // Activate the demo

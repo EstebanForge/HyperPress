@@ -33,16 +33,16 @@ class Field
     private ?string $html_content = null;
     protected array $args = [];
 
-    public function set_html(string $html): self
+    public function setHtml(string $html): self
     {
         $this->html_content = $html;
 
         return $this;
     }
 
-    public function set_html_content(string $html): self
+    public function setHtmlContent(string $html): self
     {
-        return $this->set_html($html);
+        return $this->setHtml($html);
     }
 
     public const VALID_TYPES = [
@@ -100,154 +100,154 @@ class Field
         return new self($type, $name, $label);
     }
 
-    public function set_default(mixed $default): self
+    public function setDefault(mixed $default): self
     {
         $this->default = $default;
 
         return $this;
     }
 
-    public function set_placeholder(?string $placeholder): self
+    public function setPlaceholder(?string $placeholder): self
     {
         $this->placeholder = $placeholder;
 
         return $this;
     }
 
-    public function set_required(bool $required = true): self
+    public function setRequired(bool $required = true): self
     {
         $this->required = $required;
 
         return $this;
     }
 
-    public function set_help(?string $help): self
+    public function setHelp(?string $help): self
     {
         $this->help = $help;
 
         return $this;
     }
 
-    public function set_description(?string $description): self
+    public function setDescription(?string $description): self
     {
         $this->help = $description;
 
         return $this;
     }
 
-    public function set_options(array $options): self
+    public function setOptions(array $options): self
     {
         $this->options = $options;
 
         return $this;
     }
 
-    public function set_validation(array $validation): self
+    public function setValidation(array $validation): self
     {
         $this->validation = $validation;
 
         return $this;
     }
 
-    public function set_conditional_logic(array $conditional_logic): self
+    public function setConditionalLogic(array $conditional_logic): self
     {
         $this->conditional_logic = $conditional_logic;
 
         return $this;
     }
 
-    public function set_context(string $context): self
+    public function setContext(string $context): self
     {
         $this->context = $context;
 
         return $this;
     }
 
-    public function set_storage_type(string $storage_type): self
+    public function setStorageType(string $storage_type): self
     {
         $this->storage_type = $storage_type;
 
         return $this;
     }
 
-    public function get_type(): string
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function get_name(): string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function get_label(): string
+    public function getLabel(): string
     {
         return $this->label;
     }
 
-    public function get_default(): mixed
+    public function getDefault(): mixed
     {
         return $this->default;
     }
 
-    public function get_placeholder(): ?string
+    public function getPlaceholder(): ?string
     {
         return $this->placeholder;
     }
 
-    public function is_required(): bool
+    public function isRequired(): bool
     {
         return $this->required;
     }
 
-    public function get_help(): ?string
+    public function getHelp(): ?string
     {
         return $this->help;
     }
 
-    public function get_description(): ?string
+    public function getDescription(): ?string
     {
         return $this->help;
     }
 
-    public function get_options(): array
+    public function getOptions(): array
     {
         return $this->options;
     }
 
-    public function get_html(): string
+    public function getHtml(): string
     {
         return $this->html_content ?? '';
     }
 
-    public function get_validation(): array
+    public function getValidation(): array
     {
         return $this->validation;
     }
 
-    public function get_conditional_logic(): array
+    public function getConditionalLogic(): array
     {
         return $this->conditional_logic;
     }
 
-    public function get_context(): string
+    public function getContext(): string
     {
         return $this->context;
     }
 
-    public function get_storage_type(): string
+    public function getStorageType(): string
     {
         return $this->storage_type;
     }
 
-    public function add_arg(string $key, mixed $value): self
+    public function addArg(string $key, mixed $value): self
     {
         $this->args[$key] = $value;
 
         return $this;
     }
 
-    public function set_option_values(array $values, ?string $option_group = null): self
+    public function setOptionValues(array $values, ?string $option_group = null): self
     {
         Log::debug("Field {$this->name} setting option values: " . print_r($values, true), ['source' => 'hyperpress-fields']);
         $this->option_name = $values; // Holds the values array for pre-loading
@@ -258,12 +258,12 @@ class Field
         return $this;
     }
 
-    public function get_option_name(): string|array|null
+    public function getOptionName(): string|array|null
     {
         return $this->option_name;
     }
 
-    public function get_value()
+    public function getValue()
     {
         // If option_name is an array, it means the OptionsPage has pre-loaded the values.
         if (is_array($this->option_name)) {
@@ -287,33 +287,33 @@ class Field
         return $this->default;
     }
 
-    public function get_args(): array
+    public function getArgs(): array
     {
         return $this->args;
     }
 
-    protected function set_args(array $args): void
+    protected function setArgs(array $args): void
     {
         $this->args = array_merge($this->args, $args);
     }
 
     public function render(array $args = []): void
     {
-        $value = $this->get_value();
-        $this->set_args($args);
+        $value = $this->getValue();
+        $this->setArgs($args);
 
-        $field_data = $this->to_array();
+        $field_data = $this->toArray();
         $field_data['value'] = $value;
 
         TemplateLoader::render_field($field_data, $value);
     }
 
-    public function get_option_value(): mixed
+    public function getOptionValue(): mixed
     {
         return get_option($this->name, $this->default);
     }
 
-    public function get_name_attr(): string
+    public function getNameAttr(): string
     {
 
         // For metabox context, use just the field name (meta key)
@@ -333,12 +333,12 @@ class Field
         return $this->option_name ? sprintf('%s[%s]', $this->option_name, $this->name) : $this->name;
     }
 
-    public function to_array(): array
+    public function toArray(): array
     {
         return [
             'type' => $this->type,
             'name' => $this->name,
-            'name_attr' => $this->get_name_attr(),
+            'name_attr' => $this->getNameAttr(),
             'label' => $this->label,
             'default' => $this->default,
             'placeholder' => $this->placeholder,
@@ -357,7 +357,7 @@ class Field
         ];
     }
 
-    public function sanitize_value(mixed $value): mixed
+    public function sanitizeValue(mixed $value): mixed
     {
         switch ($this->type) {
             case 'text':
@@ -387,17 +387,17 @@ class Field
                 return esc_url_raw($value) ?: '';
             case 'select':
             case 'radio':
-                return $this->sanitize_select_value($value);
+                return $this->sanitizeSelectValue($value);
             case 'multiselect':
-                return $this->sanitize_array_value($value);
+                return $this->sanitizeArrayValue($value);
             case 'set':
-                return $this->sanitize_set_value($value);
+                return $this->sanitizeSetValue($value);
             case 'checkbox':
                 return (bool) $value;
             case 'html':
                 return wp_kses_post($value);
             case 'map':
-                return $this->sanitize_map_value($value);
+                return $this->sanitizeMapValue($value);
             case 'oembed':
                 return esc_url_raw($value) ?: '';
             case 'separator':
@@ -407,9 +407,9 @@ class Field
             case 'complex':
             case 'repeater':
             case 'group':
-                return $this->sanitize_complex_value($value);
+                return $this->sanitizeComplexValue($value);
             case 'association':
-                return $this->sanitize_association_value($value);
+                return $this->sanitizeAssociationValue($value);
             case 'sidebar':
                 return sanitize_text_field($value);
             case 'gravity_form':
@@ -419,7 +419,7 @@ class Field
         }
     }
 
-    private function sanitize_set_value(mixed $value): array
+    private function sanitizeSetValue(mixed $value): array
     {
         if (!is_array($value)) {
             return [];
@@ -452,7 +452,7 @@ class Field
         return $sanitized;
     }
 
-    private function sanitize_array_value(mixed $value): array
+    private function sanitizeArrayValue(mixed $value): array
     {
         if (!is_array($value)) {
             return [];
@@ -461,7 +461,7 @@ class Field
         return array_map('sanitize_text_field', $value);
     }
 
-    private function sanitize_map_value(mixed $value): array
+    private function sanitizeMapValue(mixed $value): array
     {
         if (!is_array($value)) {
             return ['lat' => 0, 'lng' => 0];
@@ -474,16 +474,16 @@ class Field
         ];
     }
 
-    private function sanitize_complex_value(mixed $value): array
+    private function sanitizeComplexValue(mixed $value): array
     {
         if (!is_array($value)) {
             return [];
         }
 
-        return array_map([$this, 'sanitize_nested_value'], $value);
+        return array_map([$this, 'sanitizeNestedValue'], $value);
     }
 
-    private function sanitize_nested_value(mixed $value): mixed
+    private function sanitizeNestedValue(mixed $value): mixed
     {
         if (is_array($value)) {
             return array_map('sanitize_text_field', $value);
@@ -492,7 +492,7 @@ class Field
         return sanitize_text_field((string) $value);
     }
 
-    private function sanitize_association_value(mixed $value): array
+    private function sanitizeAssociationValue(mixed $value): array
     {
         if (!is_array($value)) {
             return [];
@@ -501,7 +501,7 @@ class Field
         return array_map('absint', $value);
     }
 
-    private function sanitize_select_value(mixed $value): string
+    private function sanitizeSelectValue(mixed $value): string
     {
         if (empty($this->options)) {
             return (string) $value;
@@ -512,14 +512,14 @@ class Field
         return in_array($value, $allowed_values, true) ? (string) $value : (string) $allowed_values[0];
     }
 
-    public function validate_value(mixed $value): bool
+    public function validateValue(mixed $value): bool
     {
         if ($this->required && empty($value)) {
             return false;
         }
 
         foreach ($this->validation as $rule => $param) {
-            if (!$this->apply_validation_rule($value, $rule, $param)) {
+            if (!$this->applyValidationRule($value, $rule, $param)) {
                 return false;
             }
         }
@@ -527,7 +527,7 @@ class Field
         return true;
     }
 
-    private function apply_validation_rule(mixed $value, string $rule, mixed $param): bool
+    private function applyValidationRule(mixed $value, string $rule, mixed $param): bool
     {
         switch ($rule) {
             case 'min':

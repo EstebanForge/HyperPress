@@ -170,11 +170,11 @@ class UserMetaContainer extends Container
         }
 
         foreach ($this->fields as $field) {
-            $field_name = $field->get_name();
-            $value = $_POST[$field_name] ?? $field->get_default();
+            $field_name = $field->getName();
+            $value = $_POST[$field_name] ?? $field->getDefault();
 
             // Sanitize the value
-            $value = $field->sanitize_value($value);
+            $value = $field->sanitizeValue($value);
 
             // Save as user meta
             update_user_meta($this->user_id, $field_name, $value);
@@ -202,19 +202,19 @@ class UserMetaContainer extends Container
 
         foreach ($this->fields as $field) {
             // Get user meta value
-            $meta_value = get_user_meta($this->user_id, $field->get_name(), true);
-            $value = $meta_value !== '' ? $meta_value : $field->get_default();
+            $meta_value = get_user_meta($this->user_id, $field->getName(), true);
+            $value = $meta_value !== '' ? $meta_value : $field->getDefault();
 
             echo '<tr>';
-            echo '<th><label for="' . esc_attr($field->get_name()) . '">' . esc_html($field->get_label()) . '</label></th>';
+            echo '<th><label for="' . esc_attr($field->getName()) . '">' . esc_html($field->getLabel()) . '</label></th>';
             echo '<td>';
 
             // Set context and render
-            $field->set_context('metabox');
+            $field->setContext('metabox');
             $field->render(['value' => $value]);
 
-            if ($field->get_help()) {
-                echo '<p class="description">' . esc_html($field->get_help()) . '</p>';
+            if ($field->getHelp()) {
+                echo '<p class="description">' . esc_html($field->getHelp()) . '</p>';
             }
 
             echo '</td>';

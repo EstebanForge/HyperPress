@@ -4,7 +4,7 @@ Developer-focused API for saving and retrieving field values across posts, users
 
 ## Overview
 
-- Centralized sanitization: values saved through HyperFields are sanitized via `Field::sanitize_value()` when a type is provided.
+- Centralized sanitization: values saved through HyperFields are sanitized via `Field::sanitizeValue()` when a type is provided.
 - Field contexts supported: `post`, `user`, `term`, `option`.
 - Helper factories available: `hp_create_option_page()`, `hp_create_field()`, `hp_create_tabs()`, `hp_create_repeater()`, `hp_create_section()`.
 - Retrieval/update helpers: `hp_get_field()`, `hp_update_field()`, `hp_delete_field()`.
@@ -23,7 +23,7 @@ $tagline = hp_get_field('site_tagline', 'options', [
 
 // Save to options (with type for sanitization)
 hp_update_field('site_tagline', 'Hello World', 'options', [
-    'type' => 'text',            // Enables Field::sanitize_value()
+    'type' => 'text',            // Enables Field::sanitizeValue()
     'option_group' => 'hyperpress_options'
 ]);
 
@@ -56,7 +56,7 @@ hp_update_field('enable_feature', '1', 'options', [ 'type' => 'checkbox' ]);
 ```
 
 Notes:
-- Metabox field sanitization is centralized in `Field::sanitize_value()` across Post/User/Term containers.
+- Metabox field sanitization is centralized in `Field::sanitizeValue()` across Post/User/Term containers.
 - Checkbox and Set fields are robust: hidden inputs ensure unchecked/empty states are posted; set fields drop the internal empty sentinel during sanitization.
 
 ## Helper Factories (for building UIs)

@@ -15,18 +15,18 @@ function hyperfields_conditional_logic_test() {
         ->set_position(100);
 
     // Test Section
-    $test_section = $container->add_section('test', 'Test Section', 'Test conditional logic functionality');
+    $test_section = $container->addSection('test', 'Test Section', 'Test conditional logic functionality');
 
     $test_section
-        ->add_field(HyperFields::makeField('select', 'show_extra_fields', 'Show Extra Fields?')
-            ->set_options([
+        ->addField(HyperFields::makeField('select', 'show_extra_fields', 'Show Extra Fields?')
+            ->setOptions([
                 'no' => 'No',
                 'yes' => 'Yes'
             ])
-            ->set_default('no'))
+        ->setDefault('no'))
 
-        ->add_field(HyperFields::makeField('text', 'extra_text_field', 'Extra Text Field')
-            ->set_conditional_logic([
+        ->addField(HyperFields::makeField('text', 'extra_text_field', 'Extra Text Field')
+            ->setConditionalLogic([
                 'relation' => 'AND',
                 'conditions' => [[
                     'field' => 'show_extra_fields',
@@ -34,10 +34,10 @@ function hyperfields_conditional_logic_test() {
                     'value' => 'yes'
                 ]]
             ])
-            ->set_placeholder('This field is shown conditionally'))
+        ->setPlaceholder('This field is shown conditionally'))
 
-        ->add_field(HyperFields::makeField('textarea', 'extra_textarea_field', 'Extra Textarea Field')
-            ->set_conditional_logic([
+        ->addField(HyperFields::makeField('textarea', 'extra_textarea_field', 'Extra Textarea Field')
+            ->setConditionalLogic([
                 'relation' => 'AND',
                 'conditions' => [[
                     'field' => 'show_extra_fields',
@@ -45,7 +45,7 @@ function hyperfields_conditional_logic_test() {
                     'value' => 'yes'
                 ]]
             ])
-            ->set_placeholder('Another conditionally shown field'));
+            ->setPlaceholder('Another conditionally shown field'));
 
     $container->register();
 }

@@ -64,7 +64,7 @@ class CustomField extends Field
         return $this->assets;
     }
 
-    public function sanitize_value(mixed $value): mixed
+    public function sanitizeValue(mixed $value): mixed
     {
         if (!empty($this->sanitize_callback) && is_callable($this->sanitize_callback)) {
             return call_user_func($this->sanitize_callback, $value);
@@ -73,7 +73,7 @@ class CustomField extends Field
         return sanitize_text_field((string) $value);
     }
 
-    public function validate_value(mixed $value): bool
+    public function validateValue(mixed $value): bool
     {
         if (!empty($this->validate_callback) && is_callable($this->validate_callback)) {
             return (bool) call_user_func($this->validate_callback, $value);
@@ -82,9 +82,9 @@ class CustomField extends Field
         return true;
     }
 
-    public function to_array(): array
+    public function toArray(): array
     {
-        return array_merge(parent::to_array(), [
+        return array_merge(parent::toArray(), [
             'render_callback' => $this->render_callback,
             'sanitize_callback' => $this->sanitize_callback,
             'validate_callback' => $this->validate_callback,

@@ -107,7 +107,7 @@ class Main
         if (is_admin()) {
             // Handle migration from wp-settings to hyper fields
             $migration = new OptionsMigration($this);
-            if ($migration->needs_migration()) {
+            if ($migration->needsMigration()) {
                 $migration->migrate();
             }
 
@@ -123,7 +123,7 @@ class Main
      * @since 2.0.3
      * @return array
      */
-    public function get_options(): array
+    public function getOptions(): array
     {
         $defaults = [
             'active_library' => 'htmx',

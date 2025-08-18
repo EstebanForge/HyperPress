@@ -13,7 +13,7 @@ class UserField extends Field
     {
         $field = new self($type, $name, $label);
         $field->user_id = $user_id;
-        $field->set_context('user');
+        $field->setContext('user');
 
         return $field;
     }
@@ -27,34 +27,34 @@ class UserField extends Field
 
     public function get_meta_key(): string
     {
-        $key = $this->meta_key_prefix . $this->get_name();
+        $key = $this->meta_key_prefix . $this->getName();
 
-        return apply_filters('hyperpress_user_field_meta_key', $key, $this->get_name(), $this->user_id);
+        return apply_filters('hyperpress_user_field_meta_key', $key, $this->getName(), $this->user_id);
     }
 
-    public function get_value(): mixed
+    public function getValue(): mixed
     {
         $value = get_user_meta($this->user_id, $this->get_meta_key(), true);
 
         if ($value === '' || $value === false) {
-            $value = $this->get_default();
+            $value = $this->getDefault();
         }
 
-        return $this->sanitize_value($value);
+        return $this->sanitizeValue($value);
     }
 
-    public function set_value(mixed $value): bool
+    public function setValue(mixed $value): bool
     {
-        $sanitized_value = $this->sanitize_value($value);
+        $sanitized_value = $this->sanitizeValue($value);
 
-        if (!$this->validate_value($sanitized_value)) {
+        if (!$this->validateValue($sanitized_value)) {
             return false;
         }
 
         return update_user_meta($this->user_id, $this->get_meta_key(), $sanitized_value) !== false;
     }
 
-    public function delete_value(): bool
+    public function deleteValue(): bool
     {
         return delete_user_meta($this->user_id, $this->get_meta_key()) !== false;
     }

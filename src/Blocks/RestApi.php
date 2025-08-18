@@ -217,13 +217,13 @@ class RestApi
                     $incoming = $attributes[$name] ?? null;
 
                     if ($incoming === null) {
-                        $attributes[$name] = $field->getHyperField()->get_default();
+                        $attributes[$name] = $field->getHyperField()->getDefault();
                         continue;
                     }
 
                     $sanitized = $adapter->sanitize_for_block($incoming);
                     if (!$adapter->validate_for_block($sanitized)) {
-                        $attributes[$name] = $field->getHyperField()->get_default();
+                        $attributes[$name] = $field->getHyperField()->getDefault();
                     } else {
                         $attributes[$name] = $sanitized;
                     }

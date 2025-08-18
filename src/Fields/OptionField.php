@@ -9,83 +9,83 @@ class OptionField extends Field
     private string $option_name;
     private string $option_group = 'hyperpress_fields';
 
-    public static function for_option(string $option_name, string $type, string $name, string $label): self
+    public static function forOption(string $option_name, string $type, string $name, string $label): self
     {
         $field = new self($type, $name, $label);
         $field->option_name = $option_name;
-        $field->set_context('option');
-        $field->set_storage_type('option');
+        $field->setContext('option');
+        $field->setStorageType('option');
 
         return $field;
     }
 
-    public function set_option_group(string $group): self
+    public function setOptionGroup(string $group): self
     {
         $this->option_group = $group;
 
         return $this;
     }
 
-    public function get_option_name(): string
+    public function getOptionName(): string
     {
-        return apply_filters('hyperpress_option_field_name', $this->option_name, $this->get_name());
+        return apply_filters('hyperpress_option_field_name', $this->option_name, $this->getName());
     }
 
-    public function get_option_group(): string
+    public function getOptionGroup(): string
     {
         return $this->option_group;
     }
 
-    public function get_value(): mixed
+    public function getValue(): mixed
     {
-        $value = get_option($this->get_option_name());
+        $value = get_option($this->getOptionName());
 
         if ($value === false || $value === '') {
-            $value = $this->get_default();
+            $value = $this->getDefault();
         }
 
         // Handle array storage for multiple fields in single option
         if (is_array($value)) {
-            return $value[$this->get_name()] ?? $this->get_default();
+            return $value[$this->getName()] ?? $this->getDefault();
         }
 
-        return $this->sanitize_value($value);
+        return $this->sanitizeValue($value);
     }
 
-    public function set_value(mixed $value): bool
+    public function setValue(mixed $value): bool
     {
-        $sanitized_value = $this->sanitize_value($value);
+        $sanitized_value = $this->sanitizeValue($value);
 
-        if (!$this->validate_value($sanitized_value)) {
+        if (!$this->validateValue($sanitized_value)) {
             return false;
         }
 
         // Handle both single and array storage
-        $current_options = get_option($this->get_option_name(), []);
+        $current_options = get_option($this->getOptionName(), []);
 
         if (is_array($current_options)) {
-            $current_options[$this->get_name()] = $sanitized_value;
+            $current_options[$this->getName()] = $sanitized_value;
 
-            return update_option($this->get_option_name(), $current_options);
+            return update_option($this->getOptionName(), $current_options);
         }
 
-        return update_option($this->get_option_name(), $sanitized_value);
+        return update_option($this->getOptionName(), $sanitized_value);
     }
 
-    public function delete_value(): bool
+    public function deleteValue(): bool
     {
-        $current_options = get_option($this->get_option_name(), []);
+        $current_options = get_option($this->getOptionName(), []);
 
-        if (is_array($current_options) && isset($current_options[$this->get_name()])) {
-            unset($current_options[$this->get_name()]);
+        if (is_array($current_options) && isset($current_options[$this->getName()])) {
+            unset($current_options[$this->getName()]);
 
             if (empty($current_options)) {
-                return delete_option($this->get_option_name());
+                return delete_option($this->getOptionName());
             }
 
-            return update_option($this->get_option_name(), $current_options);
+            return update_option($this->getOptionName(), $current_options);
         }
 
-        return delete_option($this->get_option_name());
+        return delete_option($this->getOptionName());
     }
 }

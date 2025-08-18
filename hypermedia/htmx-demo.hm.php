@@ -40,7 +40,7 @@ switch ($demo_type) {
 <div class="api-for-htmx-demo-container">
   <h3><?php esc_html_e('Hello HTMX!', 'api-for-htmx'); ?></h3>
 
-  <p><?php esc_html_e('Demo template loaded from', 'api-for-htmx'); ?> <code>plugins/Api-for-htmx/<?php echo esc_html(HPRESS_TEMPLATE_DIR); ?>/htmx-demo.hm.php</code></p>
+  <p><?php esc_html_e('Demo template loaded from', 'api-for-htmx'); ?> <code>plugins/Api-for-htmx/<?php echo esc_html(HYPERPRESS_TEMPLATE_DIR); ?>/htmx-demo.hm.php</code></p>
 
   <?php if (!empty($processed_message)): ?>
     <div class="notice notice-success">
