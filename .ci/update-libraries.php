@@ -24,7 +24,8 @@ define('EXTENSIONS_DIR', ASSETS_DIR . '/htmx-extensions');
  * Extract CDN URLs from Main.php file
  * This ensures we always use the same URLs as defined in the main plugin
  */
-function get_cdn_urls() {
+function getCdnUrls()
+{
     $main_php_path = 'src/Main.php';
 
     if (!file_exists($main_php_path)) {
@@ -33,12 +34,12 @@ function get_cdn_urls() {
 
     $content = file_get_contents($main_php_path);
 
-    // Extract the get_cdn_urls method content
-    $pattern = '/public function get_cdn_urls\(\): array\s*\{(.*?)\n    \}/s';
+    // Extract the getCdnUrls method content
+    $pattern = '/public function getCdnUrls\(\): array\s*\{(.*?)\n    \}/s';
     preg_match($pattern, $content, $matches);
 
     if (!$matches) {
-        throw new Exception("Could not find get_cdn_urls method in Main.php");
+        throw new Exception("Could not find getCdnUrls method in Main.php");
     }
 
     $method_content = $matches[1];
@@ -48,7 +49,7 @@ function get_cdn_urls() {
     preg_match($return_pattern, $method_content, $return_matches);
 
     if (!$return_matches) {
-        throw new Exception("Could not find return array in get_cdn_urls method");
+        throw new Exception("Could not find return array in getCdnUrls method");
     }
 
     $array_string = $return_matches[1];
@@ -178,7 +179,7 @@ function download_libraries($target_library = null) {
     try {
         echo "🔍 Getting CDN URLs...\n";
 
-        $cdn_urls = get_cdn_urls();
+        $cdn_urls = getCdnUrls();
         $core_count = count($cdn_urls) - (isset($cdn_urls['htmx_extensions']) ? 1 : 0);
         $extensions_count = isset($cdn_urls['htmx_extensions']) ? count($cdn_urls['htmx_extensions']) : 0;
 

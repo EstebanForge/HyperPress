@@ -11,8 +11,8 @@ class TemplateLoader
     public static function init(): void
     {
         self::$template_dir = __DIR__ . '/templates/';
-        add_action('admin_enqueue_scripts', [__CLASS__, 'enqueue_assets']);
-        add_action('wp_enqueue_scripts', [__CLASS__, 'enqueue_assets']);
+        add_action('admin_enqueue_scripts', [__CLASS__, 'enqueueAssets']);
+        add_action('wp_enqueue_scripts', [__CLASS__, 'enqueueAssets']);
         // Enqueue type-specific assets after fields render (footer), so checks see rendered types
         add_action('admin_print_footer_scripts', [__CLASS__, 'enqueue_late_assets']);
         add_action('wp_print_footer_scripts', [__CLASS__, 'enqueue_late_assets']);
@@ -128,7 +128,7 @@ class TemplateLoader
 <?php
     }
 
-    public static function enqueue_assets(): void
+    public static function enqueueAssets(): void
     {
         // Always enqueue admin.css for HyperFields admin pages
         if (is_admin()) {

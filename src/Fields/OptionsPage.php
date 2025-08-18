@@ -36,49 +36,49 @@ class OptionsPage
         $this->position = null;
     }
 
-    public function set_menu_title(string $menu_title): self
+    public function setMenuTitle(string $menu_title): self
     {
         $this->menu_title = $menu_title;
 
         return $this;
     }
 
-    public function set_capability(string $capability): self
+    public function setCapability(string $capability): self
     {
         $this->capability = $capability;
 
         return $this;
     }
 
-    public function set_parent_slug(string $parent_slug): self
+    public function setParentSlug(string $parent_slug): self
     {
         $this->parent_slug = $parent_slug;
 
         return $this;
     }
 
-    public function set_icon_url(string $icon_url): self
+    public function setIconUrl(string $icon_url): self
     {
         $this->icon_url = $icon_url;
 
         return $this;
     }
 
-    public function set_position(?int $position): self
+    public function setPosition(?int $position): self
     {
         $this->position = $position;
 
         return $this;
     }
 
-    public function set_option_name(string $option_name): self
+    public function setOptionName(string $option_name): self
     {
         $this->option_name = $option_name;
 
         return $this;
     }
 
-    public function set_footer_content(string $footer_content): self
+    public function setFooterContent(string $footer_content): self
     {
         $this->footer_content = $footer_content;
 
@@ -120,9 +120,9 @@ class OptionsPage
     public function register(): void
     {
         $this->loadOptions();
-        add_action('admin_menu', $this->add_menu_page(...));
-        add_action('admin_init', $this->register_settings(...));
-        add_action('admin_enqueue_scripts', $this->enqueue_assets(...));
+        add_action('admin_menu', $this->addMenuPage(...));
+        add_action('admin_init', $this->registerSettings(...));
+        add_action('admin_enqueue_scripts', $this->enqueueAssets(...));
     }
 
     private function loadOptions(): void
@@ -131,7 +131,7 @@ class OptionsPage
         $this->option_values = array_merge($this->default_values, $saved_options);
     }
 
-    public function add_menu_page(): void
+    public function addMenuPage(): void
     {
         if ($this->parent_slug === 'menu') {
             add_menu_page(
@@ -139,7 +139,7 @@ class OptionsPage
                 $this->menu_title,
                 $this->capability,
                 $this->menu_slug,
-                [$this, 'render_page'],
+                [$this, 'renderPage'],
                 $this->icon_url,
                 $this->position
             );
@@ -150,21 +150,21 @@ class OptionsPage
                 $this->menu_title,
                 $this->capability,
                 $this->menu_slug,
-                [$this, 'render_page'],
+                [$this, 'renderPage'],
                 $this->position
             );
         }
     }
 
-    public function register_settings(): void
+    public function registerSettings(): void
     {
         // Register a single settings group and option for all sections/tabs.
         register_setting($this->option_name, $this->option_name, [
-            'sanitize_callback' => [$this, 'sanitize_options'],
+            'sanitize_callback' => [$this, 'sanitizeOptions'],
         ]);
 
         // Register fields for all sections/tabs, but only register settings fields for the active tab
-        $active_tab = $this->get_active_tab();
+        $active_tab = $this->getActiveTab();
 
         foreach ($this->sections as $section_id => $section) {
             add_settings_section($section_id, '', '__return_false', $this->option_name);
@@ -183,44 +183,44 @@ class OptionsPage
         }
     }
 
-    public function render_page(): void
+    public function renderPage(): void
     {
-        $active_tab = $this->get_active_tab();
-        ?>
+        $active_tab = $this->getActiveTab();
+?>
         <div class="wrap hyperpress hyperpress-options-wrap">
             <h1><?php echo esc_html($this->page_title); ?></h1>
-            <?php $this->render_tabs(); ?>
+            <?php $this->renderTabs(); ?>
             <form method="post" action="options.php">
                 <input type="hidden" name="hyperpress_active_tab" value="<?php echo esc_attr($active_tab); ?>" />
                 <?php
                 settings_fields($this->option_name);
-        if (defined('HYPERPRESS_COMPACT_INPUT') && HYPERPRESS_COMPACT_INPUT === true) {
-            // Placeholder for the compacted JSON payload the JS will populate
-            echo '<input type="hidden" name="' . esc_attr(defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input') . '" value="" />';
-            // Dummy field under the option array to ensure the Settings API processes this option
-            echo '<input type="hidden" data-hp-keep-name="1" name="' . esc_attr($this->option_name) . '[_compact]" value="1" />';
-        }
-        // Only render the active tab's section
-        if (isset($this->sections[$active_tab])) {
-            $section = $this->sections[$active_tab];
+                if (defined('HYPERPRESS_COMPACT_INPUT') && HYPERPRESS_COMPACT_INPUT === true) {
+                    // Placeholder for the compacted JSON payload the JS will populate
+                    echo '<input type="hidden" name="' . esc_attr(defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input') . '" value="" />';
+                    // Dummy field under the option array to ensure the Settings API processes this option
+                    echo '<input type="hidden" data-hp-keep-name="1" name="' . esc_attr($this->option_name) . '[_compact]" value="1" />';
+                }
+                // Only render the active tab's section
+                if (isset($this->sections[$active_tab])) {
+                    $section = $this->sections[$active_tab];
                     // Render section title
                     if ($section->getTitle()) {
                         echo '<h2>' . esc_html($section->getTitle()) . '</h2>';
-            }
+                    }
                     // Render section description
                     if ($section->getDescription()) {
                         echo '<p>' . esc_html($section->getDescription()) . '</p>';
-            }
-            // Render fields for this section
-            echo '<div class="hyperpress-fields-group">';
-            do_settings_fields($this->option_name, $active_tab);
-            echo '</div>';
-        }
-        submit_button(
+                    }
+                    // Render fields for this section
+                    echo '<div class="hyperpress-fields-group">';
+                    do_settings_fields($this->option_name, $active_tab);
+                    echo '</div>';
+                }
+                submit_button(
                     esc_html__('Save Changes', 'api-for-htmx'),
-            'primary'
-        );
-        ?>
+                    'primary'
+                );
+                ?>
             </form>
             <?php if ($this->footer_content): ?>
                 <div class="hyperpress-options-footer">
@@ -231,10 +231,8 @@ class OptionsPage
 <?php
     }
 
-    public function sanitize_options(?array $input): array
+    public function sanitizeOptions(?array $input): array
     {
-        \HyperPress\Log::debug('sanitize_options called: input=' . print_r($input, true) . ' option_name=' . $this->option_name);
-
         // When compact input is enabled, reconstruct $input from the single compacted POST variable
         if (defined('HYPERPRESS_COMPACT_INPUT') && HYPERPRESS_COMPACT_INPUT === true) {
             $compact_key = defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input';
@@ -244,18 +242,15 @@ class OptionsPage
                 if (is_array($decoded)) {
                     if (isset($decoded[$this->option_name]) && is_array($decoded[$this->option_name])) {
                         $input = $decoded[$this->option_name];
-                        \HyperPress\Log::debug('sanitize_options compact input expanded for ' . $this->option_name . ': ' . print_r($input, true));
                     }
                 }
             }
         }
         // Use the already loaded options to preserve values from other tabs
         $output = $this->option_values;
-        \HyperPress\Log::debug('sanitize_options existing_options (from property): ' . print_r($output, true) . ' option_name=' . $this->option_name);
 
         // Only process fields from the active tab
-        $active_tab = $this->get_active_tab();
-        \HyperPress\Log::debug('sanitize_options active_tab: ' . $active_tab);
+        $active_tab = $this->getActiveTab();
 
         if (isset($this->sections[$active_tab])) {
             $section = $this->sections[$active_tab];
@@ -273,12 +268,11 @@ class OptionsPage
                 }
             }
         }
-        \HyperPress\Log::debug('sanitize_options output: ' . print_r($output, true) . ' option_name=' . $this->option_name);
 
         return $output;
     }
 
-    private function get_active_tab(): string
+    private function getActiveTab(): string
     {
         // On POST (save), check for hidden field
         if (!empty($_POST['hyperpress_active_tab']) && isset($this->sections[$_POST['hyperpress_active_tab']])) {
@@ -295,13 +289,13 @@ class OptionsPage
         return $section_keys[0] ?? 'main';
     }
 
-    private function render_tabs(): void
+    private function renderTabs(): void
     {
         if (empty($this->sections)) {
             return;
         }
 
-        $active_tab = $this->get_active_tab();
+        $active_tab = $this->getActiveTab();
         echo '<h2 class="nav-tab-wrapper">';
         foreach (array_keys($this->sections) as $tab_id) {
             $class = ($active_tab === $tab_id) ? 'nav-tab-active' : '';
@@ -312,7 +306,7 @@ class OptionsPage
         echo '</h2>';
     }
 
-    public function enqueue_assets(string $hook_suffix): void
+    public function enqueueAssets(string $hook_suffix): void
     {
         if (
             $hook_suffix !== 'settings_page_' . $this->menu_slug
@@ -321,7 +315,7 @@ class OptionsPage
             return;
         }
 
-        TemplateLoader::enqueue_assets();
+        TemplateLoader::enqueueAssets();
 
         // Require a valid plugin URL; skip in library mode where URL is unavailable
         if (!defined('HYPERPRESS_PLUGIN_URL') || empty(HYPERPRESS_PLUGIN_URL)) {
@@ -336,13 +330,14 @@ class OptionsPage
             defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7',
             true
         );
+
         wp_localize_script('hyperpress-admin-options', 'hyperpressOptions', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('hyperpress_options'),
             'compactInput' => defined('HYPERPRESS_COMPACT_INPUT') ? (bool) HYPERPRESS_COMPACT_INPUT : false,
             'compactInputKey' => defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input',
             'optionName' => $this->option_name,
-            'activeTab' => $this->get_active_tab(),
+            'activeTab' => $this->getActiveTab(),
         ]);
     }
 }

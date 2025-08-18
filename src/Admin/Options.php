@@ -109,7 +109,7 @@ class Options
 
     private function build_htmx_tab_config(): array
     {
-        $available_extensions = HTMXLib::get_extensions($this->main);
+        $available_extensions = HTMXLib::getExtensions($this->main);
 
         $fields = [
             [

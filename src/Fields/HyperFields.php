@@ -28,19 +28,19 @@ class HyperFields
         $options_page = self::makeOptionPage($config['title'], $config['slug']);
 
         if (isset($config['menu_title'])) {
-            $options_page->set_menu_title($config['menu_title']);
+            $options_page->setMenuTitle($config['menu_title']);
         }
         if (isset($config['parent_slug'])) {
-            $options_page->set_parent_slug($config['parent_slug']);
+            $options_page->setParentSlug($config['parent_slug']);
         }
         if (isset($config['capability'])) {
-            $options_page->set_capability($config['capability']);
+            $options_page->setCapability($config['capability']);
         }
         if (isset($config['option_name'])) {
-            $options_page->set_option_name($config['option_name']);
+            $options_page->setOptionName($config['option_name']);
         }
         if (isset($config['footer_content'])) {
-            $options_page->set_footer_content($config['footer_content']);
+            $options_page->setFooterContent($config['footer_content']);
         }
 
         if (isset($config['sections']) && is_array($config['sections'])) {

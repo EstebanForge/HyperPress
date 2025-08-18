@@ -13,7 +13,7 @@ use HyperPress\Fields\HyperFields;
 function hyperfields_conditional_logic_demo() {
     $container = HyperFields::makeOptionPage('Conditional Logic Demo', 'conditional-logic-demo')
         ->set_icon('dashicons-admin-generic')
-        ->set_position(100);
+        ->setPosition(100);
 
     // General Settings Section
     $general_section = $container->addSection('general', 'General Settings', 'Configure general options');
