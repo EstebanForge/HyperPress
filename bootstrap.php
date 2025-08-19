@@ -135,8 +135,8 @@ if (!function_exists('hyperpress_run_initialization_logic')) {
         define('HYPERPRESS_LEGACY_ENDPOINT', 'wp-htmx');
         define('HYPERPRESS_TEMPLATE_DIR', 'hypermedia');
         define('HYPERPRESS_LEGACY_TEMPLATE_DIR', 'htmx-templates');
-        define('HYPERPRESS_TEMPLATE_EXT', '.hm.php');
-        define('HYPERPRESS_LEGACY_TEMPLATE_EXT', '.htmx.php');
+        define('HYPERPRESS_TEMPLATE_EXT', '.hp.php');
+        define('HYPERPRESS_LEGACY_TEMPLATE_EXT', '.hm.php,.htmx.php');
         define('HYPERPRESS_ENDPOINT_VERSION', 'v1');
 
         // Load helpers and compatibility layers after constants are defined.
