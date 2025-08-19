@@ -186,41 +186,41 @@ class OptionsPage
     public function renderPage(): void
     {
         $active_tab = $this->getActiveTab();
-?>
+        ?>
         <div class="wrap hyperpress hyperpress-options-wrap">
             <h1><?php echo esc_html($this->page_title); ?></h1>
             <?php $this->renderTabs(); ?>
             <form method="post" action="options.php">
                 <input type="hidden" name="hyperpress_active_tab" value="<?php echo esc_attr($active_tab); ?>" />
                 <?php
-                settings_fields($this->option_name);
-                if (defined('HYPERPRESS_COMPACT_INPUT') && HYPERPRESS_COMPACT_INPUT === true) {
-                    // Placeholder for the compacted JSON payload the JS will populate
-                    echo '<input type="hidden" name="' . esc_attr(defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input') . '" value="" />';
-                    // Dummy field under the option array to ensure the Settings API processes this option
-                    echo '<input type="hidden" data-hp-keep-name="1" name="' . esc_attr($this->option_name) . '[_compact]" value="1" />';
-                }
-                // Only render the active tab's section
-                if (isset($this->sections[$active_tab])) {
-                    $section = $this->sections[$active_tab];
-                    // Render section title
-                    if ($section->getTitle()) {
-                        echo '<h2>' . esc_html($section->getTitle()) . '</h2>';
-                    }
-                    // Render section description
-                    if ($section->getDescription()) {
-                        echo '<p>' . esc_html($section->getDescription()) . '</p>';
-                    }
-                    // Render fields for this section
-                    echo '<div class="hyperpress-fields-group">';
-                    do_settings_fields($this->option_name, $active_tab);
-                    echo '</div>';
-                }
-                submit_button(
-                    esc_html__('Save Changes', 'api-for-htmx'),
-                    'primary'
-                );
-                ?>
+                        settings_fields($this->option_name);
+        if (defined('HYPERPRESS_COMPACT_INPUT') && HYPERPRESS_COMPACT_INPUT === true) {
+            // Placeholder for the compacted JSON payload the JS will populate
+            echo '<input type="hidden" name="' . esc_attr(defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input') . '" value="" />';
+            // Dummy field under the option array to ensure the Settings API processes this option
+            echo '<input type="hidden" data-hp-keep-name="1" name="' . esc_attr($this->option_name) . '[_compact]" value="1" />';
+        }
+        // Only render the active tab's section
+        if (isset($this->sections[$active_tab])) {
+            $section = $this->sections[$active_tab];
+            // Render section title
+            if ($section->getTitle()) {
+                echo '<h2>' . esc_html($section->getTitle()) . '</h2>';
+            }
+            // Render section description
+            if ($section->getDescription()) {
+                echo '<p>' . esc_html($section->getDescription()) . '</p>';
+            }
+            // Render fields for this section
+            echo '<div class="hyperpress-fields-group">';
+            do_settings_fields($this->option_name, $active_tab);
+            echo '</div>';
+        }
+        submit_button(
+            esc_html__('Save Changes', 'api-for-htmx'),
+            'primary'
+        );
+        ?>
             </form>
             <?php if ($this->footer_content): ?>
                 <div class="hyperpress-options-footer">

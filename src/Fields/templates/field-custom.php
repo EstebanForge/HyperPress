@@ -1,7 +1,7 @@
 <?php
 // Support for conditional_logic: pass as data-hp-conditional-logic attribute for JS
-$conditional_logic = $field_data["conditional_logic"] ?? null;
-$conditional_attr = "";
+$conditional_logic = $field_data['conditional_logic'] ?? null;
+$conditional_attr = '';
 if ($conditional_logic) {
     // Encode as JSON and safely embed as a single-quoted attribute value
     $json = wp_json_encode($conditional_logic);

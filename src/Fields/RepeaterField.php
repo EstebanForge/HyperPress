@@ -139,7 +139,7 @@ class RepeaterField extends Field
     public function toArray(): array
     {
         return array_merge(parent::toArray(), [
-            'sub_fields' => array_map(fn($field) => $field->toArray(), $this->sub_fields),
+            'sub_fields' => array_map(fn ($field) => $field->toArray(), $this->sub_fields),
             'label_template' => $this->label_template,
             'collapsible' => $this->collapsible,
             'collapsed' => $this->collapsed,

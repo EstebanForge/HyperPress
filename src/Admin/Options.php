@@ -315,7 +315,7 @@ class Options
     {
         ob_start();
         $api_url = hp_get_endpoint_url();
-?>
+        ?>
         <div class="hyperpress-api-endpoint-box">
             <h2><?php echo esc_html__('HyperPress API Endpoint', 'api-for-htmx'); ?></h2>
             <div style="display:flex;align-items:center;gap:8px;max-width:100%;">
@@ -347,6 +347,6 @@ class Options
             </script>
         </div>
 <?php
-        return ob_get_clean();
+                return ob_get_clean();
     }
 }

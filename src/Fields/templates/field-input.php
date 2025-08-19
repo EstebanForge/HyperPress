@@ -184,7 +184,7 @@ if ($conditional_logic) {
                             'teeny' => true,
                         ]
                     );
-                ?>
+                    ?>
                 <?php break;
                 case 'image': ?>
                     <div class="hyperpress-image-field">

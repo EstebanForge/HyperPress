@@ -170,7 +170,7 @@ class Render
         // Only show debug info if WP_DEBUG is enabled or user can manage options
         $show_debug = defined('WP_DEBUG') && WP_DEBUG || current_user_can('manage_options');
 
-?>
+        ?>
         <!DOCTYPE html>
         <html <?php language_attributes(); ?>>
 
@@ -367,7 +367,7 @@ class Render
 
         </html>
 <?php
-        die();
+                die();
     }
 
     /**

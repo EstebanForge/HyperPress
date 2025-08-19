@@ -7,12 +7,12 @@ $hp_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
 
 // Check if nonce is valid.
 if (!isset($hp_nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($hp_nonce)), 'hyperpress_nonce')) {
-  hp_die('Nonce verification failed.');
+    hp_die('Nonce verification failed.');
 }
 
 // Action = alpine_ajax_do_something
 if (!isset($hp_vals['action']) || $hp_vals['action'] != 'alpine_ajax_do_something') {
-  hp_die('Invalid action.');
+    hp_die('Invalid action.');
 }
 ?>
 
