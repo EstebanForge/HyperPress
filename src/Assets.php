@@ -101,7 +101,7 @@ class Assets
      */
     public function enqueueFrontendScripts()
     {
-        $this->enqueue_scripts_logic(false);
+        $this->enqueueScriptsLogic(false);
     }
 
     /**
@@ -114,7 +114,7 @@ class Assets
      */
     public function enqueueBackendScripts()
     {
-        $this->enqueue_scripts_logic(true);
+        $this->enqueueScriptsLogic(true);
     }
 
     /**
@@ -150,12 +150,12 @@ class Assets
      *
      * @example
      * // Frontend script loading
-     * $this->enqueue_scripts_logic(false);
+     * $this->enqueueScriptsLogic(false);
      *
      * // Backend/admin script loading
-     * $this->enqueue_scripts_logic(true);
+     * $this->enqueueScriptsLogic(true);
      */
-    private function enqueue_scripts_logic(bool $is_admin)
+    private function enqueueScriptsLogic(bool $is_admin)
     {
         $options = $this->getOptions();
         $load_from_cdn = !empty($options['load_from_cdn']);
@@ -176,7 +176,7 @@ class Assets
 
         // In library mode, construct URLs using vendor directory detection
         if ($is_library_mode) {
-            $plugin_url = $this->get_library_mode_url($plugin_path);
+            $plugin_url = $this->getLibraryModeUrl($plugin_path);
         }
 
         // Asset definitions
@@ -360,7 +360,7 @@ class Assets
         }
 
         // --- Centralized Hypermedia Library Configuration ---
-        $this->configure_hypermedia_libraries($htmx_loaded, $alpine_ajax_loaded, $datastar_loaded, $is_admin, $options);
+        $this->configureHypermediaLibraries($htmx_loaded, $alpine_ajax_loaded, $datastar_loaded, $is_admin, $options);
 
         if ($is_admin) {
             do_action('hyperpress/enqueue/backend_scripts_end', $options);
@@ -389,7 +389,7 @@ class Assets
      * @param string $plugin_path The absolute filesystem path to the plugin directory
      * @return string The public URL to the plugin directory, or empty string if unable to detect
      */
-    private function get_library_mode_url(string $plugin_path): string
+    private function getLibraryModeUrl(string $plugin_path): string
     {
         // Normalize the plugin path
         $plugin_path = rtrim($plugin_path, '/');
@@ -464,7 +464,7 @@ class Assets
      *
      * @return void
      */
-    private function configure_hypermedia_libraries(bool $htmx_loaded, bool $alpine_ajax_loaded, bool $datastar_loaded, bool $is_admin, array $options): void
+    private function configureHypermediaLibraries(bool $htmx_loaded, bool $alpine_ajax_loaded, bool $datastar_loaded, bool $is_admin, array $options): void
     {
         // Only configure if at least one library is loaded
         if (!$htmx_loaded && !$alpine_ajax_loaded && !$datastar_loaded) {

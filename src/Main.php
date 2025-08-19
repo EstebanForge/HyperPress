@@ -222,8 +222,7 @@ class Main
      *     $sse_url = $cdn_urls['htmx_extensions']['sse']['url'];
      * }
      *
-     * @see Assets::enqueue_scripts_logic() For usage in script enqueuing
-     * @see Admin\Options::get_htmx_extensions() For admin interface integration
+     * @see Assets::enqueueScriptsLogic() For usage in script enqueuing
      */
     public function getCdnUrls(): array
     {
@@ -354,9 +353,9 @@ class Main
      */
     public function run()
     {
-        add_action('init', [$this->router, 'register_main_route']);
+        add_action('init', [$this->router, 'registerMainRoute']);
         add_action('template_redirect', [$this->render, 'loadTemplate']);
-        add_action('wp_head', [$this->config, 'insert_config_meta_tag']);
+        add_action('wp_head', [$this->config, 'insertConfigMetaTag']);
         $this->compatibility->run();
         $this->theme_support->run();
     }

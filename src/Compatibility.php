@@ -23,7 +23,7 @@ class Compatibility
      */
     public function run()
     {
-        add_filter('the_content', [$this, 'woocommerce'], PHP_INT_MAX);
+        add_filter('the_content', [$this, 'woocommerceBoostForHtmx'], PHP_INT_MAX);
 
         do_action('hyperpress/compatibility/run');
     }
@@ -32,7 +32,7 @@ class Compatibility
      * Fix WooCommerce compatibility issues.
      * It doesn't like HTMX's boost.
      */
-    public function woocommerce($content)
+    public function woocommerceBoostForHtmx($content)
     {
         do_action('hyperpress/compatibility/woocommerce');
 
