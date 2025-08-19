@@ -45,10 +45,10 @@ Assuming `YOUR_PLUGIN_PATH` is already defined and points to your plugin's root 
 Then, you can use the new template path in your plugin like this, using a colon `:` to separate the namespace from the template file path (which can include subdirectories):
 
 ```php
-// Loads the template from: YOUR_PLUGIN_PATH/hypermedia/template-name.hm.php
+// Loads the template from: YOUR_PLUGIN_PATH/hypermedia/template-name.hp.php
 echo hp_get_endpoint_url( 'my-plugin:template-name' );
 
-// Loads the template from: YOUR_PLUGIN_PATH/hypermedia/parts/header.hm.php
+// Loads the template from: YOUR_PLUGIN_PATH/hypermedia/parts/header.hp.php
 echo hp_get_endpoint_url( 'my-plugin:parts/header' );
 ```
 
@@ -57,10 +57,10 @@ This will output the URL for the template from the path associated with the `my-
 For templates located directly in your active theme's `hypermedia` directory (or its subdirectories), you would call them without a namespace:
 
 ```php
-// Loads: wp-content/themes/your-theme/hypermedia/live-search.hm.php
+// Loads: wp-content/themes/your-theme/hypermedia/live-search.hp.php
 echo hp_get_endpoint_url( 'live-search' );
 
-// Loads: wp-content/themes/your-theme/hypermedia/subfolder/my-listing.hm.php
+// Loads: wp-content/themes/your-theme/hypermedia/subfolder/my-listing.hp.php
 echo hp_get_endpoint_url( 'subfolder/my-listing' );
 ```
 

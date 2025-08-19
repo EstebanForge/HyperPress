@@ -8,18 +8,18 @@ The plugin has an opt-in option, not enforced, to include these third-party libr
 
 Create a `hypermedia` folder in your theme's root directory. This plugin includes a demo folder that you can copy to your theme. Don't put your templates inside the demo folder located in the plugin's directory, because it will be deleted when you update the plugin.
 
-Inside your `hypermedia` folder, create as many templates as you want. All files must end with `.hm.php`.
+Inside your `hypermedia` folder, create as many templates as you want. All files must end with `.hp.php`.
 
 For example:
 
 ```
-hypermedia/live-search.hm.php
-hypermedia/related-posts.hm.php
-hypermedia/private/author.hm.php
-hypermedia/private/author-posts.hm.php
+hypermedia/live-search.hp.php
+hypermedia/related-posts.hp.php
+hypermedia/private/author.hp.php
+hypermedia/private/author-posts.hp.php
 ```
 
-Check the demo template at `hypermedia/demo.hm.php` to see how to use it.
+Check the demo template at `hypermedia/demo.hp.php` to see how to use it.
 
 For a full working example of REST endpoint usage, see the showcase/demo theme at [EstebanForge/Hypermedia-Theme-WordPress](https://github.com/EstebanForge/Hypermedia-Theme-WordPress).
 
@@ -65,8 +65,8 @@ For convenience, use the `noswap/` endpoint convention:
 Template files are located under `hypermedia/noswap/` in your theme:
 
 ```
-hypermedia/noswap/save-user.hm.php
-hypermedia/noswap/delete-user.hm.php
+hypermedia/noswap/save-user.hp.php
+hypermedia/noswap/delete-user.hp.php
 ```
 
 You can pass data to these templates the same way as regular templates. Alternatively, you can handle non-visual actions in regular templates; `noswap/` is just a convenience.
@@ -143,7 +143,7 @@ hp_send_header_response([
 ]);
 
 // For Datastar SSE endpoints, use the ds helpers instead:
-// hypermedia/save-user-sse.hm.php
+// hypermedia/save-user-sse.hp.php
 
 // Get user data from Datastar signals
 $signals = hp_ds_read_signals();
