@@ -27,7 +27,7 @@ class Router
      * @since 2023-11-22
      * @return void
      */
-    public function register_main_route(): void
+    public function registerMainRoute(): void
     {
         // Register the new primary endpoint (e.g., /wp-html/v1/)
         if (defined('HYPERPRESS_ENDPOINT') && defined('HYPERPRESS_ENDPOINT_VERSION')) {
@@ -48,7 +48,7 @@ class Router
      *
      * @return array Modified query variables.
      */
-    public function register_query_vars(array $vars): array
+    public function registerQueryVars(array $vars): array
     {
         if (defined('HYPERPRESS_ENDPOINT')) {
             $vars[] = HYPERPRESS_ENDPOINT;

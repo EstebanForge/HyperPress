@@ -46,7 +46,7 @@ class Config
      * @since 2023-12-04
      * @return void
      */
-    public function insert_config_meta_tag(): void
+    public function insertConfigMetaTag(): void
     {
         $options = $this->getOptions();
         // Align with Assets.php option key
