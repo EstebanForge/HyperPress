@@ -36,6 +36,16 @@ class Config
         // Apply filter to allow programmatic configuration
         $default_options = apply_filters('hyperpress/config/default_options', $default_options);
 
+        // Backward compatibility: allow legacy defaults filter to modify options.
+        // Developers should migrate to 'hyperpress/config/default_options'.
+        $default_options = apply_filters_deprecated(
+            'hmapi/default_options',
+            [ $default_options ],
+            '2.1.0',
+            'hyperpress/config/default_options',
+            'Use hyperpress/config/default_options instead.'
+        );
+
         return get_option('hyperpress_options', $default_options);
     }
 
