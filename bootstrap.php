@@ -151,34 +151,13 @@ if (!function_exists('hyperpress_run_initialization_logic')) {
             define('HYPERPRESS_COMPACT_INPUT_KEY', 'hyperpress_compact_input');
         }
 
-        // Enqueue HyperBlocks editor integration script for Gutenberg inspector controls
-        add_action('enqueue_block_editor_assets', function () {
-            // Require a valid plugin URL; skip in library mode where URL is unavailable
-            if (!defined('HYPERPRESS_PLUGIN_URL') || empty(HYPERPRESS_PLUGIN_URL)) {
-                return;
-            }
-
-            wp_enqueue_script(
-                'hyperpress-hyperblocks-editor',
-                HYPERPRESS_PLUGIN_URL . 'assets/js/hyperblocks-editor.js',
-                [
-                    'wp-api-fetch',
-                    'wp-hooks',
-                    'wp-element',
-                    'wp-components',
-                    'wp-block-editor',
-                    'wp-editor',
-                ],
-                defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : false,
-                true
-            );
-        });
 
         if ((defined('DOING_CRON') && DOING_CRON === true) ||
-             (defined('DOING_AJAX') && DOING_AJAX === true) ||
-             (defined('REST_REQUEST') && REST_REQUEST === true) ||
-             (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST === true) ||
-             (defined('WP_CLI') && WP_CLI === true)) {
+            (defined('DOING_AJAX') && DOING_AJAX === true) ||
+            (defined('REST_REQUEST') && REST_REQUEST === true) ||
+            (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST === true) ||
+            (defined('WP_CLI') && WP_CLI === true)
+        ) {
             return;
         }
 
@@ -228,7 +207,7 @@ if (!function_exists('hyperpress_select_and_load_latest')) {
         }
 
         $candidates = $GLOBALS['hyperpress_api_candidates'];
-        uasort($candidates, fn ($a, $b) => version_compare($b['version'], $a['version']));
+        uasort($candidates, fn($a, $b) => version_compare($b['version'], $a['version']));
         $winner = reset($candidates);
 
         if ($winner && isset($winner['path'], $winner['version'], $winner['init_function']) && function_exists($winner['init_function'])) {

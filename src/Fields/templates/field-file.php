@@ -3,14 +3,14 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-        $conditional_logic = $field_data['conditional_logic'] ?? null;
-        $conditional_attr = '';
-        if ($conditional_logic) {
-            $json = wp_json_encode($conditional_logic);
-            $conditional_attr = ' data-hp-conditional-logic=\'' . esc_attr((string) $json) . '\'';
-        }
+$conditional_logic = $field_data['conditional_logic'] ?? null;
+$conditional_attr = '';
+if ($conditional_logic) {
+    $json = wp_json_encode($conditional_logic);
+    $conditional_attr = ' data-hp-conditional-logic=\'' . esc_attr((string) $json) . '\'';
+}
 
-        $type = $field_data['type'] ?? 'file';
+$type = $field_data['type'] ?? 'file';
 $name = $field_data['name'] ?? '';
 $name_attr = $field_data['name_attr'] ?? $name;
 $label = $field_data['label'] ?? '';

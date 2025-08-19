@@ -7,12 +7,12 @@ $hp_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
 
 // Check if nonce is valid.
 if (!isset($hp_nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($hp_nonce)), 'api-for-htmx_nonce')) {
-  hp_die('Nonce verification failed.');
+    hp_die('Nonce verification failed.');
 }
 
 // Action = htmx_do_something
 if (!isset($hp_vals['action']) || $hp_vals['action'] != 'htmx_do_something') {
-  hp_die('Invalid action.');
+    hp_die('Invalid action.');
 }
 
 // Process different demo types
@@ -20,20 +20,20 @@ $demo_type = $hp_vals['demo_type'] ?? 'default';
 $processed_message = '';
 
 switch ($demo_type) {
-  case 'simple_get':
-    $processed_message = __('HTMX GET request processed successfully!', 'api-for-htmx');
-    break;
-  case 'post_with_data':
-    $user_data = $hp_vals['user_data'] ?? __('No data', 'api-for-htmx');
-    $processed_message = sprintf(__('HTMX POST processed. You sent: %s', 'api-for-htmx'), esc_html($user_data));
-    break;
-  case 'form_submission':
-    $name = $hp_vals['name'] ?? __('Unknown', 'api-for-htmx');
-    $email = $hp_vals['email'] ?? __('No email', 'api-for-htmx');
-    $processed_message = sprintf(__('Form submitted successfully! Name: %s, Email: %s', 'api-for-htmx'), esc_html($name), esc_html($email));
-    break;
-  default:
-    $processed_message = __('HTMX demo template processed.', 'api-for-htmx');
+    case 'simple_get':
+        $processed_message = __('HTMX GET request processed successfully!', 'api-for-htmx');
+        break;
+    case 'post_with_data':
+        $user_data = $hp_vals['user_data'] ?? __('No data', 'api-for-htmx');
+        $processed_message = sprintf(__('HTMX POST processed. You sent: %s', 'api-for-htmx'), esc_html($user_data));
+        break;
+    case 'form_submission':
+        $name = $hp_vals['name'] ?? __('Unknown', 'api-for-htmx');
+        $email = $hp_vals['email'] ?? __('No email', 'api-for-htmx');
+        $processed_message = sprintf(__('Form submitted successfully! Name: %s, Email: %s', 'api-for-htmx'), esc_html($name), esc_html($email));
+        break;
+    default:
+        $processed_message = __('HTMX demo template processed.', 'api-for-htmx');
 }
 ?>
 

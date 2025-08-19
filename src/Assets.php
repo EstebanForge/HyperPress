@@ -49,6 +49,8 @@ class Assets
 
         add_action('wp_enqueue_scripts', $this->enqueueFrontendScripts(...));
         add_action('admin_enqueue_scripts', $this->enqueueBackendScripts(...));
+        // Enqueue HyperBlocks editor integration for Gutenberg inspector controls
+        add_action('enqueue_block_editor_assets', $this->enqueueEditorAssets(...));
     }
 
     /**
@@ -115,6 +117,33 @@ class Assets
     public function enqueueBackendScripts()
     {
         $this->enqueueScriptsLogic(true);
+    }
+
+    /**
+     * Enqueue editor-only assets for the block editor (Gutenberg).
+     * Mirrors prior bootstrap closure but centralized here.
+     */
+    public function enqueueEditorAssets(): void
+    {
+        // Require a valid plugin URL; skip in library mode where URL is unavailable
+        if (!defined('HYPERPRESS_PLUGIN_URL') || empty(HYPERPRESS_PLUGIN_URL)) {
+            return;
+        }
+
+        wp_enqueue_script(
+            'hyperpress-hyperblocks-editor',
+            HYPERPRESS_PLUGIN_URL . 'assets/js/hyperblocks-editor.js',
+            [
+                'wp-api-fetch',
+                'wp-hooks',
+                'wp-element',
+                'wp-components',
+                'wp-block-editor',
+                'wp-editor',
+            ],
+            defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : false,
+            true
+        );
     }
 
     /**
