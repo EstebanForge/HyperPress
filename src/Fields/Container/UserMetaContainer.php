@@ -180,7 +180,7 @@ class UserMetaContainer extends Container
             update_user_meta($this->user_id, $field_name, $value);
         }
 
-        do_action('hyperfields_user_meta_container_saved', $this->user_id, $this);
+        do_action('hyperpress/fields/user_meta_container_saved', $this->user_id, $this);
     }
 
     /**

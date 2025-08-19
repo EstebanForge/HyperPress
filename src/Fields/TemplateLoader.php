@@ -44,7 +44,7 @@ class TemplateLoader
         }
 
         // Allow template override via filter
-        $template_file = apply_filters('hyperpress_field_template', $template_file, $type, $field_data);
+        $template_file = apply_filters('hyperpress/fields/template', $template_file, $type, $field_data);
 
         if (file_exists($template_file)) {
 
@@ -234,6 +234,6 @@ class TemplateLoader
             'custom',
         ];
 
-        return apply_filters('hyperpress_supported_field_types', $types);
+        return apply_filters('hyperpress/fields/supported_field_types', $types);
     }
 }

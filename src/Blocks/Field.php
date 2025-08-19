@@ -39,7 +39,7 @@ class Field
      *
      * @var HyperField
      */
-    private HyperField $hyper_field;
+    private HyperField $hyperField;
 
     /**
      * Constructor.

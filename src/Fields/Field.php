@@ -415,7 +415,7 @@ class Field
             case 'gravity_form':
                 return absint($value);
             default:
-                return apply_filters("hyperpress_field_sanitize_{$this->type}", $value, $this->type);
+                return apply_filters("hyperpress/fields/sanitize_{$this->type}", $value, $this->type);
         }
     }
 
@@ -547,7 +547,7 @@ class Field
             case 'float':
                 return filter_var($value, FILTER_VALIDATE_FLOAT) !== false;
             default:
-                return apply_filters("hyperpress_field_validation_{$rule}", true, $value, $param, $this);
+                return apply_filters("hyperpress/fields/validation_{$rule}", true, $value, $param, $this);
         }
     }
 }

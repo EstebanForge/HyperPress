@@ -34,7 +34,7 @@ $editor_settings = [
 ];
 
 // Allow customization via filter
-$editor_settings = apply_filters('hyperpress_rich_text_editor_settings', $editor_settings, $name);
+$editor_settings = apply_filters('hyperpress/fields/rich_text_editor_settings', $editor_settings, $name);
 ?>
 
 <div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>

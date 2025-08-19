@@ -28,7 +28,7 @@ class OptionField extends Field
 
     public function getOptionName(): string
     {
-        return apply_filters('hyperpress_option_field_name', $this->option_name, $this->getName());
+        return apply_filters('hyperpress/fields/option_field_name', $this->option_name, $this->getName());
     }
 
     public function getOptionGroup(): string

@@ -36,11 +36,11 @@ class Options
         $options = HyperFields::getOptions($this->option_name, []);
 
         $all_sections = array_merge(
-            $this->build_general_tab_config(),
-            $this->build_htmx_tab_config(),
-            $this->build_alpine_tab_config(),
-            $this->build_datastar_tab_config(),
-            $this->build_about_tab_config()
+            $this->buildGeneralTabConfig(),
+            $this->buildHTMXTabConfig(),
+            $this->buildAlpineTabConfig(),
+            $this->buildDatastarTabConfig(),
+            $this->buildAboutTabConfig()
         );
 
         // PHP-side tab conditionality: filter by visible_if
@@ -60,16 +60,16 @@ class Options
         HyperFields::registerOptionsPage([
             'title' => 'HyperPress Options',
             'slug' => 'hyperpress-options',
-            'menu_title' => 'api-for-htmx',
+            'menu_title' => 'HyperPress',
             'parent_slug' => 'options-general.php',
             'capability' => 'manage_options',
             'option_name' => $this->option_name,
             'sections' => $sections,
-            'footer_content' => $this->get_footer_content(),
+            'footer_content' => $this->getFooterContent(),
         ]);
     }
 
-    private function build_general_tab_config(): array
+    private function buildGeneralTabConfig(): array
     {
         return [
             [
@@ -81,18 +81,18 @@ class Options
                         'type' => 'html',
                         'name' => 'api_endpoint',
                         'label' => '',
-                        'html_content' => $this->render_api_endpoint_html(),
+                        'html_content' => $this->renderApiEndpointHtml(),
                     ],
                     [
                         'type' => 'select',
                         'name' => 'active_library',
                         'label' => __('Active Library', 'api-for-htmx'),
                         'options' => [
+                            'datastar' => 'Datastar',
                             'htmx' => 'HTMX',
                             'alpine-ajax' => 'Alpine Ajax',
-                            'datastar' => 'Datastar',
                         ],
-                        'default' => 'htmx',
+                        'default' => 'datastar',
                         'help' => __('Select the primary hypermedia library to use.', 'api-for-htmx'),
                     ],
                     [
@@ -107,7 +107,7 @@ class Options
         ];
     }
 
-    private function build_htmx_tab_config(): array
+    private function buildHTMXTabConfig(): array
     {
         $available_extensions = HTMXLib::getExtensions($this->main);
 
@@ -172,7 +172,7 @@ class Options
         ];
     }
 
-    private function build_alpine_tab_config(): array
+    private function buildAlpineTabConfig(): array
     {
         return [
             [
@@ -193,7 +193,7 @@ class Options
         ];
     }
 
-    private function build_datastar_tab_config(): array
+    private function buildDatastarTabConfig(): array
     {
         return [
             [
@@ -214,7 +214,7 @@ class Options
         ];
     }
 
-    private function build_about_tab_config(): array
+    private function buildAboutTabConfig(): array
     {
         return [
             [
@@ -226,20 +226,20 @@ class Options
                         'type' => 'html',
                         'name' => 'about_content',
                         'label' => '',
-                        'html_content' => $this->get_about_html(),
+                        'html_content' => $this->getAboutHtml(),
                     ],
                     [
                         'type' => 'html',
                         'name' => 'system_info',
                         'label' => '',
-                        'html_content' => $this->get_system_info_html(),
+                        'html_content' => $this->getSystemInfoHtml(),
                     ],
                 ],
             ],
         ];
     }
 
-    private function get_about_html(): string
+    private function getAboutHtml(): string
     {
         return '<div class="hyperpress-about-content">'
             . '<p>' . __('Designed for developers, HyperPress brings the power and simplicity of hypermedia to your WordPress projects. It seamlessly integrates popular libraries like HTMX, Alpine AJAX, and Datastar, empowering you to create rich, dynamic user interfaces without the complexity of traditional JavaScript frameworks.', 'api-for-htmx') . '</p>'
@@ -249,9 +249,9 @@ class Options
             . '</div>';
     }
 
-    private function get_system_info_html(): string
+    private function getSystemInfoHtml(): string
     {
-        $system_info_table = $this->render_system_info($this->get_system_information());
+        $system_info_table = $this->renderSystemInfo($this->getSystemInformation());
 
         return '<hr style="margin: 1rem 0;"><div class="hyperpress-system-info-section">
             <p>' . __('General information about your WordPress installation and this plugin status:', 'api-for-htmx') . '</p>
@@ -259,7 +259,7 @@ class Options
         </div>';
     }
 
-    private function render_system_info(array $system_info): string
+    private function renderSystemInfo(array $system_info): string
     {
         $html = '<div class="hyperpress-system-info"><table class="widefat">';
         $html .= '<thead><tr><th>' . __('Setting', 'api-for-htmx') . '</th><th>' . __('Value', 'api-for-htmx') . '</th></tr></thead><tbody>';
@@ -277,7 +277,7 @@ class Options
         return $html;
     }
 
-    private function get_system_information(): array
+    private function getSystemInformation(): array
     {
         global $wp_version;
 
@@ -295,23 +295,23 @@ class Options
         ];
     }
 
-    private function get_footer_content(): string
+    private function getFooterContent(): string
     {
         $plugin_version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7';
 
         return '<span>' . __('Active Instance: Plugin v', 'api-for-htmx') . esc_html($plugin_version) . '</span><br />'
             . __('Proudly brought to you by', 'api-for-htmx')
-            . ' <a href="https://actitud.studio" target="_blank" rel="noopener noreferrer">Actitud Studio</a>.';
+            . ' <a href="https://actitud.xyz" target="_blank" rel="noopener noreferrer">Actitud Studio</a>.';
     }
 
-    public function plugin_action_links(array $links): array
+    public function pluginActionLinks(array $links): array
     {
         $links[] = '<a href="' . esc_url(admin_url('options-general.php?page=hyperpress-options')) . '">' . esc_html__('Settings', 'api-for-htmx') . '</a>';
 
         return $links;
     }
 
-    private function render_api_endpoint_html(): string
+    private function renderApiEndpointHtml(): string
     {
         ob_start();
         $api_url = hp_get_endpoint_url();

@@ -567,16 +567,16 @@ class Render
         // Sanitize each param
         foreach ($hp_vals as $key => $value) {
             // Sanitize key
-            $key = apply_filters('hyperpress/sanitize_param_key', sanitize_key($key), $key);
+            $key = apply_filters('hyperpress/render/sanitize_param_key', sanitize_key($key), $key);
 
             // For form elements with multiple values
             // https://github.com/EstebanForge/HTMX-API-WP/discussions/8
             if (is_array($value)) {
                 // Sanitize each value
-                $value = apply_filters('hyperpress/sanitize_param_array_value', array_map('sanitize_text_field', $value), $key);
+                $value = apply_filters('hyperpress/render/sanitize_param_array_value', array_map('sanitize_text_field', $value), $key);
             } else {
                 // Sanitize single value
-                $value = apply_filters('hyperpress/sanitize_param_value', sanitize_text_field($value), $key);
+                $value = apply_filters('hyperpress/render/sanitize_param_value', sanitize_text_field($value), $key);
             }
 
             // Update param
@@ -667,7 +667,7 @@ class Render
             return false;
         }
 
-        $namespaced_paths = apply_filters('hyperpress/register_template_path', []);
+        $namespaced_paths = apply_filters('hyperpress/render/register_template_path', []);
         $parsed_template_data = $this->parseNamespacedTemplate($templateName);
 
         if ($parsed_template_data !== false) {
@@ -691,7 +691,7 @@ class Render
                 $this->getThemePath() . HYPERPRESS_LEGACY_TEMPLATE_DIR . '/',
             ];
 
-            $default_templates_paths_array = apply_filters('hyperpress/get_template_file/templates_path', $default_paths);
+            $default_templates_paths_array = apply_filters('hyperpress/render/get_template_file/templates_path', $default_paths);
 
             foreach ((array) $default_templates_paths_array as $default_path_item_base) {
                 if (empty($default_path_item_base)) {

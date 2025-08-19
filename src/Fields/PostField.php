@@ -29,7 +29,7 @@ class PostField extends Field
     {
         $key = $this->meta_key_prefix . $this->getName();
 
-        return apply_filters('hyperpress_post_field_meta_key', $key, $this->getName(), $this->post_id);
+        return apply_filters('hyperpress/fields/post_field_meta_key', $key, $this->getName(), $this->post_id);
     }
 
     public function getValue(): mixed
