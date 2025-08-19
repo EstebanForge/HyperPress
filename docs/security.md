@@ -6,8 +6,8 @@
 | ------- | ------------------ |
 | 2.0.1  | :white_check_mark: |
 | <2.0.1 | :x:                |
- 
- 
+
+
 
 ## Hypermedia Security Notes
 
@@ -44,7 +44,7 @@ if (!hp_validate_request($custom_data, 'save_settings')) {
 }
 
 // Datastar SSE endpoint with real-time validation
-// hypermedia/validate-form.hm.php
+// hypermedia/validate-form.hp.php
 $signals = hp_ds_read_signals();
 $email = $signals['email'] ?? '';
 $password = $signals['password'] ?? '';

@@ -7,7 +7,7 @@ These functions provide direct integration with Datastar's Server-Sent Events (S
 This is the smallest possible example to stream updates via SSE from a hypermedia template partial and consume them on the frontend.
 
 ```php
-// In your hypermedia template partial file, e.g., hypermedia/my-sse-endpoint.hm.php
+// In your hypermedia template partial file, e.g., hypermedia/my-sse-endpoint.hp.php
 
 // Apply rate limiting
 if (hp_ds_is_rate_limited()) {
@@ -236,7 +236,7 @@ if (hp_ds_is_rate_limited($rate_config)) {
 Here's a practical example combining multiple Datastar helpers:
 
 ```php
-// hypermedia/process-upload.hm.php
+// hypermedia/process-upload.hp.php
 <?php
 // Apply strict rate limiting for uploads (5 uploads per 5 minutes)
 if (hp_ds_is_rate_limited([
@@ -314,7 +314,7 @@ Here's a complete frontend-backend example showing how all helper functions work
 </div>
 ```
 
-**Backend Template - Real-time Validation (hypermedia/search-users-validate.hm.php):**
+**Backend Template - Real-time Validation (hypermedia/search-users-validate.hp.php):**
 ```php
 <?php
 // Apply rate limiting
@@ -346,7 +346,7 @@ if (strlen($query) < 2 && strlen($query) > 0) {
 ?>
 ```
 
-**Backend Template - Search Execution (hypermedia/search-users.hm.php):**
+**Backend Template - Search Execution (hypermedia/search-users.hp.php):**
 ```php
 <?php
 // Apply rate limiting for search operations
@@ -481,7 +481,7 @@ Here's a complete example showing how to integrate rate limiting with user feedb
 </div>
 ```
 
-**Backend Template (hypermedia/send-message.hm.php):**
+**Backend Template (hypermedia/send-message.hp.php):**
 ```php
 <?php
 // Apply rate limiting for chat messages (10 messages per minute)
