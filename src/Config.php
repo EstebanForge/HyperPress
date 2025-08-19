@@ -29,12 +29,12 @@ class Config
     {
         $default_options = [
             // Use the same key as Assets to avoid mismatch
-            'active_library' => 'htmx',
+            'active_library' => 'datastar',
             'hyperpress_meta_config_content' => '',
         ];
 
         // Apply filter to allow programmatic configuration
-        $default_options = apply_filters('hyperpress/default_options', $default_options);
+        $default_options = apply_filters('hyperpress/config/default_options', $default_options);
 
         return get_option('hyperpress_options', $default_options);
     }
@@ -50,7 +50,7 @@ class Config
     {
         $options = $this->getOptions();
         // Align with Assets.php option key
-        $active_library = $options['active_library'] ?? 'htmx'; // Default to htmx if not set
+        $active_library = $options['active_library'] ?? 'datastar'; // Default to datastar if not set
 
         // Only output htmx-config if HTMX is the active library
         if ('htmx' !== $active_library) {
@@ -63,14 +63,14 @@ class Config
             return;
         }
 
-        $meta_config_content = apply_filters('hyperpress/meta/config_content', $meta_config_content);
+        $meta_config_content = apply_filters('hyperpress/config/config_meta_content', $meta_config_content);
 
         // Sanitize the content for the meta tag
         $escaped_meta_config_content = esc_attr($meta_config_content);
         $meta_tag = "<meta name=\"htmx-config\" content='{$escaped_meta_config_content}'>";
 
         // Allow filtering of the entire meta tag
-        $meta_tag = apply_filters('hyperpress/meta/insert_config_tag', $meta_tag, $escaped_meta_config_content);
+        $meta_tag = apply_filters('hyperpress/config/insert_config_meta_tag', $meta_tag, $escaped_meta_config_content);
 
         /*
          * Action hook before echoing the htmx-config meta tag.
@@ -78,7 +78,7 @@ class Config
          * @since 2.0.0
          * @param string $meta_tag The complete HTML meta tag.
          */
-        do_action('hyperpress/meta/before_echo_config_tag', $meta_tag);
+        do_action('hyperpress/config/before_echo_config_meta_tag', $meta_tag);
 
         echo $meta_tag;
     }

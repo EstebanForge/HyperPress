@@ -66,7 +66,7 @@ class Assets
     {
         if ($this->options === null) {
             $default_options_fallback = [
-                'active_library' => 'htmx',
+                'active_library' => 'datastar',
                 'load_from_cdn' => 0,
                 'load_hyperscript' => 0,
                 'load_alpinejs_with_htmx' => 0,
@@ -85,7 +85,7 @@ class Assets
             }
 
             // Apply filter to allow programmatic configuration
-            $default_options_fallback = apply_filters('hyperpress/default_options', $default_options_fallback);
+            $default_options_fallback = apply_filters('hyperpress/assets/default_options', $default_options_fallback);
 
             $this->options = get_option('hyperpress_options', $default_options_fallback);
         }
@@ -188,7 +188,7 @@ class Assets
     {
         $options = $this->getOptions();
         $load_from_cdn = !empty($options['load_from_cdn']);
-        $active_library = $options['active_library'] ?? 'htmx';
+        $active_library = $options['active_library'] ?? 'datastar';
 
         $htmx_loaded = false;
         $alpine_core_loaded = false;
@@ -233,7 +233,7 @@ class Assets
         ];
 
         // Filter: Allow developers to completely override asset configuration
-        $assets_config = apply_filters('hyperpress/assets_config', $assets_config, $plugin_url, $plugin_path, $is_library_mode, $load_from_cdn);
+        $assets_config = apply_filters('hyperpress/assets/config', $assets_config, $plugin_url, $plugin_path, $is_library_mode, $load_from_cdn);
 
         // --- HTMX ---
         $should_load_htmx = false;
@@ -351,7 +351,7 @@ class Assets
             $extensions_dir_url = $plugin_url . 'assets/libs/htmx-extensions/';
 
             // Filter: Allow developers to override HTMX extensions directory
-            $extensions_dir_url = apply_filters('hyperpress/htmx_extensions_url', $extensions_dir_url, $extensions_dir_local, $plugin_url, $plugin_path, $is_library_mode);
+            $extensions_dir_url = apply_filters('hyperpress/assets/htmx_extensions_url', $extensions_dir_url, $extensions_dir_local, $plugin_url, $plugin_path, $is_library_mode);
 
             $cdn_urls = $this->main->getCdnUrls();
 
@@ -619,7 +619,7 @@ class Assets
         $complete_inline_script = implode('', $inline_script_parts);
 
         // Apply filters for extensibility
-        $complete_inline_script = apply_filters('hyperpress/hypermedia/inline_script', $complete_inline_script, [
+        $complete_inline_script = apply_filters('hyperpress/assets/inline_script', $complete_inline_script, [
             'htmx_loaded' => $htmx_loaded,
             'alpine_ajax_loaded' => $alpine_ajax_loaded,
             'datastar_loaded' => $datastar_loaded,
@@ -629,7 +629,7 @@ class Assets
 
         // Legacy filter for backward compatibility
         if ($htmx_loaded) {
-            $complete_inline_script = apply_filters('hyperpress/htmx/inline_script', $complete_inline_script, $options);
+            $complete_inline_script = apply_filters('hyperpress/assets/htmx_inline_script', $complete_inline_script, $options);
         }
 
         // Add the inline script

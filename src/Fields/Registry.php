@@ -105,7 +105,7 @@ class Registry
         return $this;
     }
 
-    public function register_user_fields(array $fields): self
+    public function registerUserFields(array $fields): self
     {
         foreach ($fields as $name => $field) {
             $this->register_field('user', $name, $field);
@@ -114,7 +114,7 @@ class Registry
         return $this;
     }
 
-    public function register_term_fields(array $fields): self
+    public function registerTermFields(array $fields): self
     {
         foreach ($fields as $name => $field) {
             $this->register_field('term', $name, $field);
@@ -123,7 +123,7 @@ class Registry
         return $this;
     }
 
-    public function register_option_fields(array $fields): self
+    public function registerOptionFields(array $fields): self
     {
         foreach ($fields as $name => $field) {
             $this->register_field('option', $name, $field);
@@ -134,36 +134,36 @@ class Registry
 
     public function init(): self
     {
-        add_action('init', [$this, 'register_all']);
+        add_action('init', [$this, 'registerAll']);
 
         return $this;
     }
 
-    public function register_all(): void
+    public function registerAll(): void
     {
-        do_action('hyperpress_fields_register');
-        $this->register_admin_hooks();
+        do_action('hyperpress/fields/register');
+        $this->registerAdminHooks();
     }
 
-    private function register_admin_hooks(): void
+    private function registerAdminHooks(): void
     {
         if (!is_admin()) {
             return;
         }
 
-        add_action('add_meta_boxes', [$this, 'register_post_meta_boxes']);
-        add_action('show_user_profile', [$this, 'render_user_fields']);
-        add_action('edit_user_profile', [$this, 'render_user_fields']);
-        add_action('personal_options_update', [$this, 'save_user_fields']);
-        add_action('edit_user_profile_update', [$this, 'save_user_fields']);
-        add_action('edit_term', [$this, 'render_term_fields']);
-        add_action('add_tag_form_fields', [$this, 'render_term_fields']);
-        add_action('edit_tag_form_fields', [$this, 'render_term_fields']);
-        add_action('created_term', [$this, 'save_term_fields']);
-        add_action('edited_term', [$this, 'save_term_fields']);
+        add_action('add_meta_boxes', [$this, 'registerPostMetaBoxes']);
+        add_action('show_user_profile', [$this, 'renderUserFields']);
+        add_action('edit_user_profile', [$this, 'renderUserFields']);
+        add_action('personal_options_update', [$this, 'saveUserFields']);
+        add_action('edit_user_profile_update', [$this, 'saveUserFields']);
+        add_action('edit_term', [$this, 'renderTermFields']);
+        add_action('add_tag_form_fields', [$this, 'renderTermFields']);
+        add_action('edit_tag_form_fields', [$this, 'renderTermFields']);
+        add_action('created_term', [$this, 'saveTermFields']);
+        add_action('edited_term', [$this, 'saveTermFields']);
     }
 
-    public function register_post_meta_boxes(): void
+    public function registerPostMetaBoxes(): void
     {
         $post_fields = $this->getFieldsByContext('post');
         if (empty($post_fields)) {
@@ -173,14 +173,14 @@ class Registry
         add_meta_box(
             'hyperpress_post_fields',
             'Custom Fields',
-            [$this, 'render_post_meta_box'],
+            [$this, 'renderPostMetaBox'],
             null,
             'normal',
             'default'
         );
     }
 
-    public function render_post_meta_box(): void
+    public function renderPostMetaBox(): void
     {
         $post_fields = $this->getFieldsByContext('post');
         if (empty($post_fields)) {
@@ -190,11 +190,11 @@ class Registry
         wp_nonce_field('hyperpress_post_fields', 'hyperpress_post_fields_nonce');
 
         foreach ($post_fields as $field) {
-            $this->render_field_input($field);
+            $this->renderFieldInput($field);
         }
     }
 
-    public function render_user_fields(): void
+    public function renderUserFields(): void
     {
         $user_fields = $this->getFieldsByContext('user');
         if (empty($user_fields)) {
@@ -202,11 +202,11 @@ class Registry
         }
 
         foreach ($user_fields as $field) {
-            $this->render_field_input($field);
+            $this->renderFieldInput($field);
         }
     }
 
-    public function render_term_fields(): void
+    public function renderTermFields(): void
     {
         $term_fields = $this->getFieldsByContext('term');
         if (empty($term_fields)) {
@@ -214,11 +214,11 @@ class Registry
         }
 
         foreach ($term_fields as $field) {
-            $this->render_field_input($field);
+            $this->renderFieldInput($field);
         }
     }
 
-    private function render_field_input(Field $field): void
+    private function renderFieldInput(Field $field): void
     {
         $value = '';
         $context = $field->getContext();
@@ -258,7 +258,7 @@ class Registry
         include __DIR__ . '/templates/field-input.php';
     }
 
-    public function save_post_fields(int $post_id): void
+    public function savePostFields(int $post_id): void
     {
         if (!isset($_POST['hyperpress_post_fields_nonce'])) {
             return;
@@ -286,7 +286,7 @@ class Registry
         }
     }
 
-    public function save_user_fields(int $user_id): void
+    public function saveUserFields(int $user_id): void
     {
         if (!current_user_can('edit_user', $user_id)) {
             return;
@@ -302,7 +302,7 @@ class Registry
         }
     }
 
-    public function save_term_fields(int $term_id): void
+    public function saveTermFields(int $term_id): void
     {
         if (!current_user_can('manage_categories')) {
             return;

@@ -183,7 +183,7 @@ class TermMetaContainer extends Container
             update_term_meta($this->term_id, $field_name, $value);
         }
 
-        do_action('hyperfields_term_meta_container_saved', $this->term_id, $this);
+        do_action('hyperpress/fields/term_meta_container_saved', $this->term_id, $this);
     }
 
     /**

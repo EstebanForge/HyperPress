@@ -189,7 +189,7 @@ class ConditionalLogic
             case 'NOT EMPTY':
                 return !empty($field_value);
             default:
-                return apply_filters('hyperpress_conditional_logic_evaluate', false, $field_value, $operator, $compare_value);
+                return apply_filters('hyperpress/fields/conditional_logic_evaluate', false, $field_value, $operator, $compare_value);
         }
     }
 

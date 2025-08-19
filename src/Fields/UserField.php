@@ -29,7 +29,7 @@ class UserField extends Field
     {
         $key = $this->meta_key_prefix . $this->getName();
 
-        return apply_filters('hyperpress_user_field_meta_key', $key, $this->getName(), $this->user_id);
+        return apply_filters('hyperpress/fields/user_field_meta_key', $key, $this->getName(), $this->user_id);
     }
 
     public function getValue(): mixed
