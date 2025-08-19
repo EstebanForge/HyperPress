@@ -567,16 +567,46 @@ class Render
         // Sanitize each param
         foreach ($hp_vals as $key => $value) {
             // Sanitize key
-            $key = apply_filters('hyperpress/render/sanitize_param_key', sanitize_key($key), $key);
+            $original_key = $key;
+            $sanitized_key = apply_filters('hyperpress/render/sanitize_param_key', sanitize_key($original_key), $original_key);
+            // Deprecated compatibility: hmapi/sanitize_param_key
+            $sanitized_key = apply_filters_deprecated(
+                'hmapi/sanitize_param_key',
+                [ $sanitized_key, $original_key ],
+                '2.1.0',
+                'hyperpress/render/sanitize_param_key',
+                'Use hyperpress/render/sanitize_param_key instead.'
+            );
+            $key = $sanitized_key;
 
             // For form elements with multiple values
             // https://github.com/EstebanForge/HTMX-API-WP/discussions/8
             if (is_array($value)) {
                 // Sanitize each value
-                $value = apply_filters('hyperpress/render/sanitize_param_array_value', array_map('sanitize_text_field', $value), $key);
+                $original_array = $value;
+                $sanitized_array = apply_filters('hyperpress/render/sanitize_param_array_value', array_map('sanitize_text_field', $original_array), $key);
+                // Deprecated compatibility: hmapi/sanitize_param_array_value
+                $sanitized_array = apply_filters_deprecated(
+                    'hmapi/sanitize_param_array_value',
+                    [ $sanitized_array, $original_array ],
+                    '2.1.0',
+                    'hyperpress/render/sanitize_param_array_value',
+                    'Use hyperpress/render/sanitize_param_array_value instead.'
+                );
+                $value = $sanitized_array;
             } else {
                 // Sanitize single value
-                $value = apply_filters('hyperpress/render/sanitize_param_value', sanitize_text_field($value), $key);
+                $original_value = $value;
+                $sanitized_value = apply_filters('hyperpress/render/sanitize_param_value', sanitize_text_field($original_value), $key);
+                // Deprecated compatibility: hmapi/sanitize_param_value
+                $sanitized_value = apply_filters_deprecated(
+                    'hmapi/sanitize_param_value',
+                    [ $sanitized_value, $original_value ],
+                    '2.1.0',
+                    'hyperpress/render/sanitize_param_value',
+                    'Use hyperpress/render/sanitize_param_value instead.'
+                );
+                $value = $sanitized_value;
             }
 
             // Update param
@@ -678,7 +708,18 @@ class Render
             return false;
         }
 
+        // Primary filter for registering namespaced template base paths.
         $namespaced_paths = apply_filters('hyperpress/render/register_template_path', []);
+
+        // Backward compatibility: allow legacy registrations via deprecated filter.
+        // Developers should migrate to 'hyperpress/render/register_template_path'.
+        $namespaced_paths = apply_filters_deprecated(
+            'hmapi/register_template_path',
+            [ $namespaced_paths ],
+            '2.1.0',
+            'hyperpress/render/register_template_path',
+            'Use hyperpress/render/register_template_path instead.'
+        );
         $parsed_template_data = $this->parseNamespacedTemplate($templateName);
 
         if ($parsed_template_data !== false) {
