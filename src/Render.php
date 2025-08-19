@@ -314,15 +314,15 @@ class Render
                 <div class="success-box">
                     <p><strong>Correct endpoint usage:</strong></p>
                     <ul>
-                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('my-template')); ?></code> - Loads template file <code>my-template.hp.php</code></li>
-                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('folder/template')); ?></code> - Loads <code>folder/template.hp.php</code></li>
-                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('noswap/header-update')); ?></code> - Loads <code>noswap/header-update.hp.php</code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('my-template')); ?></code> - Loads template file <code>my-template<?php echo esc_html(HYPERPRESS_TEMPLATE_EXT); ?></code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('folder/template')); ?></code> - Loads <code>folder/template<?php echo esc_html(HYPERPRESS_TEMPLATE_EXT); ?></code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('noswap/header-update')); ?></code> - Loads <code>noswap/header-update<?php echo esc_html(HYPERPRESS_TEMPLATE_EXT); ?></code></li>
                     </ul>
                 </div>
 
                 <h2>Template File Locations</h2>
                 <div class="info-box">
-                    <p>Template files (<code>.hp.php</code>) should be placed in:</p>
+                    <p>Template files (<code><?php echo esc_html(HYPERPRESS_TEMPLATE_EXT); ?></code>) should be placed in:</p>
                     <ul>
                         <li><strong>Theme:</strong> <code><?php echo esc_html(get_template_directory()); ?>/hypermedia/</code></li>
                         <li><strong>Child Theme:</strong> <code><?php echo esc_html(get_stylesheet_directory()); ?>/hypermedia/</code></li>
@@ -627,11 +627,22 @@ class Render
      */
     private function findTemplateWithExtensions(string $base_dir, string $template_name): string|false
     {
-        // Define the extensions to check, with primary first.
-        $extensions = [
-            HYPERPRESS_TEMPLATE_EXT,        // Primary: .hp.php
-            HYPERPRESS_LEGACY_TEMPLATE_EXT, // Legacy: .htmx.php
-        ];
+        // Build the list of extensions to check, with primary first, then any legacy ones.
+        $extensions = [];
+        if (defined('HYPERPRESS_TEMPLATE_EXT')) {
+            $extensions[] = (string) HYPERPRESS_TEMPLATE_EXT;
+        }
+
+        if (defined('HYPERPRESS_LEGACY_TEMPLATE_EXT')) {
+            $legacy = (string) HYPERPRESS_LEGACY_TEMPLATE_EXT;
+            // Support comma-separated legacy extensions (e.g., ".hm.php,.htmx.php")
+            $parts = array_map('trim', explode(',', $legacy));
+            foreach ($parts as $ext) {
+                if ($ext !== '' && !in_array($ext, $extensions, true)) {
+                    $extensions[] = $ext;
+                }
+            }
+        }
 
         foreach ($extensions as $extension) {
             $potential_path = $base_dir . $template_name . $extension;
