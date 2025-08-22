@@ -1,6 +1,6 @@
 # Changelog
 
-# 3.0.0 / 2025-08-17
+# 3.0.0 / 2025-08-21
 - **NEW:** **HyperBlocks** - Sane PHP-based block creation system, no JavaScript required, with **two complementary approaches**
   - **Fluent API**: PHP-only block development.
   - **block.json**: WordPress-standard JSON blocks.
@@ -14,7 +14,7 @@
 - **NEW:** Reusable field groups for consistent block development
 - **NEW:** Comprehensive documentation and demo blocks included
 - **NEW:** Backward compatible with existing WordPress block ecosystem
-- **BREAKING CHANGE:** The project's namespace has been updated from `HMApi` to `HyperPress` for clarity and branding. All public-facing helper functions have been renamed from `hm_` to `hp_`. Key constants and nonce identifiers have also been updated (`HMAPI_ABSPATH` is now `HYPERPRESS_ABSPATH`, and `hmapi_nonce` is now `hyperpress_nonce`). A backward-compatibility layer has been included to minimize disruption, but a major version bump is required to signal this significant change.
+- **BREAKING CHANGE:** The project's namespace has been updated from `HMApi` to `HyperPress` for clarity and branding. All public-facing helper functions have been renamed from `hm_` to `hp_`. Key constants and nonce identifiers have also been updated (`HMAPI_ABSPATH` is now `HYPERPRESS_ABSPATH`, and `hmapi_nonce` is now `hyperpress_nonce`). A backward-compatibility layer has been included to minimize disruption (ex: HyperPress provides alias for old now-deprecated functions). However, a major version bump was required to signal significant changes on new HyperPress v3.
 
 # 2.0.7 / 2025-08-02
 - **IMPROVEMENT:** Added a `hyperpress/before_template_load` action hook that fires before each hypermedia template partial is loaded, providing a centralized point for common template preparation logic. Thanks @eduwass.
