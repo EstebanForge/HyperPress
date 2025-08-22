@@ -214,23 +214,37 @@ final class Registry
                 continue;
             }
 
-            // Find all .hb.php files
-            $fluentBlockFiles = glob($basePath . '/**/*.hb.php');
+            // Find all files matching allowed extensions
+            $fluentBlockFiles = [];
+            if (defined('HYPERPRESS_TEMPLATE_EXT')) {
+                $exts = array_map('trim', explode(',', HYPERPRESS_TEMPLATE_EXT));
+                foreach ($exts as $ext) {
+                    $files = glob($basePath . '/**/*' . $ext);
+                    if ($files !== false) {
+                        $fluentBlockFiles = array_merge($fluentBlockFiles, $files);
+                    }
+                }
+            }
 
             foreach ($fluentBlockFiles as $file) {
                 // Skip files in directories starting with underscore
                 if (str_contains($file, '/_')) {
                     continue;
                 }
-
                 require_once $file;
             }
         }
 
         // Load individual fluent block files provided via filter
-        foreach ($additionalFiles as $file) {
-            if (file_exists($file) && str_ends_with($file, '.hb.php')) {
-                require_once $file;
+        if (defined('HYPERPRESS_TEMPLATE_EXT')) {
+            $exts = array_map('trim', explode(',', HYPERPRESS_TEMPLATE_EXT));
+            foreach ($additionalFiles as $file) {
+                foreach ($exts as $ext) {
+                    if (file_exists($file) && str_ends_with($file, $ext)) {
+                        require_once $file;
+                        break;
+                    }
+                }
             }
         }
     }

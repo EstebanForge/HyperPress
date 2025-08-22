@@ -135,8 +135,8 @@ if (!function_exists('hyperpress_run_initialization_logic')) {
         define('HYPERPRESS_LEGACY_ENDPOINT', 'wp-htmx');
         define('HYPERPRESS_TEMPLATE_DIR', 'hypermedia');
         define('HYPERPRESS_LEGACY_TEMPLATE_DIR', 'htmx-templates');
-        define('HYPERPRESS_TEMPLATE_EXT', '.hp.php');
-        define('HYPERPRESS_LEGACY_TEMPLATE_EXT', '.hm.php,.htmx.php');
+        define('HYPERPRESS_TEMPLATE_EXT', '.hp.php,.hm.php,.hb.php');
+        define('HYPERPRESS_LEGACY_TEMPLATE_EXT', '.htmx.php,.hmedia.php');
         define('HYPERPRESS_ENDPOINT_VERSION', 'v1');
 
         // Load helpers and compatibility layers after constants are defined.
@@ -151,12 +151,11 @@ if (!function_exists('hyperpress_run_initialization_logic')) {
             define('HYPERPRESS_COMPACT_INPUT_KEY', 'hyperpress_compact_input');
         }
 
-
-        if ((defined('DOING_CRON') && DOING_CRON === true) ||
-            (defined('DOING_AJAX') && DOING_AJAX === true) ||
-            (defined('REST_REQUEST') && REST_REQUEST === true) ||
-            (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST === true) ||
-            (defined('WP_CLI') && WP_CLI === true)
+        if ((defined('DOING_CRON') && DOING_CRON === true)
+            || (defined('DOING_AJAX') && DOING_AJAX === true)
+            || (defined('REST_REQUEST') && REST_REQUEST === true)
+            || (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST === true)
+            || (defined('WP_CLI') && WP_CLI === true)
         ) {
             return;
         }
@@ -207,7 +206,7 @@ if (!function_exists('hyperpress_select_and_load_latest')) {
         }
 
         $candidates = $GLOBALS['hyperpress_api_candidates'];
-        uasort($candidates, fn($a, $b) => version_compare($b['version'], $a['version']));
+        uasort($candidates, fn ($a, $b) => version_compare($b['version'], $a['version']));
         $winner = reset($candidates);
 
         if ($winner && isset($winner['path'], $winner['version'], $winner['init_function']) && function_exists($winner['init_function'])) {

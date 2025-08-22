@@ -75,16 +75,3 @@ hp_delete_field(string $name, $source = null, array $args = []): bool
 
 - Works with post/user/term meta and options, resolved by `hp_resolve_field_context()`.
 - Pass `['type' => '...']` to `hp_update_field()` to enable sanitization via `Field::sanitizeValue()`.
-
-## Backward Compatibility
-
-The following legacy helpers remain for backward compatibility. Avoid using them in new code:
-
-- `hxwp_api_url()` → Use `hp_get_endpoint_url()` instead
-- `hxwp_send_header_response()` → Use `hp_send_header_response()` instead
-- `hxwp_die()` → Use `hp_die()` instead
-- `hxwp_validate_request()` → Use `hp_validate_request()` instead
-
-Notes:
-- All global helpers use the `hp_` prefix going forward.
-- Datastar rate limiting helper is `hp_ds_is_rate_limited()`; no legacy alias exists.

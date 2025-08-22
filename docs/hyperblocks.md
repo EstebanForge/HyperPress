@@ -57,7 +57,7 @@ Two endpoints back the editor integration and server-side previews:
 - `render-preview` requires edit capability; avoid exposing it to unauthenticated users.
 
 ## Getting Started
-- Create a folder `hyperblocks/your-block/`
+- Create a folder `hyperblocks/your-block/` (block files must use one of the allowed extensions defined in `HYPERPRESS_TEMPLATE_EXT`, e.g. `.hp.php`, `.hm.php`)
 - EITHER add a `block.json` + PHP render template
 - OR register via the Fluent PHP API (WIP docs)
 - Define fields for the block via HyperFields
@@ -78,7 +78,8 @@ Pure PHP, rapid development - Single file approach
 
 ```php
 <?php
-// hyperblocks/hero-banner.hb.php - Complete implementation in one file
+// hyperblocks/hero-banner.hp.php - Complete implementation in one file
+// Extension should be: .hp.php
 use HyperPress\Blocks\Block;
 use HyperPress\Blocks\Field;
 
@@ -208,16 +209,16 @@ Supported formats:
 Example directory structure:
 ```
 hyperblocks/
-├── hero-banner.hb.php          # Fluent API
-├── content-card.hb.php         # Fluent API
+├── hero-banner.hp.php          # Fluent API (extension must match HYPERPRESS_TEMPLATE_EXT)
+├── content-card.hp.php         # Fluent API (extension must match HYPERPRESS_TEMPLATE_EXT)
 ├── quote-block/
 │   ├── block.json              # WordPress standard
 │   ├── render.php
 │   └── editor.js
 ├── _draft-block/               # Disabled (ignored)
-│   └── draft.hb.php
+│   └── draft.hp.php
 └── _deprecated/                # Disabled directory
-    └── old-block.hb.php
+    └── old-block.hp.php
 ```
 
 ### Manual Block Registration
@@ -230,8 +231,8 @@ Use the `hyperpress/blocks/register_fluent_blocks` filter to add the absolute pa
 
 ```php
 add_filter('hyperpress/blocks/register_fluent_blocks', function ($blocks) {
-    // Path to the block file in your plugin/theme
-    $blocks[] = MY_PLUGIN_PATH . 'path/to/my-custom-fluent-block.hb.php';
+    // Path to the block file in your plugin/theme (must use an allowed extension from HYPERPRESS_TEMPLATE_EXT)
+    $blocks[] = MY_PLUGIN_PATH . 'path/to/my-custom-fluent-block.hp.php';
     return $blocks;
 });
 ```

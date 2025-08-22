@@ -1,14 +1,5 @@
 # Security & Validation
 
-## Supported Versions
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 2.0.1  | :white_check_mark: |
-| <2.0.1 | :x:                |
-
-
-
 ## Hypermedia Security Notes
 
 Every call to the `wp-html` endpoint, using this plugin included helpers, will automatically check for a valid nonce. If the nonce is not valid, the call will be rejected.
