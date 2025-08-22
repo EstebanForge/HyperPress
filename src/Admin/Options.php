@@ -27,8 +27,26 @@ class Options
     public function __construct(Main $main)
     {
         $this->main = $main;
-
+        $this->maybeMigrateLegacyOptions();
         add_action('init', $this->initOptionsPage(...));
+    }
+
+    /**
+     * Migrate legacy hmapi_options to hyperpress_options if needed. Runs only once.
+     */
+    private function maybeMigrateLegacyOptions(): void
+    {
+        if (!is_admin() || !current_user_can('manage_options')) {
+            return;
+        }
+
+        $old_option = get_option('hmapi_options', null);
+        $new_option = get_option($this->option_name, null);
+
+        if ($old_option !== null && (empty($new_option) || !is_array($new_option))) {
+            update_option($this->option_name, $old_option, false);
+            delete_option('hmapi_options');
+        }
     }
 
     public function initOptionsPage(): void
@@ -316,37 +334,47 @@ class Options
         ob_start();
         $api_url = hp_get_endpoint_url();
         ?>
-        <div class="hyperpress-api-endpoint-box">
-            <h2><?php echo esc_html__('HyperPress API Endpoint', 'api-for-htmx'); ?></h2>
-            <div style="display:flex;align-items:center;gap:8px;max-width:100%;">
-                <input type="text" readonly value="<?php echo esc_attr($api_url); ?>" id="hyperpress-api-endpoint" aria-label="<?php echo esc_attr__('API Endpoint', 'api-for-htmx'); ?>" />
-                <button type="button" class="button" id="hyperpress-api-endpoint-copy"><?php echo esc_html__('Copy', 'api-for-htmx'); ?></button>
-            </div>
-            <p><?php echo esc_html__('Use this base URL to make requests to the HyperPress API endpoints from your frontend code.', 'api-for-htmx'); ?></p>
-            <script>
-                // Vanilla JS for Copy button (LOC principle)
-                (function() {
-                    var btn = document.getElementById('hyperpress-api-endpoint-copy');
-                    var input = document.getElementById('hyperpress-api-endpoint');
-                    if (btn && input) {
-                        btn.addEventListener('click', function() {
-                            input.select();
-                            input.setSelectionRange(0, 99999);
-                            try {
-                                document.execCommand('copy');
-                                btn.textContent = '<?php echo esc_js(__('Copied!', 'api-for-htmx')); ?>';
-                                setTimeout(function() {
-                                    btn.textContent = '<?php echo esc_js(__('Copy', 'api-for-htmx')); ?>';
-                                }, 1200);
-                            } catch (e) {
-                                btn.textContent = '<?php echo esc_js(__('Error', 'api-for-htmx')); ?>';
-                            }
-                        });
+<div class="hyperpress-api-endpoint-box">
+    <h2><?php echo esc_html__('HyperPress API Endpoint', 'api-for-htmx'); ?>
+    </h2>
+    <div style="display:flex;align-items:center;gap:8px;max-width:100%;">
+        <input type="text" readonly
+            value="<?php echo esc_attr($api_url); ?>"
+            id="hyperpress-api-endpoint"
+            aria-label="<?php echo esc_attr__('API Endpoint', 'api-for-htmx'); ?>" />
+        <button type="button" class="button"
+            id="hyperpress-api-endpoint-copy"><?php echo esc_html__('Copy', 'api-for-htmx'); ?></button>
+    </div>
+    <p><?php echo esc_html__('Use this base URL to make requests to the HyperPress API endpoints from your frontend code.', 'api-for-htmx'); ?>
+    </p>
+    <script>
+        // Vanilla JS for Copy button (LOC principle)
+        (function() {
+            var btn = document.getElementById('hyperpress-api-endpoint-copy');
+            var input = document.getElementById('hyperpress-api-endpoint');
+            if (btn && input) {
+                btn.addEventListener('click', function() {
+                    input.select();
+                    input.setSelectionRange(0, 99999);
+                    try {
+                        document.execCommand('copy');
+                        btn.textContent =
+                            '<?php echo esc_js(__('Copied!', 'api-for-htmx')); ?>';
+                        setTimeout(function() {
+                            btn.textContent =
+                                '<?php echo esc_js(__('Copy', 'api-for-htmx')); ?>';
+                        }, 1200);
+                    } catch (e) {
+                        btn.textContent =
+                            '<?php echo esc_js(__('Error', 'api-for-htmx')); ?>';
                     }
-                })();
-            </script>
-        </div>
+                });
+            }
+        })();
+    </script>
+</div>
 <?php
                 return ob_get_clean();
     }
 }
+?>
