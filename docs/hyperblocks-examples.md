@@ -38,7 +38,7 @@ add_action('init', function () {
           ->setRenderTemplate('<div class="card"><RichText attribute="title" tag="h3" /><div class="content">{{ body }}</div></div>')
           ->addField( HyperFields::makeField('text', 'title', 'Title') )
           ->addField( HyperFields::makeField('textarea', 'body', 'Body') )
-          ->attachFieldGroup('cardFields');
+          ->addFieldGroup('cardFields');
 
     // Register with the registry (auto-registers on init)
     Registry::getInstance()->registerFluentBlock($block);
@@ -57,7 +57,7 @@ add_action('init', function () {
     $block->setTitle('Hyper Hero')
           ->setIcon('slides')
           // Use a file template; prefix is required
-          ->setRenderTemplate('file:hyperblocks/hero/render.php')
+          ->setRenderTemplateFile('hyperblocks/hero/render')
           ->addField( HyperFields::makeField('text', 'title', 'Title')->setDefault('Welcome') )
           ->addField( HyperFields::makeField('text', 'subtitle', 'Subtitle') );
 
@@ -149,7 +149,7 @@ add_action('init', function () {
 
     $block = new Block('hyper/image-card');
     $block->setTitle('Image Card')
-          ->attachFieldGroup('media')
+          ->addFieldGroup('media')
           ->addField( HyperFields::makeField('text', 'title', 'Title') )
           ->setRenderTemplate('<figure><figcaption>{{ caption }}</figcaption></figure>');
 

@@ -2,7 +2,7 @@
 
 Reduce POST size and complexity by compacting all option fields into a single JSON payload during form submission.
 
-Source: `assets/js/admin-options.js`
+This feature exists specifically to prevent issues with PHP's `max_input_vars` limit. On forms with many options, exceeding this limit can cause lost or incomplete data during save. Compacting all inputs into a single variable ensures reliable saving even on very large options pages.
 
 ## What It Does
 

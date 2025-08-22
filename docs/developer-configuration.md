@@ -28,10 +28,11 @@ The plugin provides the filter: `hyperpress/register_template_path`
 
 This filter allows you to register a new template path for your plugin or theme. It expects an associative array where keys are your chosen namespaces and values are the absolute paths to your template directories.
 
+
 For example, if your plugin slug is `my-plugin`, you can register a new template path like this:
 
 ```php
-add_filter( 'hyperpress/register_template_path', function( $paths ) {
+add_filter( 'hyperpress/render/register_template_path', function( $paths ) {
     // Ensure YOUR_PLUGIN_PATH is correctly defined, e.g., plugin_dir_path( __FILE__ )
     // 'my-plugin' is the namespace.
     $paths['my-plugin'] = YOUR_PLUGIN_PATH . 'hypermedia/';
@@ -78,10 +79,10 @@ When in library mode, the plugin will not register its admin options/settings pa
 
 You can configure the plugin programmatically using WordPress filters instead of using the admin interface. This is particularly useful when the plugin is used as a library or when you want to force specific configurations.
 
-All plugin settings can be controlled using the `hyperpress/default_options` filter. This filter allows you to override any default option value:
+All plugin settings can be controlled using the `hyperpress/config/default_options` filter. This filter allows you to override any default option value:
 
 ```php
-add_filter('hyperpress/default_options', function($defaults) {
+add_filter('hyperpress/config/default_options', function($defaults) {
     // General Settings
     $defaults['active_library'] = 'htmx'; // 'htmx', 'alpinejs', or 'datastar'
     $defaults['load_from_cdn'] = false;  // `true` to use CDN, `false` for local files
@@ -129,7 +130,7 @@ add_filter('hyperpress/default_options', function($defaults) {
 
 **Complete HTMX Setup with Extensions:**
 ```php
-add_filter('hyperpress/default_options', function($defaults) {
+add_filter('hyperpress/config/default_options', function($defaults) {
     $defaults['active_library'] = 'htmx';
     $defaults['load_from_cdn'] = false; // Use local files
     $defaults['load_hyperscript'] = true;
@@ -148,7 +149,7 @@ add_filter('hyperpress/default_options', function($defaults) {
 
 **Alpine Ajax Setup:**
 ```php
-add_filter('hyperpress/default_options', function($defaults) {
+add_filter('hyperpress/config/default_options', function($defaults) {
     $defaults['active_library'] = 'alpinejs';
     $defaults['load_from_cdn'] = true; // Use CDN for latest version
     $defaults['load_alpinejs_backend'] = true;
@@ -159,7 +160,7 @@ add_filter('hyperpress/default_options', function($defaults) {
 
 **Datastar Configuration:**
 ```php
-add_filter('hyperpress/default_options', function($defaults) {
+add_filter('hyperpress/config/default_options', function($defaults) {
     $defaults['active_library'] = 'datastar';
     $defaults['load_from_cdn'] = false;
     $defaults['load_datastar_backend'] = true;
@@ -170,7 +171,7 @@ add_filter('hyperpress/default_options', function($defaults) {
 
 **Production-Ready Configuration (CDN with specific extensions):**
 ```php
-add_filter('hyperpress/default_options', function($defaults) {
+add_filter('hyperpress/config/default_options', function($defaults) {
     $defaults['active_library'] = 'htmx';
     $defaults['load_from_cdn'] = true; // Better performance
     $defaults['load_hyperscript'] = true;
@@ -190,7 +191,7 @@ add_filter('hyperpress/default_options', function($defaults) {
 Register custom template paths for your plugin or theme:
 
 ```php
-add_filter('hyperpress/register_template_path', function($paths) {
+add_filter('hyperpress/render/register_template_path', function($paths) {
     $paths['my-plugin'] = plugin_dir_path(__FILE__) . 'hypermedia/';
     $paths['my-theme'] = get_template_directory() . '/custom-hypermedia/';
     return $paths;
@@ -203,19 +204,19 @@ Modify the sanitization process for parameters:
 
 ```php
 // Customize parameter key sanitization
-add_filter('hyperpress/sanitize_param_key', function($sanitized_key, $original_key) {
+add_filter('hyperpress/render/sanitize_param_key', function($sanitized_key, $original_key) {
     // Custom sanitization logic
     return $sanitized_key;
 }, 10, 2);
 
 // Customize parameter value sanitization
-add_filter('hyperpress/sanitize_param_value', function($sanitized_value, $original_value) {
+add_filter('hyperpress/render/sanitize_param_value', function($sanitized_value, $original_value) {
     // Custom sanitization logic for single values
     return $sanitized_value;
 }, 10, 2);
 
 // Customize array parameter value sanitization
-add_filter('hyperpress/sanitize_param_array_value', function($sanitized_array, $original_array) {
+add_filter('hyperpress/render/sanitize_param_array_value', function($sanitized_array, $original_array) {
     // Custom sanitization logic for array values
     return array_map('esc_html', $sanitized_array);
 }, 10, 2);
@@ -402,7 +403,7 @@ If you want to configure everything programmatically and hide the admin interfac
 define('HYPERPRESS_LIBRARY_MODE', true);
 
 // You can then configure the plugin using filters as needed
-add_filter('hyperpress/default_options', function($defaults) {
+add_filter('hyperpress/config/default_options', function($defaults) {
     // Your configuration here. See above for examples.
     return $defaults;
 });

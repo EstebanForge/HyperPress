@@ -143,8 +143,86 @@ class Block
      */
     public function setRenderTemplate(string $templateString): self
     {
+        if (str_starts_with($templateString, 'file:')) {
+            $relativePath = substr($templateString, 5);
+            $relativePath = rtrim($relativePath, '/');
+            $exts = array_map('trim', explode(',', HYPERPRESS_TEMPLATE_EXT));
+            $hasValidExt = false;
+            foreach ($exts as $ext) {
+                if (str_ends_with($relativePath, $ext)) {
+                    $hasValidExt = true;
+                    break;
+                }
+            }
+            if (!$hasValidExt) {
+                // Always use the first extension as default
+                $relativePath .= $exts[0];
+            }
+            self::validateTemplatePath($relativePath, $exts);
+            $templateString = 'file:' . $relativePath;
+        }
         $this->render_template = $templateString;
-
         return $this;
+    }
+
+    /**
+    * Validate a file-based template path for security.
+    * Throws InvalidArgumentException if invalid.
+    *
+    * @param string $relativePath
+    * @param array $exts Array of allowed extensions
+    * @return void
+    */
+    private static function validateTemplatePath(string $relativePath, array $exts): void
+    {
+        if (str_starts_with($relativePath, '/') || str_contains($relativePath, '..')) {
+            throw new \InvalidArgumentException('Invalid template path: must be relative and not contain parent traversal.');
+        }
+        $validExt = false;
+        foreach ($exts as $e) {
+            if (str_ends_with($relativePath, $e)) {
+                $validExt = true;
+                break;
+            }
+        }
+        if (!$validExt) {
+            throw new \InvalidArgumentException('Invalid template extension. Only [' . implode(', ', $exts) . '] files are allowed.');
+        }
+        $allowedBases = [];
+        if (defined('WP_CONTENT_DIR')) {
+            $allowedBases[] = rtrim(WP_CONTENT_DIR, '/');
+        }
+        if (function_exists('get_template_directory')) {
+            $themeDir = get_template_directory();
+            if ($themeDir) {
+                $allowedBases[] = rtrim($themeDir, '/');
+            }
+        }
+        if (defined('HYPERPRESS_ABSPATH')) {
+            $allowedBases[] = rtrim(HYPERPRESS_ABSPATH, '/');
+        }
+        $valid = false;
+        foreach ($allowedBases as $base) {
+            $fullPath = $base . '/' . ltrim($relativePath, '/');
+            $real = @realpath($fullPath);
+            if ($real && str_starts_with($real, $base)) {
+                $valid = true;
+                break;
+            }
+        }
+        if (!$valid) {
+            throw new \InvalidArgumentException('Template path not allowed. Must be inside WP_CONTENT_DIR, theme, or plugin directory.');
+        }
+    }
+
+    /**
+     * Set a file-based render template for the block (alias for setRenderTemplate with file: prefix).
+     *
+     * @param string $relativePath Relative path to the template file.
+     * @return self
+     */
+    public function setRenderTemplateFile(string $relativePath): self
+    {
+        return $this->setRenderTemplate('file:' . ltrim($relativePath, '/'));
     }
 }

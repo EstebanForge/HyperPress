@@ -660,12 +660,21 @@ class Render
         // Build the list of extensions to check, with primary first, then any legacy ones.
         $extensions = [];
         if (defined('HYPERPRESS_TEMPLATE_EXT')) {
-            $extensions[] = (string) HYPERPRESS_TEMPLATE_EXT;
+
+$primary = (string) HYPERPRESS_TEMPLATE_EXT;
+$primaryParts = array_map('trim', explode(',', $primary));
+foreach ($primaryParts as $ext) {
+    if ($ext !== '' && !in_array($ext, $extensions, true)) {
+        $extensions[] = $ext;
+    }
+}
+
         }
 
         if (defined('HYPERPRESS_LEGACY_TEMPLATE_EXT')) {
-            $legacy = (string) HYPERPRESS_LEGACY_TEMPLATE_EXT;
-            // Support comma-separated legacy extensions (e.g., ".hm.php,.htmx.php")
+
+$legacy = (string) HYPERPRESS_LEGACY_TEMPLATE_EXT;
+
             $parts = array_map('trim', explode(',', $legacy));
             foreach ($parts as $ext) {
                 if ($ext !== '' && !in_array($ext, $extensions, true)) {
