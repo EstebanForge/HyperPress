@@ -3,7 +3,7 @@
  * @copyright Copyright (c) PutYourLightsOn
  */
 
-namespace HMApi\starfederation\datastar\events;
+namespace HyperPress\starfederation\datastar\events;
 
 class Location extends ExecuteScript
 {

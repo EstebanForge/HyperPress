@@ -1,0 +1,55 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+$type = $field_data['type'] ?? 'set';
+$name = $field_data['name'] ?? '';
+$name_attr = $field_data['name_attr'] ?? $name;
+$label = $field_data['label'] ?? '';
+$value = $field_data['value'] ?? [];
+$required = $field_data['required'] ?? false;
+$help = $field_data['help'] ?? '';
+$options = $field_data['options'] ?? [];
+$layout = $field_data['layout'] ?? 'vertical';
+
+// Support for conditional_logic: pass as data-hp-conditional-logic attribute for JS
+$conditional_logic = $field_data['conditional_logic'] ?? null;
+$conditional_attr = '';
+if ($conditional_logic) {
+    $json = wp_json_encode($conditional_logic);
+    $conditional_attr = ' data-hp-conditional-logic=\'' . esc_attr((string) $json) . '\'';
+}
+
+$value = is_array($value) ? $value : [$value];
+$layout_class = 'hyperpress-set-' . $layout;
+?>
+
+<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label class="hyperpress-field-label">
+        <?php echo esc_html($label); ?>
+        <?php if ($required): ?><span class="required">*</span><?php endif; ?>
+    </label>
+
+    <div class="hyperpress-field-input">
+        <!-- Hidden input to ensure the field is always sent in POST data even when none selected -->
+        <input type="hidden" name="<?php echo esc_attr($name_attr); ?>[]" value="__hm_empty__">
+        
+        <div class="<?php echo esc_attr($layout_class); ?>">
+            <?php foreach ($options as $option_value => $option_label): ?>
+                <label>
+                    <input type="checkbox" 
+                           name="<?php echo esc_attr($name_attr); ?>[]" 
+                           value="<?php echo esc_attr($option_value); ?>" 
+                           <?php checked(in_array($option_value, $value)); ?>
+                           <?php echo $required ? 'required' : ''; ?>>
+                    <?php echo esc_html($option_label); ?>
+                </label>
+            <?php endforeach; ?>
+        </div>
+
+        <?php if ($help): ?>
+            <p class="description"><?php echo esc_html($help); ?></p>
+        <?php endif; ?>
+    </div>
+</div>

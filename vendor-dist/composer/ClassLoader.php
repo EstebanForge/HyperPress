@@ -10,12 +10,12 @@
  * file that was distributed with this source code.
  */
 
-namespace HMApi\Composer\Autoload;
+namespace HyperPress\Composer\Autoload;
 
 /**
  * ClassLoader implements a PSR-0, PSR-4 and classmap class loader.
  *
- *     $loader = new \HMApi\Composer\Autoload\ClassLoader();
+ *     $loader = new \HyperPress\Composer\Autoload\ClassLoader();
  *
  *     // register classes with namespaces
  *     $loader->add('Symfony\Component', __DIR__.'/component');

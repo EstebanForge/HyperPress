@@ -6,7 +6,7 @@
  * @since   2024-02-27
  */
 
-namespace HMApi;
+namespace HyperPress;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 /**
  * Theme support Class.
  * This class is a placeholder for any future theme-specific integrations.
- * The hx-boost functionality previously here is now handled by HMApi\Assets.
+ * The hx-boost functionality previously here is now handled by HyperPress\Assets.
  */
 class Theme
 {
@@ -30,6 +30,6 @@ class Theme
          *
          * @since 2.0.0
          */
-        do_action('hmapi/theme/run');
+        do_action('hyperpress/theme/run');
     }
 }

@@ -1,0 +1,39 @@
+{
+    "name": "hyperblocks/content-card-json",
+    "title": "HB Content Card (JSON)",
+    "description": "A content card block with title, image, and nested content area - block.json implementation.",
+    "category": "widgets",
+    "icon": "table-col-before",
+    "keywords": ["card", "content", "image", "nested"],
+    "supports": {
+        "html": false,
+        "anchor": true,
+        "spacing": {
+            "padding": true,
+            "margin": true
+        }
+    },
+    "attributes": {
+        "card_title": {
+            "type": "string",
+            "default": ""
+        },
+        "image_url": {
+            "type": "string",
+            "default": ""
+        },
+        "image_alt": {
+            "type": "string",
+            "default": ""
+        },
+        "background_color": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "text_color": {
+            "type": "string",
+            "default": "#333333"
+        }
+    },
+    "render": "file:./render.php"
+}
