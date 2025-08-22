@@ -113,15 +113,6 @@ add_action('init', 'hyperfields_simple_example');
 ->whereTermSlugs(['featured', 'trending']) // Multiple term slugs
 ```
 
-## 📚 Full Documentation
-
-See the main plugin README.md for complete HyperFields documentation, including:
-- API reference
-- Field types
-- Conditional logic
-- Options pages
-- Integration examples
-
 ## 🚧 Optional: Compact Input for Options Pages
 
 To avoid hitting PHP's `max_input_vars` on complex options pages, HyperFields can compact all option inputs into a single POST variable.

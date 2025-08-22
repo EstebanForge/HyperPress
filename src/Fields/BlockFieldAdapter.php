@@ -15,9 +15,9 @@ class BlockFieldAdapter
         $this->block_attributes = $block_attributes;
     }
 
-    public static function from_field(Field $field, array $block_attributes = []): self
+    public static function fromField(Field $field, array $blockAttributes = []): self
     {
-        return new self($field, $block_attributes);
+        return new self($field, $blockAttributes);
     }
 
     public function getValue(): mixed
@@ -34,23 +34,23 @@ class BlockFieldAdapter
         // This method exists for interface consistency
     }
 
-    public function get_field(): Field
+    public function getField(): Field
     {
         return $this->field;
     }
 
-    public function get_attribute_name(): string
+    public function getAttributeName(): string
     {
         return $this->field->getName();
     }
 
-    public function to_block_attribute(): array
+    public function toBlockAttribute(): array
     {
-        $field_type = $this->field->getType();
+        $fieldType = $this->field->getType();
         $default = $this->field->getDefault();
 
         // Map field types to WordPress block attribute types
-        $type_map = [
+        $typeMap = [
             'text' => 'string',
             'textarea' => 'string',
             'number' => 'number',
@@ -67,20 +67,20 @@ class BlockFieldAdapter
             'wysiwyg' => 'string',
         ];
 
-        $attribute_type = $type_map[$field_type] ?? 'string';
+        $attributeType = $typeMap[$fieldType] ?? 'string';
 
         return [
-            'type' => $attribute_type,
+            'type' => $attributeType,
             'default' => $default,
         ];
     }
 
-    public function sanitize_for_block(mixed $value): mixed
+    public function sanitizeForBlock(mixed $value): mixed
     {
         return $this->field->sanitizeValue($value);
     }
 
-    public function validate_for_block(mixed $value): bool
+    public function validateForBlock(mixed $value): bool
     {
         return $this->field->validateValue($value);
     }

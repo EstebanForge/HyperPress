@@ -396,9 +396,10 @@ function hp_ds_is_rate_limited(array $options = []): bool
             ]);
 
             // Send rate limit info to client via script
+            // translators: %1$d: number of requests allowed; %2$d: time window in seconds.
             hp_ds_execute_script("
                 console.warn('" . esc_js(__('Rate limit exceeded for Datastar SSE endpoint', 'api-for-htmx')) . "');
-                console.info('" . esc_js(sprintf(__('Requests allowed: %d per %d seconds', 'api-for-htmx'), $config['requests_per_window'], $config['time_window_seconds'])) . "');
+                console.info('" . esc_js(sprintf(__('Requests allowed: %1$d per %2$d seconds', 'api-for-htmx'), $config['requests_per_window'], $config['time_window_seconds'])) . "');
             ");
         }
 
@@ -425,6 +426,7 @@ function hp_ds_is_rate_limited(array $options = []): bool
 
         // Log remaining requests for debugging
         if ($remaining_requests <= 5) {
+            // translators: %d: number of remaining requests in the current time window.
             hp_ds_execute_script("
                 console.warn('" . esc_js(sprintf(__('Rate limit warning: %d requests remaining in this time window', 'api-for-htmx'), $remaining_requests)) . "');
             ");

@@ -59,7 +59,7 @@ class PostField extends Field
         return delete_post_meta($this->post_id, $this->getMetaKey()) !== false;
     }
 
-    public function get_post_id(): int
+    public function getPostId(): int
     {
         return $this->post_id;
     }

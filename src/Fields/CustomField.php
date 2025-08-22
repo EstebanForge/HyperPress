@@ -16,50 +16,50 @@ class CustomField extends Field
         return new self('custom', $name, $label);
     }
 
-    public function set_render_callback(string $callback): self
+    public function setRenderCallback(string $callback): self
     {
         $this->render_callback = $callback;
 
         return $this;
     }
 
-    public function set_sanitize_callback(string $callback): self
+    public function setSanitizeCallback(string $callback): self
     {
         $this->sanitize_callback = $callback;
 
         return $this;
     }
 
-    public function set_validate_callback(string $callback): self
+    public function setValidateCallback(string $callback): self
     {
         $this->validate_callback = $callback;
 
         return $this;
     }
 
-    public function set_assets(array $assets): self
+    public function setAssets(array $assets): self
     {
         $this->assets = $assets;
 
         return $this;
     }
 
-    public function get_render_callback(): string
+    public function getRenderCallback(): string
     {
         return $this->render_callback;
     }
 
-    public function get_sanitize_callback(): string
+    public function getSanitizeCallback(): string
     {
         return $this->sanitize_callback;
     }
 
-    public function get_validate_callback(): string
+    public function getValidateCallback(): string
     {
         return $this->validate_callback;
     }
 
-    public function get_assets(): array
+    public function getAssets(): array
     {
         return $this->assets;
     }

@@ -162,17 +162,18 @@ class Block
             $templateString = 'file:' . $relativePath;
         }
         $this->render_template = $templateString;
+
         return $this;
     }
 
     /**
-    * Validate a file-based template path for security.
-    * Throws InvalidArgumentException if invalid.
-    *
-    * @param string $relativePath
-    * @param array $exts Array of allowed extensions
-    * @return void
-    */
+     * Validate a file-based template path for security.
+     * Throws InvalidArgumentException if invalid.
+     *
+     * @param string $relativePath
+     * @param array $exts Array of allowed extensions
+     * @return void
+     */
     private static function validateTemplatePath(string $relativePath, array $exts): void
     {
         if (str_starts_with($relativePath, '/') || str_contains($relativePath, '..')) {
@@ -186,7 +187,7 @@ class Block
             }
         }
         if (!$validExt) {
-            throw new \InvalidArgumentException('Invalid template extension. Only [' . implode(', ', $exts) . '] files are allowed.');
+            throw new \InvalidArgumentException('Invalid template extension. Only [' . esc_html(implode(', ', $exts)) . '] files are allowed.');
         }
         $allowedBases = [];
         if (defined('WP_CONTENT_DIR')) {

@@ -27,19 +27,19 @@ class ConditionalLogic
         'NOT EMPTY',
     ];
 
-    public static function if(string $field_name): self
+    public static function if(string $fieldName): self
     {
-        return new self($field_name);
+        return new self($fieldName);
     }
 
-    public static function where(string $field_name): self
+    public static function where(string $fieldName): self
     {
-        return new self($field_name);
+        return new self($fieldName);
     }
 
-    private function __construct(string $field_name)
+    private function __construct(string $fieldName)
     {
-        $this->field_name = $field_name;
+        $this->field_name = $fieldName;
     }
 
     public function equals(mixed $value): self
@@ -50,7 +50,7 @@ class ConditionalLogic
         return $this;
     }
 
-    public function not_equals(mixed $value): self
+    public function notEquals(mixed $value): self
     {
         $this->operator = '!=';
         $this->value = $value;
@@ -58,7 +58,7 @@ class ConditionalLogic
         return $this;
     }
 
-    public function greater_than(mixed $value): self
+    public function greaterThan(mixed $value): self
     {
         $this->operator = '>';
         $this->value = $value;
@@ -66,7 +66,7 @@ class ConditionalLogic
         return $this;
     }
 
-    public function less_than(mixed $value): self
+    public function lessThan(mixed $value): self
     {
         $this->operator = '<';
         $this->value = $value;
@@ -82,7 +82,7 @@ class ConditionalLogic
         return $this;
     }
 
-    public function not_in(array $values): self
+    public function notIn(array $values): self
     {
         $this->operator = 'NOT IN';
         $this->value = $values;
@@ -106,7 +106,7 @@ class ConditionalLogic
         return $this;
     }
 
-    public function not_empty(): self
+    public function notEmpty(): self
     {
         $this->operator = 'NOT EMPTY';
         $this->value = null;
@@ -114,7 +114,7 @@ class ConditionalLogic
         return $this;
     }
 
-    public function and(string $field_name): self
+    public function and(string $fieldName): self
     {
         $this->conditions[] = [
             'field' => $this->field_name,
@@ -122,18 +122,18 @@ class ConditionalLogic
             'value' => $this->value,
         ];
 
-        $this->field_name = $field_name;
+        $this->field_name = $fieldName;
         $this->operator = '';
         $this->value = null;
 
         return $this;
     }
 
-    public function or(string $field_name): self
+    public function or(string $fieldName): self
     {
         $this->relation = 'OR';
 
-        return $this->and($field_name);
+        return $this->and($fieldName);
     }
 
     public function evaluate(array $values): bool
@@ -151,7 +151,7 @@ class ConditionalLogic
         $results = [];
         foreach ($conditions as $condition) {
             $field_value = $values[$condition['field']] ?? null;
-            $results[] = $this->evaluate_condition($field_value, $condition['operator'], $condition['value']);
+            $results[] = $this->evaluateCondition($field_value, $condition['operator'], $condition['value']);
         }
 
         if ($this->relation === 'OR') {
@@ -161,35 +161,35 @@ class ConditionalLogic
         return !in_array(false, $results, true);
     }
 
-    private function evaluate_condition(mixed $field_value, string $operator, mixed $compare_value): bool
+    private function evaluateCondition(mixed $fieldValue, string $operator, mixed $compareValue): bool
     {
         switch ($operator) {
             case '=':
-                return $field_value === $compare_value;
+                return $fieldValue === $compareValue;
             case '!=':
-                return $field_value !== $compare_value;
+                return $fieldValue !== $compareValue;
             case '>':
-                return $field_value > $compare_value;
+                return $fieldValue > $compareValue;
             case '<':
-                return $field_value < $compare_value;
+                return $fieldValue < $compareValue;
             case '>=':
-                return $field_value >= $compare_value;
+                return $fieldValue >= $compareValue;
             case '<=':
-                return $field_value <= $compare_value;
+                return $fieldValue <= $compareValue;
             case 'IN':
-                return in_array($field_value, (array) $compare_value, true);
+                return in_array($fieldValue, (array) $compareValue, true);
             case 'NOT IN':
-                return !in_array($field_value, (array) $compare_value, true);
+                return !in_array($fieldValue, (array) $compareValue, true);
             case 'CONTAINS':
-                return strpos((string) $field_value, (string) $compare_value) !== false;
+                return strpos((string) $fieldValue, (string) $compareValue) !== false;
             case 'NOT CONTAINS':
-                return strpos((string) $field_value, (string) $compare_value) === false;
+                return strpos((string) $fieldValue, (string) $compareValue) === false;
             case 'EMPTY':
-                return empty($field_value);
+                return empty($fieldValue);
             case 'NOT EMPTY':
-                return !empty($field_value);
+                return !empty($fieldValue);
             default:
-                return apply_filters('hyperpress/fields/conditional_logic_evaluate', false, $field_value, $operator, $compare_value);
+                return apply_filters('hyperpress/fields/conditional_logic_evaluate', false, $fieldValue, $operator, $compareValue);
         }
     }
 

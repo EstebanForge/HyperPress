@@ -11,9 +11,12 @@ Documentation for the HyperPress plugin, with its Hypermedia REST API, and its l
  - [Hypermedia Libraries](./hypermedia-libraries.md)
 
  - [HyperFields (API and Field Types)](./hyperfields.md)
-   - HyperFields provides options pages, metaboxes, conditional logic, and a simple facade/helper API.
    - [Overview](./hyperfields.md#overview)
    - [Getting and Saving Values](./hyperfields.md#getting-and-saving-values)
+   - [API Reference](./hyperfields.md#api-reference)
+   - [Field Types](./hyperfields.md#field-types-reference)
+   - [Conditional Logic](./hyperfields.md#conditional-logic)
+   - [Options Pages](./hyperfields.md#options-pages)
    - [Sanitization](./hyperfields.md#sanitization)
    - [Helper Factories](./hyperfields.md#helper-factories-for-building-uis)
    - [Tips](./hyperfields.md#tips)
@@ -34,7 +37,6 @@ Documentation for the HyperPress plugin, with its Hypermedia REST API, and its l
    - [Notes](./hyperblocks.md#notes)
 
  - [Helper Functions](./helper-functions.md)
-   - [Backward Compatibility](./helper-functions.md#backward-compatibility)
  - [Datastar Helper Functions](./datastar-helpers.md)
    - [Quick Start: Minimal SSE Example](./datastar-helpers.md#quick-start-minimal-sse-example)
  - [HyperBlocks Examples](./hyperblocks-examples.md)

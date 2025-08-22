@@ -9,7 +9,7 @@ class TermField extends Field
     private int $term_id;
     private string $meta_key_prefix = '';
 
-    public static function for_term(int $term_id, string $type, string $name, string $label): self
+    public static function forTerm(int $term_id, string $type, string $name, string $label): self
     {
         $field = new self($type, $name, $label);
         $field->term_id = $term_id;

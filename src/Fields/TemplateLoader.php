@@ -14,11 +14,11 @@ class TemplateLoader
         add_action('admin_enqueue_scripts', [__CLASS__, 'enqueueAssets']);
         add_action('wp_enqueue_scripts', [__CLASS__, 'enqueueAssets']);
         // Enqueue type-specific assets after fields render (footer), so checks see rendered types
-        add_action('admin_print_footer_scripts', [__CLASS__, 'enqueue_late_assets']);
-        add_action('wp_print_footer_scripts', [__CLASS__, 'enqueue_late_assets']);
+        add_action('admin_print_footer_scripts', [__CLASS__, 'enqueueLateAssets']);
+        add_action('wp_print_footer_scripts', [__CLASS__, 'enqueueLateAssets']);
     }
 
-    public static function render_field(array $field_data, mixed $value = null): void
+    public static function renderField(array $field_data, mixed $value = null): void
     {
         $type = $field_data['type'] ?? 'text';
         $name = $field_data['name'] ?? '';
@@ -36,7 +36,7 @@ class TemplateLoader
         }
 
         // Get the appropriate template file
-        $template_file = self::get_template_file($type);
+        $template_file = self::getTemplateFile($type);
 
         if (!$template_file) {
             // Fallback to basic input template
@@ -52,11 +52,11 @@ class TemplateLoader
 
         } else {
             // Last resort fallback
-            self::render_fallback($field_data);
+            self::renderFallback($field_data);
         }
     }
 
-    private static function get_template_file(string $type): ?string
+    private static function getTemplateFile(string $type): ?string
     {
         // Check cache first
         if (isset(self::$template_cache[$type])) {
@@ -94,7 +94,7 @@ class TemplateLoader
         return null;
     }
 
-    private static function render_fallback(array $field_data): void
+    private static function renderFallback(array $field_data): void
     {
         $type = $field_data['type'] ?? 'text';
         $name = $field_data['name'] ?? '';
@@ -190,7 +190,7 @@ class TemplateLoader
         ]);
     }
 
-    public static function enqueue_late_assets(): void
+    public static function enqueueLateAssets(): void
     {
         // Enqueue heavy/type-specific assets after fields have rendered (works for admin and frontend)
         if (isset(self::$rendered_field_types['map'])) {
@@ -200,7 +200,7 @@ class TemplateLoader
         }
     }
 
-    public static function get_supported_field_types(): array
+    public static function getSupportedFieldTypes(): array
     {
         $types = [
             'text',

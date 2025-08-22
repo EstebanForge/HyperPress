@@ -310,8 +310,8 @@ final class Registry
         // Add attributes from block fields using HyperFields adapter
         foreach ($block->fields as $field) {
             // $field is HyperPress\Blocks\Field wrapper; use underlying HyperField
-            $adapter = \HyperPress\Fields\BlockFieldAdapter::from_field($field->getHyperField());
-            $attributes[$field->name] = $adapter->to_block_attribute();
+            $adapter = \HyperPress\Fields\BlockFieldAdapter::fromField($field->getHyperField());
+            $attributes[$field->name] = $adapter->toBlockAttribute();
         }
 
         // Add attributes from attached field groups (only if not already defined by block)
@@ -320,8 +320,8 @@ final class Registry
             if ($group) {
                 foreach ($group->fields as $field) {
                     if (!array_key_exists($field->name, $attributes)) {
-                        $adapter = \HyperPress\Fields\BlockFieldAdapter::from_field($field->getHyperField());
-                        $attributes[$field->name] = $adapter->to_block_attribute();
+                        $adapter = \HyperPress\Fields\BlockFieldAdapter::fromField($field->getHyperField());
+                        $attributes[$field->name] = $adapter->toBlockAttribute();
                     }
                 }
             }
@@ -669,7 +669,7 @@ final class Registry
 
             // Sanitize/validate incoming attributes; apply defaults when missing/invalid
             foreach ($mergedFields as $name => $field) {
-                $adapter = \HyperPress\Fields\BlockFieldAdapter::from_field($field->getHyperField(), $attributes);
+                $adapter = \HyperPress\Fields\BlockFieldAdapter::fromField($field->getHyperField(), $attributes);
                 $incoming = $attributes[$name] ?? null;
 
                 if ($incoming === null) {
@@ -678,8 +678,8 @@ final class Registry
                     continue;
                 }
 
-                $sanitized = $adapter->sanitize_for_block($incoming);
-                if (!$adapter->validate_for_block($sanitized)) {
+                $sanitized = $adapter->sanitizeForBlock($incoming);
+                if (!$adapter->validateForBlock($sanitized)) {
                     $attributes[$name] = $field->getHyperField()->getDefault();
                 } else {
                     $attributes[$name] = $sanitized;

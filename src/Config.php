@@ -40,7 +40,7 @@ class Config
         // Developers should migrate to 'hyperpress/config/default_options'.
         $default_options = apply_filters_deprecated(
             'hmapi/default_options',
-            [ $default_options ],
+            [$default_options],
             '2.1.0',
             'hyperpress/config/default_options',
             'Use hyperpress/config/default_options instead.'

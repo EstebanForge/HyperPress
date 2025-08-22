@@ -9,7 +9,7 @@ class UserField extends Field
     private int $user_id;
     private string $meta_key_prefix = '';
 
-    public static function for_user(int $user_id, string $type, string $name, string $label): self
+    public static function forUser(int $user_id, string $type, string $name, string $label): self
     {
         $field = new self($type, $name, $label);
         $field->user_id = $user_id;

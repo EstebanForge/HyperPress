@@ -213,7 +213,7 @@ class RestApi
                 }
 
                 foreach ($mergedFields as $name => $field) {
-                    $adapter = \HyperPress\Fields\BlockFieldAdapter::from_field($field->getHyperField(), $attributes);
+                    $adapter = \HyperPress\Fields\BlockFieldAdapter::fromField($field->getHyperField(), $attributes);
                     $incoming = $attributes[$name] ?? null;
 
                     if ($incoming === null) {
@@ -221,8 +221,8 @@ class RestApi
                         continue;
                     }
 
-                    $sanitized = $adapter->sanitize_for_block($incoming);
-                    if (!$adapter->validate_for_block($sanitized)) {
+                    $sanitized = $adapter->sanitizeForBlock($incoming);
+                    if (!$adapter->validateForBlock($sanitized)) {
                         $attributes[$name] = $field->getHyperField()->getDefault();
                     } else {
                         $attributes[$name] = $sanitized;

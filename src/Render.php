@@ -572,7 +572,7 @@ class Render
             // Deprecated compatibility: hmapi/sanitize_param_key
             $sanitized_key = apply_filters_deprecated(
                 'hmapi/sanitize_param_key',
-                [ $sanitized_key, $original_key ],
+                [$sanitized_key, $original_key],
                 '2.1.0',
                 'hyperpress/render/sanitize_param_key',
                 'Use hyperpress/render/sanitize_param_key instead.'
@@ -588,7 +588,7 @@ class Render
                 // Deprecated compatibility: hmapi/sanitize_param_array_value
                 $sanitized_array = apply_filters_deprecated(
                     'hmapi/sanitize_param_array_value',
-                    [ $sanitized_array, $original_array ],
+                    [$sanitized_array, $original_array],
                     '2.1.0',
                     'hyperpress/render/sanitize_param_array_value',
                     'Use hyperpress/render/sanitize_param_array_value instead.'
@@ -601,7 +601,7 @@ class Render
                 // Deprecated compatibility: hmapi/sanitize_param_value
                 $sanitized_value = apply_filters_deprecated(
                     'hmapi/sanitize_param_value',
-                    [ $sanitized_value, $original_value ],
+                    [$sanitized_value, $original_value],
                     '2.1.0',
                     'hyperpress/render/sanitize_param_value',
                     'Use hyperpress/render/sanitize_param_value instead.'
@@ -661,19 +661,19 @@ class Render
         $extensions = [];
         if (defined('HYPERPRESS_TEMPLATE_EXT')) {
 
-$primary = (string) HYPERPRESS_TEMPLATE_EXT;
-$primaryParts = array_map('trim', explode(',', $primary));
-foreach ($primaryParts as $ext) {
-    if ($ext !== '' && !in_array($ext, $extensions, true)) {
-        $extensions[] = $ext;
-    }
-}
+            $primary = (string) HYPERPRESS_TEMPLATE_EXT;
+            $primaryParts = array_map('trim', explode(',', $primary));
+            foreach ($primaryParts as $ext) {
+                if ($ext !== '' && !in_array($ext, $extensions, true)) {
+                    $extensions[] = $ext;
+                }
+            }
 
         }
 
         if (defined('HYPERPRESS_LEGACY_TEMPLATE_EXT')) {
 
-$legacy = (string) HYPERPRESS_LEGACY_TEMPLATE_EXT;
+            $legacy = (string) HYPERPRESS_LEGACY_TEMPLATE_EXT;
 
             $parts = array_map('trim', explode(',', $legacy));
             foreach ($parts as $ext) {
@@ -724,7 +724,7 @@ $legacy = (string) HYPERPRESS_LEGACY_TEMPLATE_EXT;
         // Developers should migrate to 'hyperpress/render/register_template_path'.
         $namespaced_paths = apply_filters_deprecated(
             'hmapi/register_template_path',
-            [ $namespaced_paths ],
+            [$namespaced_paths],
             '2.1.0',
             'hyperpress/render/register_template_path',
             'Use hyperpress/render/register_template_path instead.'

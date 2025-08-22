@@ -17,7 +17,7 @@ $name_attr = $field_data['name_attr'] ?? $name;
 $label = $field_data['label'] ?? '';
 $value = $field_data['value'] ?? '';
 $required = $field_data['required'] ?? false;
-$help = $field_data['help'] ?? __('', 'api-for-htmx');
+$help = $field_data['help'] ?? '';
 
 // Editor settings
 $editor_settings = [
