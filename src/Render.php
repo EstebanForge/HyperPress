@@ -314,15 +314,15 @@ class Render
                 <div class="success-box">
                     <p><strong>Correct endpoint usage:</strong></p>
                     <ul>
-                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('my-template')); ?></code> - Loads template file <code>my-template<?php echo esc_html(HYPERPRESS_TEMPLATE_EXT); ?></code></li>
-                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('folder/template')); ?></code> - Loads <code>folder/template<?php echo esc_html(HYPERPRESS_TEMPLATE_EXT); ?></code></li>
-                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('noswap/header-update')); ?></code> - Loads <code>noswap/header-update<?php echo esc_html(HYPERPRESS_TEMPLATE_EXT); ?></code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('my-template')); ?></code> - Loads template file <code>my-template.hp.php</code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('folder/template')); ?></code> - Loads <code>folder/template.hp.php</code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('noswap/header-update')); ?></code> - Loads <code>noswap/header-update.hp.php</code></li>
                     </ul>
                 </div>
 
                 <h2>Template File Locations</h2>
                 <div class="info-box">
-                    <p>Template files (<code><?php echo esc_html(HYPERPRESS_TEMPLATE_EXT); ?></code>) should be placed in:</p>
+                    <p>Template files (<code>.hp.php</code>) should be placed in:</p>
                     <ul>
                         <li><strong>Theme:</strong> <code><?php echo esc_html(get_template_directory()); ?>/hypermedia/</code></li>
                         <li><strong>Child Theme:</strong> <code><?php echo esc_html(get_stylesheet_directory()); ?>/hypermedia/</code></li>
