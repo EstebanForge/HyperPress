@@ -13,7 +13,7 @@
 - **NEW:** REST API endpoints for dynamic block field definitions and live previews
 - **NEW:** Reusable field groups for consistent block development
 - **NEW:** Comprehensive documentation and demo blocks included
-- **NEW:** Backward compatible with existing WordPress block ecosystem
+- **NEW:** Compatible with existing WordPress block ecosystem
 - **BREAKING CHANGE:** The project's namespace has been updated from `HMApi` to `HyperPress` for clarity and branding. All public-facing helper functions have been renamed from `hm_` to `hp_`. Key constants and nonce identifiers have also been updated (`HMAPI_ABSPATH` is now `HYPERPRESS_ABSPATH`, and `hmapi_nonce` is now `hyperpress_nonce`). A backward-compatibility layer has been included to minimize disruption (ex: HyperPress provides alias for old now-deprecated functions). However, a major version bump was required to signal significant changes on new HyperPress v3.
 
 # 2.0.7 / 2025-08-02
