@@ -9,10 +9,12 @@
 
 declare(strict_types=1);
 
+use HyperPress\Fields\HyperFields;
+
 // No imports needed - functions are available globally in the namespace
 
 // Example 1: Basic Plugin Options Page
-$plugin_options = hp_option_page(__('My Plugin Settings', 'api-for-htmx'), 'my-plugin-settings')
+$plugin_options = HyperFields::makeOptionPage(__('My Plugin Settings', 'api-for-htmx'), 'my-plugin-settings')
     ->setMenuTitle(__('My Plugin', 'api-for-htmx'))
     ->setParentSlug('options-general.php')
     ->setFooterContent('<span>' . __('Demo Footer: Powered by HyperFields', 'api-for-htmx') . '</span>');
@@ -20,30 +22,30 @@ $plugin_options = hp_option_page(__('My Plugin Settings', 'api-for-htmx'), 'my-p
 // Add sections and fields
 $general_section = $plugin_options->addSection('general', __('General Settings', 'api-for-htmx'), __('Configure basic plugin settings', 'api-for-htmx'));
 $general_section->addField(
-    hp_field('text', 'plugin_title', __('Plugin Title', 'api-for-htmx'))
+    HyperFields::makeField('text', 'plugin_title', __('Plugin Title', 'api-for-htmx'))
         ->setDefault(__('My Awesome Plugin', 'api-for-htmx'))
         ->setPlaceholder(__('Enter plugin title...', 'api-for-htmx'))
 );
 
 $general_section->addField(
-    hp_field('textarea', 'plugin_description', __('Plugin Description', 'api-for-htmx'))
+    HyperFields::makeField('textarea', 'plugin_description', __('Plugin Description', 'api-for-htmx'))
         ->setPlaceholder(__('Describe your plugin...', 'api-for-htmx'))
         ->setHelp(__('This description will appear in the plugin header.', 'api-for-htmx'))
 );
 
 $general_section->addField(
-    hp_field('color', 'primary_color', __('Primary Color', 'api-for-htmx'))
+    HyperFields::makeField('color', 'primary_color', __('Primary Color', 'api-for-htmx'))
         ->setDefault('#007cba')
         ->setHelp(__('Choose the primary color for your plugin interface', 'api-for-htmx'))
 );
 
 $general_section->addField(
-    hp_field('image', 'plugin_logo', __('Plugin Logo', 'api-for-htmx'))
+    HyperFields::makeField('image', 'plugin_logo', __('Plugin Logo', 'api-for-htmx'))
         ->setHelp(__('Recommended size: 300x100px', 'api-for-htmx'))
 );
 
 $general_section->addField(
-    hp_field('checkbox', 'enable_feature_x', __('Enable Feature X', 'api-for-htmx'))
+    HyperFields::makeField('checkbox', 'enable_feature_x', __('Enable Feature X', 'api-for-htmx'))
         ->setDefault(true)
         ->setHelp(__('Turn on the advanced Feature X functionality', 'api-for-htmx'))
 );
@@ -52,14 +54,14 @@ $general_section->addField(
 $api_url = hp_get_endpoint_url();
 
 $general_section->addField(
-    hp_field('html', 'api_endpoint', __('API Endpoint', 'api-for-htmx'))
+    HyperFields::makeField('html', 'api_endpoint', __('API Endpoint', 'api-for-htmx'))
         ->setHtmlContent('<div><input type="text" readonly value="' . esc_attr($api_url) . '" style="width:100%" /></div>')
         ->setHelp(__('This is the base API endpoint for your integration.', 'api-for-htmx'))
 );
 
 // HTML/script field demo
 $general_section->addField(
-    hp_field('html', 'custom_script', __('Custom Script Demo', 'api-for-htmx'))
+    HyperFields::makeField('html', 'custom_script', __('Custom Script Demo', 'api-for-htmx'))
         ->setHtmlContent('<button id="demo-btn">' . esc_html__('Click Me', 'api-for-htmx') . '</button><script>document.getElementById("demo-btn").onclick=function(){alert("' . esc_js(__('Hello from HyperFields!', 'api-for-htmx')) . '");}</script>')
         ->setHelp(__('Demo of HTML field with script.', 'api-for-htmx'))
 );
@@ -68,38 +70,38 @@ $general_section->addField(
 $advanced_section = $plugin_options->addSection('advanced', 'Advanced Settings', 'Configure advanced functionality');
 
 // Tabs field for organizing complex settings
-$tabs_field = hp_tabs('settings_tabs', 'Configuration Tabs')
-    ->add_tab('api', 'API Settings', [
-        hp_field('text', 'api_key', 'API Key')
-        ->setPlaceholder('Enter your API key...')
-        ->setRequired(true),
-        hp_field('url', 'api_endpoint', 'API Endpoint')
-        ->setDefault('https://api.example.com/v1')
-        ->setRequired(true),
-        hp_field('select', 'api_version', 'API Version')
-        ->setOptions(['v1' => 'Version 1', 'v2' => 'Version 2'])
-        ->setDefault('v1')
+$tabs_field = HyperFields::makeTabs('settings_tabs', 'Configuration Tabs')
+    ->addTab('api', 'API Settings', [
+    HyperFields::makeField('text', 'api_key', 'API Key')
+    ->setPlaceholder('Enter your API key...')
+    ->setRequired(true),
+    HyperFields::makeField('url', 'api_endpoint', 'API Endpoint')
+    ->setDefault('https://api.example.com/v1')
+    ->setRequired(true),
+    HyperFields::makeField('select', 'api_version', 'API Version')
+    ->setOptions(['v1' => 'Version 1', 'v2' => 'Version 2'])
+    ->setDefault('v1')
     ])
-    ->add_tab('notifications', 'Notifications', [
-        hp_field('email', 'notification_email', 'Notification Email')
-        ->setDefault(get_option('admin_email')),
-        hp_field('multiselect', 'notification_types', 'Notification Types')
-        ->setOptions([
-                'new_user' => 'New User Registration',
-                'new_order' => 'New Orders',
-                'system_errors' => 'System Errors'
-            ])
+    ->addTab('notifications', 'Notifications', [
+    HyperFields::makeField('email', 'notification_email', 'Notification Email')
+    ->setDefault(get_option('admin_email')),
+    HyperFields::makeField('multiselect', 'notification_types', 'Notification Types')
+    ->setOptions([
+        'new_user' => 'New User Registration',
+        'new_order' => 'New Orders',
+        'system_errors' => 'System Errors'
+        ])
     ]);
 
 $advanced_section->addField($tabs_field);
 
 // Example 3: Repeater Field for Multiple Items
-$repeater_field = hp_repeater('social_links', 'Social Media Links')
+$repeater_field = HyperFields::makeRepeater('social_links', 'Social Media Links')
     ->setMinRows(1)
     ->setMaxRows(10)
-    ->set_label_template('{platform} ({url})')
-    ->add_sub_field(
-        hp_field('select', 'platform', 'Platform')
+    ->setLabelTemplate('{platform} ({url})')
+    ->addSubField(
+        HyperFields::makeField('select', 'platform', 'Platform')
         ->setOptions([
                 'facebook' => 'Facebook',
                 'twitter' => 'Twitter',
@@ -109,20 +111,20 @@ $repeater_field = hp_repeater('social_links', 'Social Media Links')
             ])
         ->setRequired(true)
     )
-    ->add_sub_field(
-        hp_field('url', 'url', 'URL')
+    ->addSubField(
+        HyperFields::makeField('url', 'url', 'URL')
         ->setPlaceholder('https://...')
         ->setRequired(true)
     )
-    ->add_sub_field(
-        hp_field('color', 'color', 'Brand Color')
+    ->addSubField(
+        HyperFields::makeField('color', 'color', 'Brand Color')
     );
 
 $advanced_section->addField($repeater_field);
 
 // Example 4: Conditional Logic
 $advanced_section->addField(
-    hp_field('radio', 'display_mode', 'Display Mode')
+    HyperFields::makeField('radio', 'display_mode', 'Display Mode')
         ->setOptions([
             'simple' => 'Simple Display',
             'advanced' => 'Advanced Display'
@@ -131,7 +133,7 @@ $advanced_section->addField(
 );
 
 $advanced_section->addField(
-    hp_field('number', 'items_per_page', 'Items Per Page')
+    HyperFields::makeField('number', 'items_per_page', 'Items Per Page')
         ->setDefault(10)
         // ->setMin(1)
         // ->setMax(100)
@@ -149,7 +151,7 @@ $advanced_section->addField(
 $plugin_options->register();
 
 // Example 5: Theme Options Page
-$theme_options = hp_option_page('Theme Settings', 'theme-settings')
+$theme_options = HyperFields::makeOptionPage('Theme Settings', 'theme-settings')
     ->setMenuTitle('Theme Options')
     ->setParentSlug('themes.php')
     ->setIconUrl('dashicons-admin-customizer');
@@ -157,12 +159,12 @@ $theme_options = hp_option_page('Theme Settings', 'theme-settings')
 // Header settings
 $header_section = $theme_options->addSection('header', 'Header Configuration', 'Customize your theme header');
 $header_section->addField(
-    hp_field('image', 'header_logo', 'Header Logo')
+    HyperFields::makeField('image', 'header_logo', 'Header Logo')
         ->setHelp('Recommended: transparent PNG, 200x60px')
 );
 
 $header_section->addField(
-    hp_field('radio_image', 'header_layout', 'Header Layout')
+    HyperFields::makeField('radio_image', 'header_layout', 'Header Layout')
         ->setOptions([
             'default' => 'https://via.placeholder.com/150x60/007cba/ffffff?text=Default',
             'centered' => 'https://via.placeholder.com/150x60/28a745/ffffff?text=Centered',
@@ -174,7 +176,7 @@ $header_section->addField(
 // Typography settings
 $typography_section = $theme_options->addSection('typography', 'Typography', 'Font and text settings');
 $typography_section->addField(
-    hp_field('select', 'primary_font', 'Primary Font')
+    HyperFields::makeField('select', 'primary_font', 'Primary Font')
         ->setOptions([
             'system' => 'System Fonts',
             'roboto' => 'Roboto',
@@ -186,7 +188,7 @@ $typography_section->addField(
 );
 
 $typography_section->addField(
-    hp_field('number', 'base_font_size', 'Base Font Size (px)')
+    HyperFields::makeField('number', 'base_font_size', 'Base Font Size (px)')
         ->setDefault(16)
     // ->setMin(12)
     // ->setMax(24)
@@ -195,13 +197,13 @@ $typography_section->addField(
 // Footer settings
 $footer_section = $theme_options->addSection('footer', 'Footer Configuration', 'Customize your theme footer');
 $footer_section->addField(
-    hp_field('textarea', 'footer_text', 'Footer Text')
+    HyperFields::makeField('textarea', 'footer_text', 'Footer Text')
         ->setDefault('© ' . date('Y') . ' All rights reserved.')
         ->setHelp('You can use HTML tags here')
 );
 
 $footer_section->addField(
-    hp_field('footer_scripts', 'footer_scripts', 'Footer Scripts')
+    HyperFields::makeField('footer_scripts', 'footer_scripts', 'Footer Scripts')
         ->setHelp('Add tracking codes or custom JavaScript here')
 );
 
@@ -209,7 +211,7 @@ $footer_section->addField(
 $theme_options->register();
 
 // Example 6: Custom Top-Level Menu
-$custom_menu = hp_option_page('Custom Plugin', 'custom-plugin')
+$custom_menu = HyperFields::makeOptionPage('Custom Plugin', 'custom-plugin')
     ->setMenuTitle('Custom Plugin')
     ->setIconUrl('dashicons-admin-generic')
     ->setPosition(30);
@@ -217,7 +219,7 @@ $custom_menu = hp_option_page('Custom Plugin', 'custom-plugin')
 // Dashboard section
 $dashboard_section = $custom_menu->addSection('dashboard', 'Dashboard', 'Welcome to your custom plugin dashboard');
 $dashboard_section->addField(
-    hp_field('html', 'dashboard_welcome', 'Welcome Message')
+    HyperFields::makeField('html', 'dashboard_welcome', 'Welcome Message')
         ->setHtmlContent('
         <div class="welcome-panel">
             <h2>Welcome to Custom Plugin!</h2>
@@ -229,7 +231,7 @@ $dashboard_section->addField(
 // Settings sections
 $settings_section = $custom_menu->addSection('settings', 'Plugin Settings', 'Configure your plugin behavior');
 $settings_section->addField(
-    hp_field('map', 'business_location', 'Business Location')
+    HyperFields::makeField('map', 'business_location', 'Business Location')
         // ->set_map_options([
         // 'zoom' => 15,
         // 'type' => 'roadmap'
@@ -237,7 +239,7 @@ $settings_section->addField(
 );
 
 $settings_section->addField(
-    hp_field('media_gallery', 'gallery_images', 'Gallery Images')
+    HyperFields::makeField('media_gallery', 'gallery_images', 'Gallery Images')
         // ->set_multiple(true)
 );
 

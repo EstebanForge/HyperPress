@@ -82,12 +82,12 @@ class Field
     protected function __construct(string $type, string $name, string $label)
     {
         if (!in_array($type, self::VALID_TYPES, true)) {
-            throw new \InvalidArgumentException("Invalid field type: {$type}");
+            throw new \InvalidArgumentException('Invalid field type: ' . esc_html($type));
         }
 
         // Allow hyphens in field names for compatibility with extension filenames
         if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_-]*$/', $name)) {
-            throw new \InvalidArgumentException("Invalid field name: {$name}");
+            throw new \InvalidArgumentException('Invalid field name: ' . esc_html($name));
         }
 
         $this->type = $type;
@@ -305,7 +305,7 @@ class Field
         $field_data = $this->toArray();
         $field_data['value'] = $value;
 
-        TemplateLoader::render_field($field_data, $value);
+        TemplateLoader::renderField($field_data, $value);
     }
 
     public function getOptionValue(): mixed

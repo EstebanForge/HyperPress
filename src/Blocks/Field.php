@@ -52,7 +52,7 @@ class Field
     private function __construct(string $type, string $name, string $label)
     {
         if (!in_array($type, self::FIELD_TYPES, true)) {
-            throw new \InvalidArgumentException("Unsupported field type: {$type}. Supported types: " . implode(', ', self::FIELD_TYPES));
+            throw new \InvalidArgumentException("Unsupported field type: {$type}. Supported types: " . esc_html(implode(', ', self::FIELD_TYPES)));
         }
 
         $this->hyperField = HyperField::make($type, $name, $label);

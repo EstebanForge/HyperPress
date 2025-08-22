@@ -70,7 +70,7 @@ $advanced_section = $plugin_options->addSection('advanced', 'Advanced Settings',
 
 // Tabs field for organizing complex settings
 $tabs_field = HyperFields::makeTabs('settings_tabs', 'Configuration Tabs')
-    ->add_tab('api', 'API Settings', [
+    ->addTab('api', 'API Settings', [
     HyperFields::makeField('text', 'api_key', 'API Key')
         ->setPlaceholder('Enter your API key...')
         ->setRequired(true),
@@ -81,7 +81,7 @@ $tabs_field = HyperFields::makeTabs('settings_tabs', 'Configuration Tabs')
         ->setOptions(['v1' => 'Version 1', 'v2' => 'Version 2'])
         ->setDefault('v1')
     ])
-    ->add_tab('notifications', 'Notifications', [
+    ->addTab('notifications', 'Notifications', [
     HyperFields::makeField('email', 'notification_email', 'Notification Email')
         ->setDefault(get_option('admin_email')),
     HyperFields::makeField('multiselect', 'notification_types', 'Notification Types')
@@ -98,8 +98,8 @@ $advanced_section->addField($tabs_field);
 $repeater_field = HyperFields::makeRepeater('social_links', 'Social Media Links')
     ->setMinRows(1)
     ->setMaxRows(10)
-    ->set_label_template('{platform} ({url})')
-    ->add_sub_field(
+    ->setLabelTemplate('{platform} ({url})')
+    ->addSubField(
     HyperFields::makeField('select', 'platform', 'Platform')
         ->setOptions([
                 'facebook' => 'Facebook',
@@ -110,12 +110,12 @@ $repeater_field = HyperFields::makeRepeater('social_links', 'Social Media Links'
             ])
         ->setRequired(true)
     )
-    ->add_sub_field(
+    ->addSubField(
     HyperFields::makeField('url', 'url', 'URL')
         ->setPlaceholder('https://...')
         ->setRequired(true)
     )
-    ->add_sub_field(
+    ->addSubField(
     HyperFields::makeField('color', 'color', 'Brand Color')
     );
 

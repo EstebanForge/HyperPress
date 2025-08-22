@@ -19,12 +19,13 @@
     "scripts": {
         "cs-fix": "php-cs-fixer fix",
         "ensure-vendor-dist": "mkdir -p vendor-dist",
-        "prod": [
+        "production": [
             "@cs-fix",
             "@prefix-namespaces",
             "@dump-autoload-prod"
         ],
         "dump-autoload-prod": "@php composer dump-autoload --optimize --no-dev",
+        "dump-autoload-dev": "@php composer dump-autoload",
         "prefix-namespaces": [
             "@ensure-vendor-dist",
             "strauss"

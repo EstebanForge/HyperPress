@@ -78,6 +78,7 @@ class HTMXLib
 
             $result[$extension_key] = [
                 'label'       => $label,
+                /* translators: %s: HTMX extension key (for example, "sse" or "preload"). */
                 'description' => $extension_descriptions[$extension_key] ?? sprintf(esc_html__('HTMX %s extension', 'api-for-htmx'), $extension_key),
             ];
         }

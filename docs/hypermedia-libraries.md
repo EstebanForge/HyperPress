@@ -1,8 +1,11 @@
+
 # Hypermedia Libraries
 
 Guidance on choosing and loading the integrated hypermedia libraries in HyperPress.
 
 ## Choosing a Hypermedia Library
+
+**Datastar is the default library.**
 
 This plugin comes with [HTMX](https://htmx.org), [Alpine Ajax](https://alpine-ajax.js.org/) and [Datastar](https://data-star.dev/) already integrated and enabled.
 

@@ -13,7 +13,7 @@ class TabsField extends Field
     private string $layout = 'horizontal';
     private string $active_tab = '';
 
-    public function add_tab(string $id, string $label, array $fields = []): self
+    public function addTab(string $id, string $label, array $fields = []): self
     {
         $this->tabs[$id] = [
             'id' => $id,
@@ -28,14 +28,14 @@ class TabsField extends Field
         return $this;
     }
 
-    public function set_layout(string $layout): self
+    public function setLayout(string $layout): self
     {
         $this->layout = in_array($layout, ['horizontal', 'vertical']) ? $layout : 'horizontal';
 
         return $this;
     }
 
-    public function set_active_tab(string $tab_id): self
+    public function setActiveTab(string $tab_id): self
     {
         if (isset($this->tabs[$tab_id])) {
             $this->active_tab = $tab_id;
@@ -44,7 +44,7 @@ class TabsField extends Field
         return $this;
     }
 
-    public function set_active_tab_from_url(string $param = 'tab'): self
+    public function setActiveTabFromUrl(string $param = 'tab'): self
     {
         if (isset($_GET[$param]) && isset($this->tabs[$_GET[$param]])) {
             $this->active_tab = sanitize_text_field($_GET[$param]);
@@ -53,19 +53,19 @@ class TabsField extends Field
         return $this;
     }
 
-    public function get_tab_url(string $tab_id): string
+    public function getTabUrl(string $tab_id): string
     {
         $current_url = add_query_arg([]); // Get current URL with all parameters
 
         return add_query_arg('tab', $tab_id, $current_url);
     }
 
-    public function get_tabs(): array
+    public function getTabs(): array
     {
         return $this->tabs;
     }
 
-    public function get_layout(): string
+    public function getLayout(): string
     {
         return $this->layout;
     }
@@ -75,7 +75,7 @@ class TabsField extends Field
         return $this->active_tab;
     }
 
-    public function get_tab_fields(string $tab_id): array
+    public function getTabFields(string $tab_id): array
     {
         return $this->tabs[$tab_id]['fields'] ?? [];
     }

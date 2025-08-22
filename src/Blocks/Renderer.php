@@ -89,7 +89,7 @@ class Renderer
         $templatePath = $this->validateTemplatePath($templatePath);
 
         if (!file_exists($templatePath)) {
-            throw new \Exception("Template file not found: {$templatePath}");
+            throw new \Exception('Template file not found: ' . esc_html($templatePath));
         }
 
         // Execute template in isolated scope
@@ -157,7 +157,7 @@ class Renderer
             // Try with ABSPATH prefix
             $realPath = realpath(ABSPATH . ltrim($templatePath, '/'));
             if ($realPath === false) {
-                throw new \Exception("Invalid template path: {$templatePath}");
+                throw new \Exception('Invalid template path: ' . esc_html($templatePath));
             }
         }
 
@@ -167,7 +167,7 @@ class Renderer
         // Check if path is within allowed directories
         if ($realContentDir && !str_starts_with($realPath, $realContentDir)
             && $realPluginDir && !str_starts_with($realPath, $realPluginDir)) {
-            throw new \Exception("Template path outside allowed directories: {$templatePath}");
+            throw new \Exception('Template path outside allowed directories: ' . esc_html($templatePath));
         }
 
         return $realPath;

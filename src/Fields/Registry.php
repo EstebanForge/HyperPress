@@ -16,7 +16,7 @@ class Registry
         // Private constructor for singleton
     }
 
-    public static function get_instance(): self
+    public static function getInstance(): self
     {
         if (self::$instance === null) {
             self::$instance = new self();
@@ -25,7 +25,7 @@ class Registry
         return self::$instance;
     }
 
-    public function register_field(string $context, string $name, Field $field): self
+    public function registerField(string $context, string $name, Field $field): self
     {
         if (!isset($this->fields[$context])) {
             $this->fields[$context] = [];
@@ -36,19 +36,19 @@ class Registry
         return $this;
     }
 
-    public function register_field_group(string $name, array $fields): self
+    public function registerFieldGroup(string $name, array $fields): self
     {
         $this->field_groups[$name] = $fields;
 
         return $this;
     }
 
-    public function get_field(string $context, string $name): ?Field
+    public function getField(string $context, string $name): ?Field
     {
         return $this->fields[$context][$name] ?? null;
     }
 
-    public function get_field_group(string $name): ?array
+    public function getFieldGroup(string $name): ?array
     {
         return $this->field_groups[$name] ?? null;
     }
@@ -58,27 +58,27 @@ class Registry
         return $this->fields[$context] ?? [];
     }
 
-    public function get_all_fields(): array
+    public function getAllFields(): array
     {
         return $this->fields;
     }
 
-    public function get_all_field_groups(): array
+    public function getAllFieldGroups(): array
     {
         return $this->field_groups;
     }
 
-    public function has_field(string $context, string $name): bool
+    public function hasField(string $context, string $name): bool
     {
         return isset($this->fields[$context][$name]);
     }
 
-    public function has_field_group(string $name): bool
+    public function hasFieldGroup(string $name): bool
     {
         return isset($this->field_groups[$name]);
     }
 
-    public function remove_field(string $context, string $name): self
+    public function removeField(string $context, string $name): self
     {
         if (isset($this->fields[$context][$name])) {
             unset($this->fields[$context][$name]);
@@ -87,7 +87,7 @@ class Registry
         return $this;
     }
 
-    public function remove_field_group(string $name): self
+    public function removeFieldGroup(string $name): self
     {
         if (isset($this->field_groups[$name])) {
             unset($this->field_groups[$name]);
@@ -96,10 +96,10 @@ class Registry
         return $this;
     }
 
-    public function register_post_fields(array $fields): self
+    public function registerPostFields(array $fields): self
     {
         foreach ($fields as $name => $field) {
-            $this->register_field('post', $name, $field);
+            $this->registerField('post', $name, $field);
         }
 
         return $this;
@@ -108,7 +108,7 @@ class Registry
     public function registerUserFields(array $fields): self
     {
         foreach ($fields as $name => $field) {
-            $this->register_field('user', $name, $field);
+            $this->registerField('user', $name, $field);
         }
 
         return $this;
@@ -117,7 +117,7 @@ class Registry
     public function registerTermFields(array $fields): self
     {
         foreach ($fields as $name => $field) {
-            $this->register_field('term', $name, $field);
+            $this->registerField('term', $name, $field);
         }
 
         return $this;
@@ -126,7 +126,7 @@ class Registry
     public function registerOptionFields(array $fields): self
     {
         foreach ($fields as $name => $field) {
-            $this->register_field('option', $name, $field);
+            $this->registerField('option', $name, $field);
         }
 
         return $this;
@@ -233,7 +233,7 @@ class Registry
                 if (isset($_GET['user_id'])) {
                     $user_id = intval($_GET['user_id']);
                 }
-                $user_field = UserField::for_user($user_id, $field->getType(), $field->getName(), $field->getLabel());
+                $user_field = UserField::forUser($user_id, $field->getType(), $field->getName(), $field->getLabel());
                 $value = $user_field->getValue();
                 break;
             case 'term':
@@ -242,7 +242,7 @@ class Registry
                     $term_id = intval($_GET['tag_ID']);
                 }
                 if ($term_id > 0) {
-                    $term_field = TermField::for_term($term_id, $field->getType(), $field->getName(), $field->getLabel());
+                    $term_field = TermField::forTerm($term_id, $field->getType(), $field->getName(), $field->getLabel());
                     $value = $term_field->getValue();
                 }
                 break;
@@ -296,7 +296,7 @@ class Registry
         foreach ($user_fields as $field) {
             $field_name = $field->getName();
             if (isset($_POST[$field_name])) {
-                $user_field = UserField::for_user($user_id, $field->getType(), $field_name, $field->getLabel());
+                $user_field = UserField::forUser($user_id, $field->getType(), $field_name, $field->getLabel());
                 $user_field->setValue($_POST[$field_name]);
             }
         }
@@ -312,7 +312,7 @@ class Registry
         foreach ($term_fields as $field) {
             $field_name = $field->getName();
             if (isset($_POST[$field_name])) {
-                $term_field = TermField::for_term($term_id, $field->getType(), $field_name, $field->getLabel());
+                $term_field = TermField::forTerm($term_id, $field->getType(), $field_name, $field->getLabel());
                 $term_field->setValue($_POST[$field_name]);
             }
         }

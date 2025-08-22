@@ -13,37 +13,37 @@ class RepeaterField extends Field
     private int $min_rows = 0;
     private int $max_rows = 0;
 
-    public function add_sub_field(Field $field): self
+    public function addSubField(Field $field): self
     {
         $this->sub_fields[$field->getName()] = $field;
 
         return $this;
     }
 
-    public function add_sub_fields(array $fields): self
+    public function addSubFields(array $fields): self
     {
         foreach ($fields as $field) {
-            $this->add_sub_field($field);
+            $this->addSubField($field);
         }
 
         return $this;
     }
 
-    public function set_label_template(string $template): self
+    public function setLabelTemplate(string $template): self
     {
         $this->label_template = $template;
 
         return $this;
     }
 
-    public function set_collapsible(bool $collapsible = true): self
+    public function setCollapsible(bool $collapsible = true): self
     {
         $this->collapsible = $collapsible;
 
         return $this;
     }
 
-    public function set_collapsed(bool $collapsed = true): self
+    public function setCollapsed(bool $collapsed = true): self
     {
         $this->collapsed = $collapsed;
 
@@ -64,7 +64,7 @@ class RepeaterField extends Field
         return $this;
     }
 
-    public function get_sub_fields(): array
+    public function getSubFields(): array
     {
         return $this->sub_fields;
     }
@@ -74,22 +74,22 @@ class RepeaterField extends Field
         return $this->label_template;
     }
 
-    public function is_collapsible(): bool
+    public function isCollapsible(): bool
     {
         return $this->collapsible;
     }
 
-    public function is_collapsed(): bool
+    public function isCollapsed(): bool
     {
         return $this->collapsed;
     }
 
-    public function get_min_rows(): int
+    public function getMinRows(): int
     {
         return $this->min_rows;
     }
 
-    public function get_max_rows(): int
+    public function getMaxRows(): int
     {
         return $this->max_rows;
     }
