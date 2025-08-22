@@ -1,6 +1,6 @@
 === HyperPress: Modern Hypermedia for WordPress ===
 Contributors: tcattd
-Tags: hypermedia, ajax, htmx, hyperscript, alpinejs, datastar
+Tags: hypermedia, ajax, htmx, alpinejs, datastar
 Stable tag: 3.0.0
 Requires at least: 6.4
 Tested up to: 6.6
