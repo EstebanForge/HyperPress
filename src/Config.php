@@ -6,7 +6,7 @@
  * @since   2023-12-04
  */
 
-namespace HMApi;
+namespace HyperPress;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -25,17 +25,28 @@ class Config
      * @since 2.0.0
      * @return array
      */
-    private function get_options(): array
+    private function getOptions(): array
     {
         $default_options = [
-            'active_hypermedia_library' => 'htmx',
-            'hmapi_meta_config_content' => '',
+            // Use the same key as Assets to avoid mismatch
+            'active_library' => 'datastar',
+            'hyperpress_meta_config_content' => '',
         ];
 
         // Apply filter to allow programmatic configuration
-        $default_options = apply_filters('hmapi/default_options', $default_options);
+        $default_options = apply_filters('hyperpress/config/default_options', $default_options);
 
-        return get_option('hmapi_options', $default_options);
+        // Backward compatibility: allow legacy defaults filter to modify options.
+        // Developers should migrate to 'hyperpress/config/default_options'.
+        $default_options = apply_filters_deprecated(
+            'hmapi/default_options',
+            [ $default_options ],
+            '2.1.0',
+            'hyperpress/config/default_options',
+            'Use hyperpress/config/default_options instead.'
+        );
+
+        return get_option('hyperpress_options', $default_options);
     }
 
     /**
@@ -45,30 +56,31 @@ class Config
      * @since 2023-12-04
      * @return void
      */
-    public function insert_config_meta_tag(): void
+    public function insertConfigMetaTag(): void
     {
-        $options = $this->get_options();
-        $active_library = $options['active_hypermedia_library'] ?? 'htmx'; // Default to htmx if not set
+        $options = $this->getOptions();
+        // Align with Assets.php option key
+        $active_library = $options['active_library'] ?? 'datastar'; // Default to datastar if not set
 
         // Only output htmx-config if HTMX is the active library
         if ('htmx' !== $active_library) {
             return;
         }
 
-        $meta_config_content = $options['hmapi_meta_config_content'] ?? '';
+        $meta_config_content = $options['hyperpress_meta_config_content'] ?? '';
 
         if (empty($meta_config_content)) {
             return;
         }
 
-        $meta_config_content = apply_filters('hmapi/meta/config_content', $meta_config_content);
+        $meta_config_content = apply_filters('hyperpress/config/config_meta_content', $meta_config_content);
 
         // Sanitize the content for the meta tag
         $escaped_meta_config_content = esc_attr($meta_config_content);
         $meta_tag = "<meta name=\"htmx-config\" content='{$escaped_meta_config_content}'>";
 
         // Allow filtering of the entire meta tag
-        $meta_tag = apply_filters('hmapi/meta/insert_config_tag', $meta_tag, $escaped_meta_config_content);
+        $meta_tag = apply_filters('hyperpress/config/insert_config_meta_tag', $meta_tag, $escaped_meta_config_content);
 
         /*
          * Action hook before echoing the htmx-config meta tag.
@@ -76,7 +88,7 @@ class Config
          * @since 2.0.0
          * @param string $meta_tag The complete HTML meta tag.
          */
-        do_action('hmapi/meta/before_echo_config_tag', $meta_tag);
+        do_action('hyperpress/config/before_echo_config_meta_tag', $meta_tag);
 
         echo $meta_tag;
     }

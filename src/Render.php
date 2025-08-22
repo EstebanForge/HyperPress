@@ -6,7 +6,7 @@
  * @since   2023-11-22
  */
 
-namespace HMApi;
+namespace HyperPress;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -26,7 +26,7 @@ class Render
      *
      * @var string|null
      */
-    protected $template_name;
+    protected $templateName;
 
     /**
      * Current request nonce for validation.
@@ -40,7 +40,7 @@ class Render
      *
      * @var array|false
      */
-    protected $hmvals = false;
+    protected $hpVals = false;
 
     /**
      * Render the template.
@@ -48,47 +48,44 @@ class Render
      * @since 2023-11-22
      * @return void
      */
-    public function load_template()
+    public function loadTemplate()
     {
         global $wp_query;
 
         // Determine which endpoint is being accessed (primary or legacy)
         $actual_endpoint_key = null;
-        if (defined('HMAPI_ENDPOINT') && isset($wp_query->query_vars[HMAPI_ENDPOINT])) {
-            $actual_endpoint_key = HMAPI_ENDPOINT;
-        } elseif (defined('HMAPI_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HMAPI_LEGACY_ENDPOINT])) {
-            $actual_endpoint_key = HMAPI_LEGACY_ENDPOINT;
+        if (defined('HYPERPRESS_ENDPOINT') && isset($wp_query->query_vars[HYPERPRESS_ENDPOINT])) {
+            $actual_endpoint_key = HYPERPRESS_ENDPOINT;
+        } elseif (defined('HYPERPRESS_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HYPERPRESS_LEGACY_ENDPOINT])) {
+            $actual_endpoint_key = HYPERPRESS_LEGACY_ENDPOINT;
         }
 
         // Don't go further if this is not a request for one of our endpoints
         if (null === $actual_endpoint_key) {
             // Check if this might be a base endpoint access (without version)
-            $this->handle_base_endpoint_access();
+            $this->handleBaseEndpointAccess();
 
             return;
         }
 
         // Check if nonce exists and is valid, only on POST requests
-        if (!$this->valid_nonce() && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!$this->validNonce() && $_SERVER['REQUEST_METHOD'] === 'POST') {
             wp_die(esc_html__('Invalid nonce', 'api-for-htmx'), esc_html__('Error', 'api-for-htmx'), ['response' => 403]);
         }
 
         // Sanitize template name using the determined endpoint key
-        $template_name = $this->sanitize_path($wp_query->query_vars[$actual_endpoint_key]);
+        $template_name = $this->sanitizePath($wp_query->query_vars[$actual_endpoint_key]);
 
-        // Get hmvals from $_REQUEST and sanitize them
-        $hmvals = $_REQUEST; // Nonce is validated in valid_nonce()
-        if (!isset($hmvals) || empty($hmvals)) {
-            $hmvals = false;
+        // Get hp_vals from $_REQUEST and sanitize them
+        $hp_vals = $_REQUEST; // Nonce is validated in valid_nonce()
+        if (!isset($hp_vals) || empty($hp_vals)) {
+            $hp_vals = false;
         } else {
-            $hmvals = $this->sanitize_params($hmvals);
+            $hp_vals = $this->sanitizeParams($hp_vals);
         }
 
-        // For backward compatibility
-        $hxvals = $hmvals;
-
         // Load the requested template or fail with a 404
-        $this->render_or_fail($template_name, $hmvals);
+        $this->renderOrFail($template_name, $hp_vals);
         die(); // No wp_die() here, we don't want to show the complete WP error page
     }
 
@@ -102,38 +99,35 @@ class Render
      *
      * @return void
      */
-    protected function render_or_fail($template_name = '', $hmvals = false)
+    protected function renderOrFail($template_name = '', $hp_vals = false)
     {
         if (empty($template_name)) {
-            $this->show_developer_info_page('missing-template-name');
+            $this->showDeveloperInfoPage('missing-template-name');
 
             return;
         }
 
         // Get our template file and vars
-        $template_path = $this->get_template_file($template_name);
+        $template_path = $this->getTemplateFile($template_name);
 
         if (!$template_path) {
-            $this->show_developer_info_page('invalid-route', $template_name);
+            $this->showDeveloperInfoPage('invalid-route', $template_name);
 
             return;
         }
 
         // Check if the template exists
         if (!file_exists($template_path)) {
-            $this->show_developer_info_page('template-not-found', $template_name, $template_path);
+            $this->showDeveloperInfoPage('template-not-found', $template_name, $template_path);
 
             return;
         }
 
         // To help developers know when template files were loaded via our plugin
-        define('HMAPI_REQUEST', true);
-
-        // For backward compatibility
-        $hxvals = $hmvals;
+        define('HYPERPRESS_REQUEST', true);
 
         // Run actions before loading the template
-        do_action('hmapi/before_template_load', $template_name, $hmvals);
+        do_action('hyperpress/before_template_load', $template_name, $hp_vals);
 
         // Load the template
         require_once $template_path;
@@ -148,7 +142,7 @@ class Render
      * @param string $template_path Optional template path that was searched
      * @return void
      */
-    protected function show_developer_info_page($error_type = 'endpoint-info', $template_name = '', $template_path = '')
+    protected function showDeveloperInfoPage($error_type = 'endpoint-info', $template_name = '', $template_path = '')
     {
         status_header(200); // Use 200 to show helpful info instead of 404
 
@@ -162,16 +156,16 @@ class Render
         $current_endpoint = '';
         $endpoint_version = '';
 
-        if (defined('HMAPI_ENDPOINT') && isset($wp_query->query_vars[HMAPI_ENDPOINT])) {
-            $current_endpoint = HMAPI_ENDPOINT;
-            $endpoint_version = defined('HMAPI_ENDPOINT_VERSION') ? HMAPI_ENDPOINT_VERSION : 'v1';
-        } elseif (defined('HMAPI_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HMAPI_LEGACY_ENDPOINT])) {
-            $current_endpoint = HMAPI_LEGACY_ENDPOINT;
-            $endpoint_version = defined('HMAPI_ENDPOINT_VERSION') ? HMAPI_ENDPOINT_VERSION : 'v1';
+        if (defined('HYPERPRESS_ENDPOINT') && isset($wp_query->query_vars[HYPERPRESS_ENDPOINT])) {
+            $current_endpoint = HYPERPRESS_ENDPOINT;
+            $endpoint_version = defined('HYPERPRESS_ENDPOINT_VERSION') ? HYPERPRESS_ENDPOINT_VERSION : 'v1';
+        } elseif (defined('HYPERPRESS_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HYPERPRESS_LEGACY_ENDPOINT])) {
+            $current_endpoint = HYPERPRESS_LEGACY_ENDPOINT;
+            $endpoint_version = defined('HYPERPRESS_ENDPOINT_VERSION') ? HYPERPRESS_ENDPOINT_VERSION : 'v1';
         }
 
         $base_url = home_url($current_endpoint . '/' . $endpoint_version);
-        $plugin_name = defined('HMAPI_PLUGIN_NAME') ? HMAPI_PLUGIN_NAME : 'HyperPress: Modern Hypermedia for WordPress';
+        $plugin_name = 'HyperPress';
 
         // Only show debug info if WP_DEBUG is enabled or user can manage options
         $show_debug = defined('WP_DEBUG') && WP_DEBUG || current_user_can('manage_options');
@@ -320,30 +314,30 @@ class Render
                 <div class="success-box">
                     <p><strong>Correct endpoint usage:</strong></p>
                     <ul>
-                        <li><code class="endpoint-url"><?php echo esc_url(hm_get_endpoint_url('my-template')); ?></code> - Loads template file <code>my-template.hm.php</code></li>
-                        <li><code class="endpoint-url"><?php echo esc_url(hm_get_endpoint_url('folder/template')); ?></code> - Loads <code>folder/template.hm.php</code></li>
-                        <li><code class="endpoint-url"><?php echo esc_url(hm_get_endpoint_url('noswap/header-update')); ?></code> - Loads <code>noswap/header-update.hm.php</code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('my-template')); ?></code> - Loads template file <code>my-template.hp.php</code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('folder/template')); ?></code> - Loads <code>folder/template.hp.php</code></li>
+                        <li><code class="endpoint-url"><?php echo esc_url(hp_get_endpoint_url('noswap/header-update')); ?></code> - Loads <code>noswap/header-update.hp.php</code></li>
                     </ul>
                 </div>
 
                 <h2>Template File Locations</h2>
                 <div class="info-box">
-                    <p>Template files (<code>.hm.php</code>) should be placed in:</p>
+                    <p>Template files (<code>.hp.php</code>) should be placed in:</p>
                     <ul>
                         <li><strong>Theme:</strong> <code><?php echo esc_html(get_template_directory()); ?>/hypermedia/</code></li>
                         <li><strong>Child Theme:</strong> <code><?php echo esc_html(get_stylesheet_directory()); ?>/hypermedia/</code></li>
-                        <li><strong>Plugin:</strong> <code><?php echo esc_html(dirname(HMAPI_INSTANCE_LOADED_PATH)); ?>/hypermedia/</code></li>
+                        <li><strong>Plugin:</strong> <code><?php echo esc_html(dirname(HYPERPRESS_INSTANCE_LOADED_PATH)); ?>/hypermedia/</code></li>
                     </ul>
                 </div>
 
                 <h2>Available Helper Functions</h2>
                 <div class="info-box">
                     <ul>
-                        <li><code>hm_validate_request()</code> - Validate nonce and request</li>
-                        <li><code>hm_send_header_response($data, $action)</code> - Send header-only response</li>
-                        <li><code>hm_die($message)</code> - Die gracefully with error message</li>
-                        <li><code>hm_get_endpoint_url($template)</code> - Get URL for template</li>
-                        <li><code>hm_endpoint_url($template)</code> - Echoes endpoint URL for template</li>
+                        <li><code>hp_validate_request()</code> - Validate nonce and request</li>
+                        <li><code>hp_send_header_response($data, $action)</code> - Send header-only response</li>
+                        <li><code>hp_die($message)</code> - Die gracefully with error message</li>
+                        <li><code>hp_get_endpoint_url($template)</code> - Get URL for template</li>
+                        <li><code>hp_endpoint_url($template)</code> - Echoes endpoint URL for template</li>
                     </ul>
                 </div>
 
@@ -360,7 +354,7 @@ class Render
                                 <code>Requested Template:</code> <?php echo esc_html($template_name); ?><br>
                             <?php endif; ?>
                             <code>WordPress Version:</code> <?php echo esc_html(get_bloginfo('version')); ?><br>
-                            <code>Plugin Version:</code> <?php echo esc_html(defined('HMAPI_LOADED_VERSION') ? HMAPI_LOADED_VERSION : 'Unknown'); ?>
+                            <code>Plugin Version:</code> <?php echo esc_html(defined('HYPERPRESS_LOADED_VERSION') ? HYPERPRESS_LOADED_VERSION : 'Unknown'); ?>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -382,25 +376,25 @@ class Render
      * @since 2.0.0
      * @return void
      */
-    protected function handle_base_endpoint_access()
+    protected function handleBaseEndpointAccess()
     {
         $request_uri = $_SERVER['REQUEST_URI'] ?? '';
 
         // Check if the request URI matches our base endpoints
         $base_endpoints = [];
-        if (defined('HMAPI_ENDPOINT')) {
-            $base_endpoints[] = '/' . HMAPI_ENDPOINT . '/';
-            $base_endpoints[] = '/' . HMAPI_ENDPOINT;
+        if (defined('HYPERPRESS_ENDPOINT')) {
+            $base_endpoints[] = '/' . HYPERPRESS_ENDPOINT . '/';
+            $base_endpoints[] = '/' . HYPERPRESS_ENDPOINT;
         }
-        if (defined('HMAPI_LEGACY_ENDPOINT')) {
-            $base_endpoints[] = '/' . HMAPI_LEGACY_ENDPOINT . '/';
-            $base_endpoints[] = '/' . HMAPI_LEGACY_ENDPOINT;
+        if (defined('HYPERPRESS_LEGACY_ENDPOINT')) {
+            $base_endpoints[] = '/' . HYPERPRESS_LEGACY_ENDPOINT . '/';
+            $base_endpoints[] = '/' . HYPERPRESS_LEGACY_ENDPOINT;
         }
 
         foreach ($base_endpoints as $endpoint) {
             if (strpos($request_uri, $endpoint) !== false) {
                 // This is likely a base endpoint access, show helpful info
-                $this->show_developer_info_page('endpoint-info');
+                $this->showDeveloperInfoPage('endpoint-info');
 
                 return;
             }
@@ -409,13 +403,13 @@ class Render
 
     /**
      * Check if nonce exists and is valid
-     * nonce: hmapi_nonce.
+     * nonce: hyperpress_nonce.
      *
      * @since 2023-11-30
      *
      * @return bool
      */
-    protected function valid_nonce()
+    protected function validNonce()
     {
         // https://github.com/WP-API/api-core/blob/develop/wp-includes/rest-api.php#L555
         $nonce = null;
@@ -433,11 +427,9 @@ class Render
             return false;
         }
 
-        // Check for the new nonce first, then fall back to the legacy nonce.
-        $is_valid_new = wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hmapi_nonce');
-        $is_valid_legacy = wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hxwp_nonce');
+        $is_valid = wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hyperpress_nonce');
 
-        if (!$is_valid_new && !$is_valid_legacy) {
+        if (!$is_valid) {
             return false;
         }
 
@@ -456,7 +448,7 @@ class Render
      *
      * @return string|false The sanitized path string, or false if sanitization fails or input is empty.
      */
-    private function sanitize_path($path_string = '')
+    private function sanitizePath($path_string = '')
     {
         if (empty($path_string)) {
             return false;
@@ -465,7 +457,7 @@ class Render
         $path_string = (string) $path_string;
 
         // Attempt to parse using the colon separator.
-        $parsed_data = $this->parse_namespaced_template($path_string);
+        $parsed_data = $this->parseNamespacedTemplate($path_string);
 
         if ($parsed_data !== false) {
             // Namespaced path: namespace:template_segment
@@ -487,7 +479,7 @@ class Render
 
                 if ($index === count($template_segment_parts) - 1) {
                     // Last part is the filename
-                    $sanitized_template_segment_parts[] = $this->sanitize_file_name($part_cleaned);
+                    $sanitized_template_segment_parts[] = $this->sanitizeFileName($part_cleaned);
                 } else {
                     // Directory part
                     $sanitized_template_segment_parts[] = sanitize_key($part_cleaned);
@@ -518,7 +510,7 @@ class Render
 
                 if ($index === count($template_segment_parts) - 1) {
                     // Last part is the filename
-                    $sanitized_template_segment_parts[] = $this->sanitize_file_name($part_cleaned);
+                    $sanitized_template_segment_parts[] = $this->sanitizeFileName($part_cleaned);
                 } else {
                     // Directory part
                     $sanitized_template_segment_parts[] = sanitize_key($part_cleaned);
@@ -543,7 +535,7 @@ class Render
      *
      * @return string|false Sanitized file name, or false if input is empty.
      */
-    private function sanitize_file_name($file_name = '')
+    private function sanitizeFileName($file_name = '')
     {
         if (empty($file_name)) {
             return false;
@@ -556,51 +548,81 @@ class Render
     }
 
     /**
-     * Sanitize request parameters (hmvals).
+     * Sanitize request parameters (hp_vals).
      * Applies WordPress sanitization functions to all request parameters and removes nonces.
      * Supports both single values and arrays (for multi-value form elements).
      *
      * @since 2023-11-30
      *
-     * @param array $hmvals Raw request parameters to sanitize.
+     * @param array $hp_vals Raw request parameters to sanitize.
      *
      * @return array|false Sanitized parameters array, or false if input is empty.
      */
-    private function sanitize_params($hmvals = [])
+    private function sanitizeParams($hp_vals = [])
     {
-        if (empty($hmvals)) {
+        if (empty($hp_vals)) {
             return false;
         }
 
         // Sanitize each param
-        foreach ($hmvals as $key => $value) {
+        foreach ($hp_vals as $key => $value) {
             // Sanitize key
-            $key = apply_filters('hmapi/sanitize_param_key', sanitize_key($key), $key);
+            $original_key = $key;
+            $sanitized_key = apply_filters('hyperpress/render/sanitize_param_key', sanitize_key($original_key), $original_key);
+            // Deprecated compatibility: hmapi/sanitize_param_key
+            $sanitized_key = apply_filters_deprecated(
+                'hmapi/sanitize_param_key',
+                [ $sanitized_key, $original_key ],
+                '2.1.0',
+                'hyperpress/render/sanitize_param_key',
+                'Use hyperpress/render/sanitize_param_key instead.'
+            );
+            $key = $sanitized_key;
 
             // For form elements with multiple values
             // https://github.com/EstebanForge/HTMX-API-WP/discussions/8
             if (is_array($value)) {
                 // Sanitize each value
-                $value = apply_filters('hmapi/sanitize_param_array_value', array_map('sanitize_text_field', $value), $key);
+                $original_array = $value;
+                $sanitized_array = apply_filters('hyperpress/render/sanitize_param_array_value', array_map('sanitize_text_field', $original_array), $key);
+                // Deprecated compatibility: hmapi/sanitize_param_array_value
+                $sanitized_array = apply_filters_deprecated(
+                    'hmapi/sanitize_param_array_value',
+                    [ $sanitized_array, $original_array ],
+                    '2.1.0',
+                    'hyperpress/render/sanitize_param_array_value',
+                    'Use hyperpress/render/sanitize_param_array_value instead.'
+                );
+                $value = $sanitized_array;
             } else {
                 // Sanitize single value
-                $value = apply_filters('hmapi/sanitize_param_value', sanitize_text_field($value), $key);
+                $original_value = $value;
+                $sanitized_value = apply_filters('hyperpress/render/sanitize_param_value', sanitize_text_field($original_value), $key);
+                // Deprecated compatibility: hmapi/sanitize_param_value
+                $sanitized_value = apply_filters_deprecated(
+                    'hmapi/sanitize_param_value',
+                    [ $sanitized_value, $original_value ],
+                    '2.1.0',
+                    'hyperpress/render/sanitize_param_value',
+                    'Use hyperpress/render/sanitize_param_value instead.'
+                );
+                $value = $sanitized_value;
             }
 
             // Update param
-            $hmvals[$key] = $value;
+            $hp_vals[$key] = $value;
         }
 
         // Remove nonce if exists
-        if (isset($hmvals['_wpnonce'])) { // Standard WordPress nonce key in $_REQUEST
-            unset($hmvals['_wpnonce']);
+        if (isset($hp_vals['_wpnonce'])) { // Standard WordPress nonce key in $_REQUEST
+            unset($hp_vals['_wpnonce']);
         }
         // Also unset our specific nonce if it was passed as a regular param, though primary check is _wpnonce
-        if (isset($hmvals['hmapi_nonce'])) {
-            unset($hmvals['hmapi_nonce']);
+        if (isset($hp_vals['hyperpress_nonce'])) {
+            unset($hp_vals['hyperpress_nonce']);
         }
 
-        return $hmvals;
+        return $hp_vals;
     }
 
     /**
@@ -611,7 +633,7 @@ class Render
      *
      * @return string
      */
-    protected function get_theme_path()
+    protected function getThemePath()
     {
         $theme_path = trailingslashit(get_template_directory());
 
@@ -633,17 +655,37 @@ class Render
      * @param string $template_name The name of the template file (without extension).
      * @return string|false The full path to the found template file, or false if not found.
      */
-    private function find_template_with_extensions(string $base_dir, string $template_name): string|false
+    private function findTemplateWithExtensions(string $base_dir, string $template_name): string|false
     {
-        // Define the extensions to check, with primary first.
-        $extensions = [
-            HMAPI_TEMPLATE_EXT,        // Primary: .hm.php
-            HMAPI_LEGACY_TEMPLATE_EXT, // Legacy: .htmx.php
-        ];
+        // Build the list of extensions to check, with primary first, then any legacy ones.
+        $extensions = [];
+        if (defined('HYPERPRESS_TEMPLATE_EXT')) {
+
+$primary = (string) HYPERPRESS_TEMPLATE_EXT;
+$primaryParts = array_map('trim', explode(',', $primary));
+foreach ($primaryParts as $ext) {
+    if ($ext !== '' && !in_array($ext, $extensions, true)) {
+        $extensions[] = $ext;
+    }
+}
+
+        }
+
+        if (defined('HYPERPRESS_LEGACY_TEMPLATE_EXT')) {
+
+$legacy = (string) HYPERPRESS_LEGACY_TEMPLATE_EXT;
+
+            $parts = array_map('trim', explode(',', $legacy));
+            foreach ($parts as $ext) {
+                if ($ext !== '' && !in_array($ext, $extensions, true)) {
+                    $extensions[] = $ext;
+                }
+            }
+        }
 
         foreach ($extensions as $extension) {
             $potential_path = $base_dir . $template_name . $extension;
-            $resolved_path = $this->sanitize_full_path($potential_path);
+            $resolved_path = $this->sanitizeFullPath($potential_path);
 
             if ($resolved_path) {
                 // Ensure the resolved path is within the allowed base directory.
@@ -659,7 +701,7 @@ class Render
 
     /**
      * Determine our template file.
-     * It first checks for templates in paths registered via 'hmapi/register_template_path'.
+     * It first checks for templates in paths registered via 'hyperpress/register_template_path'.
      * If a namespaced template is requested (e.g., "namespace:template-name") and found, it's used.
      * If an explicit namespace is used but not found, it will fail (no fallback).
      * Otherwise (no namespace in request), it falls back to the default theme's template directory.
@@ -669,14 +711,25 @@ class Render
      *
      * @return string|false The full, sanitized path to the template file, or false if not found.
      */
-    protected function get_template_file($template_name = '')
+    protected function getTemplateFile($templateName = '')
     {
-        if (empty($template_name)) {
+        if (empty($templateName)) {
             return false;
         }
 
-        $namespaced_paths = apply_filters('hmapi/register_template_path', []);
-        $parsed_template_data = $this->parse_namespaced_template($template_name);
+        // Primary filter for registering namespaced template base paths.
+        $namespaced_paths = apply_filters('hyperpress/render/register_template_path', []);
+
+        // Backward compatibility: allow legacy registrations via deprecated filter.
+        // Developers should migrate to 'hyperpress/render/register_template_path'.
+        $namespaced_paths = apply_filters_deprecated(
+            'hmapi/register_template_path',
+            [ $namespaced_paths ],
+            '2.1.0',
+            'hyperpress/render/register_template_path',
+            'Use hyperpress/render/register_template_path instead.'
+        );
+        $parsed_template_data = $this->parseNamespacedTemplate($templateName);
 
         if ($parsed_template_data !== false) {
             $namespace = $parsed_template_data['namespace'];
@@ -684,7 +737,7 @@ class Render
 
             if (isset($namespaced_paths[$namespace])) {
                 $base_dir_registered = trailingslashit((string) $namespaced_paths[$namespace]);
-                $found_path = $this->find_template_with_extensions($base_dir_registered, $template_part);
+                $found_path = $this->findTemplateWithExtensions($base_dir_registered, $template_part);
 
                 if ($found_path) {
                     return $found_path;
@@ -695,13 +748,11 @@ class Render
         } else {
             // No colon found (or invalid colon format). Treat as a theme-relative path.
             $default_paths = [
-                $this->get_theme_path() . HMAPI_TEMPLATE_DIR . '/',
-                $this->get_theme_path() . HMAPI_LEGACY_TEMPLATE_DIR . '/',
+                $this->getThemePath() . HYPERPRESS_TEMPLATE_DIR . '/',
+                $this->getThemePath() . HYPERPRESS_LEGACY_TEMPLATE_DIR . '/',
             ];
 
-            // Apply modern and legacy filters for backward compatibility.
-            $modern_paths = apply_filters('hmapi/get_template_file/templates_path', $default_paths);
-            $default_templates_paths_array = apply_filters('hxwp/get_template_file/templates_path', $modern_paths);
+            $default_templates_paths_array = apply_filters('hyperpress/render/get_template_file/templates_path', $default_paths);
 
             foreach ((array) $default_templates_paths_array as $default_path_item_base) {
                 if (empty($default_path_item_base)) {
@@ -709,7 +760,7 @@ class Render
                 }
 
                 $base_dir_theme = trailingslashit((string) $default_path_item_base);
-                $found_path = $this->find_template_with_extensions($base_dir_theme, $template_name);
+                $found_path = $this->findTemplateWithExtensions($base_dir_theme, $templateName);
 
                 if ($found_path) {
                     return $found_path;
@@ -728,10 +779,10 @@ class Render
      * @param string $template_name The template name to parse.
      * @return array{'namespace': string, 'template': string}|false Array with 'namespace' and 'template' keys if ':' is found and parts are valid, or false otherwise.
      */
-    protected function parse_namespaced_template($template_name)
+    protected function parseNamespacedTemplate($templateName)
     {
-        if (str_contains((string) $template_name, ':')) {
-            $parts = explode(':', (string) $template_name, 2);
+        if (str_contains((string) $templateName, ':')) {
+            $parts = explode(':', (string) $templateName, 2);
             if (count($parts) === 2 && !empty($parts[0]) && !empty($parts[1])) {
                 return [
                     'namespace' => $parts[0],
@@ -753,18 +804,18 @@ class Render
      *
      * @return string|false Resolved and sanitized file path, or false if invalid/nonexistent.
      */
-    protected function sanitize_full_path($full_path = '')
+    protected function sanitizeFullPath($fullPath = '')
     {
-        if (empty($full_path)) {
+        if (empty($fullPath)) {
             return false;
         }
 
         // Ensure full path is always a string
-        $full_path = (string) $full_path;
+        $fullPath = (string) $fullPath;
 
         // Realpath
-        $full_path = realpath($full_path);
+        $fullPath = realpath($fullPath);
 
-        return $full_path;
+        return $fullPath;
     }
 }

@@ -6,7 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    '765877c22806cd3aae73f7162b2a69d7' => $vendorDir . '/adbario/php-dot-notation/src/helpers.php',
-    '09cf3936aa2ba06d40dd63bf48b69aca' => $vendorDir . '/jeffreyvanrossum/wp-settings/src/helpers.php',
     'b4e0b991acd5ddad926ebc747d73282f' => $baseDir . '/bootstrap.php',
+    '2803859e227f0e3ceb34ed7862ddd1d0' => $baseDir . '/includes/backward-compatibility.php',
 );

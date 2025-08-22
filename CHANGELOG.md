@@ -1,7 +1,23 @@
 # Changelog
 
+# 3.0.0 / 2025-08-17
+- **NEW:** **HyperBlocks** - Sane PHP-based block creation system, no JavaScript required, with **two complementary approaches**
+  - **Fluent API**: PHP-only block development.
+  - **block.json**: WordPress-standard JSON blocks.
+  - **Unified Editor**: Both approaches use the same React editor component for consistent UX.
+  - **Zero JavaScript**: Build complex Gutenberg blocks using only PHP.
+- **NEW:** **HyperFields** - PHP-based field creation system, no JavaScript required, for use with Gutenberg blocks, metaboxes and custom option pages.
+- **NEW:** Auto-discovery system for blocks in `/hyperblocks/` directories
+- **NEW:** Server-side rendering engine with secure PHP template execution
+- **NEW:** Custom component system with `<RichText>` and `<InnerBlocks>` support
+- **NEW:** REST API endpoints for dynamic block field definitions and live previews
+- **NEW:** Reusable field groups for consistent block development
+- **NEW:** Comprehensive documentation and demo blocks included
+- **NEW:** Backward compatible with existing WordPress block ecosystem
+- **BREAKING CHANGE:** The project's namespace has been updated from `HMApi` to `HyperPress` for clarity and branding. All public-facing helper functions have been renamed from `hm_` to `hp_`. Key constants and nonce identifiers have also been updated (`HMAPI_ABSPATH` is now `HYPERPRESS_ABSPATH`, and `hmapi_nonce` is now `hyperpress_nonce`). A backward-compatibility layer has been included to minimize disruption, but a major version bump is required to signal this significant change.
+
 # 2.0.7 / 2025-08-02
-- **IMPROVEMENT:** Added a `hmapi/before_template_load` action hook that fires before each hypermedia template is loaded, providing a centralized point for common template preparation logic. Thanks @eduwass.
+- **IMPROVEMENT:** Added a `hyperpress/before_template_load` action hook that fires before each hypermedia template partial is loaded, providing a centralized point for common template preparation logic. Thanks @eduwass.
 - **FIX:** Added `stripslashes_deep()` to the `hm_ds_read_signals()` function to remove WordPress "magic quotes" slashes from GET requests, ensuring proper JSON decoding for Datastar signals. Thanks @eduwass.
 - Updated Datastar JS library to the latest version.
 - Updated Datastar PHP SDK to the latest version.
@@ -12,7 +28,7 @@
 # 2.0.5 / 2025-07-11
 - **NEW:** Added a suite of Datastar helper functions (`hm_ds_*`) to simplify working with Server-Sent Events (SSE), including functions for patching elements, managing signals, and executing scripts.
 - **IMPROVEMENT:** The admin settings page now dynamically displays tabs based on the selected active library (HTMX, Alpine Ajax, or Datastar), reducing UI clutter.
-- **REFACTOR:** Centralized plugin option management by introducing a `get_options()` method in the main plugin class.
+- **REFACTOR:** Centralized plugin option management by introducing a `getOptions()` method in the main plugin class.
 - **REFACTOR:** Improved the structure of the admin options page for better maintainability and separation of concerns.
 - **FIX:** Several bugfixes and improvements.
 
@@ -23,9 +39,9 @@
 - **NEW:** Template engine now supports both `.hm.php` (primary) and `.htmx.php` (legacy) extensions.
 - **NEW:** Template engine now supports both `hypermedia` (primary) and `htmx-templates` (legacy) theme directories.
 - **NEW:** Added `hm_get_endpoint_url()` helper function to get the API endpoint URL.
-- **NEW:** Added `hmapi_enpoint_url()` helper function to echo the API endpoint URL in templates.
+- **NEW:** Added `hyperpress_enpoint_url()` helper function to echo the API endpoint URL in templates.
 - **NEW:** Added `hm_is_library_mode()` helper function to detect when plugin is running as a Composer library.
-- **NEW:** Comprehensive programmatic configuration via `hmapi/default_options` filter for all plugin settings.
+- **NEW:** Comprehensive programmatic configuration via `hyperpress/default_options` filter for all plugin settings.
 - **NEW:** Library mode automatically hides admin interface when plugin is used as a Composer dependency.
 - **NEW:** Enhanced Composer library integration with automatic version conflict resolution.
 - **NEW:** Fixed Strauss namespace prefixing to include WPSettings template files via `override_autoload` configuration.
@@ -33,10 +49,10 @@
 - **IMPROVED:** The `$hmvals` variable is now available in templates, containing the request parameters.
 - **IMPROVED:** Better detection of library vs plugin mode based on WordPress active_plugins list.
 - **IMPROVED:** Complete documentation for programmatic configuration with real-world examples.
-- **BACKWARD COMPATIBILITY:** All `hxwp_*` functions are maintained as deprecated aliases for `hmapi_*` functions.
+- **BACKWARD COMPATIBILITY:** All `hxwp_*` functions are maintained as deprecated aliases for `hyperpress_*` functions.
 - **BACKWARD COMPATIBILITY:** The legacy `$hxvals` variable is still available in templates for backward compatibility.
-- **BACKWARD COMPATIBILITY:** Dual nonce system supports both `hmapi_nonce` (new) and `hxwp_nonce` (legacy).
-- **BACKWARD COMPATIBILITY:** Legacy filter hooks (`hxwp/`) are preserved alongside new `hmapi/` prefixed filters.
+- **BACKWARD COMPATIBILITY:** Dual nonce system supports both `hyperpress_nonce` (new) and `hxwp_nonce` (legacy).
+- **BACKWARD COMPATIBILITY:** Legacy filter hooks (`hxwp/`) are preserved alongside new `hyperpress/` prefixed filters.
 - **BACKWARD COMPATIBILITY:** The plugin now intelligently sends the correct nonce with the request header, ensuring compatibility with legacy themes.
 - **DOCUMENTATION:** Updated `README.md` with comprehensive library usage guide and reorganized structure for better flow.
 

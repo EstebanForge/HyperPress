@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'estebanforge/hyperpress',
-        'pretty_version' => '2.0.7',
-        'version' => '2.0.7.0',
+        'pretty_version' => '3.0.0',
+        'version' => '3.0.0.0',
         'reference' => null,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -10,30 +10,12 @@
         'dev' => true,
     ),
     'versions' => array(
-        'adbario/php-dot-notation' => array(
-            'pretty_version' => '3.3.0',
-            'version' => '3.3.0.0',
-            'reference' => 'a94ce4493d19ea430baa8d7d210a2c9bd7129fc2',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../adbario/php-dot-notation',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'estebanforge/hyperpress' => array(
-            'pretty_version' => '2.0.7',
-            'version' => '2.0.7.0',
+            'pretty_version' => '3.0.0',
+            'version' => '3.0.0.0',
             'reference' => null,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'jeffreyvanrossum/wp-settings' => array(
-            'pretty_version' => '1.2.2',
-            'version' => '1.2.2.0',
-            'reference' => '89f4713690a800c4e23f7578f12035ce4f6d0007',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../jeffreyvanrossum/wp-settings',
             'aliases' => array(),
             'dev_requirement' => false,
         ),

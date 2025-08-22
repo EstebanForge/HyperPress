@@ -1,0 +1,43 @@
+{
+    "name": "hyperblocks/hero-banner-json",
+    "title": "HB Hero Banner (JSON)",
+    "description": "A hero banner block with headline, subtitle, and call-to-action button - block.json implementation.",
+    "category": "widgets",
+    "icon": "format-image",
+    "keywords": ["hero", "banner", "cta", "headline"],
+    "supports": {
+        "html": false,
+        "anchor": true,
+        "spacing": {
+            "padding": true,
+            "margin": true
+        }
+    },
+    "attributes": {
+        "headline": {
+            "type": "string",
+            "default": ""
+        },
+        "subtitle": {
+            "type": "string",
+            "default": ""
+        },
+        "button_url": {
+            "type": "string",
+            "default": ""
+        },
+        "button_text": {
+            "type": "string",
+            "default": "Learn More"
+        },
+        "background_color": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "text_color": {
+            "type": "string",
+            "default": "#333333"
+        }
+    },
+    "render": "file:./render.php"
+}

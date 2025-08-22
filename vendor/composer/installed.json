@@ -1,125 +1,6 @@
 {
     "packages": [
         {
-            "name": "adbario/php-dot-notation",
-            "version": "3.3.0",
-            "version_normalized": "3.3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/adbario/php-dot-notation.git",
-                "reference": "a94ce4493d19ea430baa8d7d210a2c9bd7129fc2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/adbario/php-dot-notation/zipball/a94ce4493d19ea430baa8d7d210a2c9bd7129fc2",
-                "reference": "a94ce4493d19ea430baa8d7d210a2c9bd7129fc2",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^7.4 || ^8.0"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^1.8",
-                "phpunit/phpunit": "^9.5",
-                "squizlabs/php_codesniffer": "^3.7"
-            },
-            "time": "2023-02-24T20:27:50+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
-                "psr-4": {
-                    "HMApi\\Adbar\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Riku Särkinen",
-                    "email": "riku@adbar.io"
-                }
-            ],
-            "description": "PHP dot notation access to arrays",
-            "homepage": "https://github.com/adbario/php-dot-notation",
-            "keywords": [
-                "ArrayAccess",
-                "dotnotation"
-            ],
-            "support": {
-                "issues": "https://github.com/adbario/php-dot-notation/issues",
-                "source": "https://github.com/adbario/php-dot-notation/tree/3.3.0"
-            },
-            "install-path": "../../vendor-dist/adbario/php-dot-notation/"
-        },
-        {
-            "name": "jeffreyvanrossum/wp-settings",
-            "version": "1.2.2",
-            "version_normalized": "1.2.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jeffreyvr/wp-settings.git",
-                "reference": "89f4713690a800c4e23f7578f12035ce4f6d0007"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jeffreyvr/wp-settings/zipball/89f4713690a800c4e23f7578f12035ce4f6d0007",
-                "reference": "89f4713690a800c4e23f7578f12035ce4f6d0007",
-                "shasum": ""
-            },
-            "require": {
-                "adbario/php-dot-notation": "^3.3",
-                "php": "^7.4|^8.0"
-            },
-            "require-dev": {
-                "laravel/pint": "^1.4",
-                "phpcompatibility/php-compatibility": "*",
-                "spatie/ray": "^1.36"
-            },
-            "time": "2023-10-20T20:18:58+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
-                "psr-4": {
-                    "HMApi\\Jeffreyvr\\WPSettings\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jeffrey van Rossum",
-                    "email": "jeffrey@vanrossum.dev"
-                }
-            ],
-            "description": "Handy wrapper to make creating WordPress settings pages a breeze.",
-            "support": {
-                "issues": "https://github.com/jeffreyvr/wp-settings/issues",
-                "source": "https://github.com/jeffreyvr/wp-settings/tree/1.2.2"
-            },
-            "funding": [
-                {
-                    "url": "https://vanrossum.dev/donate",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/jeffreyvr",
-                    "type": "github"
-                }
-            ],
-            "install-path": "../../vendor-dist/jeffreyvanrossum/wp-settings/"
-        },
-        {
             "name": "starfederation/datastar-php",
             "version": "1.0.0-RC.3",
             "version_normalized": "1.0.0.0-RC3",
@@ -147,7 +28,7 @@
             "installation-source": "dist",
             "autoload": {
                 "psr-4": {
-                    "HMApi\\starfederation\\datastar\\": "src/"
+                    "HyperPress\\starfederation\\datastar\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",

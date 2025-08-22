@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace HMApi\Libraries;
+namespace HyperPress\Libraries;
 
-use HMApi\Main;
+use HyperPress\Main;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -23,11 +23,11 @@ class HTMXLib
      * Get available HTMX extensions with descriptions using centralized URL management.
      *
      * This method dynamically retrieves the list of available HTMX extensions from the
-     * centralized CDN URL system in Main::get_cdn_urls(). It ensures that only extensions
+     * centralized CDN URL system in Main::getCdnUrls(). It ensures that only extensions
      * that are actually available in the CDN configuration can be displayed and enabled
      * in the admin interface.
      *
-     * @since 2.0.2 Adapted from HMApi\Admin\Options
+     * @since 2.0.2 Adapted from HyperPress\Admin\Options
      *
      * @param Main $main_instance Main plugin instance for accessing CDN URLs.
      * @return array {
@@ -36,9 +36,9 @@ class HTMXLib
      *     @type string $extension_key Extension description for display in admin interface.
      * }
      */
-    public static function get_extensions(Main $main_instance): array
+    public static function getExtensions(Main $main_instance): array
     {
-        $cdn_urls = $main_instance->get_cdn_urls();
+        $cdn_urls = $main_instance->getCdnUrls();
         $available_extensions = $cdn_urls['htmx_extensions'] ?? [];
 
         // Extension descriptions - these remain as fallbacks and for better UX

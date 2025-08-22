@@ -1,17 +1,17 @@
 === HyperPress: Modern Hypermedia for WordPress ===
 Contributors: tcattd
 Tags: hypermedia, ajax, htmx, hyperscript, alpinejs, datastar
-Stable tag: 2.0.7
-Requires at least: 6.5
+Stable tag: 3.0.0
+Requires at least: 6.4
 Tested up to: 6.6
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
-An unofficial WordPress plugin that enables the use of Hypermedia on your WordPress site, theme, and/or plugins. Intended for software developers.
+Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.
 
 == Description ==
-An unofficial WordPress plugin that enables the use of Hypermedia on WordPress. Adds a new endpoint `/wp-html/v1/` from which you can load any Hypermedia template.
+Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.
 
 Hypermedia is a concept that extends the idea of hypertext by allowing for more complex interactions and data representations. It enables the use of AJAX, WebSockets, and Server-Sent Events directly in HTML using attributes, without writing any JavaScript. It reuses an "old" concept, [Hypermedia](https://hypermedia.systems/), to handle the modern web in a more HTML-like and natural way.
 
@@ -32,7 +32,7 @@ The plugin has an opt-in option, not enforced, to include these third-party libr
 
 == Frequently Asked Questions ==
 = Where is the FAQ? =
-You can [read the full FAQ at GitHub](https://github.com/EstebanForge/HyperPress/blob/main/FAQ.md).
+You can [read the full FAQ at GitHub](https://github.com/EstebanForge/HyperPress/blob/main/docs/faq.md).
 
 = Suggestions, Support? =
 Please, open [a discussion](https://github.com/EstebanForge/HyperPress/discussions).

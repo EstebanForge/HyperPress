@@ -2,7 +2,7 @@
   "name": "hyperpress",
   "author": "Esteban Cuevas",
   "license": "GPL-2.0-or-later",
-  "version": "2.0.7",
+  "version": "3.0.0",
   "description": "Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.",
   "keywords": [],
   "main": "index.js",
@@ -17,9 +17,11 @@
     "update-alpine-ajax": "npm run update-libraries -- --library=alpine-ajax",
     "update-datastar": "npm run update-libraries -- --library=datastar",
     "update-all": "npm run update-libraries -- --all",
-    "postinstall": "echo '📋 To download all libraries, run: npm run update-all'"
+    "postinstall": "echo '📋 To download all libraries, run: npm run update-all'",
+    "build": "wp-scripts build src/js/editor.js src/js/admin-options.js src/js/map-field.js src/js/conditional-fields.js --output-path=assets/js"
   },
   "devDependencies": {
+    "@wordpress/scripts": "^27.6.0",
     "alpinejs": "^3",
     "htmx.org": "^2",
     "hyperscript.org": "*",

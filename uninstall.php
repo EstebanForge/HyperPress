@@ -14,17 +14,27 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 
 // Nonce?: https://core.trac.wordpress.org/ticket/38661
 
-if (isset($_REQUEST['plugin']) && $_REQUEST['plugin'] != 'api-for-htmx/api-for-htmx.php' && $_REQUEST['action'] != 'delete-plugin') {
-	wp_die('Error uninstalling: wrong plugin.');
+// Validate the request to ensure the correct plugin is being uninstalled
+$plugin = isset($_REQUEST['plugin']) ? sanitize_text_field(wp_unslash((string) $_REQUEST['plugin'])) : '';
+$action = isset($_REQUEST['action']) ? sanitize_text_field(wp_unslash((string) $_REQUEST['action'])) : '';
+
+$validPlugins = [
+  'hyperpress/hyperpress.php',
+  'hyperpress/api-for-htmx.php', // legacy entry point
+  'api-for-htmx/api-for-htmx.php', // legacy entry point
+];
+
+if ($action !== 'delete-plugin' || !in_array($plugin, $validPlugins, true)) {
+  wp_die('Error uninstalling: wrong plugin.');
 }
 
 // Clears HTMX API for WP options
 global $wpdb;
 
-$hmapi_options = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_hxwp_%' OR option_name LIKE 'hxwp_%' OR option_name LIKE '_hmapi_%' OR option_name LIKE 'hmapi_%'");
+$hp_options = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_hxwp_%' OR option_name LIKE 'hxwp_%' OR option_name LIKE '_hyperpress_%' OR option_name LIKE 'hyperpress_%'");
 
-if (is_array($hmapi_options) && !empty($hmapi_options)) {
-	foreach ($hmapi_options as $option) {
+if (is_array($hp_options) && !empty($hp_options)) {
+	foreach ($hp_options as $option) {
 		delete_option($option->option_name);
 	}
 }

@@ -2,7 +2,7 @@
     "name": "estebanforge/hyperpress",
     "description": "Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.",
     "type": "wordpress-plugin",
-    "version": "2.0.7",
+    "version": "3.0.0",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
@@ -14,7 +14,6 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.1",
-        "jeffreyvanrossum/wp-settings": "^1.2",
         "starfederation/datastar-php": "^1.0"
     },
     "scripts": {
@@ -47,10 +46,11 @@
     },
     "autoload": {
         "psr-4": {
-            "HMApi\\": "src/"
+            "HyperPress\\": "src/"
         },
         "files": [
-            "bootstrap.php"
+            "bootstrap.php",
+            "includes/backward-compatibility.php"
         ],
         "classmap": [
             "vendor-dist"
@@ -59,25 +59,16 @@
     "extra": {
         "strauss": {
             "target_directory": "vendor-dist",
-            "namespace_prefix": "HMApi\\",
-            "classmap_prefix": "HMApi_",
-            "constant_prefix": "HMApi_",
+            "namespace_prefix": "HyperPress\\",
+            "classmap_prefix": "HyperPress_",
+            "constant_prefix": "HYPERPRESS_",
             "packages": [
-                "jeffreyvanrossum/wp-settings",
                 "starfederation/datastar-php"
             ],
             "override_autoload": {
-                "jeffreyvanrossum/wp-settings": {
-                    "psr-4": {
-                        "HMApi\\Jeffreyvr\\WPSettings\\": "src/"
-                    },
-                    "classmap": [
-                        "resources/"
-                    ]
-                },
                 "starfederation/datastar-php": {
                     "psr-4": {
-                        "HMApi\\starfederation\\datastar\\": "src/"
+                        "HyperPress\\starfederation\\datastar\\": "src/"
                     }
                 }
             },

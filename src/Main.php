@@ -6,10 +6,11 @@
  * @since      2023
  */
 
-namespace HMApi;
+namespace HyperPress;
 
-use HMApi\Admin\Activation;
-use HMApi\Admin\Options;
+use HyperPress\Admin\Activation;
+use HyperPress\Admin\Options;
+use HyperPress\Admin\OptionsMigration;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -100,7 +101,17 @@ class Main
 
         $this->assets_manager = new Assets($this);
 
+        // Initialize TemplateLoader
+        Fields\TemplateLoader::init();
+
         if (is_admin()) {
+            // Handle migration from wp-settings to hyper fields
+            $migration = new OptionsMigration($this);
+            if ($migration->needsMigration()) {
+                $migration->migrate();
+            }
+
+            // Initialize new options system
             $this->options = new Options($this);
             new Activation();
         }
@@ -112,7 +123,7 @@ class Main
      * @since 2.0.3
      * @return array
      */
-    public function get_options(): array
+    public function getOptions(): array
     {
         $defaults = [
             'active_library' => 'htmx',
@@ -124,7 +135,7 @@ class Main
             'datastar_load_in_admin' => false,
         ];
 
-        $options = get_option('hmapi_options', $defaults);
+        $options = get_option('hyperpress_options', $defaults);
 
         return wp_parse_args($options, $defaults);
     }
@@ -198,7 +209,7 @@ class Main
      *
      * @example
      * // Get all CDN URLs
-     * $cdn_urls = $this->get_cdn_urls();
+     * $cdn_urls = $this->getCdnUrls();
      *
      * // Get HTMX core URL
      * $htmx_url = $cdn_urls['htmx']['url'];
@@ -211,10 +222,9 @@ class Main
      *     $sse_url = $cdn_urls['htmx_extensions']['sse']['url'];
      * }
      *
-     * @see Assets::enqueue_scripts_logic() For usage in script enqueuing
-     * @see Admin\Options::get_htmx_extensions() For admin interface integration
+     * @see Assets::enqueueScriptsLogic() For usage in script enqueuing
      */
-    public function get_cdn_urls(): array
+    public function getCdnUrls(): array
     {
         return [
             'htmx' => [
@@ -331,7 +341,7 @@ class Main
     }
 
     /**
-     * Main HMApi Instance.
+     * Main HyperPress Instance.
      * Initializes and registers all WordPress hooks and actions for the plugin.
      *
      * This method serves as the main entry point for plugin initialization.
@@ -343,9 +353,9 @@ class Main
      */
     public function run()
     {
-        add_action('init', [$this->router, 'register_main_route']);
-        add_action('template_redirect', [$this->render, 'load_template']);
-        add_action('wp_head', [$this->config, 'insert_config_meta_tag']);
+        add_action('init', [$this->router, 'registerMainRoute']);
+        add_action('template_redirect', [$this->render, 'loadTemplate']);
+        add_action('wp_head', [$this->config, 'insertConfigMetaTag']);
         $this->compatibility->run();
         $this->theme_support->run();
     }

@@ -3,9 +3,9 @@
  * @copyright Copyright (c) PutYourLightsOn
  */
 
-namespace HMApi\starfederation\datastar;
+namespace HyperPress\starfederation\datastar;
 
-use HMApi\starfederation\datastar\enums\EventType;
+use HyperPress\starfederation\datastar\enums\EventType;
 
 class ServerSentEventData
 {
