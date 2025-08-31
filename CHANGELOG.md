@@ -1,5 +1,8 @@
 # Changelog
 
+# 3.0.1 / 2025-08-30
+- Released on [wp.org](https://wordpress.org/plugins/api-for-htmx/).
+
 # 3.0.0 / 2025-08-21
 - **NEW:** **HyperBlocks** - Sane PHP-based block creation system, no JavaScript required, with **two complementary approaches**
   - **Fluent API**: PHP-only block development.
