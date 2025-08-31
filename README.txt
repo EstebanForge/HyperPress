@@ -8,10 +8,10 @@ Requires PHP: 8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
-Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.
+Supercharge WordPress with Hypermedia. Build interactive blocks & pages with Datastar, HTMX or Alpine Ajax—all using simple PHP. No JS required.
 
 == Description ==
-Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.
+Supercharge WordPress with the power of hypermedia. Use Datastar, HTMX or Alpine Ajax to create rich, interactive blocks and pages—all with the simplicity of PHP. No JavaScript required.
 
 Hypermedia is a concept that extends the idea of hypertext by allowing for more complex interactions and data representations. It enables the use of AJAX, WebSockets, and Server-Sent Events directly in HTML using attributes, without writing any JavaScript. It reuses an "old" concept, [Hypermedia](https://hypermedia.systems/), to handle the modern web in a more HTML-like and natural way.
 
