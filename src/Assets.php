@@ -402,13 +402,10 @@ class Assets
      * Construct the proper URL for assets when running in library mode.
      *
      * When the plugin is loaded as a Composer library, assets are available at paths like:
-     * wp-content/plugins/some-plugin/vendor-dist/estebanforge/hyperpress/assets/libs/
+     * wp-content/plugins/some-plugin/vendor-prefixed/estebanforge/hyperpress/assets/libs/
      *
      * This method detects the vendor directory {
-     *      vendor-dist
      *      vendor-prefixed
-     *      vendor-prefix
-     *      vendor-custom
      *      vendor
      * }
      * And constructs the public URL to reach the plugin's assets, respecting privacy by avoiding CDN.
@@ -433,10 +430,7 @@ class Assets
 
         // Supported vendor directory names for explicit detection
         $vendor_directories = [
-            'vendor-dist',
             'vendor-prefixed',
-            'vendor-prefix',
-            'vendor-custom',
             'vendor',
         ];
 

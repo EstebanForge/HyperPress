@@ -7,3 +7,8 @@ TODO.md
 rules-wordpress.md
 .php-cs-fixer.cache
 vendor/
+
+# Test artifacts
+coverage/
+.phpunit.result.cache
+wp-content/

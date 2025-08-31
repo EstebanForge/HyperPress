@@ -4,11 +4,10 @@
 
 namespace HyperPress\Composer\Autoload;
 
-class ComposerStaticInit8fdab5c4c154ad8745577288bf43f397
+class ComposerStaticInitd1b91324d2ccf094110b23e3d747becf
 {
     public static $files = array (
         'f42daf3eafcec374a98ace42dbc2fd4a' => __DIR__ . '/../..' . '/bootstrap.php',
-        '3a5d88153c2da435c63be0fcb179791d' => __DIR__ . '/../..' . '/includes/backward-compatibility.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -31,9 +30,8 @@ class ComposerStaticInit8fdab5c4c154ad8745577288bf43f397
     );
 
     public static $classMap = array (
-        'ComposerAutoloaderInit8fdab5c4c154ad8745577288bf43f397' => __DIR__ . '/..' . '/composer/autoload_real.php',
+        'ComposerAutoloaderInitd1b91324d2ccf094110b23e3d747becf' => __DIR__ . '/..' . '/composer/autoload_real.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'HyperPress\\Adbar\\Dot' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/Dot.php',
         'HyperPress\\Admin\\Activation' => __DIR__ . '/../..' . '/src/Admin/Activation.php',
         'HyperPress\\Admin\\Options' => __DIR__ . '/../..' . '/src/Admin/Options.php',
         'HyperPress\\Admin\\OptionsMigration' => __DIR__ . '/../..' . '/src/Admin/OptionsMigration.php',
@@ -46,7 +44,7 @@ class ComposerStaticInit8fdab5c4c154ad8745577288bf43f397
         'HyperPress\\Blocks\\RestApi' => __DIR__ . '/../..' . '/src/Blocks/RestApi.php',
         'HyperPress\\Compatibility' => __DIR__ . '/../..' . '/src/Compatibility.php',
         'HyperPress\\Composer\\Autoload\\ClassLoader' => __DIR__ . '/..' . '/composer/ClassLoader.php',
-        'HyperPress\\Composer\\Autoload\\ComposerStaticInit8fdab5c4c154ad8745577288bf43f397' => __DIR__ . '/..' . '/composer/autoload_static.php',
+        'HyperPress\\Composer\\Autoload\\ComposerStaticInitd1b91324d2ccf094110b23e3d747becf' => __DIR__ . '/..' . '/composer/autoload_static.php',
         'HyperPress\\Config' => __DIR__ . '/../..' . '/src/Config.php',
         'HyperPress\\Fields\\BlockFieldAdapter' => __DIR__ . '/../..' . '/src/Fields/BlockFieldAdapter.php',
         'HyperPress\\Fields\\ConditionalLogic' => __DIR__ . '/../..' . '/src/Fields/ConditionalLogic.php',
@@ -95,9 +93,9 @@ class ComposerStaticInit8fdab5c4c154ad8745577288bf43f397
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit8fdab5c4c154ad8745577288bf43f397::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd1b91324d2ccf094110b23e3d747becf::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd1b91324d2ccf094110b23e3d747becf::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitd1b91324d2ccf094110b23e3d747becf::$classMap;
 
         }, null, ClassLoader::class);
     }
