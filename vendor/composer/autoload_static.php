@@ -4,14 +4,17 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit87a081ed6c9a0273805bc441565a5350
+class ComposerStaticInit3e7cef769c44975eae259346d371e159
 {
     public static $files = array (
         'b4e0b991acd5ddad926ebc747d73282f' => __DIR__ . '/../..' . '/bootstrap.php',
-        '2803859e227f0e3ceb34ed7862ddd1d0' => __DIR__ . '/../..' . '/includes/backward-compatibility.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        's' => 
+        array (
+            'starfederation\\datastar\\' => 24,
+        ),
         'H' => 
         array (
             'HyperPress\\' => 11,
@@ -19,6 +22,10 @@ class ComposerStaticInit87a081ed6c9a0273805bc441565a5350
     );
 
     public static $prefixDirsPsr4 = array (
+        'starfederation\\datastar\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/starfederation/datastar-php/src',
+        ),
         'HyperPress\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -26,9 +33,8 @@ class ComposerStaticInit87a081ed6c9a0273805bc441565a5350
     );
 
     public static $classMap = array (
-        'ComposerAutoloaderInit8fdab5c4c154ad8745577288bf43f397' => __DIR__ . '/../..' . '/vendor-dist/composer/autoload_real.php',
+        'ComposerAutoloaderInitd1b91324d2ccf094110b23e3d747becf' => __DIR__ . '/../..' . '/vendor-prefixed/composer/autoload_real.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'HyperPress\\Adbar\\Dot' => __DIR__ . '/../..' . '/vendor-dist/adbario/php-dot-notation/src/Dot.php',
         'HyperPress\\Admin\\Activation' => __DIR__ . '/../..' . '/src/Admin/Activation.php',
         'HyperPress\\Admin\\Options' => __DIR__ . '/../..' . '/src/Admin/Options.php',
         'HyperPress\\Admin\\OptionsMigration' => __DIR__ . '/../..' . '/src/Admin/OptionsMigration.php',
@@ -40,8 +46,8 @@ class ComposerStaticInit87a081ed6c9a0273805bc441565a5350
         'HyperPress\\Blocks\\Renderer' => __DIR__ . '/../..' . '/src/Blocks/Renderer.php',
         'HyperPress\\Blocks\\RestApi' => __DIR__ . '/../..' . '/src/Blocks/RestApi.php',
         'HyperPress\\Compatibility' => __DIR__ . '/../..' . '/src/Compatibility.php',
-        'HyperPress\\Composer\\Autoload\\ClassLoader' => __DIR__ . '/../..' . '/vendor-dist/composer/ClassLoader.php',
-        'HyperPress\\Composer\\Autoload\\ComposerStaticInit8fdab5c4c154ad8745577288bf43f397' => __DIR__ . '/../..' . '/vendor-dist/composer/autoload_static.php',
+        'HyperPress\\Composer\\Autoload\\ClassLoader' => __DIR__ . '/../..' . '/vendor-prefixed/composer/ClassLoader.php',
+        'HyperPress\\Composer\\Autoload\\ComposerStaticInitd1b91324d2ccf094110b23e3d747becf' => __DIR__ . '/../..' . '/vendor-prefixed/composer/autoload_static.php',
         'HyperPress\\Config' => __DIR__ . '/../..' . '/src/Config.php',
         'HyperPress\\Fields\\BlockFieldAdapter' => __DIR__ . '/../..' . '/src/Fields/BlockFieldAdapter.php',
         'HyperPress\\Fields\\ConditionalLogic' => __DIR__ . '/../..' . '/src/Fields/ConditionalLogic.php',
@@ -73,26 +79,38 @@ class ComposerStaticInit87a081ed6c9a0273805bc441565a5350
         'HyperPress\\Render' => __DIR__ . '/../..' . '/src/Render.php',
         'HyperPress\\Router' => __DIR__ . '/../..' . '/src/Router.php',
         'HyperPress\\Theme' => __DIR__ . '/../..' . '/src/Theme.php',
-        'HyperPress\\starfederation\\datastar\\Consts' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/Consts.php',
-        'HyperPress\\starfederation\\datastar\\ServerSentEventData' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/ServerSentEventData.php',
-        'HyperPress\\starfederation\\datastar\\ServerSentEventGenerator' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/ServerSentEventGenerator.php',
-        'HyperPress\\starfederation\\datastar\\enums\\ElementPatchMode' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/enums/ElementPatchMode.php',
-        'HyperPress\\starfederation\\datastar\\enums\\EventType' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/enums/EventType.php',
-        'HyperPress\\starfederation\\datastar\\events\\EventInterface' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/EventInterface.php',
-        'HyperPress\\starfederation\\datastar\\events\\EventTrait' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/EventTrait.php',
-        'HyperPress\\starfederation\\datastar\\events\\ExecuteScript' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/ExecuteScript.php',
-        'HyperPress\\starfederation\\datastar\\events\\Location' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/Location.php',
-        'HyperPress\\starfederation\\datastar\\events\\PatchElements' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/PatchElements.php',
-        'HyperPress\\starfederation\\datastar\\events\\PatchSignals' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/PatchSignals.php',
-        'HyperPress\\starfederation\\datastar\\events\\RemoveElements' => __DIR__ . '/../..' . '/vendor-dist/starfederation/datastar-php/src/events/RemoveElements.php',
+        'HyperPress\\starfederation\\datastar\\Consts' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/Consts.php',
+        'HyperPress\\starfederation\\datastar\\ServerSentEventData' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/ServerSentEventData.php',
+        'HyperPress\\starfederation\\datastar\\ServerSentEventGenerator' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/ServerSentEventGenerator.php',
+        'HyperPress\\starfederation\\datastar\\enums\\ElementPatchMode' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/enums/ElementPatchMode.php',
+        'HyperPress\\starfederation\\datastar\\enums\\EventType' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/enums/EventType.php',
+        'HyperPress\\starfederation\\datastar\\events\\EventInterface' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/EventInterface.php',
+        'HyperPress\\starfederation\\datastar\\events\\EventTrait' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/EventTrait.php',
+        'HyperPress\\starfederation\\datastar\\events\\ExecuteScript' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/ExecuteScript.php',
+        'HyperPress\\starfederation\\datastar\\events\\Location' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/Location.php',
+        'HyperPress\\starfederation\\datastar\\events\\PatchElements' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/PatchElements.php',
+        'HyperPress\\starfederation\\datastar\\events\\PatchSignals' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/PatchSignals.php',
+        'HyperPress\\starfederation\\datastar\\events\\RemoveElements' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/RemoveElements.php',
+        'starfederation\\datastar\\Consts' => __DIR__ . '/..' . '/starfederation/datastar-php/src/Consts.php',
+        'starfederation\\datastar\\ServerSentEventData' => __DIR__ . '/..' . '/starfederation/datastar-php/src/ServerSentEventData.php',
+        'starfederation\\datastar\\ServerSentEventGenerator' => __DIR__ . '/..' . '/starfederation/datastar-php/src/ServerSentEventGenerator.php',
+        'starfederation\\datastar\\enums\\ElementPatchMode' => __DIR__ . '/..' . '/starfederation/datastar-php/src/enums/ElementPatchMode.php',
+        'starfederation\\datastar\\enums\\EventType' => __DIR__ . '/..' . '/starfederation/datastar-php/src/enums/EventType.php',
+        'starfederation\\datastar\\events\\EventInterface' => __DIR__ . '/..' . '/starfederation/datastar-php/src/events/EventInterface.php',
+        'starfederation\\datastar\\events\\EventTrait' => __DIR__ . '/..' . '/starfederation/datastar-php/src/events/EventTrait.php',
+        'starfederation\\datastar\\events\\ExecuteScript' => __DIR__ . '/..' . '/starfederation/datastar-php/src/events/ExecuteScript.php',
+        'starfederation\\datastar\\events\\Location' => __DIR__ . '/..' . '/starfederation/datastar-php/src/events/Location.php',
+        'starfederation\\datastar\\events\\PatchElements' => __DIR__ . '/..' . '/starfederation/datastar-php/src/events/PatchElements.php',
+        'starfederation\\datastar\\events\\PatchSignals' => __DIR__ . '/..' . '/starfederation/datastar-php/src/events/PatchSignals.php',
+        'starfederation\\datastar\\events\\RemoveElements' => __DIR__ . '/..' . '/starfederation/datastar-php/src/events/RemoveElements.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit87a081ed6c9a0273805bc441565a5350::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit87a081ed6c9a0273805bc441565a5350::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit87a081ed6c9a0273805bc441565a5350::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3e7cef769c44975eae259346d371e159::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3e7cef769c44975eae259346d371e159::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit3e7cef769c44975eae259346d371e159::$classMap;
 
         }, null, ClassLoader::class);
     }

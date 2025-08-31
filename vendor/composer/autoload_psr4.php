@@ -6,5 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'starfederation\\datastar\\' => array($vendorDir . '/starfederation/datastar-php/src'),
     'HyperPress\\' => array($baseDir . '/src'),
 );

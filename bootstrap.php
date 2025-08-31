@@ -22,25 +22,20 @@ if (defined('HYPERPRESS_BOOTSTRAP_LOADED')) {
 
 define('HYPERPRESS_BOOTSTRAP_LOADED', true);
 
-// Composer autoloader for prefixed dependencies.
-if (file_exists(__DIR__ . '/vendor-dist/autoload.php')) {
-    require_once __DIR__ . '/vendor-dist/autoload.php';
-
-    // Initialize the Registry.
-    $registry = HyperPress\Blocks\Registry::getInstance();
-    $registry->init();
-
-    // Initialize the REST API.
-    $rest_api = new HyperPress\Blocks\RestApi();
-    $rest_api->init();
+// Composer autoloader for prefixed dependencies; fallback to standard autoloader.
+if (file_exists(__DIR__ . '/vendor-prefixed/autoload.php')) {
+    require_once __DIR__ . '/vendor-prefixed/autoload.php';
+} elseif (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
 } else {
-    // Display an admin notice if the autoloader is missing.
+    // Display an admin notice if no autoloader is found, but continue so tests can register hooks/candidates.
     add_action('admin_notices', function () {
         echo '<div class="error"><p>' . esc_html__('HyperPress: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'api-for-htmx') . '</p></div>';
     });
-
-    return;
 }
+
+// Note: Do not initialize Blocks Registry or REST API here to avoid duplicate hooks.
+// They are initialized later inside hyperpress_run_initialization_logic() once per instance.
 
 // The logic from the original api-for-htmx.php is now here.
 // This ensures that no matter how the plugin is loaded, this code runs only once.
@@ -214,5 +209,51 @@ if (!function_exists('hyperpress_select_and_load_latest')) {
         }
 
         unset($GLOBALS['hyperpress_api_candidates']);
+    }
+}
+
+// Test helper: re-register candidate and ensure selection hook exists, without relying on include semantics.
+if (!function_exists('hyperpress_register_candidate_for_tests')) {
+    function hyperpress_register_candidate_for_tests(): void
+    {
+        // Determine current instance path/version similarly to main bootstrap logic.
+        $plugin_file_candidates = [
+            __DIR__ . '/hyperpress.php',
+            __DIR__ . '/api-for-htmx.php',
+        ];
+        $plugin_file_path = null;
+        foreach ($plugin_file_candidates as $candidate) {
+            if (file_exists($candidate)) { $plugin_file_path = $candidate; break; }
+        }
+
+        $current_version = '0.0.0';
+        $current_path = null;
+        if ($plugin_file_path && file_exists($plugin_file_path)) {
+            $data = get_file_data($plugin_file_path, ['Version' => 'Version'], false);
+            $current_version = $data['Version'] ?? '0.0.0';
+            $current_path = realpath($plugin_file_path) ?: $plugin_file_path;
+        } else {
+            $composer_json_path = __DIR__ . '/composer.json';
+            if (file_exists($composer_json_path)) {
+                $composer_data = json_decode(file_get_contents($composer_json_path), true);
+                if (is_array($composer_data) && isset($composer_data['version'])) {
+                    $current_version = (string) $composer_data['version'];
+                }
+            }
+            $current_path = realpath(__FILE__) ?: __FILE__;
+        }
+
+        if (!isset($GLOBALS['hyperpress_api_candidates']) || !is_array($GLOBALS['hyperpress_api_candidates'])) {
+            $GLOBALS['hyperpress_api_candidates'] = [];
+        }
+        $GLOBALS['hyperpress_api_candidates'][$current_path] = [
+            'version' => $current_version,
+            'path'    => $current_path,
+            'init_function' => 'hyperpress_run_initialization_logic',
+        ];
+
+        if (!has_action('after_setup_theme', 'hyperpress_select_and_load_latest')) {
+            add_action('after_setup_theme', 'hyperpress_select_and_load_latest', 0);
+        }
     }
 }

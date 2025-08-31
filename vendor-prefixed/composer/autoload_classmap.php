@@ -6,9 +6,8 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'ComposerAutoloaderInit8fdab5c4c154ad8745577288bf43f397' => $vendorDir . '/composer/autoload_real.php',
+    'ComposerAutoloaderInitd1b91324d2ccf094110b23e3d747becf' => $vendorDir . '/composer/autoload_real.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'HyperPress\\Adbar\\Dot' => $vendorDir . '/adbario/php-dot-notation/src/Dot.php',
     'HyperPress\\Admin\\Activation' => $baseDir . '/src/Admin/Activation.php',
     'HyperPress\\Admin\\Options' => $baseDir . '/src/Admin/Options.php',
     'HyperPress\\Admin\\OptionsMigration' => $baseDir . '/src/Admin/OptionsMigration.php',
@@ -21,7 +20,7 @@ return array(
     'HyperPress\\Blocks\\RestApi' => $baseDir . '/src/Blocks/RestApi.php',
     'HyperPress\\Compatibility' => $baseDir . '/src/Compatibility.php',
     'HyperPress\\Composer\\Autoload\\ClassLoader' => $vendorDir . '/composer/ClassLoader.php',
-    'HyperPress\\Composer\\Autoload\\ComposerStaticInit8fdab5c4c154ad8745577288bf43f397' => $vendorDir . '/composer/autoload_static.php',
+    'HyperPress\\Composer\\Autoload\\ComposerStaticInitd1b91324d2ccf094110b23e3d747becf' => $vendorDir . '/composer/autoload_static.php',
     'HyperPress\\Config' => $baseDir . '/src/Config.php',
     'HyperPress\\Fields\\BlockFieldAdapter' => $baseDir . '/src/Fields/BlockFieldAdapter.php',
     'HyperPress\\Fields\\ConditionalLogic' => $baseDir . '/src/Fields/ConditionalLogic.php',

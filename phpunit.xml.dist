@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true" bootstrap="tests/bootstrap-integration.php">
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Integration">
+            <directory>tests/Integration</directory>
+        </testsuite>
+    </testsuites>
+
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
+
+    <php>
+        <!-- Point to the wp-phpunit package test library -->
+        <env name="WP_TESTS_DIR" value="./vendor/wp-phpunit/wp-phpunit/" />
+        <env name="WP_PHP_BINARY" value="php" />
+        <env name="WP_PHPUNIT__TESTS_CONFIG" value="./tests/wp-tests-config.php" />
+        <env name="DISABLE_WP_CRON" value="true" />
+        <env name="WP_DEBUG" value="1" />
+        <env name="WP_TESTS_DOMAIN" value="example.org" />
+        <env name="WP_TESTS_EMAIL" value="admin@example.org" />
+        <env name="WP_TESTS_TITLE" value="WordPress Test Site" />
+    </php>
+</phpunit>

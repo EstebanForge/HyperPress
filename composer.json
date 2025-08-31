@@ -2,7 +2,7 @@
     "name": "estebanforge/hyperpress",
     "description": "Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.",
     "type": "wordpress-plugin",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
@@ -16,9 +16,15 @@
         "php": ">=8.1",
         "starfederation/datastar-php": "^1.0"
     },
+    "require-dev": {
+        "yoast/wp-test-utils": "^1.2",
+        "wp-phpunit/wp-phpunit": "^6.8",
+        "phpunit/phpunit": "^9.6",
+        "aaemnnosttv/wp-sqlite-db": "^1.0"
+    },
     "scripts": {
-        "cs-fix": "php-cs-fixer fix",
-        "ensure-vendor-dist": "mkdir -p vendor-dist",
+        "cs:fix": "php-cs-fixer fix",
+        "ensure-vendor-prefixed": "mkdir -p vendor-prefixed",
         "production": [
             "@cs-fix",
             "@prefix-namespaces",
@@ -27,39 +33,52 @@
         "dump-autoload-prod": "@php composer dump-autoload --optimize --no-dev",
         "dump-autoload-dev": "@php composer dump-autoload",
         "prefix-namespaces": [
-            "@ensure-vendor-dist",
+            "@ensure-vendor-prefixed",
             "strauss"
         ],
         "post-install-cmd": [
             "@cs-fix",
             "@prefix-namespaces",
-            "@dump-autoload-prod"
+            "@dump-autoload-prod",
+            "php .ci/setup-sqlite-dropin.php"
         ],
         "post-update-cmd": [
             "@cs-fix",
             "@prefix-namespaces",
-            "@dump-autoload-prod"
+            "@dump-autoload-prod",
+            "php .ci/setup-sqlite-dropin.php"
         ],
-        "post-autoload-dump": [
-            "@ensure-vendor-dist",
-            "strauss include-autoloader"
-        ]
+
+        "test": "./vendor/bin/phpunit --colors=always",
+        "test:all": [
+            "@test"
+        ],
+        "test:unit": "./vendor/bin/phpunit -c phpunit.xml.dist --testsuite Unit --colors=always",
+        "test:integration": "./vendor/bin/phpunit -c phpunit.xml.dist --testsuite Integration --colors=always",
+        "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-text --colors=always"
     },
     "autoload": {
         "psr-4": {
             "HyperPress\\": "src/"
         },
         "files": [
-            "bootstrap.php",
-            "includes/backward-compatibility.php"
+            "bootstrap.php"
         ],
         "classmap": [
-            "vendor-dist"
+            "vendor-prefixed"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "HyperPress\\Tests\\": "tests/"
+        },
+        "files": [
+            "tests/helpers.php"
         ]
     },
     "extra": {
         "strauss": {
-            "target_directory": "vendor-dist",
+            "target_directory": "vendor-prefixed",
             "namespace_prefix": "HyperPress\\",
             "classmap_prefix": "HyperPress_",
             "constant_prefix": "HYPERPRESS_",
@@ -73,7 +92,30 @@
                     }
                 }
             },
-            "delete_vendor_packages": true
+            "exclude_from_copy": {
+                "packages": [
+                    "phpunit/phpunit",
+                    "yoast/wp-test-utils",
+                    "wp-phpunit/wp-phpunit"
+                ],
+                "namespaces": [],
+                "file_patterns": []
+            },
+            "exclude_from_prefix": {
+                "packages": [
+                    "phpunit/phpunit",
+                    "yoast/wp-test-utils",
+                    "wp-phpunit/wp-phpunit"
+                ],
+                "namespaces": [],
+                "file_patterns": []
+            },
+            "delete_vendor_packages": false
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
         }
     }
 }
