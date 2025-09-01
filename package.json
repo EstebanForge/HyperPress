@@ -7,7 +7,6 @@
   "keywords": [],
   "main": "index.js",
   "scripts": {
-    "version-bump": "node -e \"const pkg = require('./package.json'); const currentVersion = pkg.version; console.log('Current version ' + currentVersion); const readline = require('readline').createInterface({ input: process.stdin, output: process.stdout }); readline.question('Enter new version (semver): ', (newVersion) => { pkg.version = newVersion; require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2)); const fs = require('fs'); const files = ['composer.json', 'README.txt', 'api-for-htmx.php', 'SECURITY.md']; const regex = new RegExp(currentVersion + '(?!\\d)', 'gm'); for (const file of files) { let data = fs.readFileSync(file, 'utf8'); data = data.replace(regex, newVersion); fs.writeFileSync(file, data, 'utf8'); } readline.close(); console.log('Bumped from ' + currentVersion + ' to ' + newVersion); console.log('Version updated successfully!'); });\"",
     "download-libraries": "php .ci/update-libraries.php",
     "update-libraries": "php .ci/update-libraries.php",
     "update-htmx": "npm run update-libraries -- --library=htmx",
