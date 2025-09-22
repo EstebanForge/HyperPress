@@ -17,10 +17,16 @@
         "starfederation/datastar-php": "^1.0"
     },
     "require-dev": {
-        "yoast/phpunit-polyfills": "^4.0",
-        "phpunit/phpunit": "^9"
+        "pestphp/pest": "*",
+        "10up/wp_mock": "^0.4.2"
     },
     "scripts": {
+        "test": "vendor/bin/pest",
+        "test:unit": "vendor/bin/pest --testsuite=Unit",
+        "test:integration": "vendor/bin/pest --testsuite=Integration", 
+        "test:feature": "vendor/bin/pest --testsuite=Feature",
+        "test:coverage": "vendor/bin/pest --coverage",
+        "test:setup": "php setup-sqlite-db.php",
         "cs:fix": "php-cs-fixer fix",
         "ensure-vendor-prefixed": "mkdir -p vendor-prefixed",
         "production": [
@@ -46,14 +52,6 @@
             "@dump-autoload-prod",
             "php .ci/setup-sqlite-dropin.php"
         ],
-
-        "test": "./vendor/bin/phpunit --colors=always",
-        "test:all": [
-            "@test"
-        ],
-        "test:unit": "./vendor/bin/phpunit -c phpunit.xml.dist --testsuite Unit --colors=always",
-        "test:integration": "./vendor/bin/phpunit -c phpunit.xml.dist --testsuite Integration --colors=always",
-        "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-text --colors=always",
         "version-bump": "php .ci/version-bump.php"
     },
     "autoload": {
@@ -70,10 +68,7 @@
     "autoload-dev": {
         "psr-4": {
             "HyperPress\\Tests\\": "tests/"
-        },
-        "files": [
-            "tests/helpers.php"
-        ]
+        }
     },
     "extra": {
         "strauss": {
@@ -114,7 +109,8 @@
     },
     "config": {
         "allow-plugins": {
-            "composer/installers": true
+            "composer/installers": true,
+            "pestphp/pest-plugin": true
         }
     }
 }
