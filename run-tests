@@ -1,0 +1,34 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Test runner script for HyperPress plugin
+ */
+
+// Set up the environment
+$pluginDir = __DIR__;
+$testsDir = $pluginDir . '/tests';
+$dbPath = $testsDir . '/db/test.sqlite';
+
+echo "HyperPress Test Runner\n";
+echo "====================\n\n";
+
+// Check if SQLite database exists, create if not
+if (!file_exists($dbPath)) {
+    echo "Creating SQLite database...\n";
+    require_once $pluginDir . '/setup-sqlite-db.php';
+} else {
+    echo "SQLite database already exists.\n";
+}
+
+// Set environment variables
+putenv('USE_SQLITE=true');
+putenv('SQLITE_DB_PATH=' . $dbPath);
+putenv('PLUGIN_DIR=' . $pluginDir);
+putenv('PLUGIN_FILE=' . $pluginDir . '/api-for-htmx.php');
+
+// Run tests
+echo "Running tests...\n\n";
+passthru('vendor/bin/pest ' . implode(' ', array_slice($argv, 1)));
+
+echo "\nTest runner completed.\n";
