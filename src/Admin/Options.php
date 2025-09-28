@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HyperPress\Admin;
 
-use HyperPress\Fields\HyperFields;
+use HyperFields\HyperFields;
 use HyperPress\Libraries\HTMXLib;
 use HyperPress\Main;
 
@@ -304,12 +304,49 @@ class Options
         $php_version = PHP_VERSION;
         $wp_ver = $wp_version ?? get_bloginfo('version');
 
+        // Get HyperFields version from composer.json (library mode) or plugin header (plugin mode)
+        $hyperfields_version = '1.0.0'; // Default fallback
+        if (defined('HYPERPRESS_ABSPATH')) {
+            $hyperfields_composer_path = rtrim(HYPERPRESS_ABSPATH, '/') . '/vendor/estebanforge/hyperfields/composer.json';
+            if (file_exists($hyperfields_composer_path)) {
+                $composer_data = json_decode(file_get_contents($hyperfields_composer_path), true);
+                $hyperfields_version = $composer_data['version'] ?? $hyperfields_version;
+            } else {
+                // Try plugin path inside wp-content if present
+                $plugin_composer = WP_CONTENT_DIR . '/plugins/hyperfields/composer.json';
+                if (file_exists($plugin_composer)) {
+                    $composer_data = json_decode(file_get_contents($plugin_composer), true);
+                    $hyperfields_version = $composer_data['version'] ?? $hyperfields_version;
+                }
+            }
+        }
+
+        // Datastar SDK: try to read installed.json produced by composer in vendor/composer
+        $datastar_version = 'v1.0.0-RC.3'; // fallback (keep existing default)
+        if (defined('HYPERPRESS_ABSPATH')) {
+            $installed_json = rtrim(HYPERPRESS_ABSPATH, '/') . '/vendor/composer/installed.json';
+            if (file_exists($installed_json)) {
+                $installed = json_decode(file_get_contents($installed_json), true);
+                // installed.json can be an object with 'packages' or an array of packages depending on composer version
+                $packages = $installed['packages'] ?? $installed;
+                if (is_array($packages)) {
+                    foreach ($packages as $pkg) {
+                        if (($pkg['name'] ?? '') === 'starfederation/datastar-php') {
+                            $datastar_version = $pkg['version'] ?? $datastar_version;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         return [
             __('WordPress Version', 'api-for-htmx') => $wp_ver,
             __('PHP Version', 'api-for-htmx') => $php_version,
             __('Plugin Version', 'api-for-htmx') => $plugin_version,
+            __('HyperFields Library', 'api-for-htmx') => $hyperfields_version,
             __('Active Library', 'api-for-htmx') => ucfirst($options['active_library'] ?? 'datastar'),
-            __('Datastar SDK', 'api-for-htmx') => __('Available (v1.0.0-RC.3)', 'api-for-htmx'),
+            __('Datastar SDK', 'api-for-htmx') => $datastar_version,
         ];
     }
 

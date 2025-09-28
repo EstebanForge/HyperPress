@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace HyperPress\Blocks;
 
+use HyperFields\BlockFieldAdapter;
+
 // Prevent direct file access.
 if (!defined('ABSPATH')) {
     exit;
@@ -309,8 +311,7 @@ final class Registry
 
         // Add attributes from block fields using HyperFields adapter
         foreach ($block->fields as $field) {
-            // $field is HyperPress\Blocks\Field wrapper; use underlying HyperField
-            $adapter = \HyperPress\Fields\BlockFieldAdapter::fromField($field->getHyperField());
+            $adapter = BlockFieldAdapter::fromField($field->getHyperField());
             $attributes[$field->name] = $adapter->toBlockAttribute();
         }
 
@@ -320,7 +321,7 @@ final class Registry
             if ($group) {
                 foreach ($group->fields as $field) {
                     if (!array_key_exists($field->name, $attributes)) {
-                        $adapter = \HyperPress\Fields\BlockFieldAdapter::fromField($field->getHyperField());
+                        $adapter = \HyperFields\BlockFieldAdapter::fromField($field->getHyperField());
                         $attributes[$field->name] = $adapter->toBlockAttribute();
                     }
                 }
@@ -669,7 +670,7 @@ final class Registry
 
             // Sanitize/validate incoming attributes; apply defaults when missing/invalid
             foreach ($mergedFields as $name => $field) {
-                $adapter = \HyperPress\Fields\BlockFieldAdapter::fromField($field->getHyperField(), $attributes);
+                $adapter = BlockFieldAdapter::fromField($field->getHyperField(), $attributes);
                 $incoming = $attributes[$name] ?? null;
 
                 if ($incoming === null) {

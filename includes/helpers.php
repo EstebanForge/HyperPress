@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use HyperPress\starfederation\datastar\ServerSentEventGenerator;
+use HyperFields\HyperFields;
 
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
@@ -441,11 +442,11 @@ function hp_ds_is_rate_limited(array $options = []): bool
  *
  * @param string $page_title The title of the page
  * @param string $menu_slug The slug for the menu
- * @return HyperPress\Fields\OptionsPage
+ * @return HyperFields\OptionsPage
  */
-function hp_create_option_page(string $page_title, string $menu_slug): HyperPress\Fields\OptionsPage
+function hp_create_option_page(string $page_title, string $menu_slug): \HyperFields\OptionsPage
 {
-    return HyperPress\Fields\OptionsPage::make($page_title, $menu_slug);
+    return HyperFields::makeOptionPage($page_title, $menu_slug);
 }
 
 /**
@@ -455,11 +456,11 @@ function hp_create_option_page(string $page_title, string $menu_slug): HyperPres
  * @param string $type The field type
  * @param string $name The field name
  * @param string $label The field label
- * @return HyperPress\Fields\Field
+ * @return HyperFields\Field
  */
-function hp_create_field(string $type, string $name, string $label): HyperPress\Fields\Field
+function hp_create_field(string $type, string $name, string $label): \HyperFields\Field
 {
-    return HyperPress\Fields\Field::make($type, $name, $label);
+    return HyperFields::makeField($type, $name, $label);
 }
 
 /**
@@ -468,11 +469,11 @@ function hp_create_field(string $type, string $name, string $label): HyperPress\
  * @since 2.1.0
  * @param string $name The field name
  * @param string $label The field label
- * @return HyperPress\Fields\TabsField
+ * @return HyperFields\TabsField
  */
-function hp_create_tabs(string $name, string $label): HyperPress\Fields\TabsField
+function hp_create_tabs(string $name, string $label): \HyperFields\TabsField
 {
-    return HyperPress\Fields\TabsField::make($name, $label);
+    return HyperFields::makeTabs($name, $label);
 }
 
 /**
@@ -481,11 +482,11 @@ function hp_create_tabs(string $name, string $label): HyperPress\Fields\TabsFiel
  * @since 2.1.0
  * @param string $name The field name
  * @param string $label The field label
- * @return HyperPress\Fields\RepeaterField
+ * @return HyperFields\RepeaterField
  */
-function hp_create_repeater(string $name, string $label): HyperPress\Fields\RepeaterField
+function hp_create_repeater(string $name, string $label): \HyperFields\RepeaterField
 {
-    return HyperPress\Fields\RepeaterField::make($name, $label);
+    return HyperFields::makeRepeater($name, $label);
 }
 
 /**
@@ -494,11 +495,11 @@ function hp_create_repeater(string $name, string $label): HyperPress\Fields\Repe
  * @since 2.1.0
  * @param string $id The section ID
  * @param string $title The section title
- * @return HyperPress\Fields\OptionsSection
+ * @return HyperFields\OptionsSection
  */
-function hp_create_section(string $id, string $title): HyperPress\Fields\OptionsSection
+function hp_create_section(string $id, string $title): \HyperFields\OptionsSection
 {
-    return HyperPress\Fields\OptionsSection::make($id, $title);
+    return HyperFields::makeSection($id, $title);
 }
 
 /**
@@ -604,7 +605,7 @@ function hp_maybe_sanitize_field_value(string $name, $value, array $args = [])
     $type = $args['type'] ?? null;
     if (is_string($type) && $type !== '') {
         try {
-            $field = HyperPress\Fields\Field::make($type, $name, $name);
+            $field = HyperFields::makeField($type, $name, $name);
 
             return $field->sanitizeValue($value);
         } catch (Throwable $e) {

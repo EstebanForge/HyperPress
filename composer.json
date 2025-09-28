@@ -14,7 +14,8 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.1",
-        "starfederation/datastar-php": "^1.0"
+        "starfederation/datastar-php": "^1.0",
+        "estebanforge/hyperfields": "1.0.0"
     },
     "require-dev": {
         "pestphp/pest": "*",
@@ -23,32 +24,24 @@
     "scripts": {
         "test": "vendor/bin/pest",
         "test:unit": "vendor/bin/pest --testsuite=Unit",
-        "test:integration": "vendor/bin/pest --testsuite=Integration", 
+        "test:integration": "vendor/bin/pest --testsuite=Integration",
         "test:feature": "vendor/bin/pest --testsuite=Feature",
         "test:coverage": "vendor/bin/pest --coverage",
         "test:setup": "php setup-sqlite-db.php",
         "cs:fix": "php-cs-fixer fix",
-        "ensure-vendor-prefixed": "mkdir -p vendor-prefixed",
-        "production": [
-            "@cs-fix",
-            "@prefix-namespaces",
-            "@dump-autoload-prod"
-        ],
         "dump-autoload-prod": "@php composer dump-autoload --optimize --no-dev",
         "dump-autoload-dev": "@php composer dump-autoload",
-        "prefix-namespaces": [
-            "@ensure-vendor-prefixed",
-            "strauss"
+        "production": [
+            "@cs-fix",
+            "@dump-autoload-prod"
         ],
         "post-install-cmd": [
             "@cs-fix",
-            "@prefix-namespaces",
             "@dump-autoload-prod",
             "php .ci/setup-sqlite-dropin.php"
         ],
         "post-update-cmd": [
             "@cs-fix",
-            "@prefix-namespaces",
             "@dump-autoload-prod",
             "php .ci/setup-sqlite-dropin.php"
         ],
@@ -61,50 +54,13 @@
         "files": [
             "bootstrap.php"
         ],
-        "classmap": [
-            "vendor-prefixed"
+        "exclude-from-classmap": [
+            "**/vendor/starfederation/datastar-php/**"
         ]
     },
     "autoload-dev": {
         "psr-4": {
             "HyperPress\\Tests\\": "tests/"
-        }
-    },
-    "extra": {
-        "strauss": {
-            "target_directory": "vendor-prefixed",
-            "namespace_prefix": "HyperPress\\",
-            "classmap_prefix": "HyperPress_",
-            "constant_prefix": "HYPERPRESS_",
-            "packages": [
-                "starfederation/datastar-php"
-            ],
-            "override_autoload": {
-                "starfederation/datastar-php": {
-                    "psr-4": {
-                        "HyperPress\\starfederation\\datastar\\": "src/"
-                    }
-                }
-            },
-            "exclude_from_copy": {
-                "packages": [
-                    "phpunit/phpunit",
-                    "yoast/wp-test-utils",
-                    "wp-phpunit/wp-phpunit"
-                ],
-                "namespaces": [],
-                "file_patterns": []
-            },
-            "exclude_from_prefix": {
-                "packages": [
-                    "phpunit/phpunit",
-                    "yoast/wp-test-utils",
-                    "wp-phpunit/wp-phpunit"
-                ],
-                "namespaces": [],
-                "file_patterns": []
-            },
-            "delete_vendor_packages": false
         }
     },
     "config": {

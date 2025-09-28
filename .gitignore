@@ -6,7 +6,6 @@ TODO.md
 .wp-org-assets/htmx-api-wp-logo.psd
 rules-wordpress.md
 .php-cs-fixer.cache
-vendor/
 
 # Test artifacts
 coverage/

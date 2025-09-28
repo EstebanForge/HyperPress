@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-use HyperPress\Fields\Field;
-use HyperPress\Fields\OptionsPage;
-use HyperPress\Fields\OptionsSection;
-use HyperPress\Fields\RepeaterField;
-use HyperPress\Fields\TabsField;
 use starfederation\datastar\ServerSentEventGenerator;
 
 // Exit if accessed directly.
@@ -147,112 +142,46 @@ function hm_ds_is_rate_limited(array $options = []): bool
 /**
  * @deprecated 2.1.0 Use hp_create_option_page() instead
  */
-function hf_option_page(string $page_title, string $menu_slug): OptionsPage
-{
-    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_create_option_page');
-
-    return hp_create_option_page($page_title, $menu_slug);
-}
 
 /**
  * @deprecated 2.1.0 Use hp_create_field() instead
  */
-function hf_field(string $type, string $name, string $label): Field
-{
-    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_create_field');
-
-    return hp_create_field($type, $name, $label);
-}
 
 /**
  * @deprecated 2.1.0 Use hp_create_tabs() instead
  */
-function hf_tabs(string $name, string $label): TabsField
-{
-    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_create_tabs');
-
-    return hp_create_tabs($name, $label);
-}
 
 /**
  * @deprecated 2.1.0 Use hp_create_repeater() instead
  */
-function hf_repeater(string $name, string $label): RepeaterField
-{
-    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_create_repeater');
-
-    return hp_create_repeater($name, $label);
-}
 
 /**
  * @deprecated 2.1.0 Use hp_create_section() instead
  */
-function hf_section(string $id, string $title): OptionsSection
-{
-    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_create_section');
-
-    return hp_create_section($id, $title);
-}
 
 /**
  * @deprecated 2.1.0 Use hp_resolve_field_context() instead
  */
-function hf_resolve_field_context($source = null, array $args = []): array
-{
-    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_resolve_field_context');
-
-    return hp_resolve_field_context($source, $args);
-}
 
 /**
  * @deprecated 2.1.0 Use hp_maybe_sanitize_field_value() instead
  */
-function hf_maybe_sanitize_field_value(string $name, $value, array $args = [])
-{
-    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_maybe_sanitize_field_value');
-
-    return hp_maybe_sanitize_field_value($name, $value, $args);
-}
 
 /**
  * @deprecated 2.1.0 Use hp_get_field() instead
  */
-function hf_get_field(string $name, $source = null, array $args = [])
-{
-    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_get_field');
-
-    return hp_get_field($name, $source, $args);
-}
 
 /**
  * @deprecated 2.1.0 Use hp_update_field() instead
  */
-function hf_update_field(string $name, $value, $source = null, array $args = []): bool
-{
-    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_update_field');
-
-    return hp_update_field($name, $value, $source, $args);
-}
 
 /**
  * @deprecated 2.1.0 Use hp_delete_field() instead
  */
-function hf_delete_field(string $name, $source = null, array $args = []): bool
-{
-    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_delete_field');
-
-    return hp_delete_field($name, $source, $args);
-}
 
 /**
  * @deprecated 2.1.0 Use hp_save_field() instead
  */
-function hf_save_field(string $name, $value, $source = null, array $args = []): bool
-{
-    _deprecated_function(__FUNCTION__, '2.1.0', 'hp_save_field');
-
-    return hp_save_field($name, $value, $source, $args);
-}
 
 /**
  * @deprecated 2.1.0 Use hp_get_endpoint_url() instead

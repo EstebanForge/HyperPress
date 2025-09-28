@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'starfederation\\datastar\\' => array($vendorDir . '/starfederation/datastar-php/src'),
     'HyperPress\\' => array($baseDir . '/src'),
+    'HyperFields\\' => array($vendorDir . '/estebanforge/hyperfields/src'),
 );
