@@ -10,17 +10,6 @@ Documentation for the HyperPress plugin, with its Hypermedia REST API, and its l
    - [No Swap Response Templates](./how-to-use.md#no-swap-response-templates)
  - [Hypermedia Libraries](./hypermedia-libraries.md)
 
- - [HyperFields (API and Field Types)](./hyperfields.md)
-   - [Overview](./hyperfields.md#overview)
-   - [Getting and Saving Values](./hyperfields.md#getting-and-saving-values)
-   - [API Reference](./hyperfields.md#api-reference)
-   - [Field Types](./hyperfields.md#field-types-reference)
-   - [Conditional Logic](./hyperfields.md#conditional-logic)
-   - [Options Pages](./hyperfields.md#options-pages)
-   - [Sanitization](./hyperfields.md#sanitization)
-   - [Helper Factories](./hyperfields.md#helper-factories-for-building-uis)
-   - [Tips](./hyperfields.md#tips)
-
  - [HyperBlocks](./hyperblocks.md)
    - [Getting Started](./hyperblocks.md#getting-started)
    - [Why HyperBlocks](./hyperblocks.md#why-hyperblocks)
@@ -40,7 +29,6 @@ Documentation for the HyperPress plugin, with its Hypermedia REST API, and its l
  - [Datastar Helper Functions](./datastar-helpers.md)
    - [Quick Start: Minimal SSE Example](./datastar-helpers.md#quick-start-minimal-sse-example)
  - [HyperBlocks Examples](./hyperblocks-examples.md)
- - [HyperFields Examples](./hyperfields-examples.md)
  - [Options Page Compact Input](./options-compact-input.md)
 
  - [Developer Configuration](./developer-configuration.md)

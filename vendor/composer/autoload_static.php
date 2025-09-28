@@ -4,9 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7cf49577292fa31777d454950d4fa93e
+class ComposerStaticInit72a6f5e6d738bf187bffc10e27c53e4d
 {
     public static $files = array (
+        '13f65e44352b0407f05cb5a5e174612b' => __DIR__ . '/..' . '/estebanforge/hyperfields/includes/helpers.php',
+        '0522701f5d113a2ff6373ccc834dd7d6' => __DIR__ . '/..' . '/estebanforge/hyperfields/includes/backward-compatibility.php',
+        'c1c635284e1ca7836efff979fb09390f' => __DIR__ . '/..' . '/estebanforge/hyperfields/bootstrap.php',
         'b4e0b991acd5ddad926ebc747d73282f' => __DIR__ . '/../..' . '/bootstrap.php',
     );
 
@@ -18,6 +21,7 @@ class ComposerStaticInit7cf49577292fa31777d454950d4fa93e
         'H' => 
         array (
             'HyperPress\\' => 11,
+            'HyperFields\\' => 12,
         ),
     );
 
@@ -30,11 +34,41 @@ class ComposerStaticInit7cf49577292fa31777d454950d4fa93e
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
+        'HyperFields\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/estebanforge/hyperfields/src',
+        ),
     );
 
     public static $classMap = array (
-        'ComposerAutoloaderInitd1b91324d2ccf094110b23e3d747becf' => __DIR__ . '/../..' . '/vendor-prefixed/composer/autoload_real.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'HyperFields\\Admin\\Activation' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/Activation.php',
+        'HyperFields\\Admin\\Options' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/Options.php',
+        'HyperFields\\Admin\\OptionsMigration' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/OptionsMigration.php',
+        'HyperFields\\Assets' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Assets.php',
+        'HyperFields\\BlockFieldAdapter' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/BlockFieldAdapter.php',
+        'HyperFields\\ConditionalLogic' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/ConditionalLogic.php',
+        'HyperFields\\Container\\Container' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Container/Container.php',
+        'HyperFields\\Container\\ContainerFactory' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Container/ContainerFactory.php',
+        'HyperFields\\Container\\PostMetaContainer' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Container/PostMetaContainer.php',
+        'HyperFields\\Container\\TermMetaContainer' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Container/TermMetaContainer.php',
+        'HyperFields\\Container\\UserMetaContainer' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Container/UserMetaContainer.php',
+        'HyperFields\\CustomField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/CustomField.php',
+        'HyperFields\\Field' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Field.php',
+        'HyperFields\\HeadingField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/HeadingField.php',
+        'HyperFields\\HyperFields' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/HyperFields.php',
+        'HyperFields\\Log' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Log.php',
+        'HyperFields\\OptionField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/OptionField.php',
+        'HyperFields\\OptionsPage' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/OptionsPage.php',
+        'HyperFields\\OptionsSection' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/OptionsSection.php',
+        'HyperFields\\PostField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/PostField.php',
+        'HyperFields\\Registry' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Registry.php',
+        'HyperFields\\RepeaterField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/RepeaterField.php',
+        'HyperFields\\SeparatorField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/SeparatorField.php',
+        'HyperFields\\TabsField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/TabsField.php',
+        'HyperFields\\TemplateLoader' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/TemplateLoader.php',
+        'HyperFields\\TermField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/TermField.php',
+        'HyperFields\\UserField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/UserField.php',
         'HyperPress\\Admin\\Activation' => __DIR__ . '/../..' . '/src/Admin/Activation.php',
         'HyperPress\\Admin\\Options' => __DIR__ . '/../..' . '/src/Admin/Options.php',
         'HyperPress\\Admin\\OptionsMigration' => __DIR__ . '/../..' . '/src/Admin/OptionsMigration.php',
@@ -46,31 +80,7 @@ class ComposerStaticInit7cf49577292fa31777d454950d4fa93e
         'HyperPress\\Blocks\\Renderer' => __DIR__ . '/../..' . '/src/Blocks/Renderer.php',
         'HyperPress\\Blocks\\RestApi' => __DIR__ . '/../..' . '/src/Blocks/RestApi.php',
         'HyperPress\\Compatibility' => __DIR__ . '/../..' . '/src/Compatibility.php',
-        'HyperPress\\Composer\\Autoload\\ClassLoader' => __DIR__ . '/../..' . '/vendor-prefixed/composer/ClassLoader.php',
-        'HyperPress\\Composer\\Autoload\\ComposerStaticInitd1b91324d2ccf094110b23e3d747becf' => __DIR__ . '/../..' . '/vendor-prefixed/composer/autoload_static.php',
         'HyperPress\\Config' => __DIR__ . '/../..' . '/src/Config.php',
-        'HyperPress\\Fields\\BlockFieldAdapter' => __DIR__ . '/../..' . '/src/Fields/BlockFieldAdapter.php',
-        'HyperPress\\Fields\\ConditionalLogic' => __DIR__ . '/../..' . '/src/Fields/ConditionalLogic.php',
-        'HyperPress\\Fields\\Container\\Container' => __DIR__ . '/../..' . '/src/Fields/Container/Container.php',
-        'HyperPress\\Fields\\Container\\ContainerFactory' => __DIR__ . '/../..' . '/src/Fields/Container/ContainerFactory.php',
-        'HyperPress\\Fields\\Container\\PostMetaContainer' => __DIR__ . '/../..' . '/src/Fields/Container/PostMetaContainer.php',
-        'HyperPress\\Fields\\Container\\TermMetaContainer' => __DIR__ . '/../..' . '/src/Fields/Container/TermMetaContainer.php',
-        'HyperPress\\Fields\\Container\\UserMetaContainer' => __DIR__ . '/../..' . '/src/Fields/Container/UserMetaContainer.php',
-        'HyperPress\\Fields\\CustomField' => __DIR__ . '/../..' . '/src/Fields/CustomField.php',
-        'HyperPress\\Fields\\Field' => __DIR__ . '/../..' . '/src/Fields/Field.php',
-        'HyperPress\\Fields\\HeadingField' => __DIR__ . '/../..' . '/src/Fields/HeadingField.php',
-        'HyperPress\\Fields\\HyperFields' => __DIR__ . '/../..' . '/src/Fields/HyperFields.php',
-        'HyperPress\\Fields\\OptionField' => __DIR__ . '/../..' . '/src/Fields/OptionField.php',
-        'HyperPress\\Fields\\OptionsPage' => __DIR__ . '/../..' . '/src/Fields/OptionsPage.php',
-        'HyperPress\\Fields\\OptionsSection' => __DIR__ . '/../..' . '/src/Fields/OptionsSection.php',
-        'HyperPress\\Fields\\PostField' => __DIR__ . '/../..' . '/src/Fields/PostField.php',
-        'HyperPress\\Fields\\Registry' => __DIR__ . '/../..' . '/src/Fields/Registry.php',
-        'HyperPress\\Fields\\RepeaterField' => __DIR__ . '/../..' . '/src/Fields/RepeaterField.php',
-        'HyperPress\\Fields\\SeparatorField' => __DIR__ . '/../..' . '/src/Fields/SeparatorField.php',
-        'HyperPress\\Fields\\TabsField' => __DIR__ . '/../..' . '/src/Fields/TabsField.php',
-        'HyperPress\\Fields\\TemplateLoader' => __DIR__ . '/../..' . '/src/Fields/TemplateLoader.php',
-        'HyperPress\\Fields\\TermField' => __DIR__ . '/../..' . '/src/Fields/TermField.php',
-        'HyperPress\\Fields\\UserField' => __DIR__ . '/../..' . '/src/Fields/UserField.php',
         'HyperPress\\Libraries\\AlpineAjaxLib' => __DIR__ . '/../..' . '/src/Libraries/AlpineAjaxLib.php',
         'HyperPress\\Libraries\\DatastarLib' => __DIR__ . '/../..' . '/src/Libraries/DatastarLib.php',
         'HyperPress\\Libraries\\HTMXLib' => __DIR__ . '/../..' . '/src/Libraries/HTMXLib.php',
@@ -79,18 +89,6 @@ class ComposerStaticInit7cf49577292fa31777d454950d4fa93e
         'HyperPress\\Render' => __DIR__ . '/../..' . '/src/Render.php',
         'HyperPress\\Router' => __DIR__ . '/../..' . '/src/Router.php',
         'HyperPress\\Theme' => __DIR__ . '/../..' . '/src/Theme.php',
-        'HyperPress\\starfederation\\datastar\\Consts' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/Consts.php',
-        'HyperPress\\starfederation\\datastar\\ServerSentEventData' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/ServerSentEventData.php',
-        'HyperPress\\starfederation\\datastar\\ServerSentEventGenerator' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/ServerSentEventGenerator.php',
-        'HyperPress\\starfederation\\datastar\\enums\\ElementPatchMode' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/enums/ElementPatchMode.php',
-        'HyperPress\\starfederation\\datastar\\enums\\EventType' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/enums/EventType.php',
-        'HyperPress\\starfederation\\datastar\\events\\EventInterface' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/EventInterface.php',
-        'HyperPress\\starfederation\\datastar\\events\\EventTrait' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/EventTrait.php',
-        'HyperPress\\starfederation\\datastar\\events\\ExecuteScript' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/ExecuteScript.php',
-        'HyperPress\\starfederation\\datastar\\events\\Location' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/Location.php',
-        'HyperPress\\starfederation\\datastar\\events\\PatchElements' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/PatchElements.php',
-        'HyperPress\\starfederation\\datastar\\events\\PatchSignals' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/PatchSignals.php',
-        'HyperPress\\starfederation\\datastar\\events\\RemoveElements' => __DIR__ . '/../..' . '/vendor-prefixed/starfederation/datastar-php/src/events/RemoveElements.php',
         'starfederation\\datastar\\Consts' => __DIR__ . '/..' . '/starfederation/datastar-php/src/Consts.php',
         'starfederation\\datastar\\ServerSentEventData' => __DIR__ . '/..' . '/starfederation/datastar-php/src/ServerSentEventData.php',
         'starfederation\\datastar\\ServerSentEventGenerator' => __DIR__ . '/..' . '/starfederation/datastar-php/src/ServerSentEventGenerator.php',
@@ -108,9 +106,9 @@ class ComposerStaticInit7cf49577292fa31777d454950d4fa93e
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit7cf49577292fa31777d454950d4fa93e::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit7cf49577292fa31777d454950d4fa93e::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit7cf49577292fa31777d454950d4fa93e::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit72a6f5e6d738bf187bffc10e27c53e4d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit72a6f5e6d738bf187bffc10e27c53e4d::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit72a6f5e6d738bf187bffc10e27c53e4d::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -1,0 +1,50 @@
+{
+    "name": "estebanforge/hyperfields",
+    "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
+    "type": "wordpress-plugin",
+    "version": "1.0.0",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Esteban Cuevas",
+            "email": "esteban@actitud.xyz"
+        }
+    ],
+    "minimum-stability": "RC",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "HyperFields\\": "src/"
+        },
+        "files": [
+            "includes/helpers.php",
+            "includes/backward-compatibility.php",
+            "bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "HyperFields\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "pestphp/pest": "*",
+        "10up/wp_mock": "^0.4.2"
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "test:unit": "vendor/bin/pest --testsuite=Unit",
+        "test:integration": "vendor/bin/pest --testsuite=Integration",
+        "test:feature": "vendor/bin/pest --testsuite=Feature",
+        "test:coverage": "vendor/bin/pest --coverage"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "pestphp/pest-plugin": true
+        }
+    }
+}
