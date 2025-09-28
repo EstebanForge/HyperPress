@@ -11,6 +11,7 @@ namespace HyperPress;
 use HyperPress\Admin\Activation;
 use HyperPress\Admin\Options;
 use HyperPress\Admin\OptionsMigration;
+use HyperFields\TemplateLoader;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -102,7 +103,7 @@ class Main
         $this->assets_manager = new Assets($this);
 
         // Initialize TemplateLoader
-        Fields\TemplateLoader::init();
+        TemplateLoader::init();
 
         if (is_admin()) {
             // Handle migration from wp-settings to hyper fields
@@ -353,6 +354,16 @@ class Main
      */
     public function run()
     {
+        $options = $this->getOptions();
+        if ($options['active_library'] === 'datastar') {
+            if (!class_exists('StarFederation\Datastar\ServerSentEventGenerator')) {
+                $autoloader = HYPERPRESS_ABSPATH . 'vendor/starfederation/datastar-php/autoload.php';
+                if (file_exists($autoloader)) {
+                    require_once $autoloader;
+                }
+            }
+        }
+
         add_action('init', [$this->router, 'registerMainRoute']);
         add_action('template_redirect', [$this->render, 'loadTemplate']);
         add_action('wp_head', [$this->config, 'insertConfigMetaTag']);

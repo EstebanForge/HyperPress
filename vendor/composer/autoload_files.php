@@ -6,5 +6,8 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    '13f65e44352b0407f05cb5a5e174612b' => $vendorDir . '/estebanforge/hyperfields/includes/helpers.php',
+    '0522701f5d113a2ff6373ccc834dd7d6' => $vendorDir . '/estebanforge/hyperfields/includes/backward-compatibility.php',
+    'c1c635284e1ca7836efff979fb09390f' => $vendorDir . '/estebanforge/hyperfields/bootstrap.php',
     'b4e0b991acd5ddad926ebc747d73282f' => $baseDir . '/bootstrap.php',
 );

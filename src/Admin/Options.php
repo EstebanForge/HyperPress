@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HyperPress\Admin;
 
-use HyperPress\Fields\HyperFields;
+use HyperFields\HyperFields;
 use HyperPress\Libraries\HTMXLib;
 use HyperPress\Main;
 
@@ -301,6 +301,7 @@ class Options
 
         $options = HyperFields::getOptions($this->option_name, []);
         $plugin_version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7';
+        $hyperfields_version = defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : '1.0.0';
         $php_version = PHP_VERSION;
         $wp_ver = $wp_version ?? get_bloginfo('version');
 
@@ -308,6 +309,7 @@ class Options
             __('WordPress Version', 'api-for-htmx') => $wp_ver,
             __('PHP Version', 'api-for-htmx') => $php_version,
             __('Plugin Version', 'api-for-htmx') => $plugin_version,
+            __('HyperFields Version', 'api-for-htmx') => $hyperfields_version,
             __('Active Library', 'api-for-htmx') => ucfirst($options['active_library'] ?? 'datastar'),
             __('Datastar SDK', 'api-for-htmx') => __('Available (v1.0.0-RC.3)', 'api-for-htmx'),
         ];
