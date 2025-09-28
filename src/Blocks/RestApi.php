@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace HyperPress\Blocks;
 
+use HyperFields\BlockFieldAdapter;
+
 // Prevent direct file access.
 if (!defined('ABSPATH')) {
     exit;
@@ -213,7 +215,7 @@ class RestApi
                 }
 
                 foreach ($mergedFields as $name => $field) {
-                    $adapter = \HyperPress\Fields\BlockFieldAdapter::fromField($field->getHyperField(), $attributes);
+                    $adapter = BlockFieldAdapter::fromField($field->getHyperField(), $attributes);
                     $incoming = $attributes[$name] ?? null;
 
                     if ($incoming === null) {
