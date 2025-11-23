@@ -11,3 +11,4 @@ rules-wordpress.md
 coverage/
 .phpunit.result.cache
 wp-content/
+deploy-readme-only.sh

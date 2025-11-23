@@ -1,7 +1,0 @@
-/.idea
-composer.lock
-vendor/
-docs/
-.editorconfig
-.phpunit.result.cache
-build/

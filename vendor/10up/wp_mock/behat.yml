@@ -1,9 +1,0 @@
-default:
-  suites:
-    default:
-      contexts:
-        - FeatureContext
-        - HooksContext
-        - FunctionsContext
-  formatters:
-    progress: true

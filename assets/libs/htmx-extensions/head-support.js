@@ -1,6 +1,6 @@
 /**
- * Minified by jsDelivr using Terser v5.37.0.
- * Original file: /npm/htmx-ext-head-support@2.0.4/head-support.js
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/htmx-ext-head-support@2.0.5/head-support.js
  *
  * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
  */
