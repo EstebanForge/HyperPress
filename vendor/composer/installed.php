@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'estebanforge/hyperfields' => array(
-            'pretty_version' => '1.0.0',
-            'version' => '1.0.0.0',
-            'reference' => '7eb46269f923d44f1073cd03efdc119666dbc50c',
+            'pretty_version' => '1.0.1',
+            'version' => '1.0.1.0',
+            'reference' => 'ead94af60baff48e9f8487b2655a470eb4c8bb40',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../estebanforge/hyperfields',
             'aliases' => array(),
