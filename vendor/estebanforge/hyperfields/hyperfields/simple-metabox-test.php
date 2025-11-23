@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use HyperPress\Fields\HyperFields;
+use HyperFields\HyperFields;
 
 /**
  * Simple post meta example.

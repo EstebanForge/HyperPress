@@ -5,9 +5,9 @@ declare(strict_types=1);
 /**
  * HyperFields Simple Example
  * Basic usage demonstration for HyperFields metaboxes.
- * 
+ *
  * ⚠️  EXAMPLE FILE - NOT AUTO-ACTIVATED
- * 
+ *
  * To use this example:
  * 1. Copy this function to your theme/plugin
  * 2. Uncomment the add_action line at the bottom
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use HyperPress\Fields\HyperFields;
+use HyperFields\HyperFields;
 
 /**
  * Simple post meta example.

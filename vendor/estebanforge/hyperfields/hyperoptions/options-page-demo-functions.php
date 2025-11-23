@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Example: Creating an Options Page with Hyper Fields (Helper Functions)
+ * Example: Creating an Options Page with Hyper Fields (Helper Functions).
  *
  * This demonstrates how to use the helper functions API
  * to create plugin/theme options pages in WordPress.
@@ -50,6 +50,17 @@ $general_section->addField(
         ->setHelp(__('Turn on the advanced Feature X functionality', 'api-for-htmx'))
 );
 
+// API Endpoint field using helper
+if (function_exists('hp_get_endpoint_url')) {
+    $api_url = hp_get_endpoint_url();
+
+    $general_section->addField(
+        HyperFields::makeField('html', 'api_endpoint', __('API Endpoint', 'api-for-htmx'))
+            ->setHtmlContent('<div><input type="text" readonly value="' . esc_attr($api_url) . '" style="width:100%" /></div>')
+            ->setHelp(__('This is the base API endpoint for your integration.', 'api-for-htmx'))
+    );
+}
+
 // HTML/script field demo
 $general_section->addField(
     HyperFields::makeField('html', 'custom_script', __('Custom Script Demo', 'api-for-htmx'))
@@ -63,25 +74,25 @@ $advanced_section = $plugin_options->addSection('advanced', 'Advanced Settings',
 // Tabs field for organizing complex settings
 $tabs_field = HyperFields::makeTabs('settings_tabs', 'Configuration Tabs')
     ->addTab('api', 'API Settings', [
-    HyperFields::makeField('text', 'api_key', 'API Key')
-    ->setPlaceholder('Enter your API key...')
-    ->setRequired(true),
-    HyperFields::makeField('url', 'api_endpoint', 'API Endpoint')
-    ->setDefault('https://api.example.com/v1')
-    ->setRequired(true),
-    HyperFields::makeField('select', 'api_version', 'API Version')
-    ->setOptions(['v1' => 'Version 1', 'v2' => 'Version 2'])
-    ->setDefault('v1')
+        HyperFields::makeField('text', 'api_key', 'API Key')
+        ->setPlaceholder('Enter your API key...')
+        ->setRequired(true),
+        HyperFields::makeField('url', 'api_endpoint', 'API Endpoint')
+        ->setDefault('https://api.example.com/v1')
+        ->setRequired(true),
+        HyperFields::makeField('select', 'api_version', 'API Version')
+        ->setOptions(['v1' => 'Version 1', 'v2' => 'Version 2'])
+        ->setDefault('v1'),
     ])
     ->addTab('notifications', 'Notifications', [
-    HyperFields::makeField('email', 'notification_email', 'Notification Email')
-    ->setDefault(get_option('admin_email')),
-    HyperFields::makeField('multiselect', 'notification_types', 'Notification Types')
-    ->setOptions([
-        'new_user' => 'New User Registration',
-        'new_order' => 'New Orders',
-        'system_errors' => 'System Errors'
-        ])
+        HyperFields::makeField('email', 'notification_email', 'Notification Email')
+        ->setDefault(get_option('admin_email')),
+        HyperFields::makeField('multiselect', 'notification_types', 'Notification Types')
+        ->setOptions([
+            'new_user' => 'New User Registration',
+            'new_order' => 'New Orders',
+            'system_errors' => 'System Errors',
+        ]),
     ]);
 
 $advanced_section->addField($tabs_field);
@@ -94,12 +105,12 @@ $repeater_field = HyperFields::makeRepeater('social_links', 'Social Media Links'
     ->addSubField(
         HyperFields::makeField('select', 'platform', 'Platform')
         ->setOptions([
-                'facebook' => 'Facebook',
-                'twitter' => 'Twitter',
-                'instagram' => 'Instagram',
-                'linkedin' => 'LinkedIn',
-                'youtube' => 'YouTube'
-            ])
+            'facebook' => 'Facebook',
+            'twitter' => 'Twitter',
+            'instagram' => 'Instagram',
+            'linkedin' => 'LinkedIn',
+            'youtube' => 'YouTube',
+        ])
         ->setRequired(true)
     )
     ->addSubField(
@@ -118,7 +129,7 @@ $advanced_section->addField(
     HyperFields::makeField('radio', 'display_mode', 'Display Mode')
         ->setOptions([
             'simple' => 'Simple Display',
-            'advanced' => 'Advanced Display'
+            'advanced' => 'Advanced Display',
         ])
         ->setDefault('simple')
 );
@@ -133,8 +144,8 @@ $advanced_section->addField(
             'conditions' => [[
                 'field' => 'display_mode',
                 'operator' => '=',
-                'value' => 'advanced'
-            ]]
+                'value' => 'advanced',
+            ]],
         ])
 );
 
@@ -159,7 +170,7 @@ $header_section->addField(
         ->setOptions([
             'default' => 'https://via.placeholder.com/150x60/007cba/ffffff?text=Default',
             'centered' => 'https://via.placeholder.com/150x60/28a745/ffffff?text=Centered',
-            'minimal' => 'https://via.placeholder.com/150x60/dc3545/ffffff?text=Minimal'
+            'minimal' => 'https://via.placeholder.com/150x60/dc3545/ffffff?text=Minimal',
         ])
         ->setDefault('default')
 );
@@ -173,7 +184,7 @@ $typography_section->addField(
             'roboto' => 'Roboto',
             'opensans' => 'Open Sans',
             'lato' => 'Lato',
-            'montserrat' => 'Montserrat'
+            'montserrat' => 'Montserrat',
         ])
         ->setDefault('system')
 );
@@ -223,15 +234,15 @@ $dashboard_section->addField(
 $settings_section = $custom_menu->addSection('settings', 'Plugin Settings', 'Configure your plugin behavior');
 $settings_section->addField(
     HyperFields::makeField('map', 'business_location', 'Business Location')
-        // ->set_map_options([
-        // 'zoom' => 15,
-        // 'type' => 'roadmap'
-        // ])
+    // ->set_map_options([
+    // 'zoom' => 15,
+    // 'type' => 'roadmap'
+    // ])
 );
 
 $settings_section->addField(
     HyperFields::makeField('media_gallery', 'gallery_images', 'Gallery Images')
-        // ->set_multiple(true)
+    // ->set_multiple(true)
 );
 
 // Register custom menu

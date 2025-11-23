@@ -4,28 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1d965405aae53fcd183dbce4b632c131",
+    "content-hash": "9df57b10e795f620526ee79a8e50f778",
     "packages": [
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EstebanForge/HyperFields.git",
-                "reference": "7eb46269f923d44f1073cd03efdc119666dbc50c"
+                "reference": "ead94af60baff48e9f8487b2655a470eb4c8bb40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EstebanForge/HyperFields/zipball/7eb46269f923d44f1073cd03efdc119666dbc50c",
-                "reference": "7eb46269f923d44f1073cd03efdc119666dbc50c",
+                "url": "https://api.github.com/repos/EstebanForge/HyperFields/zipball/ead94af60baff48e9f8487b2655a470eb4c8bb40",
+                "reference": "ead94af60baff48e9f8487b2655a470eb4c8bb40",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1"
-            },
-            "require-dev": {
-                "10up/wp_mock": "^0.4.2",
-                "pestphp/pest": "*"
             },
             "type": "wordpress-plugin",
             "autoload": {
@@ -51,9 +47,9 @@
             "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
             "support": {
                 "issues": "https://github.com/EstebanForge/HyperFields/issues",
-                "source": "https://github.com/EstebanForge/HyperFields/tree/1.0.0"
+                "source": "https://github.com/EstebanForge/HyperFields/tree/1.0.1"
             },
-            "time": "2025-09-28T01:33:59+00:00"
+            "time": "2025-11-23T21:01:00+00:00"
         },
         {
             "name": "starfederation/datastar-php",

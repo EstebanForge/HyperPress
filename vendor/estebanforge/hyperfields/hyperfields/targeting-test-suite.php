@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use HyperPress\Fields\HyperFields;
+use HyperFields\HyperFields;
 
 /**
  * Test 1: Post targeting by ID
@@ -76,10 +76,10 @@ function hp_test_post_by_type(): void
         ->setHelp('This shows on all posts and pages'))
         ->addField(HyperFields::makeField('select', 'test_priority', 'Test Priority')
         ->setOptions([
-                'low' => 'Low',
-                'medium' => 'Medium',
-                'high' => 'High',
-            ])
+            'low' => 'Low',
+            'medium' => 'Medium',
+            'high' => 'High',
+        ])
             ->setDefault('medium'));
 }
 
@@ -181,32 +181,32 @@ function hp_test_complex_targeting(): void
     $container
         ->addField(HyperFields::makeField('select', 'test_layout_type', 'Layout Type')
         ->setOptions([
-                'default' => 'Default',
-                'custom' => 'Custom',
-                'special' => 'Special',
-            ])
+            'default' => 'Default',
+            'custom' => 'Custom',
+            'special' => 'Special',
+        ])
         ->setDefault('default'))
 
         // Conditional field - only shows when custom layout is selected
         ->addField(HyperFields::makeField('textarea', 'test_custom_css', 'Custom CSS')
         ->setConditionalLogic([
-                'conditions' => [[
-                    'field' => 'test_layout_type',
-                    'operator' => '=',
-                    'value' => 'custom',
-                ]],
-            ])
+            'conditions' => [[
+                'field' => 'test_layout_type',
+                'operator' => '=',
+                'value' => 'custom',
+            ]],
+        ])
         ->setHelp('This field only appears when Custom layout is selected'))
 
         // Another conditional field
         ->addField(HyperFields::makeField('text', 'test_special_title', 'Special Title')
         ->setConditionalLogic([
-                'conditions' => [[
-                    'field' => 'test_layout_type',
-                    'operator' => '=',
-                    'value' => 'special',
-                ]],
-            ])
+            'conditions' => [[
+                'field' => 'test_layout_type',
+                'operator' => '=',
+                'value' => 'special',
+            ]],
+        ])
             ->setPlaceholder('Special title for special layout'));
 }
 

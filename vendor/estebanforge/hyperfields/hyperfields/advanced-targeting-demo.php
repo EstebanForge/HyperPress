@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use HyperPress\Fields\HyperFields;
+use HyperFields\HyperFields;
 
 /**
  * Demo: Target specific post by ID.
@@ -70,11 +70,11 @@ function hyperfields_target_multiple_posts(): void
     $container
         ->addField(HyperFields::makeField('select', 'vip_priority', 'VIP Priority')
         ->setOptions([
-                'low' => 'Low Priority',
-                'medium' => 'Medium Priority',
-                'high' => 'High Priority',
-                'urgent' => 'Urgent',
-            ])
+            'low' => 'Low Priority',
+            'medium' => 'Medium Priority',
+            'high' => 'High Priority',
+            'urgent' => 'Urgent',
+        ])
         ->setDefault('medium'))
         ->addField(HyperFields::makeField('text', 'vip_contact', 'VIP Contact')
             ->setPlaceholder('Special contact for this content'));
@@ -99,11 +99,11 @@ function hyperfields_target_post_type(): void
         ->addField(HyperFields::makeField('checkbox', 'product_featured', 'Featured Product'))
         ->addField(HyperFields::makeField('select', 'product_status', 'Availability')
         ->setOptions([
-                'in_stock' => 'In Stock',
-                'out_of_stock' => 'Out of Stock',
-                'pre_order' => 'Pre-Order',
-                'discontinued' => 'Discontinued',
-            ])
+            'in_stock' => 'In Stock',
+            'out_of_stock' => 'Out of Stock',
+            'pre_order' => 'Pre-Order',
+            'discontinued' => 'Discontinued',
+        ])
             ->setDefault('in_stock'));
 }
 
@@ -189,12 +189,12 @@ function hyperfields_target_term_by_slug(): void
         ->setPlaceholder('Featured, Trending, etc.'))
         ->addField(HyperFields::makeField('select', 'badge_style', 'Badge Style')
         ->setOptions([
-                'primary' => 'Primary',
-                'secondary' => 'Secondary',
-                'success' => 'Success',
-                'warning' => 'Warning',
-                'danger' => 'Danger',
-            ])
+            'primary' => 'Primary',
+            'secondary' => 'Secondary',
+            'success' => 'Success',
+            'warning' => 'Warning',
+            'danger' => 'Danger',
+        ])
             ->setDefault('primary'));
 }
 
@@ -229,10 +229,10 @@ function hyperfields_target_multiple_terms(): void
     $container
         ->addField(HyperFields::makeField('select', 'tag_priority', 'Priority Level')
         ->setOptions([
-                'low' => 'Low Priority',
-                'medium' => 'Medium Priority',
-                'high' => 'High Priority',
-            ])
+            'low' => 'Low Priority',
+            'medium' => 'Medium Priority',
+            'high' => 'High Priority',
+        ])
         ->setDefault('medium'))
         ->addField(HyperFields::makeField('color', 'tag_color', 'Tag Color')
             ->setDefault('#6c757d'));
@@ -253,43 +253,43 @@ function hyperfields_complex_targeting_demo(): void
     $container
         ->addField(HyperFields::makeField('select', 'post_layout', 'Layout Type')
         ->setOptions([
-                'default' => 'Default Layout',
-                'custom' => 'Custom Layout',
-                'landing' => 'Landing Page',
-                'fullwidth' => 'Full Width',
-            ])
+            'default' => 'Default Layout',
+            'custom' => 'Custom Layout',
+            'landing' => 'Landing Page',
+            'fullwidth' => 'Full Width',
+        ])
         ->setDefault('default'))
 
         // Show custom CSS field only when custom layout is selected
         ->addField(HyperFields::makeField('textarea', 'custom_css', 'Custom CSS')
         ->setConditionalLogic([
-                'conditions' => [[
-                    'field' => 'post_layout',
-                    'operator' => '=',
-                    'value' => 'custom',
-                ]],
-            ])
+            'conditions' => [[
+                'field' => 'post_layout',
+                'operator' => '=',
+                'value' => 'custom',
+            ]],
+        ])
         ->setHelp('Custom CSS for this post'))
 
         // Show landing page fields only for landing layout
         ->addField(HyperFields::makeField('text', 'landing_headline', 'Landing Headline')
         ->setConditionalLogic([
-                'conditions' => [[
-                    'field' => 'post_layout',
-                    'operator' => '=',
-                    'value' => 'landing',
-                ]],
-            ])
+            'conditions' => [[
+                'field' => 'post_layout',
+                'operator' => '=',
+                'value' => 'landing',
+            ]],
+        ])
         ->setPlaceholder('Compelling headline for landing page'))
 
         ->addField(HyperFields::makeField('url', 'cta_url', 'Call-to-Action URL')
         ->setConditionalLogic([
-                'conditions' => [[
-                    'field' => 'post_layout',
-                    'operator' => '=',
-                    'value' => 'landing',
-                ]],
-            ]));
+            'conditions' => [[
+                'field' => 'post_layout',
+                'operator' => '=',
+                'value' => 'landing',
+            ]],
+        ]));
 }
 
 // Activate all demos - UNCOMMENT LINES BELOW TO TEST

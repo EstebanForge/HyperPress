@@ -1,16 +1,17 @@
 <?php
 
 /**
- * Conditional Logic Demo
+ * Conditional Logic Demo.
  *
  * This file demonstrates how to use field-level conditional logic
  * in HyperFields options pages.
  */
 
-use HyperPress\Fields\HyperFields;
+use HyperFields\HyperFields;
 
 // Create a demo options page with conditional fields
-function hyperfields_conditional_logic_demo() {
+function hyperfields_conditional_logic_demo()
+{
     $container = HyperFields::makeOptionPage('Conditional Logic Demo', 'conditional-logic-demo')
         ->set_icon('dashicons-admin-generic')
         ->setPosition(100);
@@ -23,7 +24,7 @@ function hyperfields_conditional_logic_demo() {
             ->setOptions([
                 'default' => 'Default Layout',
                 'custom' => 'Custom Layout',
-                'landing' => 'Landing Page'
+                'landing' => 'Landing Page',
             ])
         ->setDefault('default'))
 
@@ -33,8 +34,8 @@ function hyperfields_conditional_logic_demo() {
                 'conditions' => [[
                     'field' => 'layout_type',
                     'compare' => '=',
-                    'value' => 'custom'
-                ]]
+                    'value' => 'custom',
+                ]],
             ])
         ->setHelp('Add custom CSS for your custom layout'))
 
@@ -44,8 +45,8 @@ function hyperfields_conditional_logic_demo() {
                 'conditions' => [[
                     'field' => 'layout_type',
                     'compare' => '=',
-                    'value' => 'landing'
-                ]]
+                    'value' => 'landing',
+                ]],
             ])
         ->setPlaceholder('Enter a compelling headline'))
 
@@ -55,8 +56,8 @@ function hyperfields_conditional_logic_demo() {
                 'conditions' => [[
                     'field' => 'layout_type',
                     'compare' => '=',
-                    'value' => 'landing'
-                ]]
+                    'value' => 'landing',
+                ]],
             ])
             ->setPlaceholder('https://example.com'));
 
@@ -73,8 +74,8 @@ function hyperfields_conditional_logic_demo() {
                 'conditions' => [[
                     'field' => 'enable_advanced',
                     'compare' => '=',
-                    'value' => true
-                ]]
+                    'value' => true,
+                ]],
             ])
         ->setDefault(60)
         ->setHelp('How long to cache data in minutes'))
@@ -85,14 +86,14 @@ function hyperfields_conditional_logic_demo() {
                 'conditions' => [[
                     'field' => 'enable_advanced',
                     'compare' => '=',
-                    'value' => true
-                ]]
+                    'value' => true,
+                ]],
             ])
         ->setOptions([
-                'none' => 'None',
-                'basic' => 'Basic',
-                'verbose' => 'Verbose'
-            ])
+            'none' => 'None',
+            'basic' => 'Basic',
+            'verbose' => 'Verbose',
+        ])
             ->setDefault('none')
             ->setHelp('Set the level of debug information'));
 
