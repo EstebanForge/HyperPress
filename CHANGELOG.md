@@ -1,5 +1,13 @@
 # Changelog
 
+# 3.0.2 / 2025-11-23
+- Updated all hypermedia libraries to their latest versions:
+  - HTMX and all HTMX extensions
+  - Alpine.js and Alpine AJAX
+  - Datastar.js
+- Updated package.json with new library versions
+- Maintained backward compatibility for all existing functionality
+
 # 3.0.1 / 2025-08-30
 - Released on [wp.org](https://wordpress.org/plugins/api-for-htmx/).
 

@@ -97,7 +97,7 @@ function download_file($url, $output_path) {
     $data = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $error = curl_error($ch);
-    curl_close($ch);
+    unset($ch);
 
     if ($data === false || !empty($error)) {
         throw new Exception("cURL error: $error");
