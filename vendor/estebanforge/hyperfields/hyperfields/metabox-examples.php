@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use HyperPress\Fields\HyperFields;
+use HyperFields\HyperFields;
 
 /**
  * Post Meta Example
@@ -42,11 +42,11 @@ function hyperfields_demo_post_meta(): void
         ->setHelp('Override the default excerpt'))
         ->addField(HyperFields::makeField('select', 'post_priority', 'Priority')
         ->setOptions([
-                'low' => 'Low',
-                'normal' => 'Normal',
-                'high' => 'High',
-                'urgent' => 'Urgent',
-            ])
+            'low' => 'Low',
+            'normal' => 'Normal',
+            'high' => 'High',
+            'urgent' => 'Urgent',
+        ])
         ->setDefault('normal'))
         ->addField(HyperFields::makeField('checkbox', 'featured_post', 'Featured Post')
         ->setHelp('Mark this post as featured'))
@@ -84,10 +84,10 @@ function hyperfields_demo_term_meta(): void
         ->setPlaceholder('Alternative name for this tag'))
         ->addField(HyperFields::makeField('select', 'tag_importance', 'Importance')
         ->setOptions([
-                'low' => 'Low',
-                'medium' => 'Medium',
-                'high' => 'High',
-            ])
+            'low' => 'Low',
+            'medium' => 'Medium',
+            'high' => 'High',
+        ])
             ->setDefault('medium'));
 }
 
@@ -112,11 +112,11 @@ function hyperfields_demo_user_meta(): void
         ->setHelp('Short biography or description'))
         ->addField(HyperFields::makeField('select', 'skill_level', 'Skill Level')
         ->setOptions([
-                'beginner' => 'Beginner',
-                'intermediate' => 'Intermediate',
-                'advanced' => 'Advanced',
-                'expert' => 'Expert',
-            ])
+            'beginner' => 'Beginner',
+            'intermediate' => 'Intermediate',
+            'advanced' => 'Advanced',
+            'expert' => 'Expert',
+        ])
             ->setDefault('intermediate'));
 
     // Author-specific fields
@@ -147,29 +147,29 @@ function hyperfields_demo_conditional_metabox(): void
     $advanced_container
         ->addField(HyperFields::makeField('select', 'post_layout', 'Post Layout')
         ->setOptions([
-                'default' => 'Default',
-                'wide' => 'Wide',
-                'fullwidth' => 'Full Width',
-                'custom' => 'Custom',
-            ])
+            'default' => 'Default',
+            'wide' => 'Wide',
+            'fullwidth' => 'Full Width',
+            'custom' => 'Custom',
+        ])
         ->setDefault('default'))
         ->addField(HyperFields::makeField('text', 'custom_css_class', 'Custom CSS Class')
         ->setConditionalLogic([
-                'conditions' => [[
-                    'field' => 'post_layout',
-                    'operator' => '=',
-                    'value' => 'custom',
-                ]],
-            ])
+            'conditions' => [[
+                'field' => 'post_layout',
+                'operator' => '=',
+                'value' => 'custom',
+            ]],
+        ])
         ->setPlaceholder('custom-class-name'))
         ->addField(HyperFields::makeField('textarea', 'custom_css', 'Custom CSS')
         ->setConditionalLogic([
-                'conditions' => [[
-                    'field' => 'post_layout',
-                    'operator' => '=',
-                    'value' => 'custom',
-                ]],
-            ])
+            'conditions' => [[
+                'field' => 'post_layout',
+                'operator' => '=',
+                'value' => 'custom',
+            ]],
+        ])
         ->setHelp('Custom CSS for this post'))
         ->addField(HyperFields::makeField('checkbox', 'disable_comments', 'Disable Comments')
         ->setHelp('Override global comment settings for this post'))

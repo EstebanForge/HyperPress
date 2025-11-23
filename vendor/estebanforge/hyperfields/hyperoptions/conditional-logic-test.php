@@ -1,15 +1,16 @@
 <?php
 
 /**
- * Conditional Logic Test
+ * Conditional Logic Test.
  *
  * Simple test to verify field-level conditional logic functionality.
  */
 
-use HyperPress\Fields\HyperFields;
+use HyperFields\HyperFields;
 
 // Create a test options page with conditional fields
-function hyperfields_conditional_logic_test() {
+function hyperfields_conditional_logic_test()
+{
     $container = HyperFields::makeOptionPage('Conditional Logic Test', 'conditional-logic-test')
         ->set_icon('dashicons-admin-generic')
         ->setPosition(100);
@@ -21,7 +22,7 @@ function hyperfields_conditional_logic_test() {
         ->addField(HyperFields::makeField('select', 'show_extra_fields', 'Show Extra Fields?')
             ->setOptions([
                 'no' => 'No',
-                'yes' => 'Yes'
+                'yes' => 'Yes',
             ])
         ->setDefault('no'))
 
@@ -31,8 +32,8 @@ function hyperfields_conditional_logic_test() {
                 'conditions' => [[
                     'field' => 'show_extra_fields',
                     'compare' => '=',
-                    'value' => 'yes'
-                ]]
+                    'value' => 'yes',
+                ]],
             ])
         ->setPlaceholder('This field is shown conditionally'))
 
@@ -42,8 +43,8 @@ function hyperfields_conditional_logic_test() {
                 'conditions' => [[
                     'field' => 'show_extra_fields',
                     'compare' => '=',
-                    'value' => 'yes'
-                ]]
+                    'value' => 'yes',
+                ]],
             ])
             ->setPlaceholder('Another conditionally shown field'));
 

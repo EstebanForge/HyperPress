@@ -4,7 +4,7 @@
  * Plugin Name: HyperFields
  * Plugin URI: https://github.com/estebanforge/hyperfields
  * Description: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Esteban Cuevas
  * Author URI: https://actitud.xyz
  * License: GPL-2.0-or-later
