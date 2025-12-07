@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EstebanForge/HyperFields.git",
-                "reference": "ead94af60baff48e9f8487b2655a470eb4c8bb40"
+                "reference": "911199a77337fb02354c9e45ad112bfec40d4503"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EstebanForge/HyperFields/zipball/ead94af60baff48e9f8487b2655a470eb4c8bb40",
-                "reference": "ead94af60baff48e9f8487b2655a470eb4c8bb40",
+                "url": "https://api.github.com/repos/EstebanForge/HyperFields/zipball/911199a77337fb02354c9e45ad112bfec40d4503",
+                "reference": "911199a77337fb02354c9e45ad112bfec40d4503",
                 "shasum": ""
             },
             "require": {
@@ -47,9 +47,9 @@
             "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
             "support": {
                 "issues": "https://github.com/EstebanForge/HyperFields/issues",
-                "source": "https://github.com/EstebanForge/HyperFields/tree/1.0.1"
+                "source": "https://github.com/EstebanForge/HyperFields/tree/1.0.2"
             },
-            "time": "2025-11-23T21:01:00+00:00"
+            "time": "2025-12-07T12:57:29+00:00"
         },
         {
             "name": "starfederation/datastar-php",

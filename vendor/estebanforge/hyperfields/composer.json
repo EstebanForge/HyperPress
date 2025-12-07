@@ -2,7 +2,7 @@
     "name": "estebanforge/hyperfields",
     "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
     "type": "wordpress-plugin",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "license": "GPL-2.0-or-later",
     "authors": [
         {

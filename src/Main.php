@@ -11,7 +11,6 @@ namespace HyperPress;
 use HyperPress\Admin\Activation;
 use HyperPress\Admin\Options;
 use HyperPress\Admin\OptionsMigration;
-use HyperFields\TemplateLoader;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -101,9 +100,6 @@ class Main
         $this->theme_support = $theme_support;
 
         $this->assets_manager = new Assets($this);
-
-        // Initialize TemplateLoader
-        TemplateLoader::init();
 
         if (is_admin()) {
             // Handle migration from wp-settings to hyper fields

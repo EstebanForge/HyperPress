@@ -22,10 +22,8 @@ if (defined('HYPERPRESS_BOOTSTRAP_LOADED')) {
 
 define('HYPERPRESS_BOOTSTRAP_LOADED', true);
 
-// Composer autoloader for prefixed dependencies; fallback to standard autoloader.
-if (file_exists(__DIR__ . '/vendor-prefixed/autoload.php')) {
-    require_once __DIR__ . '/vendor-prefixed/autoload.php';
-} elseif (file_exists(__DIR__ . '/vendor/autoload.php')) {
+// Composer autoloader.
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 } else {
     // Display an admin notice if no autoloader is found, but continue so tests can register hooks/candidates.
