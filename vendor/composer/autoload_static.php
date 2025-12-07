@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1d965405aae53fcd183dbce4b632c131
+class ComposerStaticInit9df57b10e795f620526ee79a8e50f778
 {
     public static $files = array (
         '13f65e44352b0407f05cb5a5e174612b' => __DIR__ . '/..' . '/estebanforge/hyperfields/includes/helpers.php',
@@ -106,9 +106,9 @@ class ComposerStaticInit1d965405aae53fcd183dbce4b632c131
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1d965405aae53fcd183dbce4b632c131::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1d965405aae53fcd183dbce4b632c131::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit1d965405aae53fcd183dbce4b632c131::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit9df57b10e795f620526ee79a8e50f778::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit9df57b10e795f620526ee79a8e50f778::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit9df57b10e795f620526ee79a8e50f778::$classMap;
 
         }, null, ClassLoader::class);
     }

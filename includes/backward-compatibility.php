@@ -14,7 +14,6 @@ $class_alias_map = [
     'HMApi\\Admin\\Activation' => 'HyperPress\\Admin\\Activation',
     'HMApi\\Admin\\Options' => 'HyperPress\\Admin\\Options',
     'HMApi\\Admin\\OptionsMigration' => 'HyperPress\\Admin\\OptionsMigration',
-    'HMApi\\Admin\\WPSettingsOptions' => 'HyperPress\\Admin\\WPSettingsOptions',
     'HMApi\\Assets' => 'HyperPress\\Assets',
     'HMApi\\Blocks\\Block' => 'HyperPress\\Blocks\\Block',
     'HMApi\\Blocks\\Field' => 'HyperPress\\Blocks\\Field',

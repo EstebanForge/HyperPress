@@ -1,5 +1,13 @@
 # Changelog
 
+# 3.0.3 / 2025-12-07
+- **IMPROVEMENT:** Updated HyperFields dependency from 1.0.1 to 1.0.2
+- **IMPROVEMENT:** Removed unused vendor-prefixed autoloader references for cleaner codebase
+- **IMPROVEMENT:** Simplified Assets.php library mode URL detection
+- **IMPROVEMENT:** Optimized Composer autoloader with production settings
+- **FIX:** Removed obsolete WPSettingsOptions class reference from backward-compatibility layer. Thanks @texorama for the report.
+- **CLEANUP:** Removed leftover TemplateLoader initialization code (TemplateLoader is internal to HyperFields and not used by HyperPress). Thanks @texorama for the report.
+
 # 3.0.2 / 2025-11-23
 - Updated all hypermedia libraries to their latest versions:
   - HTMX and all HTMX extensions

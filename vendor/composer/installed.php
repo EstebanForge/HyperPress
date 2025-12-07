@@ -7,13 +7,13 @@
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'dev' => true,
+        'dev' => false,
     ),
     'versions' => array(
         'estebanforge/hyperfields' => array(
-            'pretty_version' => '1.0.1',
-            'version' => '1.0.1.0',
-            'reference' => 'ead94af60baff48e9f8487b2655a470eb4c8bb40',
+            'pretty_version' => '1.0.2',
+            'version' => '1.0.2.0',
+            'reference' => '911199a77337fb02354c9e45ad112bfec40d4503',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../estebanforge/hyperfields',
             'aliases' => array(),

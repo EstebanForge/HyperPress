@@ -6,6 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'HyperFields\\Tests\\' => array($baseDir . '/tests'),
     'HyperFields\\' => array($baseDir . '/src'),
 );

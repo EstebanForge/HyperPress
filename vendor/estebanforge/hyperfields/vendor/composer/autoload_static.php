@@ -15,16 +15,11 @@ class ComposerStaticInit0b1779e428d95f593360c4ae583abcbc
     public static $prefixLengthsPsr4 = array (
         'H' =>
         array (
-            'HyperFields\\Tests\\' => 18,
             'HyperFields\\' => 12,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'HyperFields\\Tests\\' =>
-        array (
-            0 => __DIR__ . '/../..' . '/tests',
-        ),
         'HyperFields\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -33,6 +28,33 @@ class ComposerStaticInit0b1779e428d95f593360c4ae583abcbc
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'HyperFields\\Admin\\Activation' => __DIR__ . '/../..' . '/src/Admin/Activation.php',
+        'HyperFields\\Admin\\Options' => __DIR__ . '/../..' . '/src/Admin/Options.php',
+        'HyperFields\\Admin\\OptionsMigration' => __DIR__ . '/../..' . '/src/Admin/OptionsMigration.php',
+        'HyperFields\\Assets' => __DIR__ . '/../..' . '/src/Assets.php',
+        'HyperFields\\BlockFieldAdapter' => __DIR__ . '/../..' . '/src/BlockFieldAdapter.php',
+        'HyperFields\\ConditionalLogic' => __DIR__ . '/../..' . '/src/ConditionalLogic.php',
+        'HyperFields\\Container\\Container' => __DIR__ . '/../..' . '/src/Container/Container.php',
+        'HyperFields\\Container\\ContainerFactory' => __DIR__ . '/../..' . '/src/Container/ContainerFactory.php',
+        'HyperFields\\Container\\PostMetaContainer' => __DIR__ . '/../..' . '/src/Container/PostMetaContainer.php',
+        'HyperFields\\Container\\TermMetaContainer' => __DIR__ . '/../..' . '/src/Container/TermMetaContainer.php',
+        'HyperFields\\Container\\UserMetaContainer' => __DIR__ . '/../..' . '/src/Container/UserMetaContainer.php',
+        'HyperFields\\CustomField' => __DIR__ . '/../..' . '/src/CustomField.php',
+        'HyperFields\\Field' => __DIR__ . '/../..' . '/src/Field.php',
+        'HyperFields\\HeadingField' => __DIR__ . '/../..' . '/src/HeadingField.php',
+        'HyperFields\\HyperFields' => __DIR__ . '/../..' . '/src/HyperFields.php',
+        'HyperFields\\Log' => __DIR__ . '/../..' . '/src/Log.php',
+        'HyperFields\\OptionField' => __DIR__ . '/../..' . '/src/OptionField.php',
+        'HyperFields\\OptionsPage' => __DIR__ . '/../..' . '/src/OptionsPage.php',
+        'HyperFields\\OptionsSection' => __DIR__ . '/../..' . '/src/OptionsSection.php',
+        'HyperFields\\PostField' => __DIR__ . '/../..' . '/src/PostField.php',
+        'HyperFields\\Registry' => __DIR__ . '/../..' . '/src/Registry.php',
+        'HyperFields\\RepeaterField' => __DIR__ . '/../..' . '/src/RepeaterField.php',
+        'HyperFields\\SeparatorField' => __DIR__ . '/../..' . '/src/SeparatorField.php',
+        'HyperFields\\TabsField' => __DIR__ . '/../..' . '/src/TabsField.php',
+        'HyperFields\\TemplateLoader' => __DIR__ . '/../..' . '/src/TemplateLoader.php',
+        'HyperFields\\TermField' => __DIR__ . '/../..' . '/src/TermField.php',
+        'HyperFields\\UserField' => __DIR__ . '/../..' . '/src/UserField.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
