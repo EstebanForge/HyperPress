@@ -25,8 +25,18 @@ class Registry
         return self::$instance;
     }
 
-    public function registerField(string $context, string $name, Field $field): self
+    public function registerField(string $context, string|Field $name_or_field, ?Field $field = null): self
     {
+        // Handle both old and new signatures
+        if ($name_or_field instanceof Field) {
+            // New signature: registerField($context, $field)
+            $field = $name_or_field;
+            $name = $field->getName();
+        } else {
+            // Old signature: registerField($context, $name, $field)
+            $name = $name_or_field;
+        }
+
         if (!isset($this->fields[$context])) {
             $this->fields[$context] = [];
         }
@@ -34,6 +44,11 @@ class Registry
         $this->fields[$context][$name] = $field;
 
         return $this;
+    }
+
+    public function getFields(string $context): array
+    {
+        return array_values($this->fields[$context] ?? []);
     }
 
     public function registerFieldGroup(string $name, array $fields): self
@@ -92,6 +107,29 @@ class Registry
         if (isset($this->field_groups[$name])) {
             unset($this->field_groups[$name]);
         }
+
+        return $this;
+    }
+
+    public function containerExists(string $context): bool
+    {
+        return isset($this->fields[$context]) && !empty($this->fields[$context]);
+    }
+
+    public function removeContainer(string $context): self
+    {
+        if (isset($this->fields[$context])) {
+            unset($this->fields[$context]);
+        }
+
+        return $this;
+    }
+
+    public function clear(): self
+    {
+        $this->fields = [];
+        $this->field_groups = [];
+        $this->contexts = [];
 
         return $this;
     }

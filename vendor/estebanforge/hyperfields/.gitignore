@@ -1,0 +1,19 @@
+./wp-org-assets/htmx-api-wp-logo.psd
+/node_modules/
+deploy.sh
+deploy-notag.sh
+TODO.md
+.wp-org-assets/htmx-api-wp-logo.psd
+rules-wordpress.md
+.php-cs-fixer.cache
+
+# Test artifacts
+scripts/
+coverage/
+coverage-html/
+.phpunit.result.cache
+.phpunit.cache/
+wp-content/
+deploy-readme-only.sh
+tests/reports/teamcity.txt
+tests/reports/coverage.xml

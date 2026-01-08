@@ -8,8 +8,10 @@ use HyperFields\OptionsSection;
 use HyperFields\RepeaterField;
 use HyperFields\TabsField;
 
-// Exit if accessed directly.
-defined('ABSPATH') || exit;
+// Exit if accessed directly (but allow test environment to proceed).
+if (!defined('ABSPATH') && !defined('HYPERFIELDS_TESTING_MODE')) {
+    return;
+}
 
 /**
  * Create an OptionsPage instance.
@@ -337,3 +339,56 @@ function hf_save_field(string $name, $value, $source = null, array $args = []): 
 {
     return hf_update_field($name, $value, $source, $args);
 }
+
+// Backward compatibility aliases for hp_ prefixed functions (HyperPress era)
+if (!function_exists('hp_get_field')) {
+    function hp_get_field(string $name, $source = null, array $args = []) {
+        return hf_get_field($name, $source, $args);
+    }
+}
+if (!function_exists('hp_update_field')) {
+    function hp_update_field(string $name, $value, $source = null, array $args = []): bool {
+        return hf_update_field($name, $value, $source, $args);
+    }
+}
+if (!function_exists('hp_save_field')) {
+    function hp_save_field(string $name, $value, $source = null, array $args = []): bool {
+        return hf_save_field($name, $value, $source, $args);
+    }
+}
+if (!function_exists('hp_delete_field')) {
+    function hp_delete_field(string $name, $source = null, array $args = []): bool {
+        return hf_delete_field($name, $source, $args);
+    }
+}
+if (!function_exists('hp_resolve_field_context')) {
+    function hp_resolve_field_context($source = null, array $args = []): array {
+        return hf_resolve_field_context($source, $args);
+    }
+}
+if (!function_exists('hp_create_option_page')) {
+    function hp_create_option_page(string $page_title, string $menu_slug): OptionsPage {
+        return hf_option_page($page_title, $menu_slug);
+    }
+}
+if (!function_exists('hp_create_field')) {
+    function hp_create_field(string $type, string $name, string $label): Field {
+        return hf_field($type, $name, $label);
+    }
+}
+if (!function_exists('hp_create_tabs')) {
+    function hp_create_tabs(string $name, string $label): TabsField {
+        return hf_tabs($name, $label);
+    }
+}
+if (!function_exists('hp_create_repeater')) {
+    function hp_create_repeater(string $name, string $label): RepeaterField {
+        return hf_repeater($name, $label);
+    }
+}
+if (!function_exists('hp_create_section')) {
+    function hp_create_section(string $id, string $title): OptionsSection {
+        return hf_section($id, $title);
+    }
+}
+

@@ -1,5 +1,8 @@
 # HyperFields (API and Field Types)
 
+**Note on Helper Functions:**
+This documentation uses the `hf_` prefix for helper functions (e.g., `hf_get_field()`), which are the canonical names for the HyperFields plugin. For backward compatibility, `hp_` prefixed aliases (e.g., `hp_get_field()`) are also available and function identically.
+
 ## API Reference
 
 See below for all available methods, usage patterns, and value operations for HyperFields.
@@ -10,10 +13,10 @@ Developer-focused API for saving and retrieving field values across posts, users
 
 - Centralized sanitization: values saved through HyperFields are sanitized via `Field::sanitizeValue()` when a type is provided.
 - Field contexts supported: `post`, `user`, `term`, `option`.
-- Helper factories available: `hp_create_option_page()`, `hp_create_field()`, `hp_create_tabs()`, `hp_create_repeater()`, `hp_create_section()`.
-- Retrieval/update helpers: `hp_get_field()`, `hp_update_field()`, `hp_delete_field()`.
+- Helper factories available: `hf_option_page()`, `hf_field()`, `hf_tabs()`, `hf_repeater()`, `hf_section()`.
+- Retrieval/update helpers: `hf_get_field()`, `hf_update_field()`, `hf_delete_field()`.
 
-Source: `src/plugins/HyperPress/includes/helpers.php`
+Source: `includes/helpers.php`
 
 ## Getting and Saving Values
 
@@ -27,7 +30,7 @@ $tagline = OptionField::forOption('site_tagline', 'text', 'site_tagline', 'Site 
 OptionField::forOption('site_tagline', 'text', 'site_tagline', 'Site Tagline')->setValue('Hello World');
 
 // Get post meta by ID
-$title_override = PostField::for_post(123, 'text', 'custom_title', 'Custom Title')->getValue();
+$title_override = PostField::forPost(123, 'text', 'custom_title', 'Custom Title')->getValue();
 
 // Save user meta using user ID
 UserField::forUser(45, 'checkbox', 'onboarding_done', 'Onboarding Done')->setValue('1');
@@ -44,14 +47,14 @@ Supported `$source` forms (auto-resolved):
 - Options: `'option'|'options'` or `['type' => 'option', 'option_group' => '...']`
 - `null`: falls back to current post if inside The Loop; otherwise options
 
-See: `hp_resolve_field_context()` in `includes/helpers.php`.
+See: `hf_resolve_field_context()` in `includes/helpers.php`.
 
 ## Sanitization
 
-When you pass a `type` in the `$args`, `hp_update_field()` will sanitize via the HyperField model.
+When you pass a `type` in the `$args`, `hf_update_field()` will sanitize via the HyperField model.
 
 ```php
-hp_update_field('enable_feature', '1', 'options', [ 'type' => 'checkbox' ]);
+hf_update_field('enable_feature', '1', 'options', [ 'type' => 'checkbox' ]);
 ```
 
 Notes:
@@ -102,17 +105,17 @@ add_action('add_meta_boxes', function() {
 
 ```php
 // Render an option field value
-$tagline = hp_get_field('site_tagline', 'options', [ 'default' => '' ]);
+$tagline = hf_get_field('site_tagline', 'options', [ 'default' => '' ]);
 echo esc_html($tagline);
 
 // Render a post meta field value
-$custom_title = hp_get_field('custom_title', get_the_ID(), [ 'default' => '' ]);
+$custom_title = hf_get_field('custom_title', get_the_ID(), [ 'default' => '' ]);
 if ($custom_title) {
     echo '<h2>' . esc_html($custom_title) . '</h2>';
 }
 
 // Render a repeater field (social links)
-$social = hp_get_field('social', 'options', [ 'default' => [] ]);
+$social = hf_get_field('social', 'options', [ 'default' => [] ]);
 foreach ($social as $row) {
     echo '<a href="' . esc_url($row['url']) . '">' . esc_html($row['label']) . '</a> ';
 }
@@ -204,7 +207,7 @@ $field = HyperFields::makeField('number', 'items_per_page', 'Items Per Page')
 
 - Prefer WordPress capabilities and nonces for admin operations.
 - Keep forms accessible and semantic.
-- Use `hp_get_field()` defaults to avoid undefined notices.
+- Use `hf_get_field()` defaults to avoid undefined notices.
 - For options pages, array notation is used where appropriate; compact POST is supported (see Options Compact Input).
 
 ## Field Types Reference
@@ -212,8 +215,8 @@ $field = HyperFields::makeField('number', 'items_per_page', 'Items Per Page')
 This section documents the available HyperFields field types, how to declare them with the factory helpers, how values are saved/retrieved, and any special sanitization or rendering notes.
 
 Notes and assumptions:
-- All examples use the `hp_field()` factory (alias of `hp_create_field()` in this codebase).
-- `hp_update_field()` will run `Field::sanitizeValue()` when a `type` is provided in the `$args`.
+- All examples use the `hf_field()` factory (alias of `hf_field()` in this codebase).
+- `hf_update_field()` will run `Field::sanitizeValue()` when a `type` is provided in the `$args`.
 - When rendering values in templates always escape output according to the value shape (use `esc_html()`, `esc_url()`, `wp_kses_post()` as appropriate).
 
 ### Text
@@ -232,8 +235,8 @@ $field->setRequired(false);
 Save / retrieve:
 
 ```php
-hp_update_field('site_tagline', 'Hello world', 'options', [ 'type' => 'text' ]);
-$tagline = hp_get_field('site_tagline', 'options', [ 'default' => '' ]);
+hf_update_field('site_tagline', 'Hello world', 'options', [ 'type' => 'text' ]);
+$tagline = hf_get_field('site_tagline', 'options', [ 'default' => '' ]);
 echo esc_html($tagline);
 ```
 
@@ -254,8 +257,8 @@ $field = HyperFields::makeField('textarea', 'bio', 'Author bio')
 Save / retrieve:
 
 ```php
-hp_update_field('bio', '<p>Bio here</p>', 'user_45', [ 'type' => 'textarea' ]);
-$bio = hp_get_field('bio', 'user_45', [ 'default' => '' ]);
+hf_update_field('bio', '<p>Bio here</p>', 'user_45', [ 'type' => 'textarea' ]);
+$bio = hf_get_field('bio', 'user_45', [ 'default' => '' ]);
 echo wp_kses_post($bio); // allow basic tags if your workflow permits
 ```
 
@@ -277,8 +280,8 @@ $field->setMax(100);
 Save / retrieve:
 
 ```php
-hp_update_field('priority', 20, 123, [ 'type' => 'number' ]);
-$priority = (int) hp_get_field('priority', 123, [ 'default' => 0 ]);
+hf_update_field('priority', 20, 123, [ 'type' => 'number' ]);
+$priority = (int) hf_get_field('priority', 123, [ 'default' => 0 ]);
 ```
 
 Sanitization: coerced to numeric type; ensure client-side constraints if necessary.
@@ -297,8 +300,8 @@ $field->setDefault(false);
 Save / retrieve:
 
 ```php
-hp_update_field('enable_feature', '1', 'options', [ 'type' => 'checkbox' ]);
-$enabled = (bool) hp_get_field('enable_feature', 'options', [ 'default' => false ]);
+hf_update_field('enable_feature', '1', 'options', [ 'type' => 'checkbox' ]);
+$enabled = (bool) hf_get_field('enable_feature', 'options', [ 'default' => false ]);
 ```
 
 Sanitization: normalized to boolean-like values (0/1 or true/false).
@@ -318,8 +321,8 @@ $field->setDefault('light');
 Save / retrieve:
 
 ```php
-hp_update_field('color_scheme', 'dark', 123, [ 'type' => 'select' ]);
-$scheme = hp_get_field('color_scheme', 123, [ 'default' => 'light' ]);
+hf_update_field('color_scheme', 'dark', 123, [ 'type' => 'select' ]);
+$scheme = hf_get_field('color_scheme', 123, [ 'default' => 'light' ]);
 echo esc_html($scheme);
 ```
 
@@ -339,8 +342,8 @@ $field->setDefault('#ff0000');
 Save / retrieve:
 
 ```php
-hp_update_field('accent_color', '#00aaFF', 'options', [ 'type' => 'color' ]);
-$color = hp_get_field('accent_color', 'options', [ 'default' => '#000000' ]);
+hf_update_field('accent_color', '#00aaFF', 'options', [ 'type' => 'color' ]);
+$color = hf_get_field('accent_color', 'options', [ 'default' => '#000000' ]);
 echo esc_attr($color);
 ```
 
@@ -360,8 +363,8 @@ $field->setDefault('#');
 Save / retrieve:
 
 ```php
-hp_update_field('button_url', 'https://example.com', 'options', [ 'type' => 'url' ]);
-$url = hp_get_field('button_url', 'options', [ 'default' => '#' ]);
+hf_update_field('button_url', 'https://example.com', 'options', [ 'type' => 'url' ]);
+$url = hf_get_field('button_url', 'options', [ 'default' => '#' ]);
 echo esc_url($url);
 ```
 
@@ -381,8 +384,8 @@ $field->setReturn('id'); // or 'array'
 Save / retrieve:
 
 ```php
-hp_update_field('hero_image', 456, 123, [ 'type' => 'media' ]); // saves attachment ID
-$attachment_id = hp_get_field('hero_image', 123, [ 'default' => 0 ]);
+hf_update_field('hero_image', 456, 123, [ 'type' => 'media' ]); // saves attachment ID
+$attachment_id = hf_get_field('hero_image', 123, [ 'default' => 0 ]);
 if ($attachment_id) {
     echo wp_get_attachment_image($attachment_id, 'large');
 }
@@ -413,8 +416,8 @@ $rows = [
     [ 'label' => 'Twitter', 'url' => 'https://twitter.com/example' ],
     [ 'label' => 'GitHub',  'url' => 'https://github.com/example' ],
 ];
-hp_update_field('social', $rows, 'options', [ 'type' => 'repeater' ]);
-$social = hp_get_field('social', 'options', [ 'default' => [] ]);
+hf_update_field('social', $rows, 'options', [ 'type' => 'repeater' ]);
+$social = hf_get_field('social', 'options', [ 'default' => [] ]);
 foreach ($social as $row) {
     echo '<a href="' . esc_url($row['url']) . '">' . esc_html($row['label']) . '</a>';
 }
@@ -424,7 +427,7 @@ Sanitization: each subfield is sanitized according to its declared `type`.
 
 ### Tabs / Section (organization)
 
-These are UI helpers to group fields; they do not change storage format. Use `hp_tabs()` and `hp_section()` to structure admin pages.
+These are UI helpers to group fields; they do not change storage format. Use `hf_tabs()` and `hf_section()` to structure admin pages.
 
 Example:
 
@@ -448,8 +451,8 @@ $field->setMultiple(true);
 Save / retrieve:
 
 ```php
-hp_update_field('related_posts', [12,45], 123, [ 'type' => 'association' ]);
-$related = hp_get_field('related_posts', 123, [ 'default' => [] ]);
+hf_update_field('related_posts', [12,45], 123, [ 'type' => 'association' ]);
+$related = hf_get_field('related_posts', 123, [ 'default' => [] ]);
 // $related is an array of post IDs by default
 ```
 
@@ -457,8 +460,8 @@ Map example (simple key/value storage):
 
 ```php
 $field = HyperFields::makeField('map', 'social_handles', 'Social handles');
-hp_update_field('social_handles', ['twitter' => '@me', 'github' => 'me'], 'options', [ 'type' => 'map' ]);
-$handles = hp_get_field('social_handles', 'options', [ 'default' => [] ]);
+hf_update_field('social_handles', ['twitter' => '@me', 'github' => 'me'], 'options', [ 'type' => 'map' ]);
+$handles = hf_get_field('social_handles', 'options', [ 'default' => [] ]);
 ```
 
 ### Date / Time / Datetime
@@ -476,8 +479,8 @@ $time  = HyperFields::makeField('time', 'event_time', 'Event Time');
 Save / retrieve:
 
 ```php
-hp_update_field('event_date', '2025-09-01', 123, [ 'type' => 'date' ]);
-$date = hp_get_field('event_date', 123, [ 'default' => '' ]);
+hf_update_field('event_date', '2025-09-01', 123, [ 'type' => 'date' ]);
+$date = hf_get_field('event_date', 123, [ 'default' => '' ]);
 echo esc_html($date);
 ```
 
@@ -485,8 +488,8 @@ Sanitization: validated to expected format; convert to DateTime objects where ne
 
 ## Developer tips
 
-- Prefer explicit `type` when calling `hp_update_field()` so sanitization runs predictably.
-- Use `hp_get_field(..., [ 'default' => ... ])` to avoid undefined values.
+- Prefer explicit `type` when calling `hf_update_field()` so sanitization runs predictably.
+- Use `hf_get_field(..., [ 'default' => ... ])` to avoid undefined values.
 - When exposing user-supplied HTML, sanitize on output with `wp_kses_post()` and document the allowed tags.
 - For media and association fields always check existence (attachment/post exists) before rendering links or images.
 

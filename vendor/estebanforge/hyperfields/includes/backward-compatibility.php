@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-// Exit if accessed directly.
-defined('ABSPATH') || exit;
+// Exit if accessed directly (but allow test environment to proceed).
+if (!defined('ABSPATH') && !defined('HYPERFIELDS_TESTING_MODE')) {
+    return;
+}
 
 /**
  * A map of old to new class names for backward compatibility.

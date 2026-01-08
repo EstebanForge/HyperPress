@@ -6,6 +6,7 @@
 namespace starfederation\datastar;
 
 use starfederation\datastar\enums\ElementPatchMode;
+use starfederation\datastar\enums\NamespaceType;
 use starfederation\datastar\events\EventInterface;
 use starfederation\datastar\events\ExecuteScript;
 use starfederation\datastar\events\Location;
@@ -78,6 +79,7 @@ class ServerSentEventGenerator
      * @param array{
      *     selector?: string|null,
      *     mode?: ElementPatchMode|string|null,
+     *     namespace?: NamespaceType|string|null,
      *     useViewTransition?: bool|null,
      *     eventId?: string|null,
      *     retryDuration?: int|null,

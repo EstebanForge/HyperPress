@@ -1,57 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
-         bootstrap="tests/bootstrap.php"
-         backupGlobals="false"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         verbose="true">
-    <testsuites>
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
-        <testsuite name="Integration">
-            <directory suffix="Test.php">./tests/Integration</directory>
-        </testsuite>
-        <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Feature</directory>
-        </testsuite>
-    </testsuites>
-    <coverage>
-        <include>
-            <directory suffix=".php">./src</directory>
-        </include>
-        <exclude>
-            <directory suffix=".php">./src/Block</directory>
-            <directory suffix=".php">./src/Fields/templates</directory>
-        </exclude>
-    </coverage>
-    <php>
-        <env name="WP_TESTS_DIR" value="./vendor/wordpress/wordpress/tests/phpunit"/>
-        <env name="WP_CORE_DIR" value="./vendor/wordpress/wordpress"/>
-        <env name="WP_TESTS_DOMAIN" value="example.org"/>
-        <env name="WP_TESTS_EMAIL" value="admin@example.org"/>
-        <env name="WP_TESTS_TITLE" value="Test Blog"/>
-        <env name="DB_HOST" value="localhost"/>
-        <env name="DB_NAME" value="hyperpress_test"/>
-        <env name="DB_USER" value="root"/>
-        <env name="DB_PASSWORD" value=""/>
-        <env name="DB_CHARSET" value="utf8"/>
-        <env name="DB_COLLATE" value=""/>
-        
-        <!-- SQLite Configuration -->
-        <env name="USE_SQLITE" value="true"/>
-        <env name="SQLITE_DB_PATH" value="./tests/db/test.sqlite"/>
-        
-        <!-- Plugin Configuration -->
-        <env name="PLUGIN_DIR" value="."/>
-        <env name="PLUGIN_FILE" value="./api-for-htmx.php"/>
-        
-        <!-- WP_Mock Configuration -->
-        <env name="WP_MOCK_BOOTSTRAP" value="tests/bootstrap.php"/>
-        <env name="WP_MOCK_USE_PATCHWORK" value="true"/>
-        <env name="WP_MOCK_STRICT_MODE" value="true"/>
-    </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd" bootstrap="tests/bootstrap.php" backupGlobals="false" colors="true" failOnRisky="false" failOnWarning="false" stopOnFailure="false" cacheDirectory=".phpunit.cache" beStrictAboutOutputDuringTests="true">
+  <testsuites>
+    <testsuite name="Unit">
+      <directory suffix="Test.php">./tests/Unit</directory>
+    </testsuite>
+    <testsuite name="Integration">
+      <directory suffix="Test.php">./tests/Integration</directory>
+    </testsuite>
+    <testsuite name="Feature">
+      <directory suffix="Test.php">./tests/Feature</directory>
+    </testsuite>
+  </testsuites>
+  <coverage>
+    <report>
+      <html outputDirectory="coverage-html"/>
+      <text outputFile="php://stdout" showUncoveredFiles="false"/>
+      <clover outputFile="coverage.xml"/>
+    </report>
+  </coverage>
 </phpunit>

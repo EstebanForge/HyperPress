@@ -1,7 +1,17 @@
 # Changelog
 
+# 3.0.4 / 2026-01-08
+- **NEW:** Added Pest v4 testing framework with PHPUnit v12 support
+- **NEW:** Added pestphp/pest-plugin-browser for browser testing capabilities
+- **IMPROVEMENT:** Wrapped all helper functions with `function_exists()` checks to prevent conflicts when users have plugins/themes with similarly named functions
+- **IMPROVEMENT:** Wrapped all deprecated functions with `function_exists()` checks for better compatibility
+- **UPDATED:** HyperFields dependency constraint relaxed to `^1` for better forward compatibility
+- **CLEANUP:** Removed `mockery/mockery` dependency (using Brain Monkey only for WordPress mocking)
+- **CLEANUP:** Removed `pcov/clobber` dependency (conflicted with Pest v4 requirements)
+- **UPDATED:** All test scripts now use Pest instead of PHPUnit
+- **UPDATED:** PHPUnit bumped from ^10.5 to ^12.0 (required by Pest v4)
+
 # 3.0.3 / 2025-12-07
-- **IMPROVEMENT:** Updated HyperFields dependency from 1.0.1 to 1.0.2
 - **IMPROVEMENT:** Removed unused vendor-prefixed autoloader references for cleaner codebase
 - **IMPROVEMENT:** Simplified Assets.php library mode URL detection
 - **IMPROVEMENT:** Optimized Composer autoloader with production settings

@@ -12,8 +12,10 @@ declare(strict_types=1);
  * @since 1.0.0
  */
 
-// Exit if accessed directly.
-defined('ABSPATH') || exit;
+// Exit if accessed directly (but allow test environment to proceed).
+if (!defined('ABSPATH') && !defined('HYPERFIELDS_TESTING_MODE')) {
+    return;
+}
 
 // Use a unique constant to ensure this bootstrap logic runs only once.
 if (defined('HYPERFIELDS_BOOTSTRAP_LOADED')) {
@@ -44,14 +46,14 @@ foreach ($plugin_file_candidates as $candidate) {
         break;
     }
 }
-$current_hyperfields_instance_version = '1.0.2';
+$current_hyperfields_instance_version = '1.0.3';
 $current_hyperfields_instance_path = null;
 
 // Check if we're running as a plugin (one of the entry files exists) or as a library
 if ($plugin_file_path && file_exists($plugin_file_path)) {
     // Plugin mode: read version from the main plugin file
     $hyperfields_plugin_data = get_file_data($plugin_file_path, ['Version' => 'Version'], false);
-    $current_hyperfields_instance_version = $hyperfields_plugin_data['Version'] ?? '1.0.2';
+    $current_hyperfields_instance_version = $hyperfields_plugin_data['Version'] ?? '1.0.3';
     $current_hyperfields_instance_path = realpath($plugin_file_path);
 } else {
     // Library mode: try to get version from composer.json or use a fallback
@@ -182,11 +184,11 @@ if (!function_exists('hyperfields_register_candidate_for_tests')) {
             if (file_exists($candidate)) { $plugin_file_path = $candidate; break; }
         }
 
-        $current_version = '1.0.2';
+        $current_version = '1.0.3';
         $current_path = null;
         if ($plugin_file_path && file_exists($plugin_file_path)) {
             $data = get_file_data($plugin_file_path, ['Version' => 'Version'], false);
-            $current_version = $data['Version'] ?? '1.0.2';
+            $current_version = $data['Version'] ?? '1.0.3';
             $current_path = realpath($plugin_file_path) ?: $plugin_file_path;
         } else {
             $composer_json_path = __DIR__ . '/composer.json';

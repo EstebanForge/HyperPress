@@ -152,7 +152,7 @@ class TermMetaContainer extends Container
     /**
      * Save wrapper for WordPress hooks.
      */
-    public function _save(int $term_id, int $tt_id = null): void
+    public function _save(int $term_id, ?int $tt_id = null): void
     {
         $this->setTermId($term_id);
 

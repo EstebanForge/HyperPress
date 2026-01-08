@@ -3,6 +3,7 @@
 namespace starfederation\datastar;
 
 use starfederation\datastar\enums\ElementPatchMode;
+use starfederation\datastar\enums\NamespaceType;
 
 class Consts
 {
@@ -20,9 +21,13 @@ class Consts
     // The mode in which an element is patched into the DOM.
     public const DEFAULT_ELEMENT_PATCH_MODE = ElementPatchMode::Outer;
 
+    // The namespace to use when patching elements into the DOM.
+    public const DEFAULT_NAMESPACE = NamespaceType::Html;
+
     // Dataline literals.
     public const SELECTOR_DATALINE_LITERAL = 'selector ';
     public const MODE_DATALINE_LITERAL = 'mode ';
+    public const NAMESPACE_DATALINE_LITERAL = 'namespace ';
     public const ELEMENTS_DATALINE_LITERAL = 'elements ';
     public const USE_VIEW_TRANSITION_DATALINE_LITERAL = 'useViewTransition ';
     public const SIGNALS_DATALINE_LITERAL = 'signals ';

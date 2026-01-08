@@ -74,6 +74,22 @@ class ConditionalLogic
         return $this;
     }
 
+    public function greaterThanOrEqual(mixed $value): self
+    {
+        $this->operator = '>=';
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function lessThanOrEqual(mixed $value): self
+    {
+        $this->operator = '<=';
+        $this->value = $value;
+
+        return $this;
+    }
+
     public function in(array $values): self
     {
         $this->operator = 'IN';
@@ -93,6 +109,14 @@ class ConditionalLogic
     public function contains(string $value): self
     {
         $this->operator = 'CONTAINS';
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function notContains(string $value): self
+    {
+        $this->operator = 'NOT CONTAINS';
         $this->value = $value;
 
         return $this;
@@ -189,7 +213,7 @@ class ConditionalLogic
             case 'NOT EMPTY':
                 return !empty($fieldValue);
             default:
-                return apply_filters('hyperpress/fields/conditional_logic_evaluate', false, $fieldValue, $operator, $compareValue);
+                return (bool) apply_filters('hyperpress/fields/conditional_logic_evaluate', false, $fieldValue, $operator, $compareValue);
         }
     }
 

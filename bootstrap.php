@@ -12,8 +12,10 @@ declare(strict_types=1);
  * @since 2.0.0
  */
 
-// Exit if accessed directly.
-defined('ABSPATH') || exit;
+// Exit if accessed directly (but allow test environment to proceed).
+if (!defined('ABSPATH') && !defined('HYPERPRESS_TESTING_MODE')) {
+    return;
+}
 
 // Use a unique constant to ensure this bootstrap logic runs only once.
 if (defined('HYPERPRESS_BOOTSTRAP_LOADED')) {
