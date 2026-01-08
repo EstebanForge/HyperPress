@@ -153,6 +153,12 @@ if (!function_exists('rest_url')) {
     }
 }
 
+if (!function_exists('rest_ensure_response')) {
+    function rest_ensure_response($response) {
+        return $response;
+    }
+}
+
 if (!function_exists('is_multisite')) {
     function is_multisite() {
         return false;
@@ -223,9 +229,44 @@ if (!function_exists('register_deactivation_hook')) {
     }
 }
 
+if (!function_exists('hyperpress_test_get_plugin_version')) {
+    function hyperpress_test_get_plugin_version(): string {
+        $pluginFileCandidates = [
+            dirname(__DIR__) . '/hyperpress.php',
+            dirname(__DIR__) . '/api-for-htmx.php',
+        ];
+        $pluginFile = null;
+        foreach ($pluginFileCandidates as $candidate) {
+            if (file_exists($candidate)) {
+                $pluginFile = $candidate;
+                break;
+            }
+        }
+
+        if ($pluginFile) {
+            $contents = file_get_contents($pluginFile);
+            if (is_string($contents)) {
+                if (preg_match('/^[ \\t\\/*#@]*Version:\\s*(.+)$/mi', $contents, $matches)) {
+                    return trim($matches[1]);
+                }
+            }
+        }
+
+        $composerJson = dirname(__DIR__) . '/composer.json';
+        if (file_exists($composerJson)) {
+            $data = json_decode(file_get_contents($composerJson), true);
+            if (is_array($data) && isset($data['version']) && is_string($data['version'])) {
+                return $data['version'];
+            }
+        }
+
+        return '0.0.0';
+    }
+}
+
 // HyperPress specific constants
 if (!defined('HYPERPRESS_VERSION')) {
-    define('HYPERPRESS_VERSION', '3.0.3');
+    define('HYPERPRESS_VERSION', hyperpress_test_get_plugin_version());
 }
 
 if (!defined('HYPERPRESS_DIR')) {

@@ -83,7 +83,7 @@ class MainTest extends TestCase
         $this->assertArrayHasKey('url', $config);
         $this->assertArrayHasKey('assets_url', $config);
 
-        $this->assertEquals('3.0.3', $config['version']);
+        $this->assertSame(\hyperpress_test_get_plugin_version(), $config['version']);
         $this->assertStringContainsString('api-for-htmx', $config['dir']);
         $this->assertEquals('http://localhost/wp-content/plugins/api-for-htmx', $config['url']);
         $this->assertEquals('http://localhost/wp-content/plugins/api-for-htmx/assets/', $config['assets_url']);

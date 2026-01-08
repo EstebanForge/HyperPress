@@ -205,7 +205,9 @@ class EndpointTest extends TestCase
         }
 
         // Test WP_REST_Response mock
-        $this->assertTrue(rest_ensure_response(['success' => true]));
+        $response = rest_ensure_response(['success' => true]);
+        $this->assertIsArray($response);
+        $this->assertTrue($response['success']);
     }
 
     public function testPerformanceOptimization()
@@ -239,7 +241,7 @@ class EndpointTest extends TestCase
         $this->assertArrayHasKey('base_url', $config);
         $this->assertArrayHasKey('version', $config);
         $this->assertEquals('wp-html/v1', $config['namespace']);
-        $this->assertEquals('3.0.3', $config['version']);
+        $this->assertSame(\hyperpress_test_get_plugin_version(), $config['version']);
         $this->assertIsInt($config['timeout']);
         $this->assertIsInt($config['max_response_size']);
     }
