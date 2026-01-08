@@ -21,7 +21,7 @@ class ThemeTest extends TestCase
 
     public function testHyperPressVersion()
     {
-        $this->assertEquals('3.0.3', HYPERPRESS_VERSION);
+        $this->assertSame(\hyperpress_test_get_plugin_version(), HYPERPRESS_VERSION);
     }
 
     public function testHyperPressDirectory()
