@@ -378,6 +378,22 @@ final class CodeCoverage
     }
 
     /**
+     * @internal
+     */
+    public function driverIsPcov(): bool
+    {
+        return $this->driver->isPcov();
+    }
+
+    /**
+     * @internal
+     */
+    public function driverIsXdebug(): bool
+    {
+        return $this->driver->isXdebug();
+    }
+
+    /**
      * @throws ReflectionException
      * @throws UnintentionallyCoveredCodeException
      */

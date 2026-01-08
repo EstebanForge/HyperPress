@@ -2,6 +2,13 @@
 
 All notable changes are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## [11.0.12] - 2025-12-24
+
+### Fixed
+
+* [#1092](https://github.com/sebastianbergmann/php-code-coverage/issues/1092): Error in `DOMDocument::saveXML()` is not handled
+* [#1131](https://github.com/sebastianbergmann/php-code-coverage/issues/1131): Invalid XML generated when both PCOV and Xdebug are loaded
+
 ## [11.0.11] - 2025-08-27
 
 ### Changed
@@ -87,6 +94,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
 * This component now requires PHP-Parser 5
 * This component is no longer supported on PHP 8.1
 
+[11.0.12]: https://github.com/sebastianbergmann/php-code-coverage/compare/11.0.11...11.0.12
 [11.0.11]: https://github.com/sebastianbergmann/php-code-coverage/compare/11.0.10...11.0.11
 [11.0.10]: https://github.com/sebastianbergmann/php-code-coverage/compare/11.0.9...11.0.10
 [11.0.9]: https://github.com/sebastianbergmann/php-code-coverage/compare/11.0.8...11.0.9

@@ -17,3 +17,5 @@ wp-content/
 deploy-readme-only.sh
 tests/reports/teamcity.txt
 tests/reports/coverage.xml
+coverage.txt
+coverage.xml
