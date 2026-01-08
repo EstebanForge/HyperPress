@@ -2,7 +2,7 @@
     "name": "estebanforge/hyperfields",
     "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
     "type": "wordpress-plugin",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
@@ -29,6 +29,24 @@
         "psr-4": {
             "HyperFields\\Tests\\": "tests/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0",
+        "brain/monkey": "^2.6",
+        "mockery/mockery": "^1.6"
+    },
+    "scripts": {
+        "test": "php -d pcov.enabled=1 vendor/bin/phpunit --colors=always",
+        "test:unit": "php -d pcov.enabled=1 vendor/bin/phpunit tests/Unit --colors=always",
+        "test:integration": "php -d pcov.enabled=1 vendor/bin/phpunit tests/Integration --colors=always",
+        "test:coverage": "php -d pcov.enabled=1 vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-html --coverage-text",
+        "test:fast": "php -d pcov.enabled=1 vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-html --coverage-text",
+        "test:summary": "php -d pcov.enabled=1 vendor/bin/phpunit --configuration phpunit.xml --coverage-text",
+        "test:clover": "php -d pcov.enabled=1 vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml",
+        "test:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text",
+        "test:coverage:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text",
+        "test:summary:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-text",
+        "test:clover:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage-xdebug.xml"
     },
 
     "config": {

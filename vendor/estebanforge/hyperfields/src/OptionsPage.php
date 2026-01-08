@@ -196,9 +196,13 @@ class OptionsPage
                         settings_fields($this->option_name);
         if (defined('HYPERPRESS_COMPACT_INPUT') && HYPERPRESS_COMPACT_INPUT === true) {
             // Placeholder for the compacted JSON payload the JS will populate
-            echo '<input type="hidden" name="' . esc_attr(defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input') . '" value="" />';
+            $key = defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input';
+            if (!is_string($key)) {
+                $key = 'hyperpress_compact_input';
+            }
+            echo '<input type="hidden" name="' . esc_attr((string) $key) . '" value="" />';
             // Dummy field under the option array to ensure the Settings API processes this option
-            echo '<input type="hidden" data-hp-keep-name="1" name="' . esc_attr($this->option_name) . '[_compact]" value="1" />';
+            echo '<input type="hidden" data-hp-keep-name="1" name="' . esc_attr((string) $this->option_name) . '[_compact]" value="1" />';
         }
         // Only render the active tab's section
         if (isset($this->sections[$active_tab])) {

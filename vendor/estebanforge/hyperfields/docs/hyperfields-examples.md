@@ -1,14 +1,17 @@
 # HyperFields Examples
 
+**Note on Helper Functions:**
+This documentation uses the `hf_` prefix for helper functions (e.g., `hf_get_field()`), which are the canonical names for the HyperFields plugin. For backward compatibility, `hp_` prefixed aliases (e.g., `hp_get_field()`) are also available and function identically.
+
 This directory contains **example files** demonstrating HyperFields usage. These files are **NOT auto-activated** and are provided for learning and reference purposes.
 
 ## 📁 Files Overview
 
 ### 🧰 **helper-functions-examples.php**
 Examples for the helper functions:
-- `hp_get_field()` to retrieve values
-- `hp_save_field()` to store values (alias of `hp_update_field()`)
-- `hp_delete_field()` to remove values
+- `hf_get_field()` to retrieve values
+- `hf_save_field()` to store values (alias of `hf_update_field()`)
+- `hf_delete_field()` to remove values
 
 Covers contexts: options, post meta, user meta, and term meta. Shows how to pass `type` to leverage `Field::sanitizeValue()`.
 
@@ -131,4 +134,4 @@ When enabled, HyperFields will:
 - Remove original field `name` attributes before submit to drastically reduce POST vars.
 - Expand and sanitize the compacted input server-side in `OptionsPage::sanitize_options()`.
 
-No changes are needed to your field definitions. Existing helpers like `hp_get_field()` and `hp_save_field()` continue to work as before.
+No changes are needed to your field definitions. Existing helpers like `hf_get_field()` and `hf_save_field()` continue to work as before.

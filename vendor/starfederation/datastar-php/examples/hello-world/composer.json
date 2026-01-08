@@ -1,0 +1,7 @@
+{
+  "require": {
+    "starfederation/datastar-php": "1.0.0-RC.4"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

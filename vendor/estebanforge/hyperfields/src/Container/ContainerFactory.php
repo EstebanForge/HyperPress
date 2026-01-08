@@ -20,12 +20,20 @@ class ContainerFactory
     /**
      * Create a post meta container.
      */
-    public static function makePostMeta(string $id, string $title): PostMetaContainer
+    public static function createPostMetaContainer(string $id, string $title): PostMetaContainer
     {
         $container = new PostMetaContainer($id, $title);
         $container->init();
 
         return $container;
+    }
+
+    /**
+     * Alias for createPostMetaContainer.
+     */
+    public static function makePostMeta(string $id, string $title): PostMetaContainer
+    {
+        return self::createPostMetaContainer($id, $title);
     }
 
     /**

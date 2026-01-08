@@ -1,0 +1,2290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1765322467">
+  <project timestamp="1765322467" name="Clover Coverage">
+    <package name="HyperFields\Admin">
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/Admin/Activation.php">
+        <class name="HyperFields\Admin\Activation" namespace="HyperFields\Admin">
+          <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="4" coveredelements="0"/>
+        </class>
+        <line num="12" type="stmt" count="0"/>
+        <line num="13" type="stmt" count="0"/>
+        <line num="27" type="method" name="activate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <line num="39" type="method" name="deactivate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="42" type="stmt" count="0"/>
+        <metrics loc="45" ncloc="22" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="0" elements="6" coveredelements="0"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/Admin/Options.php">
+        <class name="HyperFields\Admin\Options" namespace="HyperFields\Admin">
+          <metrics complexity="29" methods="15" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="250" coveredstatements="0" elements="265" coveredelements="0"/>
+        </class>
+        <line num="12" type="stmt" count="0"/>
+        <line num="13" type="stmt" count="0"/>
+        <line num="27" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="29" type="stmt" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="37" type="method" name="maybeMigrateLegacyOptions" visibility="private" complexity="6" crap="42" count="0"/>
+        <line num="39" type="stmt" count="0"/>
+        <line num="40" type="stmt" count="0"/>
+        <line num="43" type="stmt" count="0"/>
+        <line num="44" type="stmt" count="0"/>
+        <line num="46" type="stmt" count="0"/>
+        <line num="47" type="stmt" count="0"/>
+        <line num="48" type="stmt" count="0"/>
+        <line num="52" type="method" name="initOptionsPage" visibility="public" complexity="6" crap="42" count="0"/>
+        <line num="54" type="stmt" count="0"/>
+        <line num="56" type="stmt" count="0"/>
+        <line num="57" type="stmt" count="0"/>
+        <line num="58" type="stmt" count="0"/>
+        <line num="59" type="stmt" count="0"/>
+        <line num="60" type="stmt" count="0"/>
+        <line num="61" type="stmt" count="0"/>
+        <line num="62" type="stmt" count="0"/>
+        <line num="65" type="stmt" count="0"/>
+        <line num="66" type="stmt" count="0"/>
+        <line num="67" type="stmt" count="0"/>
+        <line num="68" type="stmt" count="0"/>
+        <line num="69" type="stmt" count="0"/>
+        <line num="71" type="stmt" count="0"/>
+        <line num="72" type="stmt" count="0"/>
+        <line num="73" type="stmt" count="0"/>
+        <line num="74" type="stmt" count="0"/>
+        <line num="78" type="stmt" count="0"/>
+        <line num="79" type="stmt" count="0"/>
+        <line num="80" type="stmt" count="0"/>
+        <line num="81" type="stmt" count="0"/>
+        <line num="82" type="stmt" count="0"/>
+        <line num="83" type="stmt" count="0"/>
+        <line num="84" type="stmt" count="0"/>
+        <line num="85" type="stmt" count="0"/>
+        <line num="86" type="stmt" count="0"/>
+        <line num="87" type="stmt" count="0"/>
+        <line num="90" type="method" name="buildGeneralTabConfig" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="93" type="stmt" count="0"/>
+        <line num="94" type="stmt" count="0"/>
+        <line num="95" type="stmt" count="0"/>
+        <line num="96" type="stmt" count="0"/>
+        <line num="97" type="stmt" count="0"/>
+        <line num="98" type="stmt" count="0"/>
+        <line num="99" type="stmt" count="0"/>
+        <line num="100" type="stmt" count="0"/>
+        <line num="101" type="stmt" count="0"/>
+        <line num="102" type="stmt" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <line num="104" type="stmt" count="0"/>
+        <line num="105" type="stmt" count="0"/>
+        <line num="106" type="stmt" count="0"/>
+        <line num="107" type="stmt" count="0"/>
+        <line num="108" type="stmt" count="0"/>
+        <line num="109" type="stmt" count="0"/>
+        <line num="110" type="stmt" count="0"/>
+        <line num="111" type="stmt" count="0"/>
+        <line num="112" type="stmt" count="0"/>
+        <line num="113" type="stmt" count="0"/>
+        <line num="114" type="stmt" count="0"/>
+        <line num="115" type="stmt" count="0"/>
+        <line num="116" type="stmt" count="0"/>
+        <line num="117" type="stmt" count="0"/>
+        <line num="118" type="stmt" count="0"/>
+        <line num="119" type="stmt" count="0"/>
+        <line num="120" type="stmt" count="0"/>
+        <line num="121" type="stmt" count="0"/>
+        <line num="122" type="stmt" count="0"/>
+        <line num="123" type="stmt" count="0"/>
+        <line num="124" type="stmt" count="0"/>
+        <line num="125" type="stmt" count="0"/>
+        <line num="128" type="method" name="buildHTMXTabConfig" visibility="private" complexity="2" crap="6" count="0"/>
+        <line num="130" type="stmt" count="0"/>
+        <line num="132" type="stmt" count="0"/>
+        <line num="133" type="stmt" count="0"/>
+        <line num="134" type="stmt" count="0"/>
+        <line num="135" type="stmt" count="0"/>
+        <line num="136" type="stmt" count="0"/>
+        <line num="137" type="stmt" count="0"/>
+        <line num="138" type="stmt" count="0"/>
+        <line num="139" type="stmt" count="0"/>
+        <line num="140" type="stmt" count="0"/>
+        <line num="141" type="stmt" count="0"/>
+        <line num="142" type="stmt" count="0"/>
+        <line num="143" type="stmt" count="0"/>
+        <line num="144" type="stmt" count="0"/>
+        <line num="145" type="stmt" count="0"/>
+        <line num="146" type="stmt" count="0"/>
+        <line num="147" type="stmt" count="0"/>
+        <line num="148" type="stmt" count="0"/>
+        <line num="149" type="stmt" count="0"/>
+        <line num="150" type="stmt" count="0"/>
+        <line num="151" type="stmt" count="0"/>
+        <line num="152" type="stmt" count="0"/>
+        <line num="153" type="stmt" count="0"/>
+        <line num="154" type="stmt" count="0"/>
+        <line num="155" type="stmt" count="0"/>
+        <line num="156" type="stmt" count="0"/>
+        <line num="157" type="stmt" count="0"/>
+        <line num="158" type="stmt" count="0"/>
+        <line num="159" type="stmt" count="0"/>
+        <line num="160" type="stmt" count="0"/>
+        <line num="161" type="stmt" count="0"/>
+        <line num="162" type="stmt" count="0"/>
+        <line num="163" type="stmt" count="0"/>
+        <line num="164" type="stmt" count="0"/>
+        <line num="165" type="stmt" count="0"/>
+        <line num="166" type="stmt" count="0"/>
+        <line num="167" type="stmt" count="0"/>
+        <line num="168" type="stmt" count="0"/>
+        <line num="169" type="stmt" count="0"/>
+        <line num="170" type="stmt" count="0"/>
+        <line num="172" type="stmt" count="0"/>
+        <line num="173" type="stmt" count="0"/>
+        <line num="174" type="stmt" count="0"/>
+        <line num="175" type="stmt" count="0"/>
+        <line num="176" type="stmt" count="0"/>
+        <line num="177" type="stmt" count="0"/>
+        <line num="178" type="stmt" count="0"/>
+        <line num="179" type="stmt" count="0"/>
+        <line num="182" type="stmt" count="0"/>
+        <line num="183" type="stmt" count="0"/>
+        <line num="184" type="stmt" count="0"/>
+        <line num="185" type="stmt" count="0"/>
+        <line num="186" type="stmt" count="0"/>
+        <line num="187" type="stmt" count="0"/>
+        <line num="188" type="stmt" count="0"/>
+        <line num="189" type="stmt" count="0"/>
+        <line num="190" type="stmt" count="0"/>
+        <line num="193" type="method" name="buildAlpineTabConfig" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="195" type="stmt" count="0"/>
+        <line num="196" type="stmt" count="0"/>
+        <line num="197" type="stmt" count="0"/>
+        <line num="198" type="stmt" count="0"/>
+        <line num="199" type="stmt" count="0"/>
+        <line num="200" type="stmt" count="0"/>
+        <line num="201" type="stmt" count="0"/>
+        <line num="202" type="stmt" count="0"/>
+        <line num="203" type="stmt" count="0"/>
+        <line num="204" type="stmt" count="0"/>
+        <line num="205" type="stmt" count="0"/>
+        <line num="206" type="stmt" count="0"/>
+        <line num="207" type="stmt" count="0"/>
+        <line num="208" type="stmt" count="0"/>
+        <line num="209" type="stmt" count="0"/>
+        <line num="210" type="stmt" count="0"/>
+        <line num="211" type="stmt" count="0"/>
+        <line num="214" type="method" name="buildDatastarTabConfig" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="216" type="stmt" count="0"/>
+        <line num="217" type="stmt" count="0"/>
+        <line num="218" type="stmt" count="0"/>
+        <line num="219" type="stmt" count="0"/>
+        <line num="220" type="stmt" count="0"/>
+        <line num="221" type="stmt" count="0"/>
+        <line num="222" type="stmt" count="0"/>
+        <line num="223" type="stmt" count="0"/>
+        <line num="224" type="stmt" count="0"/>
+        <line num="225" type="stmt" count="0"/>
+        <line num="226" type="stmt" count="0"/>
+        <line num="227" type="stmt" count="0"/>
+        <line num="228" type="stmt" count="0"/>
+        <line num="229" type="stmt" count="0"/>
+        <line num="230" type="stmt" count="0"/>
+        <line num="231" type="stmt" count="0"/>
+        <line num="232" type="stmt" count="0"/>
+        <line num="235" type="method" name="buildAboutTabConfig" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="237" type="stmt" count="0"/>
+        <line num="238" type="stmt" count="0"/>
+        <line num="239" type="stmt" count="0"/>
+        <line num="240" type="stmt" count="0"/>
+        <line num="241" type="stmt" count="0"/>
+        <line num="242" type="stmt" count="0"/>
+        <line num="243" type="stmt" count="0"/>
+        <line num="244" type="stmt" count="0"/>
+        <line num="245" type="stmt" count="0"/>
+        <line num="246" type="stmt" count="0"/>
+        <line num="247" type="stmt" count="0"/>
+        <line num="248" type="stmt" count="0"/>
+        <line num="249" type="stmt" count="0"/>
+        <line num="250" type="stmt" count="0"/>
+        <line num="251" type="stmt" count="0"/>
+        <line num="252" type="stmt" count="0"/>
+        <line num="253" type="stmt" count="0"/>
+        <line num="254" type="stmt" count="0"/>
+        <line num="255" type="stmt" count="0"/>
+        <line num="256" type="stmt" count="0"/>
+        <line num="257" type="stmt" count="0"/>
+        <line num="260" type="method" name="getAboutHtml" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="262" type="stmt" count="0"/>
+        <line num="263" type="stmt" count="0"/>
+        <line num="264" type="stmt" count="0"/>
+        <line num="265" type="stmt" count="0"/>
+        <line num="266" type="stmt" count="0"/>
+        <line num="267" type="stmt" count="0"/>
+        <line num="270" type="method" name="getSystemInfoHtml" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="272" type="stmt" count="0"/>
+        <line num="274" type="stmt" count="0"/>
+        <line num="275" type="stmt" count="0"/>
+        <line num="276" type="stmt" count="0"/>
+        <line num="277" type="stmt" count="0"/>
+        <line num="280" type="method" name="renderSystemInfo" visibility="private" complexity="2" crap="6" count="0"/>
+        <line num="282" type="stmt" count="0"/>
+        <line num="283" type="stmt" count="0"/>
+        <line num="285" type="stmt" count="0"/>
+        <line num="286" type="stmt" count="0"/>
+        <line num="287" type="stmt" count="0"/>
+        <line num="288" type="stmt" count="0"/>
+        <line num="289" type="stmt" count="0"/>
+        <line num="290" type="stmt" count="0"/>
+        <line num="293" type="stmt" count="0"/>
+        <line num="295" type="stmt" count="0"/>
+        <line num="298" type="method" name="getSystemInformation" visibility="private" complexity="2" crap="6" count="0"/>
+        <line num="300" type="stmt" count="0"/>
+        <line num="302" type="stmt" count="0"/>
+        <line num="303" type="stmt" count="0"/>
+        <line num="304" type="stmt" count="0"/>
+        <line num="305" type="stmt" count="0"/>
+        <line num="307" type="stmt" count="0"/>
+        <line num="308" type="stmt" count="0"/>
+        <line num="309" type="stmt" count="0"/>
+        <line num="310" type="stmt" count="0"/>
+        <line num="311" type="stmt" count="0"/>
+        <line num="312" type="stmt" count="0"/>
+        <line num="313" type="stmt" count="0"/>
+        <line num="316" type="method" name="getFooterContent" visibility="private" complexity="2" crap="6" count="0"/>
+        <line num="318" type="stmt" count="0"/>
+        <line num="320" type="stmt" count="0"/>
+        <line num="321" type="stmt" count="0"/>
+        <line num="322" type="stmt" count="0"/>
+        <line num="325" type="method" name="pluginActionLinks" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="327" type="stmt" count="0"/>
+        <line num="329" type="stmt" count="0"/>
+        <line num="332" type="method" name="renderApiEndpointHtml" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="334" type="stmt" count="0"/>
+        <line num="335" type="stmt" count="0"/>
+        <line num="337" type="stmt" count="0"/>
+        <line num="338" type="stmt" count="0"/>
+        <line num="339" type="stmt" count="0"/>
+        <line num="340" type="stmt" count="0"/>
+        <line num="341" type="stmt" count="0"/>
+        <line num="342" type="stmt" count="0"/>
+        <line num="344" type="stmt" count="0"/>
+        <line num="346" type="stmt" count="0"/>
+        <line num="348" type="stmt" count="0"/>
+        <line num="349" type="stmt" count="0"/>
+        <line num="350" type="stmt" count="0"/>
+        <line num="351" type="stmt" count="0"/>
+        <line num="352" type="stmt" count="0"/>
+        <line num="353" type="stmt" count="0"/>
+        <line num="354" type="stmt" count="0"/>
+        <line num="355" type="stmt" count="0"/>
+        <line num="356" type="stmt" count="0"/>
+        <line num="357" type="stmt" count="0"/>
+        <line num="358" type="stmt" count="0"/>
+        <line num="359" type="stmt" count="0"/>
+        <line num="360" type="stmt" count="0"/>
+        <line num="361" type="stmt" count="0"/>
+        <line num="362" type="stmt" count="0"/>
+        <line num="365" type="stmt" count="0"/>
+        <line num="369" type="stmt" count="0"/>
+        <line num="377" type="stmt" count="0"/>
+        <metrics loc="381" ncloc="370" classes="1" methods="15" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="252" coveredstatements="0" elements="267" coveredelements="0"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/Admin/OptionsMigration.php">
+        <class name="HyperFields\Admin\OptionsMigration" namespace="HyperFields\Admin">
+          <metrics complexity="25" methods="11" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="73" coveredstatements="0" elements="84" coveredelements="0"/>
+        </class>
+        <line num="10" type="stmt" count="0"/>
+        <line num="11" type="stmt" count="0"/>
+        <line num="26" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="36" type="method" name="needsMigration" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="38" type="stmt" count="0"/>
+        <line num="40" type="stmt" count="0"/>
+        <line num="48" type="method" name="migrate" visibility="public" complexity="4" crap="20" count="0"/>
+        <line num="50" type="stmt" count="0"/>
+        <line num="51" type="stmt" count="0"/>
+        <line num="56" type="stmt" count="0"/>
+        <line num="58" type="stmt" count="0"/>
+        <line num="60" type="stmt" count="0"/>
+        <line num="64" type="stmt" count="0"/>
+        <line num="67" type="stmt" count="0"/>
+        <line num="70" type="stmt" count="0"/>
+        <line num="71" type="stmt" count="0"/>
+        <line num="72" type="stmt" count="0"/>
+        <line num="82" type="method" name="sanitizeExistingData" visibility="private" complexity="10" crap="110" count="0"/>
+        <line num="84" type="stmt" count="0"/>
+        <line num="87" type="stmt" count="0"/>
+        <line num="88" type="stmt" count="0"/>
+        <line num="91" type="stmt" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="93" type="stmt" count="0"/>
+        <line num="94" type="stmt" count="0"/>
+        <line num="97" type="stmt" count="0"/>
+        <line num="100" type="stmt" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <line num="104" type="stmt" count="0"/>
+        <line num="105" type="stmt" count="0"/>
+        <line num="108" type="stmt" count="0"/>
+        <line num="117" type="method" name="sanitizeActiveLibrary" visibility="private" complexity="2" crap="6" count="0"/>
+        <line num="119" type="stmt" count="0"/>
+        <line num="120" type="stmt" count="0"/>
+        <line num="122" type="stmt" count="0"/>
+        <line num="130" type="method" name="getHtmxExtensionKeys" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="132" type="stmt" count="0"/>
+        <line num="133" type="stmt" count="0"/>
+        <line num="134" type="stmt" count="0"/>
+        <line num="135" type="stmt" count="0"/>
+        <line num="136" type="stmt" count="0"/>
+        <line num="137" type="stmt" count="0"/>
+        <line num="138" type="stmt" count="0"/>
+        <line num="139" type="stmt" count="0"/>
+        <line num="140" type="stmt" count="0"/>
+        <line num="141" type="stmt" count="0"/>
+        <line num="142" type="stmt" count="0"/>
+        <line num="143" type="stmt" count="0"/>
+        <line num="144" type="stmt" count="0"/>
+        <line num="145" type="stmt" count="0"/>
+        <line num="146" type="stmt" count="0"/>
+        <line num="147" type="stmt" count="0"/>
+        <line num="155" type="method" name="markMigrationComplete" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="157" type="stmt" count="0"/>
+        <line num="165" type="method" name="createBackup" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="167" type="stmt" count="0"/>
+        <line num="168" type="stmt" count="0"/>
+        <line num="170" type="stmt" count="0"/>
+        <line num="172" type="stmt" count="0"/>
+        <line num="173" type="stmt" count="0"/>
+        <line num="174" type="stmt" count="0"/>
+        <line num="175" type="stmt" count="0"/>
+        <line num="184" type="method" name="restoreFromBackup" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="186" type="stmt" count="0"/>
+        <line num="188" type="stmt" count="0"/>
+        <line num="189" type="stmt" count="0"/>
+        <line num="192" type="stmt" count="0"/>
+        <line num="200" type="method" name="cleanupBackups" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="202" type="stmt" count="0"/>
+        <line num="204" type="stmt" count="0"/>
+        <line num="205" type="stmt" count="0"/>
+        <line num="206" type="stmt" count="0"/>
+        <line num="207" type="stmt" count="0"/>
+        <line num="208" type="stmt" count="0"/>
+        <line num="210" type="stmt" count="0"/>
+        <line num="218" type="method" name="getMigrationStatus" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="220" type="stmt" count="0"/>
+        <line num="221" type="stmt" count="0"/>
+        <line num="222" type="stmt" count="0"/>
+        <line num="224" type="stmt" count="0"/>
+        <line num="225" type="stmt" count="0"/>
+        <line num="226" type="stmt" count="0"/>
+        <line num="227" type="stmt" count="0"/>
+        <line num="228" type="stmt" count="0"/>
+        <line num="229" type="stmt" count="0"/>
+        <metrics loc="232" ncloc="162" classes="1" methods="11" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="75" coveredstatements="0" elements="86" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="HyperFields">
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/Assets.php">
+        <class name="HyperFields\Assets" namespace="HyperFields">
+          <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="0" elements="10" coveredelements="0"/>
+        </class>
+        <line num="8" type="stmt" count="0"/>
+        <line num="9" type="stmt" count="0"/>
+        <line num="20" type="method" name="init" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="22" type="stmt" count="0"/>
+        <line num="28" type="method" name="enqueueScripts" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <line num="33" type="stmt" count="0"/>
+        <line num="34" type="stmt" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <line num="36" type="stmt" count="0"/>
+        <metrics loc="39" ncloc="29" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="12" coveredelements="0"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/BlockFieldAdapter.php">
+        <class name="HyperFields\BlockFieldAdapter" namespace="HyperFields">
+          <metrics complexity="9" methods="9" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="34" coveredstatements="0" elements="43" coveredelements="0"/>
+        </class>
+        <line num="12" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="14" type="stmt" count="0"/>
+        <line num="15" type="stmt" count="0"/>
+        <line num="18" type="method" name="fromField" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="20" type="stmt" count="0"/>
+        <line num="23" type="method" name="getValue" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="25" type="stmt" count="0"/>
+        <line num="26" type="stmt" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="31" type="method" name="setValue" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <line num="37" type="method" name="getField" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="39" type="stmt" count="0"/>
+        <line num="42" type="method" name="getAttributeName" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="44" type="stmt" count="0"/>
+        <line num="47" type="method" name="toBlockAttribute" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="50" type="stmt" count="0"/>
+        <line num="53" type="stmt" count="0"/>
+        <line num="54" type="stmt" count="0"/>
+        <line num="55" type="stmt" count="0"/>
+        <line num="56" type="stmt" count="0"/>
+        <line num="57" type="stmt" count="0"/>
+        <line num="58" type="stmt" count="0"/>
+        <line num="59" type="stmt" count="0"/>
+        <line num="60" type="stmt" count="0"/>
+        <line num="61" type="stmt" count="0"/>
+        <line num="62" type="stmt" count="0"/>
+        <line num="63" type="stmt" count="0"/>
+        <line num="64" type="stmt" count="0"/>
+        <line num="65" type="stmt" count="0"/>
+        <line num="66" type="stmt" count="0"/>
+        <line num="67" type="stmt" count="0"/>
+        <line num="68" type="stmt" count="0"/>
+        <line num="70" type="stmt" count="0"/>
+        <line num="72" type="stmt" count="0"/>
+        <line num="73" type="stmt" count="0"/>
+        <line num="74" type="stmt" count="0"/>
+        <line num="75" type="stmt" count="0"/>
+        <line num="78" type="method" name="sanitizeForBlock" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="80" type="stmt" count="0"/>
+        <line num="83" type="method" name="validateForBlock" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="85" type="stmt" count="0"/>
+        <metrics loc="88" ncloc="83" classes="1" methods="9" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="34" coveredstatements="0" elements="43" coveredelements="0"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/ConditionalLogic.php">
+        <class name="HyperFields\ConditionalLogic" namespace="HyperFields">
+          <metrics complexity="38" methods="21" coveredmethods="21" conditionals="0" coveredconditionals="0" statements="103" coveredstatements="103" elements="124" coveredelements="124"/>
+        </class>
+        <line num="30" type="method" name="if" visibility="public" complexity="1" crap="1" count="24"/>
+        <line num="32" type="stmt" count="24"/>
+        <line num="35" type="method" name="where" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="37" type="stmt" count="1"/>
+        <line num="40" type="method" name="__construct" visibility="private" complexity="1" crap="1" count="27"/>
+        <line num="42" type="stmt" count="27"/>
+        <line num="45" type="method" name="equals" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="47" type="stmt" count="12"/>
+        <line num="48" type="stmt" count="12"/>
+        <line num="50" type="stmt" count="12"/>
+        <line num="53" type="method" name="notEquals" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="55" type="stmt" count="1"/>
+        <line num="56" type="stmt" count="1"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="61" type="method" name="greaterThan" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="63" type="stmt" count="1"/>
+        <line num="64" type="stmt" count="1"/>
+        <line num="66" type="stmt" count="1"/>
+        <line num="69" type="method" name="lessThan" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="71" type="stmt" count="1"/>
+        <line num="72" type="stmt" count="1"/>
+        <line num="74" type="stmt" count="1"/>
+        <line num="77" type="method" name="greaterThanOrEqual" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="79" type="stmt" count="1"/>
+        <line num="80" type="stmt" count="1"/>
+        <line num="82" type="stmt" count="1"/>
+        <line num="85" type="method" name="lessThanOrEqual" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="87" type="stmt" count="1"/>
+        <line num="88" type="stmt" count="1"/>
+        <line num="90" type="stmt" count="1"/>
+        <line num="93" type="method" name="in" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="95" type="stmt" count="2"/>
+        <line num="96" type="stmt" count="2"/>
+        <line num="98" type="stmt" count="2"/>
+        <line num="101" type="method" name="notIn" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="103" type="stmt" count="1"/>
+        <line num="104" type="stmt" count="1"/>
+        <line num="106" type="stmt" count="1"/>
+        <line num="109" type="method" name="contains" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="111" type="stmt" count="1"/>
+        <line num="112" type="stmt" count="1"/>
+        <line num="114" type="stmt" count="1"/>
+        <line num="117" type="method" name="notContains" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="119" type="stmt" count="1"/>
+        <line num="120" type="stmt" count="1"/>
+        <line num="122" type="stmt" count="1"/>
+        <line num="125" type="method" name="empty" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="127" type="stmt" count="1"/>
+        <line num="128" type="stmt" count="1"/>
+        <line num="130" type="stmt" count="1"/>
+        <line num="133" type="method" name="notEmpty" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="135" type="stmt" count="1"/>
+        <line num="136" type="stmt" count="1"/>
+        <line num="138" type="stmt" count="1"/>
+        <line num="141" type="method" name="and" visibility="public" complexity="1" crap="1" count="7"/>
+        <line num="143" type="stmt" count="7"/>
+        <line num="144" type="stmt" count="7"/>
+        <line num="145" type="stmt" count="7"/>
+        <line num="146" type="stmt" count="7"/>
+        <line num="147" type="stmt" count="7"/>
+        <line num="149" type="stmt" count="7"/>
+        <line num="150" type="stmt" count="7"/>
+        <line num="151" type="stmt" count="7"/>
+        <line num="153" type="stmt" count="7"/>
+        <line num="156" type="method" name="or" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="158" type="stmt" count="4"/>
+        <line num="160" type="stmt" count="4"/>
+        <line num="163" type="method" name="evaluate" visibility="public" complexity="4" crap="4" count="21"/>
+        <line num="165" type="stmt" count="21"/>
+        <line num="167" type="stmt" count="21"/>
+        <line num="168" type="stmt" count="20"/>
+        <line num="169" type="stmt" count="20"/>
+        <line num="170" type="stmt" count="20"/>
+        <line num="171" type="stmt" count="20"/>
+        <line num="172" type="stmt" count="20"/>
+        <line num="175" type="stmt" count="21"/>
+        <line num="176" type="stmt" count="21"/>
+        <line num="177" type="stmt" count="20"/>
+        <line num="178" type="stmt" count="20"/>
+        <line num="181" type="stmt" count="21"/>
+        <line num="182" type="stmt" count="3"/>
+        <line num="185" type="stmt" count="18"/>
+        <line num="188" type="method" name="evaluateCondition" visibility="private" complexity="14" crap="14" count="21"/>
+        <line num="191" type="stmt" count="21"/>
+        <line num="192" type="stmt" count="9"/>
+        <line num="193" type="stmt" count="12"/>
+        <line num="194" type="stmt" count="1"/>
+        <line num="195" type="stmt" count="11"/>
+        <line num="196" type="stmt" count="1"/>
+        <line num="197" type="stmt" count="10"/>
+        <line num="198" type="stmt" count="1"/>
+        <line num="199" type="stmt" count="9"/>
+        <line num="200" type="stmt" count="1"/>
+        <line num="201" type="stmt" count="9"/>
+        <line num="202" type="stmt" count="1"/>
+        <line num="203" type="stmt" count="8"/>
+        <line num="204" type="stmt" count="2"/>
+        <line num="205" type="stmt" count="6"/>
+        <line num="206" type="stmt" count="1"/>
+        <line num="207" type="stmt" count="5"/>
+        <line num="208" type="stmt" count="1"/>
+        <line num="209" type="stmt" count="4"/>
+        <line num="210" type="stmt" count="1"/>
+        <line num="211" type="stmt" count="3"/>
+        <line num="212" type="stmt" count="1"/>
+        <line num="213" type="stmt" count="2"/>
+        <line num="214" type="stmt" count="1"/>
+        <line num="216" type="stmt" count="1"/>
+        <line num="220" type="method" name="toArray" visibility="public" complexity="2" crap="2" count="4"/>
+        <line num="222" type="stmt" count="4"/>
+        <line num="224" type="stmt" count="4"/>
+        <line num="225" type="stmt" count="3"/>
+        <line num="226" type="stmt" count="3"/>
+        <line num="227" type="stmt" count="3"/>
+        <line num="228" type="stmt" count="3"/>
+        <line num="229" type="stmt" count="3"/>
+        <line num="232" type="stmt" count="4"/>
+        <line num="233" type="stmt" count="4"/>
+        <line num="234" type="stmt" count="4"/>
+        <line num="235" type="stmt" count="4"/>
+        <line num="238" type="method" name="factory" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="240" type="stmt" count="2"/>
+        <line num="241" type="stmt" count="2"/>
+        <line num="243" type="stmt" count="2"/>
+        <metrics loc="246" ncloc="246" classes="1" methods="21" coveredmethods="21" conditionals="0" coveredconditionals="0" statements="103" coveredstatements="103" elements="124" coveredelements="124"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/CustomField.php">
+        <class name="HyperFields\CustomField" namespace="HyperFields">
+          <metrics complexity="16" methods="12" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="0" elements="37" coveredelements="0"/>
+        </class>
+        <line num="14" type="method" name="build" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="16" type="stmt" count="0"/>
+        <line num="19" type="method" name="setRenderCallback" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="21" type="stmt" count="0"/>
+        <line num="23" type="stmt" count="0"/>
+        <line num="26" type="method" name="setSanitizeCallback" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <line num="33" type="method" name="setValidateCallback" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <line num="37" type="stmt" count="0"/>
+        <line num="40" type="method" name="setAssets" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="42" type="stmt" count="0"/>
+        <line num="44" type="stmt" count="0"/>
+        <line num="47" type="method" name="getRenderCallback" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="52" type="method" name="getSanitizeCallback" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="54" type="stmt" count="0"/>
+        <line num="57" type="method" name="getValidateCallback" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="59" type="stmt" count="0"/>
+        <line num="62" type="method" name="getAssets" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="64" type="stmt" count="0"/>
+        <line num="67" type="method" name="sanitizeValue" visibility="public" complexity="3" crap="12" count="0"/>
+        <line num="69" type="stmt" count="0"/>
+        <line num="70" type="stmt" count="0"/>
+        <line num="73" type="stmt" count="0"/>
+        <line num="76" type="method" name="validateValue" visibility="public" complexity="3" crap="12" count="0"/>
+        <line num="78" type="stmt" count="0"/>
+        <line num="79" type="stmt" count="0"/>
+        <line num="82" type="stmt" count="0"/>
+        <line num="85" type="method" name="toArray" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="87" type="stmt" count="0"/>
+        <line num="88" type="stmt" count="0"/>
+        <line num="89" type="stmt" count="0"/>
+        <line num="90" type="stmt" count="0"/>
+        <line num="91" type="stmt" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <metrics loc="95" ncloc="95" classes="1" methods="12" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="0" elements="37" coveredelements="0"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/Field.php">
+        <class name="HyperFields\Field" namespace="HyperFields">
+          <metrics complexity="124" methods="50" coveredmethods="45" conditionals="0" coveredconditionals="0" statements="226" coveredstatements="212" elements="276" coveredelements="257"/>
+        </class>
+        <line num="36" type="method" name="setHtml" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="38" type="stmt" count="5"/>
+        <line num="40" type="stmt" count="5"/>
+        <line num="43" type="method" name="setHtmlContent" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="45" type="stmt" count="3"/>
+        <line num="83" type="method" name="__construct" visibility="protected" complexity="3" crap="3" count="81"/>
+        <line num="85" type="stmt" count="81"/>
+        <line num="86" type="stmt" count="1"/>
+        <line num="90" type="stmt" count="80"/>
+        <line num="91" type="stmt" count="1"/>
+        <line num="94" type="stmt" count="79"/>
+        <line num="95" type="stmt" count="79"/>
+        <line num="96" type="stmt" count="79"/>
+        <line num="99" type="method" name="make" visibility="public" complexity="1" crap="1" count="64"/>
+        <line num="101" type="stmt" count="64"/>
+        <line num="104" type="method" name="setDefault" visibility="public" complexity="1" crap="1" count="14"/>
+        <line num="106" type="stmt" count="14"/>
+        <line num="108" type="stmt" count="14"/>
+        <line num="111" type="method" name="setPlaceholder" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="113" type="stmt" count="3"/>
+        <line num="115" type="stmt" count="3"/>
+        <line num="118" type="method" name="setRequired" visibility="public" complexity="1" crap="1" count="8"/>
+        <line num="120" type="stmt" count="8"/>
+        <line num="122" type="stmt" count="8"/>
+        <line num="125" type="method" name="setHelp" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="127" type="stmt" count="3"/>
+        <line num="129" type="stmt" count="3"/>
+        <line num="132" type="method" name="setDescription" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="134" type="stmt" count="0"/>
+        <line num="136" type="stmt" count="0"/>
+        <line num="139" type="method" name="setOptions" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="141" type="stmt" count="4"/>
+        <line num="143" type="stmt" count="4"/>
+        <line num="146" type="method" name="setValidation" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="148" type="stmt" count="2"/>
+        <line num="150" type="stmt" count="2"/>
+        <line num="153" type="method" name="setConditionalLogic" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="155" type="stmt" count="1"/>
+        <line num="157" type="stmt" count="1"/>
+        <line num="160" type="method" name="setContext" visibility="public" complexity="1" crap="1" count="35"/>
+        <line num="162" type="stmt" count="35"/>
+        <line num="164" type="stmt" count="35"/>
+        <line num="167" type="method" name="setStorageType" visibility="public" complexity="1" crap="1" count="14"/>
+        <line num="169" type="stmt" count="14"/>
+        <line num="171" type="stmt" count="14"/>
+        <line num="174" type="method" name="setMultiple" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="176" type="stmt" count="2"/>
+        <line num="178" type="stmt" count="2"/>
+        <line num="181" type="method" name="isMultiple" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="183" type="stmt" count="3"/>
+        <line num="186" type="method" name="getType" visibility="public" complexity="1" crap="1" count="11"/>
+        <line num="188" type="stmt" count="11"/>
+        <line num="191" type="method" name="getName" visibility="public" complexity="1" crap="1" count="46"/>
+        <line num="193" type="stmt" count="46"/>
+        <line num="196" type="method" name="getLabel" visibility="public" complexity="1" crap="1" count="8"/>
+        <line num="198" type="stmt" count="8"/>
+        <line num="201" type="method" name="getDefault" visibility="public" complexity="1" crap="1" count="7"/>
+        <line num="203" type="stmt" count="7"/>
+        <line num="206" type="method" name="getPlaceholder" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="208" type="stmt" count="1"/>
+        <line num="211" type="method" name="isRequired" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="213" type="stmt" count="1"/>
+        <line num="216" type="method" name="getHelp" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="218" type="stmt" count="1"/>
+        <line num="221" type="method" name="getDescription" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="223" type="stmt" count="0"/>
+        <line num="226" type="method" name="getOptions" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="228" type="stmt" count="1"/>
+        <line num="231" type="method" name="getHtml" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="233" type="stmt" count="4"/>
+        <line num="236" type="method" name="getValidation" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="238" type="stmt" count="1"/>
+        <line num="241" type="method" name="getConditionalLogic" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="243" type="stmt" count="1"/>
+        <line num="246" type="method" name="getContext" visibility="public" complexity="1" crap="1" count="9"/>
+        <line num="248" type="stmt" count="9"/>
+        <line num="251" type="method" name="getStorageType" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="253" type="stmt" count="1"/>
+        <line num="256" type="method" name="addArg" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="258" type="stmt" count="2"/>
+        <line num="260" type="stmt" count="2"/>
+        <line num="263" type="method" name="setOptionValues" visibility="public" complexity="2" crap="2" count="4"/>
+        <line num="265" type="stmt" count="4"/>
+        <line num="266" type="stmt" count="4"/>
+        <line num="267" type="stmt" count="4"/>
+        <line num="268" type="stmt" count="3"/>
+        <line num="271" type="stmt" count="4"/>
+        <line num="274" type="method" name="getOptionName" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="276" type="stmt" count="0"/>
+        <line num="279" type="method" name="getValue" visibility="public" complexity="4" crap="4" count="2"/>
+        <line num="282" type="stmt" count="2"/>
+        <line num="283" type="stmt" count="2"/>
+        <line num="285" type="stmt" count="2"/>
+        <line num="289" type="stmt" count="1"/>
+        <line num="290" type="stmt" count="1"/>
+        <line num="291" type="stmt" count="1"/>
+        <line num="292" type="stmt" count="1"/>
+        <line num="294" type="stmt" count="1"/>
+        <line num="298" type="stmt" count="1"/>
+        <line num="300" type="stmt" count="1"/>
+        <line num="303" type="method" name="getArgs" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="305" type="stmt" count="3"/>
+        <line num="308" type="method" name="setArgs" visibility="protected" complexity="1" crap="1" count="2"/>
+        <line num="310" type="stmt" count="2"/>
+        <line num="313" type="method" name="render" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="315" type="stmt" count="1"/>
+        <line num="316" type="stmt" count="1"/>
+        <line num="318" type="stmt" count="1"/>
+        <line num="319" type="stmt" count="1"/>
+        <line num="321" type="stmt" count="1"/>
+        <line num="324" type="method" name="getOptionValue" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="326" type="stmt" count="1"/>
+        <line num="329" type="method" name="getNameAttr" visibility="public" complexity="5" crap="5" count="8"/>
+        <line num="333" type="stmt" count="8"/>
+        <line num="334" type="stmt" count="1"/>
+        <line num="338" type="stmt" count="8"/>
+        <line num="339" type="stmt" count="2"/>
+        <line num="341" type="stmt" count="7"/>
+        <line num="343" type="stmt" count="1"/>
+        <line num="346" type="stmt" count="7"/>
+        <line num="349" type="method" name="toArray" visibility="public" complexity="1" crap="1" count="7"/>
+        <line num="351" type="stmt" count="7"/>
+        <line num="352" type="stmt" count="7"/>
+        <line num="353" type="stmt" count="7"/>
+        <line num="354" type="stmt" count="7"/>
+        <line num="355" type="stmt" count="7"/>
+        <line num="356" type="stmt" count="7"/>
+        <line num="357" type="stmt" count="7"/>
+        <line num="358" type="stmt" count="7"/>
+        <line num="359" type="stmt" count="7"/>
+        <line num="360" type="stmt" count="7"/>
+        <line num="361" type="stmt" count="7"/>
+        <line num="362" type="stmt" count="7"/>
+        <line num="363" type="stmt" count="7"/>
+        <line num="364" type="stmt" count="7"/>
+        <line num="365" type="stmt" count="7"/>
+        <line num="366" type="stmt" count="7"/>
+        <line num="367" type="stmt" count="7"/>
+        <line num="368" type="stmt" count="7"/>
+        <line num="369" type="stmt" count="7"/>
+        <line num="370" type="stmt" count="7"/>
+        <line num="371" type="stmt" count="7"/>
+        <line num="374" type="method" name="sanitizeValue" visibility="public" complexity="38" crap="42.21" count="22"/>
+        <line num="376" type="stmt" count="22"/>
+        <line num="377" type="stmt" count="22"/>
+        <line num="378" type="stmt" count="3"/>
+        <line num="379" type="stmt" count="20"/>
+        <line num="380" type="stmt" count="3"/>
+        <line num="381" type="stmt" count="3"/>
+        <line num="382" type="stmt" count="3"/>
+        <line num="383" type="stmt" count="1"/>
+        <line num="384" type="stmt" count="3"/>
+        <line num="385" type="stmt" count="1"/>
+        <line num="386" type="stmt" count="3"/>
+        <line num="387" type="stmt" count="0"/>
+        <line num="388" type="stmt" count="3"/>
+        <line num="389" type="stmt" count="1"/>
+        <line num="390" type="stmt" count="3"/>
+        <line num="391" type="stmt" count="1"/>
+        <line num="392" type="stmt" count="3"/>
+        <line num="393" type="stmt" count="1"/>
+        <line num="394" type="stmt" count="3"/>
+        <line num="395" type="stmt" count="0"/>
+        <line num="396" type="stmt" count="3"/>
+        <line num="397" type="stmt" count="0"/>
+        <line num="398" type="stmt" count="3"/>
+        <line num="399" type="stmt" count="1"/>
+        <line num="400" type="stmt" count="3"/>
+        <line num="401" type="stmt" count="1"/>
+        <line num="402" type="stmt" count="3"/>
+        <line num="403" type="stmt" count="2"/>
+        <line num="404" type="stmt" count="1"/>
+        <line num="405" type="stmt" count="2"/>
+        <line num="406" type="stmt" count="1"/>
+        <line num="407" type="stmt" count="2"/>
+        <line num="408" type="stmt" count="1"/>
+        <line num="409" type="stmt" count="2"/>
+        <line num="410" type="stmt" count="1"/>
+        <line num="411" type="stmt" count="2"/>
+        <line num="412" type="stmt" count="0"/>
+        <line num="413" type="stmt" count="2"/>
+        <line num="414" type="stmt" count="1"/>
+        <line num="415" type="stmt" count="2"/>
+        <line num="416" type="stmt" count="0"/>
+        <line num="417" type="stmt" count="2"/>
+        <line num="418" type="stmt" count="2"/>
+        <line num="419" type="stmt" count="2"/>
+        <line num="420" type="stmt" count="0"/>
+        <line num="421" type="stmt" count="2"/>
+        <line num="422" type="stmt" count="2"/>
+        <line num="423" type="stmt" count="2"/>
+        <line num="424" type="stmt" count="1"/>
+        <line num="425" type="stmt" count="2"/>
+        <line num="426" type="stmt" count="1"/>
+        <line num="427" type="stmt" count="1"/>
+        <line num="428" type="stmt" count="0"/>
+        <line num="429" type="stmt" count="1"/>
+        <line num="430" type="stmt" count="0"/>
+        <line num="432" type="stmt" count="1"/>
+        <line num="436" type="method" name="sanitizeSetValue" visibility="private" complexity="5" crap="5" count="1"/>
+        <line num="438" type="stmt" count="1"/>
+        <line num="439" type="stmt" count="1"/>
+        <line num="443" type="stmt" count="1"/>
+        <line num="444" type="stmt" count="1"/>
+        <line num="445" type="stmt" count="1"/>
+        <line num="446" type="stmt" count="1"/>
+        <line num="447" type="stmt" count="1"/>
+        <line num="448" type="stmt" count="1"/>
+        <line num="449" type="stmt" count="1"/>
+        <line num="450" type="stmt" count="1"/>
+        <line num="451" type="stmt" count="1"/>
+        <line num="454" type="stmt" count="1"/>
+        <line num="455" type="stmt" count="1"/>
+        <line num="456" type="stmt" count="1"/>
+        <line num="457" type="stmt" count="1"/>
+        <line num="458" type="stmt" count="1"/>
+        <line num="459" type="stmt" count="1"/>
+        <line num="460" type="stmt" count="1"/>
+        <line num="461" type="stmt" count="1"/>
+        <line num="462" type="stmt" count="1"/>
+        <line num="463" type="stmt" count="1"/>
+        <line num="466" type="stmt" count="1"/>
+        <line num="469" type="method" name="sanitizeArrayValue" visibility="private" complexity="2" crap="2" count="1"/>
+        <line num="471" type="stmt" count="1"/>
+        <line num="472" type="stmt" count="1"/>
+        <line num="475" type="stmt" count="1"/>
+        <line num="478" type="method" name="sanitizeMapValue" visibility="private" complexity="5" crap="5" count="1"/>
+        <line num="480" type="stmt" count="1"/>
+        <line num="481" type="stmt" count="1"/>
+        <line num="484" type="stmt" count="1"/>
+        <line num="485" type="stmt" count="1"/>
+        <line num="486" type="stmt" count="1"/>
+        <line num="487" type="stmt" count="1"/>
+        <line num="488" type="stmt" count="1"/>
+        <line num="491" type="method" name="sanitizeComplexValue" visibility="private" complexity="2" crap="2" count="1"/>
+        <line num="493" type="stmt" count="1"/>
+        <line num="494" type="stmt" count="1"/>
+        <line num="497" type="stmt" count="1"/>
+        <line num="500" type="method" name="sanitizeNestedValue" visibility="private" complexity="2" crap="2" count="1"/>
+        <line num="502" type="stmt" count="1"/>
+        <line num="503" type="stmt" count="1"/>
+        <line num="506" type="stmt" count="1"/>
+        <line num="509" type="method" name="sanitizeAssociationValue" visibility="private" complexity="2" crap="2" count="1"/>
+        <line num="511" type="stmt" count="1"/>
+        <line num="512" type="stmt" count="1"/>
+        <line num="515" type="stmt" count="1"/>
+        <line num="518" type="method" name="sanitizeSelectValue" visibility="private" complexity="3" crap="3" count="1"/>
+        <line num="520" type="stmt" count="1"/>
+        <line num="521" type="stmt" count="1"/>
+        <line num="524" type="stmt" count="1"/>
+        <line num="526" type="stmt" count="1"/>
+        <line num="529" type="method" name="validateValue" visibility="public" complexity="5" crap="5" count="9"/>
+        <line num="531" type="stmt" count="9"/>
+        <line num="532" type="stmt" count="5"/>
+        <line num="535" type="stmt" count="9"/>
+        <line num="536" type="stmt" count="1"/>
+        <line num="537" type="stmt" count="1"/>
+        <line num="541" type="stmt" count="9"/>
+        <line num="544" type="method" name="applyValidationRule" visibility="private" complexity="10" crap="10.16" count="1"/>
+        <line num="547" type="stmt" count="1"/>
+        <line num="548" type="stmt" count="1"/>
+        <line num="549" type="stmt" count="1"/>
+        <line num="550" type="stmt" count="1"/>
+        <line num="551" type="stmt" count="1"/>
+        <line num="552" type="stmt" count="1"/>
+        <line num="553" type="stmt" count="1"/>
+        <line num="554" type="stmt" count="0"/>
+        <line num="555" type="stmt" count="1"/>
+        <line num="556" type="stmt" count="0"/>
+        <line num="557" type="stmt" count="1"/>
+        <line num="558" type="stmt" count="1"/>
+        <line num="559" type="stmt" count="1"/>
+        <line num="560" type="stmt" count="1"/>
+        <line num="561" type="stmt" count="1"/>
+        <line num="562" type="stmt" count="1"/>
+        <line num="564" type="stmt" count="1"/>
+        <metrics loc="568" ncloc="559" classes="1" methods="50" coveredmethods="45" conditionals="0" coveredconditionals="0" statements="226" coveredstatements="212" elements="276" coveredelements="257"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/HeadingField.php">
+        <class name="HyperFields\HeadingField" namespace="HyperFields">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <line num="7" type="stmt" count="0"/>
+        <line num="8" type="stmt" count="0"/>
+        <metrics loc="12" ncloc="12" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="2" coveredelements="0"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/HyperFields.php">
+        <class name="HyperFields\HyperFields" namespace="HyperFields">
+          <metrics complexity="36" methods="16" coveredmethods="16" conditionals="0" coveredconditionals="0" statements="56" coveredstatements="56" elements="72" coveredelements="72"/>
+        </class>
+        <line num="26" type="method" name="registerOptionsPage" visibility="public" complexity="19" crap="19" count="4"/>
+        <line num="28" type="stmt" count="4"/>
+        <line num="30" type="stmt" count="4"/>
+        <line num="31" type="stmt" count="1"/>
+        <line num="33" type="stmt" count="4"/>
+        <line num="34" type="stmt" count="1"/>
+        <line num="36" type="stmt" count="4"/>
+        <line num="37" type="stmt" count="1"/>
+        <line num="39" type="stmt" count="4"/>
+        <line num="40" type="stmt" count="1"/>
+        <line num="42" type="stmt" count="4"/>
+        <line num="43" type="stmt" count="1"/>
+        <line num="46" type="stmt" count="4"/>
+        <line num="47" type="stmt" count="3"/>
+        <line num="48" type="stmt" count="3"/>
+        <line num="49" type="stmt" count="1"/>
+        <line num="52" type="stmt" count="3"/>
+        <line num="54" type="stmt" count="3"/>
+        <line num="55" type="stmt" count="2"/>
+        <line num="56" type="stmt" count="2"/>
+        <line num="57" type="stmt" count="1"/>
+        <line num="60" type="stmt" count="2"/>
+        <line num="62" type="stmt" count="2"/>
+        <line num="63" type="stmt" count="1"/>
+        <line num="65" type="stmt" count="2"/>
+        <line num="66" type="stmt" count="1"/>
+        <line num="68" type="stmt" count="2"/>
+        <line num="69" type="stmt" count="1"/>
+        <line num="71" type="stmt" count="2"/>
+        <line num="72" type="stmt" count="1"/>
+        <line num="74" type="stmt" count="2"/>
+        <line num="75" type="stmt" count="1"/>
+        <line num="78" type="stmt" count="2"/>
+        <line num="84" type="stmt" count="4"/>
+        <line num="94" type="method" name="makeOptionPage" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="96" type="stmt" count="5"/>
+        <line num="107" type="method" name="makeField" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="109" type="stmt" count="5"/>
+        <line num="119" type="method" name="makeTabs" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="121" type="stmt" count="1"/>
+        <line num="131" type="method" name="makeRepeater" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="133" type="stmt" count="1"/>
+        <line num="143" type="method" name="makeSection" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="145" type="stmt" count="1"/>
+        <line num="154" type="method" name="makeSeparator" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="156" type="stmt" count="1"/>
+        <line num="166" type="method" name="makeHeading" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="168" type="stmt" count="1"/>
+        <line num="178" type="method" name="getOptions" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="180" type="stmt" count="3"/>
+        <line num="181" type="stmt" count="3"/>
+        <line num="192" type="method" name="getFieldValue" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="194" type="stmt" count="2"/>
+        <line num="196" type="stmt" count="2"/>
+        <line num="207" type="method" name="setFieldValue" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="209" type="stmt" count="3"/>
+        <line num="210" type="stmt" count="3"/>
+        <line num="215" type="stmt" count="3"/>
+        <line num="225" type="method" name="deleteFieldOption" visibility="public" complexity="2" crap="2" count="4"/>
+        <line num="227" type="stmt" count="4"/>
+        <line num="229" type="stmt" count="4"/>
+        <line num="230" type="stmt" count="2"/>
+        <line num="231" type="stmt" count="2"/>
+        <line num="234" type="stmt" count="2"/>
+        <line num="244" type="method" name="createPostMetaContainer" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="246" type="stmt" count="4"/>
+        <line num="256" type="method" name="makePostMeta" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="258" type="stmt" count="1"/>
+        <line num="268" type="method" name="makeTermMeta" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="270" type="stmt" count="1"/>
+        <line num="280" type="method" name="makeUserMeta" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="282" type="stmt" count="1"/>
+        <metrics loc="285" ncloc="161" classes="1" methods="16" coveredmethods="16" conditionals="0" coveredconditionals="0" statements="56" coveredstatements="56" elements="72" coveredelements="72"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/Log.php">
+        <class name="HyperFields\Log" namespace="HyperFields">
+          <metrics complexity="27" methods="9" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="58" coveredstatements="36" elements="67" coveredelements="42"/>
+        </class>
+        <line num="24" type="method" name="registerFatalErrorHandler" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="35" type="method" name="handleFatalError" visibility="public" complexity="3" crap="7.23" count="1"/>
+        <line num="37" type="stmt" count="1"/>
+        <line num="39" type="stmt" count="1"/>
+        <line num="40" type="stmt" count="0"/>
+        <line num="41" type="stmt" count="0"/>
+        <line num="42" type="stmt" count="0"/>
+        <line num="43" type="stmt" count="0"/>
+        <line num="44" type="stmt" count="0"/>
+        <line num="45" type="stmt" count="0"/>
+        <line num="48" type="stmt" count="0"/>
+        <line num="64" type="method" name="log" visibility="public" complexity="9" crap="9.49" count="18"/>
+        <line num="68" type="stmt" count="18"/>
+        <line num="69" type="stmt" count="8"/>
+        <line num="70" type="stmt" count="3"/>
+        <line num="74" type="stmt" count="15"/>
+        <line num="75" type="stmt" count="14"/>
+        <line num="77" type="stmt" count="0"/>
+        <line num="79" type="stmt" count="0"/>
+        <line num="81" type="stmt" count="14"/>
+        <line num="84" type="stmt" count="15"/>
+        <line num="85" type="stmt" count="15"/>
+        <line num="86" type="stmt" count="1"/>
+        <line num="89" type="stmt" count="15"/>
+        <line num="90" type="stmt" count="15"/>
+        <line num="91" type="stmt" count="15"/>
+        <line num="92" type="stmt" count="15"/>
+        <line num="94" type="stmt" count="15"/>
+        <line num="95" type="stmt" count="15"/>
+        <line num="96" type="stmt" count="15"/>
+        <line num="98" type="stmt" count="15"/>
+        <line num="100" type="stmt" count="0"/>
+        <line num="102" type="stmt" count="0"/>
+        <line num="105" type="stmt" count="15"/>
+        <line num="115" type="method" name="critical" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="117" type="stmt" count="1"/>
+        <line num="127" type="method" name="error" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="129" type="stmt" count="1"/>
+        <line num="139" type="method" name="warning" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="141" type="stmt" count="1"/>
+        <line num="151" type="method" name="info" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="153" type="stmt" count="1"/>
+        <line num="163" type="method" name="debug" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="165" type="stmt" count="5"/>
+        <line num="173" type="method" name="setupLogDirectory" visibility="private" complexity="9" crap="20.64" count="14"/>
+        <line num="175" type="stmt" count="14"/>
+        <line num="176" type="stmt" count="14"/>
+        <line num="177" type="stmt" count="14"/>
+        <line num="178" type="stmt" count="0"/>
+        <line num="180" type="stmt" count="0"/>
+        <line num="182" type="stmt" count="14"/>
+        <line num="185" type="stmt" count="14"/>
+        <line num="186" type="stmt" count="0"/>
+        <line num="187" type="stmt" count="0"/>
+        <line num="189" type="stmt" count="0"/>
+        <line num="193" type="stmt" count="14"/>
+        <line num="194" type="stmt" count="14"/>
+        <line num="195" type="stmt" count="0"/>
+        <line num="196" type="stmt" count="0"/>
+        <line num="197" type="stmt" count="0"/>
+        <line num="201" type="stmt" count="14"/>
+        <line num="202" type="stmt" count="14"/>
+        <line num="203" type="stmt" count="0"/>
+        <line num="204" type="stmt" count="0"/>
+        <line num="205" type="stmt" count="0"/>
+        <line num="209" type="stmt" count="14"/>
+        <metrics loc="212" ncloc="138" classes="1" methods="9" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="58" coveredstatements="36" elements="67" coveredelements="42"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/OptionField.php">
+        <class name="HyperFields\OptionField" namespace="HyperFields">
+          <metrics complexity="15" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="30" elements="37" coveredelements="37"/>
+        </class>
+        <line num="12" type="method" name="forOption" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="14" type="stmt" count="13"/>
+        <line num="15" type="stmt" count="13"/>
+        <line num="16" type="stmt" count="13"/>
+        <line num="17" type="stmt" count="13"/>
+        <line num="19" type="stmt" count="13"/>
+        <line num="22" type="method" name="setOptionGroup" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="24" type="stmt" count="2"/>
+        <line num="26" type="stmt" count="2"/>
+        <line num="29" type="method" name="getOptionName" visibility="public" complexity="1" crap="1" count="10"/>
+        <line num="31" type="stmt" count="10"/>
+        <line num="34" type="method" name="getOptionGroup" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="36" type="stmt" count="3"/>
+        <line num="39" type="method" name="getValue" visibility="public" complexity="4" crap="4" count="4"/>
+        <line num="41" type="stmt" count="4"/>
+        <line num="43" type="stmt" count="4"/>
+        <line num="44" type="stmt" count="1"/>
+        <line num="48" type="stmt" count="4"/>
+        <line num="49" type="stmt" count="2"/>
+        <line num="52" type="stmt" count="3"/>
+        <line num="55" type="method" name="setValue" visibility="public" complexity="3" crap="3" count="3"/>
+        <line num="57" type="stmt" count="3"/>
+        <line num="59" type="stmt" count="3"/>
+        <line num="60" type="stmt" count="1"/>
+        <line num="64" type="stmt" count="3"/>
+        <line num="66" type="stmt" count="3"/>
+        <line num="67" type="stmt" count="2"/>
+        <line num="69" type="stmt" count="2"/>
+        <line num="72" type="stmt" count="1"/>
+        <line num="75" type="method" name="deleteValue" visibility="public" complexity="4" crap="4" count="4"/>
+        <line num="77" type="stmt" count="4"/>
+        <line num="79" type="stmt" count="4"/>
+        <line num="80" type="stmt" count="3"/>
+        <line num="82" type="stmt" count="3"/>
+        <line num="83" type="stmt" count="2"/>
+        <line num="86" type="stmt" count="1"/>
+        <line num="89" type="stmt" count="1"/>
+        <metrics loc="92" ncloc="90" classes="1" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="30" elements="37" coveredelements="37"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/OptionsPage.php">
+        <class name="HyperFields\OptionsPage" namespace="HyperFields">
+          <metrics complexity="63" methods="22" coveredmethods="20" conditionals="0" coveredconditionals="0" statements="159" coveredstatements="153" elements="181" coveredelements="173"/>
+        </class>
+        <line num="23" type="method" name="make" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="25" type="stmt" count="6"/>
+        <line num="28" type="method" name="__construct" visibility="private" complexity="1" crap="1" count="40"/>
+        <line num="30" type="stmt" count="40"/>
+        <line num="31" type="stmt" count="40"/>
+        <line num="32" type="stmt" count="40"/>
+        <line num="33" type="stmt" count="40"/>
+        <line num="34" type="stmt" count="40"/>
+        <line num="35" type="stmt" count="40"/>
+        <line num="36" type="stmt" count="40"/>
+        <line num="39" type="method" name="setMenuTitle" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="41" type="stmt" count="3"/>
+        <line num="43" type="stmt" count="3"/>
+        <line num="46" type="method" name="setCapability" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="48" type="stmt" count="3"/>
+        <line num="50" type="stmt" count="3"/>
+        <line num="53" type="method" name="setParentSlug" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="55" type="stmt" count="6"/>
+        <line num="57" type="stmt" count="6"/>
+        <line num="60" type="method" name="setIconUrl" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="62" type="stmt" count="2"/>
+        <line num="64" type="stmt" count="2"/>
+        <line num="67" type="method" name="setPosition" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="69" type="stmt" count="2"/>
+        <line num="71" type="stmt" count="2"/>
+        <line num="74" type="method" name="setOptionName" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="76" type="stmt" count="3"/>
+        <line num="78" type="stmt" count="3"/>
+        <line num="81" type="method" name="setFooterContent" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="83" type="stmt" count="3"/>
+        <line num="85" type="stmt" count="3"/>
+        <line num="88" type="method" name="getOptionName" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="90" type="stmt" count="1"/>
+        <line num="93" type="method" name="addSection" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="95" type="stmt" count="13"/>
+        <line num="96" type="stmt" count="13"/>
+        <line num="98" type="stmt" count="13"/>
+        <line num="101" type="method" name="addSectionObject" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="103" type="stmt" count="3"/>
+        <line num="106" type="stmt" count="3"/>
+        <line num="107" type="stmt" count="2"/>
+        <line num="110" type="stmt" count="3"/>
+        <line num="113" type="method" name="addField" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="115" type="stmt" count="1"/>
+        <line num="117" type="stmt" count="1"/>
+        <line num="120" type="method" name="register" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="122" type="stmt" count="5"/>
+        <line num="123" type="stmt" count="5"/>
+        <line num="124" type="stmt" count="5"/>
+        <line num="125" type="stmt" count="5"/>
+        <line num="128" type="method" name="loadOptions" visibility="private" complexity="1" crap="1" count="6"/>
+        <line num="130" type="stmt" count="6"/>
+        <line num="131" type="stmt" count="6"/>
+        <line num="134" type="method" name="addMenuPage" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="136" type="stmt" count="2"/>
+        <line num="137" type="stmt" count="1"/>
+        <line num="138" type="stmt" count="1"/>
+        <line num="139" type="stmt" count="1"/>
+        <line num="140" type="stmt" count="1"/>
+        <line num="141" type="stmt" count="1"/>
+        <line num="142" type="stmt" count="1"/>
+        <line num="143" type="stmt" count="1"/>
+        <line num="144" type="stmt" count="1"/>
+        <line num="145" type="stmt" count="1"/>
+        <line num="147" type="stmt" count="1"/>
+        <line num="148" type="stmt" count="1"/>
+        <line num="149" type="stmt" count="1"/>
+        <line num="150" type="stmt" count="1"/>
+        <line num="151" type="stmt" count="1"/>
+        <line num="152" type="stmt" count="1"/>
+        <line num="153" type="stmt" count="1"/>
+        <line num="154" type="stmt" count="1"/>
+        <line num="155" type="stmt" count="1"/>
+        <line num="159" type="method" name="registerSettings" visibility="public" complexity="5" crap="5" count="3"/>
+        <line num="162" type="stmt" count="3"/>
+        <line num="163" type="stmt" count="3"/>
+        <line num="164" type="stmt" count="3"/>
+        <line num="167" type="stmt" count="3"/>
+        <line num="169" type="stmt" count="3"/>
+        <line num="170" type="stmt" count="2"/>
+        <line num="173" type="stmt" count="2"/>
+        <line num="174" type="stmt" count="1"/>
+        <line num="178" type="stmt" count="2"/>
+        <line num="179" type="stmt" count="2"/>
+        <line num="180" type="stmt" count="1"/>
+        <line num="186" type="method" name="renderPage" visibility="public" complexity="9" crap="9.26" count="3"/>
+        <line num="188" type="stmt" count="3"/>
+        <line num="190" type="stmt" count="3"/>
+        <line num="191" type="stmt" count="3"/>
+        <line num="192" type="stmt" count="3"/>
+        <line num="193" type="stmt" count="3"/>
+        <line num="194" type="stmt" count="3"/>
+        <line num="196" type="stmt" count="3"/>
+        <line num="197" type="stmt" count="3"/>
+        <line num="199" type="stmt" count="0"/>
+        <line num="200" type="stmt" count="0"/>
+        <line num="201" type="stmt" count="0"/>
+        <line num="203" type="stmt" count="0"/>
+        <line num="205" type="stmt" count="0"/>
+        <line num="208" type="stmt" count="3"/>
+        <line num="209" type="stmt" count="2"/>
+        <line num="211" type="stmt" count="2"/>
+        <line num="212" type="stmt" count="2"/>
+        <line num="215" type="stmt" count="2"/>
+        <line num="216" type="stmt" count="1"/>
+        <line num="219" type="stmt" count="2"/>
+        <line num="220" type="stmt" count="2"/>
+        <line num="221" type="stmt" count="2"/>
+        <line num="223" type="stmt" count="3"/>
+        <line num="224" type="stmt" count="3"/>
+        <line num="225" type="stmt" count="3"/>
+        <line num="226" type="stmt" count="3"/>
+        <line num="228" type="stmt" count="3"/>
+        <line num="229" type="stmt" count="3"/>
+        <line num="230" type="stmt" count="1"/>
+        <line num="231" type="stmt" count="1"/>
+        <line num="232" type="stmt" count="1"/>
+        <line num="233" type="stmt" count="1"/>
+        <line num="234" type="stmt" count="3"/>
+        <line num="235" type="stmt" count="3"/>
+        <line num="238" type="method" name="sanitizeOptions" visibility="public" complexity="12" crap="12.02" count="3"/>
+        <line num="241" type="stmt" count="3"/>
+        <line num="242" type="stmt" count="1"/>
+        <line num="243" type="stmt" count="1"/>
+        <line num="244" type="stmt" count="1"/>
+        <line num="245" type="stmt" count="1"/>
+        <line num="246" type="stmt" count="1"/>
+        <line num="247" type="stmt" count="1"/>
+        <line num="248" type="stmt" count="0"/>
+        <line num="254" type="stmt" count="3"/>
+        <line num="257" type="stmt" count="3"/>
+        <line num="259" type="stmt" count="3"/>
+        <line num="260" type="stmt" count="3"/>
+        <line num="262" type="stmt" count="3"/>
+        <line num="263" type="stmt" count="3"/>
+        <line num="264" type="stmt" count="3"/>
+        <line num="265" type="stmt" count="2"/>
+        <line num="266" type="stmt" count="3"/>
+        <line num="268" type="stmt" count="1"/>
+        <line num="276" type="stmt" count="3"/>
+        <line num="279" type="method" name="getActiveTab" visibility="private" complexity="5" crap="5" count="15"/>
+        <line num="282" type="stmt" count="15"/>
+        <line num="283" type="stmt" count="4"/>
+        <line num="286" type="stmt" count="11"/>
+        <line num="287" type="stmt" count="11"/>
+        <line num="288" type="stmt" count="1"/>
+        <line num="291" type="stmt" count="10"/>
+        <line num="293" type="stmt" count="10"/>
+        <line num="296" type="method" name="renderTabs" visibility="private" complexity="5" crap="5" count="4"/>
+        <line num="298" type="stmt" count="4"/>
+        <line num="299" type="stmt" count="2"/>
+        <line num="302" type="stmt" count="2"/>
+        <line num="303" type="stmt" count="2"/>
+        <line num="304" type="stmt" count="2"/>
+        <line num="305" type="stmt" count="2"/>
+        <line num="306" type="stmt" count="2"/>
+        <line num="307" type="stmt" count="2"/>
+        <line num="308" type="stmt" count="2"/>
+        <line num="310" type="stmt" count="2"/>
+        <line num="313" type="method" name="enqueueAssets" visibility="public" complexity="9" crap="9" count="4"/>
+        <line num="316" type="stmt" count="4"/>
+        <line num="317" type="stmt" count="4"/>
+        <line num="319" type="stmt" count="1"/>
+        <line num="322" type="stmt" count="3"/>
+        <line num="325" type="stmt" count="3"/>
+        <line num="326" type="stmt" count="1"/>
+        <line num="330" type="stmt" count="2"/>
+        <line num="331" type="stmt" count="2"/>
+        <line num="332" type="stmt" count="2"/>
+        <line num="333" type="stmt" count="2"/>
+        <line num="334" type="stmt" count="2"/>
+        <line num="335" type="stmt" count="2"/>
+        <line num="336" type="stmt" count="2"/>
+        <line num="338" type="stmt" count="2"/>
+        <line num="339" type="stmt" count="2"/>
+        <line num="340" type="stmt" count="2"/>
+        <line num="341" type="stmt" count="2"/>
+        <line num="342" type="stmt" count="2"/>
+        <line num="343" type="stmt" count="2"/>
+        <line num="344" type="stmt" count="2"/>
+        <line num="345" type="stmt" count="2"/>
+        <metrics loc="348" ncloc="325" classes="1" methods="22" coveredmethods="20" conditionals="0" coveredconditionals="0" statements="159" coveredstatements="153" elements="181" coveredelements="173"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/OptionsSection.php">
+        <class name="HyperFields\OptionsSection" namespace="HyperFields">
+          <metrics complexity="10" methods="9" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="15" elements="24" coveredelements="24"/>
+        </class>
+        <line num="14" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="29"/>
+        <line num="16" type="stmt" count="29"/>
+        <line num="17" type="stmt" count="29"/>
+        <line num="18" type="stmt" count="29"/>
+        <line num="21" type="method" name="setDescription" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="23" type="stmt" count="2"/>
+        <line num="25" type="stmt" count="2"/>
+        <line num="28" type="method" name="getId" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="30" type="stmt" count="6"/>
+        <line num="33" type="method" name="getTitle" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="35" type="stmt" count="4"/>
+        <line num="38" type="method" name="getDescription" visibility="public" complexity="1" crap="1" count="7"/>
+        <line num="40" type="stmt" count="7"/>
+        <line num="43" type="method" name="addField" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="45" type="stmt" count="13"/>
+        <line num="46" type="stmt" count="13"/>
+        <line num="48" type="stmt" count="13"/>
+        <line num="51" type="method" name="getFields" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="53" type="stmt" count="13"/>
+        <line num="56" type="method" name="render" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="58" type="stmt" count="3"/>
+        <line num="59" type="stmt" count="1"/>
+        <line num="63" type="method" name="make" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="65" type="stmt" count="2"/>
+        <metrics loc="68" ncloc="68" classes="1" methods="9" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="15" elements="24" coveredelements="24"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/PostField.php">
+        <class name="HyperFields\PostField" namespace="HyperFields">
+          <metrics complexity="10" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="18" elements="25" coveredelements="25"/>
+        </class>
+        <line num="12" type="method" name="forPost" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="14" type="stmt" count="2"/>
+        <line num="15" type="stmt" count="2"/>
+        <line num="16" type="stmt" count="2"/>
+        <line num="18" type="stmt" count="2"/>
+        <line num="21" type="method" name="setMetaKeyPrefix" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="28" type="method" name="getMetaKey" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="30" type="stmt" count="2"/>
+        <line num="32" type="stmt" count="2"/>
+        <line num="35" type="method" name="getValue" visibility="public" complexity="3" crap="3" count="2"/>
+        <line num="37" type="stmt" count="2"/>
+        <line num="39" type="stmt" count="2"/>
+        <line num="40" type="stmt" count="1"/>
+        <line num="43" type="stmt" count="2"/>
+        <line num="46" type="method" name="setValue" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="48" type="stmt" count="1"/>
+        <line num="50" type="stmt" count="1"/>
+        <line num="51" type="stmt" count="1"/>
+        <line num="54" type="stmt" count="1"/>
+        <line num="57" type="method" name="deleteValue" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="59" type="stmt" count="1"/>
+        <line num="62" type="method" name="getPostId" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="64" type="stmt" count="1"/>
+        <metrics loc="67" ncloc="67" classes="1" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="18" elements="25" coveredelements="25"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/Registry.php">
+        <class name="HyperFields\Registry" namespace="HyperFields">
+          <metrics complexity="71" methods="32" coveredmethods="26" conditionals="0" coveredconditionals="0" statements="149" coveredstatements="134" elements="181" coveredelements="160"/>
+        </class>
+        <line num="14" type="method" name="__construct" visibility="private" complexity="1" crap="1" count="1"/>
+        <line num="17" type="stmt" count="1"/>
+        <line num="19" type="method" name="getInstance" visibility="public" complexity="2" crap="2" count="25"/>
+        <line num="21" type="stmt" count="25"/>
+        <line num="22" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="25"/>
+        <line num="28" type="method" name="registerField" visibility="public" complexity="3" crap="3" count="16"/>
+        <line num="31" type="stmt" count="16"/>
+        <line num="33" type="stmt" count="15"/>
+        <line num="34" type="stmt" count="15"/>
+        <line num="37" type="stmt" count="1"/>
+        <line num="40" type="stmt" count="16"/>
+        <line num="41" type="stmt" count="16"/>
+        <line num="44" type="stmt" count="16"/>
+        <line num="46" type="stmt" count="16"/>
+        <line num="49" type="method" name="getFields" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="51" type="stmt" count="3"/>
+        <line num="54" type="method" name="registerFieldGroup" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="56" type="stmt" count="1"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="61" type="method" name="getField" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="63" type="stmt" count="1"/>
+        <line num="66" type="method" name="getFieldGroup" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="68" type="stmt" count="1"/>
+        <line num="71" type="method" name="getFieldsByContext" visibility="public" complexity="1" crap="1" count="7"/>
+        <line num="73" type="stmt" count="7"/>
+        <line num="76" type="method" name="getAllFields" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="78" type="stmt" count="2"/>
+        <line num="81" type="method" name="getAllFieldGroups" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="83" type="stmt" count="1"/>
+        <line num="86" type="method" name="hasField" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="88" type="stmt" count="2"/>
+        <line num="91" type="method" name="hasFieldGroup" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="93" type="stmt" count="1"/>
+        <line num="96" type="method" name="removeField" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="98" type="stmt" count="1"/>
+        <line num="99" type="stmt" count="1"/>
+        <line num="102" type="stmt" count="1"/>
+        <line num="105" type="method" name="removeFieldGroup" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="107" type="stmt" count="1"/>
+        <line num="108" type="stmt" count="1"/>
+        <line num="111" type="stmt" count="1"/>
+        <line num="114" type="method" name="containerExists" visibility="public" complexity="2" crap="2" count="4"/>
+        <line num="116" type="stmt" count="4"/>
+        <line num="119" type="method" name="removeContainer" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="121" type="stmt" count="2"/>
+        <line num="122" type="stmt" count="1"/>
+        <line num="125" type="stmt" count="2"/>
+        <line num="128" type="method" name="clear" visibility="public" complexity="1" crap="1" count="25"/>
+        <line num="130" type="stmt" count="25"/>
+        <line num="131" type="stmt" count="25"/>
+        <line num="132" type="stmt" count="25"/>
+        <line num="134" type="stmt" count="25"/>
+        <line num="137" type="method" name="registerPostFields" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="139" type="stmt" count="1"/>
+        <line num="140" type="stmt" count="1"/>
+        <line num="143" type="stmt" count="1"/>
+        <line num="146" type="method" name="registerUserFields" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="148" type="stmt" count="1"/>
+        <line num="149" type="stmt" count="1"/>
+        <line num="152" type="stmt" count="1"/>
+        <line num="155" type="method" name="registerTermFields" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="157" type="stmt" count="1"/>
+        <line num="158" type="stmt" count="1"/>
+        <line num="161" type="stmt" count="1"/>
+        <line num="164" type="method" name="registerOptionFields" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="166" type="stmt" count="1"/>
+        <line num="167" type="stmt" count="1"/>
+        <line num="170" type="stmt" count="1"/>
+        <line num="173" type="method" name="init" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="175" type="stmt" count="1"/>
+        <line num="177" type="stmt" count="1"/>
+        <line num="180" type="method" name="registerAll" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="182" type="stmt" count="2"/>
+        <line num="183" type="stmt" count="2"/>
+        <line num="186" type="method" name="registerAdminHooks" visibility="private" complexity="2" crap="2" count="2"/>
+        <line num="188" type="stmt" count="2"/>
+        <line num="189" type="stmt" count="1"/>
+        <line num="192" type="stmt" count="1"/>
+        <line num="193" type="stmt" count="1"/>
+        <line num="194" type="stmt" count="1"/>
+        <line num="195" type="stmt" count="1"/>
+        <line num="196" type="stmt" count="1"/>
+        <line num="197" type="stmt" count="1"/>
+        <line num="198" type="stmt" count="1"/>
+        <line num="199" type="stmt" count="1"/>
+        <line num="200" type="stmt" count="1"/>
+        <line num="201" type="stmt" count="1"/>
+        <line num="204" type="method" name="registerPostMetaBoxes" visibility="public" complexity="2" crap="2.00" count="1"/>
+        <line num="206" type="stmt" count="1"/>
+        <line num="207" type="stmt" count="1"/>
+        <line num="208" type="stmt" count="0"/>
+        <line num="211" type="stmt" count="1"/>
+        <line num="212" type="stmt" count="1"/>
+        <line num="213" type="stmt" count="1"/>
+        <line num="214" type="stmt" count="1"/>
+        <line num="215" type="stmt" count="1"/>
+        <line num="216" type="stmt" count="1"/>
+        <line num="217" type="stmt" count="1"/>
+        <line num="218" type="stmt" count="1"/>
+        <line num="221" type="method" name="renderPostMetaBox" visibility="public" complexity="3" crap="3.04" count="2"/>
+        <line num="223" type="stmt" count="2"/>
+        <line num="224" type="stmt" count="2"/>
+        <line num="225" type="stmt" count="0"/>
+        <line num="228" type="stmt" count="2"/>
+        <line num="230" type="stmt" count="2"/>
+        <line num="231" type="stmt" count="2"/>
+        <line num="235" type="method" name="renderUserFields" visibility="public" complexity="3" crap="3.07" count="1"/>
+        <line num="237" type="stmt" count="1"/>
+        <line num="238" type="stmt" count="1"/>
+        <line num="239" type="stmt" count="0"/>
+        <line num="242" type="stmt" count="1"/>
+        <line num="243" type="stmt" count="1"/>
+        <line num="247" type="method" name="renderTermFields" visibility="public" complexity="3" crap="3.07" count="1"/>
+        <line num="249" type="stmt" count="1"/>
+        <line num="250" type="stmt" count="1"/>
+        <line num="251" type="stmt" count="0"/>
+        <line num="254" type="stmt" count="1"/>
+        <line num="255" type="stmt" count="1"/>
+        <line num="259" type="method" name="renderFieldInput" visibility="private" complexity="8" crap="8" count="4"/>
+        <line num="261" type="stmt" count="4"/>
+        <line num="262" type="stmt" count="4"/>
+        <line num="265" type="stmt" count="4"/>
+        <line num="266" type="stmt" count="1"/>
+        <line num="267" type="stmt" count="1"/>
+        <line num="268" type="stmt" count="1"/>
+        <line num="269" type="stmt" count="3"/>
+        <line num="270" type="stmt" count="1"/>
+        <line num="271" type="stmt" count="1"/>
+        <line num="272" type="stmt" count="0"/>
+        <line num="274" type="stmt" count="1"/>
+        <line num="275" type="stmt" count="1"/>
+        <line num="276" type="stmt" count="1"/>
+        <line num="277" type="stmt" count="2"/>
+        <line num="278" type="stmt" count="1"/>
+        <line num="279" type="stmt" count="1"/>
+        <line num="280" type="stmt" count="1"/>
+        <line num="282" type="stmt" count="1"/>
+        <line num="283" type="stmt" count="1"/>
+        <line num="284" type="stmt" count="1"/>
+        <line num="286" type="stmt" count="1"/>
+        <line num="287" type="stmt" count="1"/>
+        <line num="288" type="stmt" count="1"/>
+        <line num="289" type="stmt" count="1"/>
+        <line num="290" type="stmt" count="1"/>
+        <line num="293" type="stmt" count="4"/>
+        <line num="294" type="stmt" count="4"/>
+        <line num="296" type="stmt" count="4"/>
+        <line num="299" type="method" name="savePostFields" visibility="public" complexity="8" crap="31.32" count="1"/>
+        <line num="301" type="stmt" count="1"/>
+        <line num="302" type="stmt" count="1"/>
+        <line num="305" type="stmt" count="1"/>
+        <line num="306" type="stmt" count="1"/>
+        <line num="309" type="stmt" count="0"/>
+        <line num="310" type="stmt" count="0"/>
+        <line num="313" type="stmt" count="0"/>
+        <line num="314" type="stmt" count="0"/>
+        <line num="317" type="stmt" count="0"/>
+        <line num="318" type="stmt" count="0"/>
+        <line num="319" type="stmt" count="0"/>
+        <line num="320" type="stmt" count="0"/>
+        <line num="321" type="stmt" count="0"/>
+        <line num="322" type="stmt" count="0"/>
+        <line num="327" type="method" name="saveUserFields" visibility="public" complexity="4" crap="4" count="2"/>
+        <line num="329" type="stmt" count="2"/>
+        <line num="330" type="stmt" count="1"/>
+        <line num="333" type="stmt" count="1"/>
+        <line num="334" type="stmt" count="1"/>
+        <line num="335" type="stmt" count="1"/>
+        <line num="336" type="stmt" count="1"/>
+        <line num="337" type="stmt" count="1"/>
+        <line num="338" type="stmt" count="1"/>
+        <line num="343" type="method" name="saveTermFields" visibility="public" complexity="4" crap="4" count="2"/>
+        <line num="345" type="stmt" count="2"/>
+        <line num="346" type="stmt" count="1"/>
+        <line num="349" type="stmt" count="1"/>
+        <line num="350" type="stmt" count="1"/>
+        <line num="351" type="stmt" count="1"/>
+        <line num="352" type="stmt" count="1"/>
+        <line num="353" type="stmt" count="1"/>
+        <line num="354" type="stmt" count="1"/>
+        <metrics loc="359" ncloc="355" classes="1" methods="32" coveredmethods="26" conditionals="0" coveredconditionals="0" statements="149" coveredstatements="134" elements="181" coveredelements="160"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/RepeaterField.php">
+        <class name="HyperFields\RepeaterField" namespace="HyperFields">
+          <metrics complexity="27" methods="17" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="50" coveredstatements="1" elements="67" coveredelements="2"/>
+        </class>
+        <line num="16" type="method" name="addSubField" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="18" type="stmt" count="0"/>
+        <line num="20" type="stmt" count="0"/>
+        <line num="23" type="method" name="addSubFields" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="25" type="stmt" count="0"/>
+        <line num="26" type="stmt" count="0"/>
+        <line num="29" type="stmt" count="0"/>
+        <line num="32" type="method" name="setLabelTemplate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="34" type="stmt" count="0"/>
+        <line num="36" type="stmt" count="0"/>
+        <line num="39" type="method" name="setCollapsible" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="41" type="stmt" count="0"/>
+        <line num="43" type="stmt" count="0"/>
+        <line num="46" type="method" name="setCollapsed" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="48" type="stmt" count="0"/>
+        <line num="50" type="stmt" count="0"/>
+        <line num="53" type="method" name="setMinRows" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="55" type="stmt" count="0"/>
+        <line num="57" type="stmt" count="0"/>
+        <line num="60" type="method" name="setMaxRows" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="62" type="stmt" count="0"/>
+        <line num="64" type="stmt" count="0"/>
+        <line num="67" type="method" name="getSubFields" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="69" type="stmt" count="0"/>
+        <line num="72" type="method" name="getLabelTemplate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="74" type="stmt" count="0"/>
+        <line num="77" type="method" name="isCollapsible" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="79" type="stmt" count="0"/>
+        <line num="82" type="method" name="isCollapsed" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="84" type="stmt" count="0"/>
+        <line num="87" type="method" name="getMinRows" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="89" type="stmt" count="0"/>
+        <line num="92" type="method" name="getMaxRows" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="94" type="stmt" count="0"/>
+        <line num="97" type="method" name="sanitizeValue" visibility="public" complexity="5" crap="30" count="0"/>
+        <line num="99" type="stmt" count="0"/>
+        <line num="100" type="stmt" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <line num="104" type="stmt" count="0"/>
+        <line num="105" type="stmt" count="0"/>
+        <line num="106" type="stmt" count="0"/>
+        <line num="109" type="stmt" count="0"/>
+        <line num="110" type="stmt" count="0"/>
+        <line num="111" type="stmt" count="0"/>
+        <line num="112" type="stmt" count="0"/>
+        <line num="114" type="stmt" count="0"/>
+        <line num="117" type="stmt" count="0"/>
+        <line num="120" type="method" name="validateValue" visibility="public" complexity="6" crap="42" count="0"/>
+        <line num="122" type="stmt" count="0"/>
+        <line num="123" type="stmt" count="0"/>
+        <line num="126" type="stmt" count="0"/>
+        <line num="128" type="stmt" count="0"/>
+        <line num="129" type="stmt" count="0"/>
+        <line num="132" type="stmt" count="0"/>
+        <line num="133" type="stmt" count="0"/>
+        <line num="136" type="stmt" count="0"/>
+        <line num="139" type="method" name="toArray" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="141" type="stmt" count="0"/>
+        <line num="142" type="stmt" count="0"/>
+        <line num="143" type="stmt" count="0"/>
+        <line num="144" type="stmt" count="0"/>
+        <line num="145" type="stmt" count="0"/>
+        <line num="146" type="stmt" count="0"/>
+        <line num="147" type="stmt" count="0"/>
+        <line num="148" type="stmt" count="0"/>
+        <line num="151" type="method" name="make" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="153" type="stmt" count="1"/>
+        <metrics loc="156" ncloc="156" classes="1" methods="17" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="50" coveredstatements="1" elements="67" coveredelements="2"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/SeparatorField.php">
+        <class name="HyperFields\SeparatorField" namespace="HyperFields">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <line num="7" type="stmt" count="0"/>
+        <line num="8" type="stmt" count="0"/>
+        <metrics loc="12" ncloc="12" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="2" coveredelements="0"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/TabsField.php">
+        <class name="HyperFields\TabsField" namespace="HyperFields">
+          <metrics complexity="19" methods="13" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="1" elements="43" coveredelements="2"/>
+        </class>
+        <line num="16" type="method" name="addTab" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="18" type="stmt" count="0"/>
+        <line num="19" type="stmt" count="0"/>
+        <line num="20" type="stmt" count="0"/>
+        <line num="21" type="stmt" count="0"/>
+        <line num="22" type="stmt" count="0"/>
+        <line num="24" type="stmt" count="0"/>
+        <line num="25" type="stmt" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="31" type="method" name="setLayout" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="33" type="stmt" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <line num="38" type="method" name="setActiveTab" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="40" type="stmt" count="0"/>
+        <line num="41" type="stmt" count="0"/>
+        <line num="44" type="stmt" count="0"/>
+        <line num="47" type="method" name="setActiveTabFromUrl" visibility="public" complexity="3" crap="12" count="0"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="50" type="stmt" count="0"/>
+        <line num="53" type="stmt" count="0"/>
+        <line num="56" type="method" name="getTabUrl" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="58" type="stmt" count="0"/>
+        <line num="60" type="stmt" count="0"/>
+        <line num="63" type="method" name="getTabs" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="65" type="stmt" count="0"/>
+        <line num="68" type="method" name="getLayout" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="70" type="stmt" count="0"/>
+        <line num="73" type="method" name="getActiveTab" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="75" type="stmt" count="0"/>
+        <line num="78" type="method" name="getTabFields" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="80" type="stmt" count="0"/>
+        <line num="83" type="method" name="make" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="85" type="stmt" count="1"/>
+        <line num="88" type="method" name="sanitizeValue" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="90" type="stmt" count="0"/>
+        <line num="93" type="method" name="toArray" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="95" type="stmt" count="0"/>
+        <line num="96" type="stmt" count="0"/>
+        <line num="97" type="stmt" count="0"/>
+        <line num="98" type="stmt" count="0"/>
+        <line num="99" type="stmt" count="0"/>
+        <line num="102" type="method" name="render" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="104" type="stmt" count="0"/>
+        <metrics loc="107" ncloc="103" classes="1" methods="13" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="1" elements="43" coveredelements="2"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/TemplateLoader.php">
+        <class name="HyperFields\TemplateLoader" namespace="HyperFields">
+          <metrics complexity="23" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="146" coveredstatements="0" elements="153" coveredelements="0"/>
+        </class>
+        <line num="11" type="method" name="init" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="13" type="stmt" count="0"/>
+        <line num="14" type="stmt" count="0"/>
+        <line num="15" type="stmt" count="0"/>
+        <line num="17" type="stmt" count="0"/>
+        <line num="18" type="stmt" count="0"/>
+        <line num="21" type="method" name="renderField" visibility="public" complexity="6" crap="42" count="0"/>
+        <line num="23" type="stmt" count="0"/>
+        <line num="24" type="stmt" count="0"/>
+        <line num="25" type="stmt" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <line num="33" type="stmt" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <line num="39" type="stmt" count="0"/>
+        <line num="41" type="stmt" count="0"/>
+        <line num="43" type="stmt" count="0"/>
+        <line num="47" type="stmt" count="0"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="51" type="stmt" count="0"/>
+        <line num="55" type="stmt" count="0"/>
+        <line num="59" type="method" name="getTemplateFile" visibility="private" complexity="6" crap="42" count="0"/>
+        <line num="62" type="stmt" count="0"/>
+        <line num="63" type="stmt" count="0"/>
+        <line num="66" type="stmt" count="0"/>
+        <line num="68" type="stmt" count="0"/>
+        <line num="69" type="stmt" count="0"/>
+        <line num="71" type="stmt" count="0"/>
+        <line num="75" type="stmt" count="0"/>
+        <line num="76" type="stmt" count="0"/>
+        <line num="77" type="stmt" count="0"/>
+        <line num="79" type="stmt" count="0"/>
+        <line num="83" type="stmt" count="0"/>
+        <line num="84" type="stmt" count="0"/>
+        <line num="85" type="stmt" count="0"/>
+        <line num="86" type="stmt" count="0"/>
+        <line num="88" type="stmt" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="94" type="stmt" count="0"/>
+        <line num="97" type="method" name="renderFallback" visibility="private" complexity="4" crap="20" count="0"/>
+        <line num="99" type="stmt" count="0"/>
+        <line num="100" type="stmt" count="0"/>
+        <line num="101" type="stmt" count="0"/>
+        <line num="102" type="stmt" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <line num="104" type="stmt" count="0"/>
+        <line num="105" type="stmt" count="0"/>
+        <line num="108" type="stmt" count="0"/>
+        <line num="109" type="stmt" count="0"/>
+        <line num="110" type="stmt" count="0"/>
+        <line num="111" type="stmt" count="0"/>
+        <line num="112" type="stmt" count="0"/>
+        <line num="114" type="stmt" count="0"/>
+        <line num="115" type="stmt" count="0"/>
+        <line num="116" type="stmt" count="0"/>
+        <line num="117" type="stmt" count="0"/>
+        <line num="118" type="stmt" count="0"/>
+        <line num="119" type="stmt" count="0"/>
+        <line num="120" type="stmt" count="0"/>
+        <line num="121" type="stmt" count="0"/>
+        <line num="123" type="stmt" count="0"/>
+        <line num="124" type="stmt" count="0"/>
+        <line num="126" type="stmt" count="0"/>
+        <line num="127" type="stmt" count="0"/>
+        <line num="128" type="stmt" count="0"/>
+        <line num="131" type="method" name="enqueueAssets" visibility="public" complexity="3" crap="12" count="0"/>
+        <line num="134" type="stmt" count="0"/>
+        <line num="135" type="stmt" count="0"/>
+        <line num="136" type="stmt" count="0"/>
+        <line num="137" type="stmt" count="0"/>
+        <line num="138" type="stmt" count="0"/>
+        <line num="139" type="stmt" count="0"/>
+        <line num="140" type="stmt" count="0"/>
+        <line num="142" type="stmt" count="0"/>
+        <line num="143" type="stmt" count="0"/>
+        <line num="144" type="stmt" count="0"/>
+        <line num="145" type="stmt" count="0"/>
+        <line num="146" type="stmt" count="0"/>
+        <line num="147" type="stmt" count="0"/>
+        <line num="148" type="stmt" count="0"/>
+        <line num="150" type="stmt" count="0"/>
+        <line num="151" type="stmt" count="0"/>
+        <line num="152" type="stmt" count="0"/>
+        <line num="153" type="stmt" count="0"/>
+        <line num="154" type="stmt" count="0"/>
+        <line num="155" type="stmt" count="0"/>
+        <line num="156" type="stmt" count="0"/>
+        <line num="157" type="stmt" count="0"/>
+        <line num="158" type="stmt" count="0"/>
+        <line num="159" type="stmt" count="0"/>
+        <line num="160" type="stmt" count="0"/>
+        <line num="161" type="stmt" count="0"/>
+        <line num="163" type="stmt" count="0"/>
+        <line num="167" type="stmt" count="0"/>
+        <line num="168" type="stmt" count="0"/>
+        <line num="171" type="stmt" count="0"/>
+        <line num="172" type="stmt" count="0"/>
+        <line num="173" type="stmt" count="0"/>
+        <line num="174" type="stmt" count="0"/>
+        <line num="175" type="stmt" count="0"/>
+        <line num="176" type="stmt" count="0"/>
+        <line num="177" type="stmt" count="0"/>
+        <line num="179" type="stmt" count="0"/>
+        <line num="180" type="stmt" count="0"/>
+        <line num="181" type="stmt" count="0"/>
+        <line num="182" type="stmt" count="0"/>
+        <line num="183" type="stmt" count="0"/>
+        <line num="184" type="stmt" count="0"/>
+        <line num="185" type="stmt" count="0"/>
+        <line num="186" type="stmt" count="0"/>
+        <line num="187" type="stmt" count="0"/>
+        <line num="188" type="stmt" count="0"/>
+        <line num="189" type="stmt" count="0"/>
+        <line num="190" type="stmt" count="0"/>
+        <line num="193" type="method" name="enqueueLateAssets" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="196" type="stmt" count="0"/>
+        <line num="197" type="stmt" count="0"/>
+        <line num="198" type="stmt" count="0"/>
+        <line num="199" type="stmt" count="0"/>
+        <line num="203" type="method" name="getSupportedFieldTypes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="205" type="stmt" count="0"/>
+        <line num="206" type="stmt" count="0"/>
+        <line num="207" type="stmt" count="0"/>
+        <line num="208" type="stmt" count="0"/>
+        <line num="209" type="stmt" count="0"/>
+        <line num="210" type="stmt" count="0"/>
+        <line num="211" type="stmt" count="0"/>
+        <line num="212" type="stmt" count="0"/>
+        <line num="213" type="stmt" count="0"/>
+        <line num="214" type="stmt" count="0"/>
+        <line num="215" type="stmt" count="0"/>
+        <line num="216" type="stmt" count="0"/>
+        <line num="217" type="stmt" count="0"/>
+        <line num="218" type="stmt" count="0"/>
+        <line num="219" type="stmt" count="0"/>
+        <line num="220" type="stmt" count="0"/>
+        <line num="221" type="stmt" count="0"/>
+        <line num="222" type="stmt" count="0"/>
+        <line num="223" type="stmt" count="0"/>
+        <line num="224" type="stmt" count="0"/>
+        <line num="225" type="stmt" count="0"/>
+        <line num="226" type="stmt" count="0"/>
+        <line num="227" type="stmt" count="0"/>
+        <line num="228" type="stmt" count="0"/>
+        <line num="229" type="stmt" count="0"/>
+        <line num="230" type="stmt" count="0"/>
+        <line num="231" type="stmt" count="0"/>
+        <line num="232" type="stmt" count="0"/>
+        <line num="233" type="stmt" count="0"/>
+        <line num="234" type="stmt" count="0"/>
+        <line num="235" type="stmt" count="0"/>
+        <line num="237" type="stmt" count="0"/>
+        <metrics loc="240" ncloc="225" classes="1" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="146" coveredstatements="0" elements="153" coveredelements="0"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/TermField.php">
+        <class name="HyperFields\TermField" namespace="HyperFields">
+          <metrics complexity="10" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="18" elements="25" coveredelements="25"/>
+        </class>
+        <line num="12" type="method" name="forTerm" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="14" type="stmt" count="3"/>
+        <line num="15" type="stmt" count="3"/>
+        <line num="16" type="stmt" count="3"/>
+        <line num="18" type="stmt" count="3"/>
+        <line num="21" type="method" name="setMetaKeyPrefix" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="28" type="method" name="getMetaKey" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="30" type="stmt" count="3"/>
+        <line num="32" type="stmt" count="3"/>
+        <line num="35" type="method" name="getValue" visibility="public" complexity="3" crap="3" count="2"/>
+        <line num="37" type="stmt" count="2"/>
+        <line num="39" type="stmt" count="2"/>
+        <line num="40" type="stmt" count="1"/>
+        <line num="43" type="stmt" count="2"/>
+        <line num="46" type="method" name="setValue" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="48" type="stmt" count="2"/>
+        <line num="50" type="stmt" count="2"/>
+        <line num="51" type="stmt" count="1"/>
+        <line num="54" type="stmt" count="2"/>
+        <line num="57" type="method" name="deleteValue" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="59" type="stmt" count="1"/>
+        <line num="62" type="method" name="getTermId" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="64" type="stmt" count="1"/>
+        <metrics loc="67" ncloc="67" classes="1" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="18" elements="25" coveredelements="25"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/UserField.php">
+        <class name="HyperFields\UserField" namespace="HyperFields">
+          <metrics complexity="10" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="18" elements="25" coveredelements="25"/>
+        </class>
+        <line num="12" type="method" name="forUser" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="14" type="stmt" count="3"/>
+        <line num="15" type="stmt" count="3"/>
+        <line num="16" type="stmt" count="3"/>
+        <line num="18" type="stmt" count="3"/>
+        <line num="21" type="method" name="setMetaKeyPrefix" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="28" type="method" name="getMetaKey" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="30" type="stmt" count="3"/>
+        <line num="32" type="stmt" count="3"/>
+        <line num="35" type="method" name="getValue" visibility="public" complexity="3" crap="3" count="2"/>
+        <line num="37" type="stmt" count="2"/>
+        <line num="39" type="stmt" count="2"/>
+        <line num="40" type="stmt" count="1"/>
+        <line num="43" type="stmt" count="2"/>
+        <line num="46" type="method" name="setValue" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="48" type="stmt" count="2"/>
+        <line num="50" type="stmt" count="2"/>
+        <line num="51" type="stmt" count="1"/>
+        <line num="54" type="stmt" count="2"/>
+        <line num="57" type="method" name="deleteValue" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="59" type="stmt" count="1"/>
+        <line num="62" type="method" name="getUserId" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="64" type="stmt" count="1"/>
+        <metrics loc="67" ncloc="67" classes="1" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="18" elements="25" coveredelements="25"/>
+      </file>
+    </package>
+    <package name="HyperFields\Container">
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/Container/Container.php">
+        <class name="HyperFields\Container\Container" namespace="HyperFields\Container">
+          <metrics complexity="13" methods="11" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="21" coveredstatements="14" elements="32" coveredelements="23"/>
+        </class>
+        <line num="10" type="stmt" count="4"/>
+        <line num="11" type="stmt" count="0"/>
+        <line num="28" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="88"/>
+        <line num="30" type="stmt" count="88"/>
+        <line num="31" type="stmt" count="88"/>
+        <line num="32" type="stmt" count="88"/>
+        <line num="38" type="method" name="getDefaultSettings" visibility="protected" complexity="1" crap="1" count="50"/>
+        <line num="40" type="stmt" count="50"/>
+        <line num="46" type="method" name="addField" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="48" type="stmt" count="12"/>
+        <line num="50" type="stmt" count="12"/>
+        <line num="56" type="method" name="setSetting" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="58" type="stmt" count="4"/>
+        <line num="60" type="stmt" count="4"/>
+        <line num="66" type="method" name="getSetting" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="68" type="stmt" count="6"/>
+        <line num="74" type="method" name="getId" visibility="public" complexity="1" crap="1" count="7"/>
+        <line num="76" type="stmt" count="7"/>
+        <line num="82" type="method" name="getTitle" visibility="public" complexity="1" crap="1" count="11"/>
+        <line num="84" type="stmt" count="11"/>
+        <line num="90" type="method" name="getFields" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="98" type="method" name="setObjectId" visibility="public" complexity="1" crap="1" count="31"/>
+        <line num="100" type="stmt" count="31"/>
+        <line num="106" type="method" name="render" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="108" type="stmt" count="0"/>
+        <line num="110" type="stmt" count="0"/>
+        <line num="112" type="stmt" count="0"/>
+        <line num="113" type="stmt" count="0"/>
+        <line num="116" type="stmt" count="0"/>
+        <line num="119" type="stmt" count="0"/>
+        <line num="125" type="method" name="verifyNonce" visibility="protected" complexity="2" crap="2" count="13"/>
+        <line num="127" type="stmt" count="13"/>
+        <line num="129" type="stmt" count="13"/>
+        <metrics loc="153" ncloc="101" classes="1" methods="11" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="23" coveredstatements="15" elements="34" coveredelements="24"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/Container/ContainerFactory.php">
+        <class name="HyperFields\Container\ContainerFactory" namespace="HyperFields\Container">
+          <metrics complexity="4" methods="4" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="9" elements="14" coveredelements="12"/>
+        </class>
+        <line num="8" type="stmt" count="1"/>
+        <line num="9" type="stmt" count="0"/>
+        <line num="23" type="method" name="createPostMetaContainer" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="25" type="stmt" count="4"/>
+        <line num="26" type="stmt" count="4"/>
+        <line num="28" type="stmt" count="4"/>
+        <line num="34" type="method" name="makePostMeta" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="36" type="stmt" count="0"/>
+        <line num="42" type="method" name="makeTermMeta" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="44" type="stmt" count="1"/>
+        <line num="45" type="stmt" count="1"/>
+        <line num="47" type="stmt" count="1"/>
+        <line num="53" type="method" name="makeUserMeta" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="55" type="stmt" count="1"/>
+        <line num="56" type="stmt" count="1"/>
+        <line num="58" type="stmt" count="1"/>
+        <metrics loc="61" ncloc="42" classes="1" methods="4" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="10" elements="16" coveredelements="13"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/Container/PostMetaContainer.php">
+        <class name="HyperFields\Container\PostMetaContainer" namespace="HyperFields\Container">
+          <metrics complexity="57" methods="16" coveredmethods="13" conditionals="0" coveredconditionals="0" statements="120" coveredstatements="93" elements="136" coveredelements="106"/>
+        </class>
+        <line num="8" type="stmt" count="4"/>
+        <line num="9" type="stmt" count="0"/>
+        <line num="28" type="method" name="getDefaultSettings" visibility="protected" complexity="1" crap="1" count="38"/>
+        <line num="30" type="stmt" count="38"/>
+        <line num="31" type="stmt" count="38"/>
+        <line num="32" type="stmt" count="38"/>
+        <line num="33" type="stmt" count="38"/>
+        <line num="39" type="method" name="where" visibility="public" complexity="2" crap="2" count="5"/>
+        <line num="41" type="stmt" count="5"/>
+        <line num="42" type="stmt" count="5"/>
+        <line num="45" type="stmt" count="5"/>
+        <line num="51" type="method" name="wherePostId" visibility="public" complexity="2" crap="2" count="5"/>
+        <line num="53" type="stmt" count="5"/>
+        <line num="54" type="stmt" count="5"/>
+        <line num="57" type="stmt" count="5"/>
+        <line num="63" type="method" name="wherePostSlug" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="65" type="stmt" count="3"/>
+        <line num="66" type="stmt" count="3"/>
+        <line num="69" type="stmt" count="3"/>
+        <line num="75" type="method" name="wherePostIds" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="77" type="stmt" count="1"/>
+        <line num="78" type="stmt" count="1"/>
+        <line num="81" type="stmt" count="1"/>
+        <line num="87" type="method" name="wherePostSlugs" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="89" type="stmt" count="1"/>
+        <line num="90" type="stmt" count="1"/>
+        <line num="93" type="stmt" count="1"/>
+        <line num="99" type="method" name="setContext" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="101" type="stmt" count="2"/>
+        <line num="103" type="stmt" count="2"/>
+        <line num="109" type="method" name="setPriority" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="111" type="stmt" count="2"/>
+        <line num="113" type="stmt" count="2"/>
+        <line num="119" type="method" name="init" visibility="public" complexity="4" crap="4" count="6"/>
+        <line num="123" type="stmt" count="6"/>
+        <line num="124" type="stmt" count="2"/>
+        <line num="125" type="stmt" count="2"/>
+        <line num="126" type="stmt" count="1"/>
+        <line num="130" type="stmt" count="6"/>
+        <line num="131" type="stmt" count="6"/>
+        <line num="132" type="stmt" count="6"/>
+        <line num="133" type="stmt" count="6"/>
+        <line num="139" type="method" name="attach" visibility="public" complexity="4" crap="4" count="3"/>
+        <line num="142" type="stmt" count="3"/>
+        <line num="143" type="stmt" count="2"/>
+        <line num="145" type="stmt" count="2"/>
+        <line num="149" type="stmt" count="1"/>
+        <line num="150" type="stmt" count="1"/>
+        <line num="151" type="stmt" count="1"/>
+        <line num="152" type="stmt" count="1"/>
+        <line num="153" type="stmt" count="1"/>
+        <line num="154" type="stmt" count="1"/>
+        <line num="155" type="stmt" count="1"/>
+        <line num="156" type="stmt" count="1"/>
+        <line num="157" type="stmt" count="1"/>
+        <line num="164" type="method" name="attachToSpecificPosts" visibility="protected" complexity="15" crap="43.12" count="2"/>
+        <line num="167" type="stmt" count="2"/>
+        <line num="170" type="stmt" count="2"/>
+        <line num="171" type="stmt" count="2"/>
+        <line num="172" type="stmt" count="0"/>
+        <line num="174" type="stmt" count="0"/>
+        <line num="175" type="stmt" count="0"/>
+        <line num="176" type="stmt" count="0"/>
+        <line num="177" type="stmt" count="0"/>
+        <line num="178" type="stmt" count="0"/>
+        <line num="179" type="stmt" count="0"/>
+        <line num="180" type="stmt" count="0"/>
+        <line num="181" type="stmt" count="0"/>
+        <line num="182" type="stmt" count="0"/>
+        <line num="183" type="stmt" count="0"/>
+        <line num="186" type="stmt" count="0"/>
+        <line num="189" type="stmt" count="2"/>
+        <line num="190" type="stmt" count="0"/>
+        <line num="193" type="stmt" count="2"/>
+        <line num="196" type="stmt" count="2"/>
+        <line num="197" type="stmt" count="2"/>
+        <line num="201" type="stmt" count="2"/>
+        <line num="202" type="stmt" count="0"/>
+        <line num="203" type="stmt" count="0"/>
+        <line num="204" type="stmt" count="0"/>
+        <line num="209" type="stmt" count="2"/>
+        <line num="210" type="stmt" count="0"/>
+        <line num="211" type="stmt" count="0"/>
+        <line num="212" type="stmt" count="0"/>
+        <line num="216" type="stmt" count="2"/>
+        <line num="217" type="stmt" count="2"/>
+        <line num="218" type="stmt" count="2"/>
+        <line num="219" type="stmt" count="2"/>
+        <line num="220" type="stmt" count="2"/>
+        <line num="221" type="stmt" count="2"/>
+        <line num="222" type="stmt" count="2"/>
+        <line num="223" type="stmt" count="2"/>
+        <line num="224" type="stmt" count="2"/>
+        <line num="225" type="stmt" count="2"/>
+        <line num="232" type="method" name="setPostId" visibility="public" complexity="1" crap="1" count="7"/>
+        <line num="234" type="stmt" count="7"/>
+        <line num="235" type="stmt" count="7"/>
+        <line num="241" type="method" name="isValidSave" visibility="public" complexity="8" crap="9.49" count="6"/>
+        <line num="244" type="stmt" count="6"/>
+        <line num="245" type="stmt" count="4"/>
+        <line num="249" type="stmt" count="2"/>
+        <line num="250" type="stmt" count="0"/>
+        <line num="254" type="stmt" count="2"/>
+        <line num="255" type="stmt" count="2"/>
+        <line num="256" type="stmt" count="0"/>
+        <line num="259" type="stmt" count="2"/>
+        <line num="260" type="stmt" count="2"/>
+        <line num="261" type="stmt" count="0"/>
+        <line num="264" type="stmt" count="2"/>
+        <line num="265" type="stmt" count="2"/>
+        <line num="266" type="stmt" count="0"/>
+        <line num="269" type="stmt" count="2"/>
+        <line num="275" type="method" name="_save" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="277" type="stmt" count="0"/>
+        <line num="279" type="stmt" count="0"/>
+        <line num="280" type="stmt" count="0"/>
+        <line num="283" type="stmt" count="0"/>
+        <line num="289" type="method" name="save" visibility="public" complexity="4" crap="4" count="3"/>
+        <line num="291" type="stmt" count="3"/>
+        <line num="292" type="stmt" count="1"/>
+        <line num="295" type="stmt" count="2"/>
+        <line num="296" type="stmt" count="2"/>
+        <line num="297" type="stmt" count="2"/>
+        <line num="300" type="stmt" count="2"/>
+        <line num="303" type="stmt" count="2"/>
+        <line num="306" type="stmt" count="2"/>
+        <line num="312" type="method" name="render" visibility="public" complexity="6" crap="6" count="2"/>
+        <line num="314" type="stmt" count="2"/>
+        <line num="316" type="stmt" count="1"/>
+        <line num="317" type="stmt" count="1"/>
+        <line num="321" type="stmt" count="2"/>
+        <line num="323" type="stmt" count="2"/>
+        <line num="325" type="stmt" count="2"/>
+        <line num="326" type="stmt" count="2"/>
+        <line num="329" type="stmt" count="2"/>
+        <line num="330" type="stmt" count="2"/>
+        <line num="333" type="stmt" count="2"/>
+        <line num="336" type="stmt" count="2"/>
+        <metrics loc="339" ncloc="268" classes="1" methods="16" coveredmethods="13" conditionals="0" coveredconditionals="0" statements="122" coveredstatements="94" elements="138" coveredelements="107"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/Container/TermMetaContainer.php">
+        <class name="HyperFields\Container\TermMetaContainer" namespace="HyperFields\Container">
+          <metrics complexity="44" methods="13" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="75" coveredstatements="57" elements="88" coveredelements="66"/>
+        </class>
+        <line num="8" type="stmt" count="1"/>
+        <line num="9" type="stmt" count="0"/>
+        <line num="29" type="method" name="where" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="31" type="stmt" count="3"/>
+        <line num="32" type="stmt" count="3"/>
+        <line num="35" type="stmt" count="3"/>
+        <line num="41" type="method" name="whereTermId" visibility="public" complexity="2" crap="2" count="6"/>
+        <line num="43" type="stmt" count="6"/>
+        <line num="44" type="stmt" count="6"/>
+        <line num="47" type="stmt" count="6"/>
+        <line num="53" type="method" name="whereTermSlug" visibility="public" complexity="2" crap="2" count="4"/>
+        <line num="55" type="stmt" count="4"/>
+        <line num="56" type="stmt" count="4"/>
+        <line num="59" type="stmt" count="4"/>
+        <line num="65" type="method" name="whereTermIds" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="67" type="stmt" count="1"/>
+        <line num="68" type="stmt" count="1"/>
+        <line num="71" type="stmt" count="1"/>
+        <line num="77" type="method" name="whereTermSlugs" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="79" type="stmt" count="1"/>
+        <line num="80" type="stmt" count="1"/>
+        <line num="83" type="stmt" count="1"/>
+        <line num="89" type="method" name="init" visibility="public" complexity="3" crap="3" count="3"/>
+        <line num="92" type="stmt" count="3"/>
+        <line num="93" type="stmt" count="1"/>
+        <line num="96" type="stmt" count="3"/>
+        <line num="99" type="stmt" count="3"/>
+        <line num="100" type="stmt" count="1"/>
+        <line num="101" type="stmt" count="1"/>
+        <line num="102" type="stmt" count="1"/>
+        <line num="109" type="method" name="attach" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="113" type="stmt" count="0"/>
+        <line num="118" type="method" name="setTermId" visibility="public" complexity="3" crap="3" count="12"/>
+        <line num="120" type="stmt" count="12"/>
+        <line num="121" type="stmt" count="12"/>
+        <line num="123" type="stmt" count="12"/>
+        <line num="124" type="stmt" count="12"/>
+        <line num="125" type="stmt" count="11"/>
+        <line num="132" type="method" name="isValidSave" visibility="public" complexity="4" crap="9.83" count="1"/>
+        <line num="135" type="stmt" count="1"/>
+        <line num="136" type="stmt" count="1"/>
+        <line num="140" type="stmt" count="0"/>
+        <line num="141" type="stmt" count="0"/>
+        <line num="145" type="stmt" count="0"/>
+        <line num="146" type="stmt" count="0"/>
+        <line num="149" type="stmt" count="0"/>
+        <line num="155" type="method" name="_save" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="157" type="stmt" count="0"/>
+        <line num="159" type="stmt" count="0"/>
+        <line num="160" type="stmt" count="0"/>
+        <line num="163" type="stmt" count="0"/>
+        <line num="169" type="method" name="save" visibility="public" complexity="4" crap="20" count="0"/>
+        <line num="171" type="stmt" count="0"/>
+        <line num="172" type="stmt" count="0"/>
+        <line num="175" type="stmt" count="0"/>
+        <line num="176" type="stmt" count="0"/>
+        <line num="177" type="stmt" count="0"/>
+        <line num="180" type="stmt" count="0"/>
+        <line num="183" type="stmt" count="0"/>
+        <line num="186" type="stmt" count="0"/>
+        <line num="192" type="method" name="render" visibility="public" complexity="7" crap="7" count="4"/>
+        <line num="194" type="stmt" count="4"/>
+        <line num="195" type="stmt" count="1"/>
+        <line num="199" type="stmt" count="4"/>
+        <line num="200" type="stmt" count="1"/>
+        <line num="203" type="stmt" count="3"/>
+        <line num="205" type="stmt" count="1"/>
+        <line num="208" type="stmt" count="2"/>
+        <line num="209" type="stmt" count="2"/>
+        <line num="210" type="stmt" count="2"/>
+        <line num="212" type="stmt" count="2"/>
+        <line num="214" type="stmt" count="2"/>
+        <line num="215" type="stmt" count="2"/>
+        <line num="218" type="stmt" count="2"/>
+        <line num="219" type="stmt" count="2"/>
+        <line num="223" type="stmt" count="2"/>
+        <line num="225" type="stmt" count="2"/>
+        <line num="226" type="stmt" count="2"/>
+        <line num="232" type="method" name="shouldShowForTerm" visibility="protected" complexity="10" crap="10" count="10"/>
+        <line num="235" type="stmt" count="10"/>
+        <line num="236" type="stmt" count="4"/>
+        <line num="240" type="stmt" count="6"/>
+        <line num="241" type="stmt" count="1"/>
+        <line num="245" type="stmt" count="5"/>
+        <line num="246" type="stmt" count="1"/>
+        <line num="250" type="stmt" count="4"/>
+        <line num="251" type="stmt" count="2"/>
+        <line num="252" type="stmt" count="2"/>
+        <line num="253" type="stmt" count="1"/>
+        <line num="257" type="stmt" count="3"/>
+        <metrics loc="260" ncloc="195" classes="1" methods="13" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="77" coveredstatements="58" elements="90" coveredelements="67"/>
+      </file>
+      <file name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/HyperFields/src/Container/UserMetaContainer.php">
+        <class name="HyperFields\Container\UserMetaContainer" namespace="HyperFields\Container">
+          <metrics complexity="34" methods="11" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="70" coveredstatements="65" elements="81" coveredelements="73"/>
+        </class>
+        <line num="8" type="stmt" count="1"/>
+        <line num="9" type="stmt" count="0"/>
+        <line num="27" type="method" name="where" visibility="public" complexity="2" crap="2" count="8"/>
+        <line num="29" type="stmt" count="8"/>
+        <line num="30" type="stmt" count="8"/>
+        <line num="33" type="stmt" count="8"/>
+        <line num="39" type="method" name="whereUserId" visibility="public" complexity="2" crap="2" count="4"/>
+        <line num="41" type="stmt" count="4"/>
+        <line num="42" type="stmt" count="4"/>
+        <line num="45" type="stmt" count="4"/>
+        <line num="51" type="method" name="whereUserIds" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="53" type="stmt" count="1"/>
+        <line num="54" type="stmt" count="1"/>
+        <line num="57" type="stmt" count="1"/>
+        <line num="63" type="method" name="init" visibility="public" complexity="4" crap="4" count="4"/>
+        <line num="67" type="stmt" count="4"/>
+        <line num="68" type="stmt" count="1"/>
+        <line num="69" type="stmt" count="3"/>
+        <line num="70" type="stmt" count="1"/>
+        <line num="73" type="stmt" count="4"/>
+        <line num="74" type="stmt" count="4"/>
+        <line num="75" type="stmt" count="4"/>
+        <line num="76" type="stmt" count="4"/>
+        <line num="77" type="stmt" count="4"/>
+        <line num="83" type="method" name="attach" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="87" type="stmt" count="0"/>
+        <line num="92" type="method" name="setUserId" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="94" type="stmt" count="12"/>
+        <line num="95" type="stmt" count="12"/>
+        <line num="101" type="method" name="isValidSave" visibility="public" complexity="4" crap="4.37" count="4"/>
+        <line num="104" type="stmt" count="4"/>
+        <line num="105" type="stmt" count="2"/>
+        <line num="109" type="stmt" count="2"/>
+        <line num="110" type="stmt" count="0"/>
+        <line num="114" type="stmt" count="2"/>
+        <line num="115" type="stmt" count="0"/>
+        <line num="118" type="stmt" count="2"/>
+        <line num="124" type="method" name="userHasRequiredRole" visibility="protected" complexity="4" crap="4" count="10"/>
+        <line num="127" type="stmt" count="10"/>
+        <line num="128" type="stmt" count="2"/>
+        <line num="132" type="stmt" count="8"/>
+        <line num="133" type="stmt" count="4"/>
+        <line num="136" type="stmt" count="4"/>
+        <line num="137" type="stmt" count="4"/>
+        <line num="138" type="stmt" count="1"/>
+        <line num="141" type="stmt" count="3"/>
+        <line num="147" type="method" name="_save" visibility="public" complexity="3" crap="3.33" count="1"/>
+        <line num="149" type="stmt" count="1"/>
+        <line num="151" type="stmt" count="1"/>
+        <line num="152" type="stmt" count="0"/>
+        <line num="156" type="stmt" count="1"/>
+        <line num="157" type="stmt" count="0"/>
+        <line num="160" type="stmt" count="1"/>
+        <line num="166" type="method" name="save" visibility="public" complexity="4" crap="4" count="4"/>
+        <line num="168" type="stmt" count="4"/>
+        <line num="169" type="stmt" count="1"/>
+        <line num="172" type="stmt" count="3"/>
+        <line num="173" type="stmt" count="3"/>
+        <line num="174" type="stmt" count="3"/>
+        <line num="177" type="stmt" count="3"/>
+        <line num="180" type="stmt" count="3"/>
+        <line num="183" type="stmt" count="3"/>
+        <line num="189" type="method" name="render" visibility="public" complexity="7" crap="7" count="4"/>
+        <line num="191" type="stmt" count="4"/>
+        <line num="192" type="stmt" count="1"/>
+        <line num="196" type="stmt" count="4"/>
+        <line num="197" type="stmt" count="2"/>
+        <line num="200" type="stmt" count="2"/>
+        <line num="201" type="stmt" count="2"/>
+        <line num="203" type="stmt" count="2"/>
+        <line num="205" type="stmt" count="2"/>
+        <line num="206" type="stmt" count="2"/>
+        <line num="208" type="stmt" count="2"/>
+        <line num="209" type="stmt" count="2"/>
+        <line num="210" type="stmt" count="2"/>
+        <line num="213" type="stmt" count="2"/>
+        <line num="214" type="stmt" count="2"/>
+        <line num="216" type="stmt" count="2"/>
+        <line num="217" type="stmt" count="1"/>
+        <line num="220" type="stmt" count="2"/>
+        <line num="221" type="stmt" count="2"/>
+        <line num="224" type="stmt" count="2"/>
+        <line num="227" type="stmt" count="2"/>
+        <metrics loc="230" ncloc="175" classes="1" methods="11" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="72" coveredstatements="66" elements="83" coveredelements="74"/>
+      </file>
+    </package>
+    <metrics files="27" loc="4829" ncloc="4193" classes="25" methods="330" coveredmethods="215" conditionals="0" coveredconditionals="0" statements="1786" coveredstatements="1038" elements="2116" coveredelements="1253"/>
+  </project>
+</coverage>

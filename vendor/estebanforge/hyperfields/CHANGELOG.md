@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.3] - 2024-12-07
+
+### Fixed
+- Fixed test environment compatibility by allowing `HYPERFIELDS_TESTING_MODE` constant to bypass ABSPATH checks
+- Updated `bootstrap.php` to conditionally return instead of exit when ABSPATH is not defined in test mode
+- Updated `includes/helpers.php` to support test environment execution
+- Updated `includes/backward-compatibility.php` to support test environment execution
+- Fixed PHPUnit bootstrap configuration to properly initialize Brain\Monkey mocks
+
+### Changed
+- Test bootstrap now defines critical WordPress functions before autoloader to prevent conflicts
+- Improved test infrastructure for downstream packages that depend on HyperFields via Composer
+
 ## [1.0.2] - 2024-12-07
 
 ### Added

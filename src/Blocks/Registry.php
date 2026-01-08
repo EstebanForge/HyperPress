@@ -321,7 +321,7 @@ final class Registry
             if ($group) {
                 foreach ($group->fields as $field) {
                     if (!array_key_exists($field->name, $attributes)) {
-                        $adapter = \HyperFields\BlockFieldAdapter::fromField($field->getHyperField());
+                        $adapter = BlockFieldAdapter::fromField($field->getHyperField());
                         $attributes[$field->name] = $adapter->toBlockAttribute();
                     }
                 }
@@ -533,7 +533,7 @@ final class Registry
      * @param \WP_Block $block The block instance.
      * @return string
      */
-    public function renderJsonBlock(array $attributes, string $content = '', \WP_Block $block = null): string
+    public function renderJsonBlock(array $attributes, string $content = '', ?\WP_Block $block = null): string
     {
         if (!$block) {
             return '<div class="hyperblocks-error">Block instance not provided</div>';
@@ -632,7 +632,7 @@ final class Registry
      * @param \WP_Block $block The block instance.
      * @return string
      */
-    public function renderBlock(array $attributes, string $content = '', \WP_Block $block = null): string
+    public function renderBlock(array $attributes, string $content = '', ?\WP_Block $block = null): string
     {
         if (!$block) {
             return '<div class="hyperblocks-error">Block instance not provided</div>';

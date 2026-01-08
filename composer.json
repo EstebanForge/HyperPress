@@ -2,7 +2,7 @@
     "name": "estebanforge/hyperpress",
     "description": "Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.",
     "type": "wordpress-plugin",
-    "version": "3.0.3",
+    "version": "3.0.4",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
@@ -12,14 +12,40 @@
     ],
     "minimum-stability": "RC",
     "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../HyperFields",
+            "options": {
+                "symlink": false
+            }
+        }
+    ],
     "require": {
         "php": ">=8.1",
         "starfederation/datastar-php": "^1.0",
-        "estebanforge/hyperfields": "^1.0.1"
+        "estebanforge/hyperfields": "^1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12",
+        "pestphp/pest": "^4",
+        "pestphp/pest-plugin-browser": "^4",
+        "brain/monkey": "^2"
     },
     "scripts": {
-
+        "test": "php -d pcov.enabled=1 vendor/bin/pest --colors=always",
+        "test:unit": "php -d pcov.enabled=1 vendor/bin/pest --testsuite=Unit --colors=always",
+        "test:integration": "php -d pcov.enabled=1 vendor/bin/pest --testsuite=Integration --colors=always",
+        "test:feature": "php -d pcov.enabled=1 vendor/bin/pest --testsuite=Feature --colors=always",
+        "test:coverage": "php -d pcov.enabled=1 vendor/bin/pest --coverage-html coverage-html --coverage-text",
+        "test:fast": "php -d pcov.enabled=1 vendor/bin/pest --coverage-html coverage-html --coverage-text",
+        "test:summary": "php -d pcov.enabled=1 vendor/bin/pest --coverage-text",
+        "test:clover": "php -d pcov.enabled=1 vendor/bin/pest --coverage-clover coverage.xml",
         "test:setup": "php setup-sqlite-db.php",
+        "test:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --coverage-html coverage-xdebug-html --coverage-text",
+        "test:coverage:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --coverage-html coverage-xdebug-html --coverage-text",
+        "test:summary:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --coverage-text",
+        "test:clover:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --coverage-clover coverage-xdebug.xml",
         "cs:fix": "php-cs-fixer fix",
         "dump-autoload-prod": "@php composer dump-autoload --optimize --no-dev",
         "dump-autoload-dev": "@php composer dump-autoload",
@@ -57,7 +83,8 @@
     },
     "config": {
         "allow-plugins": {
-            "composer/installers": true
+            "composer/installers": true,
+            "pestphp/pest-plugin": true
         }
     }
 }

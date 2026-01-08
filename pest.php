@@ -1,48 +1,63 @@
 <?php
 
-use HyperPress\Tests\WordPressTestCase;
+declare(strict_types=1);
+
+use Pest\Plugin\Plugins;
+
+Plugins::usePHPUnit();
 
 /*
 |--------------------------------------------------------------------------
-| Pest Configuration
+| Testsuite Configuration
 |--------------------------------------------------------------------------
-|
-| Here you may define all of your pest configuration. Each option is 
-| documented so feel free to look through what's available.
-|
 */
 
-uses(WordPressTestCase::class)->in('Unit');
+$testSuites = [
+    'Unit' => 'tests/Unit',
+    'Integration' => 'tests/Integration',
+    'Feature' => 'tests/Feature',
+];
 
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet 
-| certain conditions. The "expect()" function gives you access to a set 
-| of "expectation" methods that you can use to assert different 
-| conditions.
-|
-*/
-
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
-
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing 
-| code specific to your project that you don't want to repeat in every 
-| file. Here you can also expose helpers as globals to make them 
-| available in your tests.
-|
-*/
-
-function something()
-{
-    // ..
+foreach ($testSuites as $name => $path) {
+    if (is_dir($path)) {
+        testSuite($name)->in($path);
+    }
 }
+
+/*
+|--------------------------------------------------------------------------
+| Coverage Configuration
+|--------------------------------------------------------------------------
+*/
+
+$coveragePaths = [
+    'src' => true,
+    'src/Blocks' => false,
+    'src/Fields/templates' => false,
+];
+
+foreach ($coveragePaths as $path => $include) {
+    if ($include) {
+        cover($path);
+    } else {
+        cover()->exclude($path);
+    }
+}
+
+// Exclude bootstrap file from coverage
+cover()->exclude('bootstrap.php');
+
+/*
+|--------------------------------------------------------------------------
+| Test Options
+|--------------------------------------------------------------------------
+*/
+
+// Don't stop on failure
+stopOnFailure(false);
+
+// Don't fail on risky tests
+failOnRisky(false);
+
+// Don't fail on warnings
+failOnWarning(false);

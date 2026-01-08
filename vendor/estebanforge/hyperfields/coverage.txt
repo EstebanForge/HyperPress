@@ -1,0 +1,46 @@
+
+
+[1;37;40mCode Coverage Report:        [0m
+[1;37;40m  2025-12-09 23:17:56        [0m
+[1;37;40m                             [0m
+[1;37;40m Summary:                    [0m
+[37;41m  Classes: 28.00% (7/25)     [0m
+[30;43m  Methods: 65.45% (216/330)  [0m
+[30;43m  Lines:   58.17% (1039/1786)[0m
+
+HyperFields\ConditionalLogic
+  [30;42mMethods: 100.00% (21/21)[0m   [30;42mLines: 100.00% (103/103)[0m
+HyperFields\Container\Container
+  [30;42mMethods:  90.91% (10/11)[0m   [30;43mLines:  71.43% ( 15/ 21)[0m
+HyperFields\Container\ContainerFactory
+  [30;43mMethods:  75.00% ( 3/ 4)[0m   [30;42mLines:  90.00% (  9/ 10)[0m
+HyperFields\Container\PostMetaContainer
+  [30;43mMethods:  81.25% (13/16)[0m   [30;43mLines:  77.50% ( 93/120)[0m
+HyperFields\Container\TermMetaContainer
+  [30;43mMethods:  69.23% ( 9/13)[0m   [30;43mLines:  76.00% ( 57/ 75)[0m
+HyperFields\Container\UserMetaContainer
+  [30;43mMethods:  72.73% ( 8/11)[0m   [30;42mLines:  92.86% ( 65/ 70)[0m
+HyperFields\Field
+  [30;42mMethods:  90.00% (45/50)[0m   [30;42mLines:  93.81% (212/226)[0m
+HyperFields\HyperFields
+  [30;42mMethods: 100.00% (16/16)[0m   [30;42mLines: 100.00% ( 56/ 56)[0m
+HyperFields\Log
+  [30;43mMethods:  66.67% ( 6/ 9)[0m   [30;43mLines:  62.07% ( 36/ 58)[0m
+HyperFields\OptionField
+  [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% ( 30/ 30)[0m
+HyperFields\OptionsPage
+  [30;42mMethods:  90.91% (20/22)[0m   [30;42mLines:  96.23% (153/159)[0m
+HyperFields\OptionsSection
+  [30;42mMethods: 100.00% ( 9/ 9)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
+HyperFields\PostField
+  [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% ( 18/ 18)[0m
+HyperFields\Registry
+  [30;43mMethods:  81.25% (26/32)[0m   [30;43mLines:  89.93% (134/149)[0m
+HyperFields\RepeaterField
+  [37;41mMethods:   5.88% ( 1/17)[0m   [37;41mLines:   2.00% (  1/ 50)[0m
+HyperFields\TabsField
+  [37;41mMethods:   7.69% ( 1/13)[0m   [37;41mLines:   3.33% (  1/ 30)[0m
+HyperFields\TermField
+  [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% ( 18/ 18)[0m
+HyperFields\UserField
+  [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% ( 18/ 18)[0m

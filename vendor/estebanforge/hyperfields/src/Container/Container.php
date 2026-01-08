@@ -61,6 +61,14 @@ abstract class Container
     }
 
     /**
+     * Get container setting.
+     */
+    public function getSetting(string $key, mixed $default = null): mixed
+    {
+        return $this->settings[$key] ?? $default;
+    }
+
+    /**
      * Get container ID.
      */
     public function getId(): string

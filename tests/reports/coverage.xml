@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="/Users/esteban/Dev/Projects-ActitudStudio/docker-wp-hyperpress/src/app/plugins/api-for-htmx/phpunit.xml" tests="57" assertions="322" errors="9" failures="10" skipped="1" time="0.162376">
+    <testsuite name="Unit" tests="47" assertions="169" errors="8" failures="10" skipped="1" time="0.156219">
+      <testsuite name="HyperPress\Tests\Unit\Admin\ActivationTest" file="Activation (HyperPress\Tests\Unit\Admin\Activation)" tests="10" assertions="34" errors="1" failures="2" skipped="0" time="0.069339">
+        <testcase name="Activation class exists" file="Activation (HyperPress\Tests\Unit\Admin\Activation)::Activation class exists" class="HyperPress\Tests\Unit\Admin\ActivationTest" classname="HyperPress.Tests.Unit.Admin.ActivationTest" assertions="1" time="0.029414"/>
+        <testcase name="Activation hooks" file="Activation (HyperPress\Tests\Unit\Admin\Activation)::Activation hooks" class="HyperPress\Tests\Unit\Admin\ActivationTest" classname="HyperPress.Tests.Unit.Admin.ActivationTest" assertions="3" time="0.000290"/>
+        <testcase name="Plugin deactivation" file="Activation (HyperPress\Tests\Unit\Admin\Activation)::Plugin deactivation" class="HyperPress\Tests\Unit\Admin\ActivationTest" classname="HyperPress.Tests.Unit.Admin.ActivationTest" assertions="1" time="0.030267">
+          <error type="Error">Plugin deactivationError: Call to undefined function HyperPress\Tests\Unit\Admin\get_option()
+at tests/Unit/Admin/ActivationTest.php:48</error>
+        </testcase>
+        <testcase name="Database tables" file="Activation (HyperPress\Tests\Unit\Admin\Activation)::Database tables" class="HyperPress\Tests\Unit\Admin\ActivationTest" classname="HyperPress.Tests.Unit.Admin.ActivationTest" assertions="1" time="0.002815">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Database tablesFailed asserting that false is true.
+at tests/Unit/Admin/ActivationTest.php:55</failure>
+        </testcase>
+        <testcase name="Default settings" file="Activation (HyperPress\Tests\Unit\Admin\Activation)::Default settings" class="HyperPress\Tests\Unit\Admin\ActivationTest" classname="HyperPress.Tests.Unit.Admin.ActivationTest" assertions="10" time="0.001913"/>
+        <testcase name="Capabilities and roles" file="Activation (HyperPress\Tests\Unit\Admin\Activation)::Capabilities and roles" class="HyperPress\Tests\Unit\Admin\ActivationTest" classname="HyperPress.Tests.Unit.Admin.ActivationTest" assertions="5" time="0.003327"/>
+        <testcase name="File permissions" file="Activation (HyperPress\Tests\Unit\Admin\Activation)::File permissions" class="HyperPress\Tests\Unit\Admin\ActivationTest" classname="HyperPress.Tests.Unit.Admin.ActivationTest" assertions="3" time="0.000245"/>
+        <testcase name="Plugin dependencies" file="Activation (HyperPress\Tests\Unit\Admin\Activation)::Plugin dependencies" class="HyperPress\Tests\Unit\Admin\ActivationTest" classname="HyperPress.Tests.Unit.Admin.ActivationTest" assertions="3" time="0.000231"/>
+        <testcase name="Word press compatibility" file="Activation (HyperPress\Tests\Unit\Admin\Activation)::Word press compatibility" class="HyperPress\Tests\Unit\Admin\ActivationTest" classname="HyperPress.Tests.Unit.Admin.ActivationTest" assertions="3" time="0.000444">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Word press compatibilityFailed asserting that false is true.
+at tests/Unit/Admin/ActivationTest.php:143</failure>
+        </testcase>
+        <testcase name="Error message handling" file="Activation (HyperPress\Tests\Unit\Admin\Activation)::Error message handling" class="HyperPress\Tests\Unit\Admin\ActivationTest" classname="HyperPress.Tests.Unit.Admin.ActivationTest" assertions="4" time="0.000393"/>
+      </testsuite>
+      <testsuite name="HyperPress\Tests\Unit\Blocks\RegistryTest" file="Registry (HyperPress\Tests\Unit\Blocks\Registry)" tests="6" assertions="15" errors="2" failures="0" skipped="0" time="0.043503">
+        <testcase name="Registry class exists" file="Registry (HyperPress\Tests\Unit\Blocks\Registry)::Registry class exists" class="HyperPress\Tests\Unit\Blocks\RegistryTest" classname="HyperPress.Tests.Unit.Blocks.RegistryTest" assertions="1" time="0.041093"/>
+        <testcase name="Registry can be instantiated" file="Registry (HyperPress\Tests\Unit\Blocks\Registry)::Registry can be instantiated" class="HyperPress\Tests\Unit\Blocks\RegistryTest" classname="HyperPress.Tests.Unit.Blocks.RegistryTest" assertions="0" time="0.000465">
+          <error type="Error">Registry can be instantiatedError: Call to private HyperPress\Blocks\Registry::__construct() from scope HyperPress\Tests\Unit\Blocks\RegistryTest
+at tests/Unit/Blocks/RegistryTest.php:39</error>
+        </testcase>
+        <testcase name="Block registration" file="Registry (HyperPress\Tests\Unit\Blocks\Registry)::Block registration" class="HyperPress\Tests\Unit\Blocks\RegistryTest" classname="HyperPress.Tests.Unit.Blocks.RegistryTest" assertions="0" time="0.000395">
+          <error type="Error">Block registrationError: Call to private HyperPress\Blocks\Registry::__construct() from scope HyperPress\Tests\Unit\Blocks\RegistryTest
+at tests/Unit/Blocks/RegistryTest.php:48</error>
+        </testcase>
+        <testcase name="Block metadata structure" file="Registry (HyperPress\Tests\Unit\Blocks\Registry)::Block metadata structure" class="HyperPress\Tests\Unit\Blocks\RegistryTest" classname="HyperPress.Tests.Unit.Blocks.RegistryTest" assertions="6" time="0.000250"/>
+        <testcase name="Block categories" file="Registry (HyperPress\Tests\Unit\Blocks\Registry)::Block categories" class="HyperPress\Tests\Unit\Blocks\RegistryTest" classname="HyperPress.Tests.Unit.Blocks.RegistryTest" assertions="3" time="0.001045"/>
+        <testcase name="Block validation" file="Registry (HyperPress\Tests\Unit\Blocks\Registry)::Block validation" class="HyperPress\Tests\Unit\Blocks\RegistryTest" classname="HyperPress.Tests.Unit.Blocks.RegistryTest" assertions="5" time="0.000255"/>
+      </testsuite>
+      <testsuite name="HyperPress\Tests\Unit\Hypermedia\EndpointTest" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)" tests="12" assertions="78" errors="2" failures="1" skipped="0" time="0.015323">
+        <testcase name="Endpoint registration" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)::Endpoint registration" class="HyperPress\Tests\Unit\Hypermedia\EndpointTest" classname="HyperPress.Tests.Unit.Hypermedia.EndpointTest" assertions="5" time="0.002706"/>
+        <testcase name="Rest api routes" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)::Rest api routes" class="HyperPress\Tests\Unit\Hypermedia\EndpointTest" classname="HyperPress.Tests.Unit.Hypermedia.EndpointTest" assertions="12" time="0.000282"/>
+        <testcase name="Http methods" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)::Http methods" class="HyperPress\Tests\Unit\Hypermedia\EndpointTest" classname="HyperPress.Tests.Unit.Hypermedia.EndpointTest" assertions="2" time="0.000217"/>
+        <testcase name="Response formats" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)::Response formats" class="HyperPress\Tests\Unit\Hypermedia\EndpointTest" classname="HyperPress.Tests.Unit.Hypermedia.EndpointTest" assertions="2" time="0.000228"/>
+        <testcase name="Datastar integration" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)::Datastar integration" class="HyperPress\Tests\Unit\Hypermedia\EndpointTest" classname="HyperPress.Tests.Unit.Hypermedia.EndpointTest" assertions="8" time="0.000236"/>
+        <testcase name="H t m x integration" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)::H t m x integration" class="HyperPress\Tests\Unit\Hypermedia\EndpointTest" classname="HyperPress.Tests.Unit.Hypermedia.EndpointTest" assertions="15" time="0.000248"/>
+        <testcase name="Alpine integration" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)::Alpine integration" class="HyperPress\Tests\Unit\Hypermedia\EndpointTest" classname="HyperPress.Tests.Unit.Hypermedia.EndpointTest" assertions="2" time="0.009638">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Alpine integrationFailed asserting that two strings are equal.
+at tests/Unit/Hypermedia/EndpointTest.php:134</failure>
+        </testcase>
+        <testcase name="Template rendering" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)::Template rendering" class="HyperPress\Tests\Unit\Hypermedia\EndpointTest" classname="HyperPress.Tests.Unit.Hypermedia.EndpointTest" assertions="2" time="0.000407">
+          <error type="Error">Template renderingError: Call to undefined function HyperPress\Tests\Unit\Hypermedia\ends_with()
+at tests/Unit/Hypermedia/EndpointTest.php:151</error>
+        </testcase>
+        <testcase name="Security validation" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)::Security validation" class="HyperPress\Tests\Unit\Hypermedia\EndpointTest" classname="HyperPress.Tests.Unit.Hypermedia.EndpointTest" assertions="6" time="0.000513"/>
+        <testcase name="Error handling" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)::Error handling" class="HyperPress\Tests\Unit\Hypermedia\EndpointTest" classname="HyperPress.Tests.Unit.Hypermedia.EndpointTest" assertions="16" time="0.000245"/>
+        <testcase name="Performance optimization" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)::Performance optimization" class="HyperPress\Tests\Unit\Hypermedia\EndpointTest" classname="HyperPress.Tests.Unit.Hypermedia.EndpointTest" assertions="8" time="0.000227"/>
+        <testcase name="Endpoint configuration" file="Endpoint (HyperPress\Tests\Unit\Hypermedia\Endpoint)::Endpoint configuration" class="HyperPress\Tests\Unit\Hypermedia\EndpointTest" classname="HyperPress.Tests.Unit.Hypermedia.EndpointTest" assertions="0" time="0.000378">
+          <error type="Error">Endpoint configurationError: Call to undefined function HyperPress\Tests\Unit\Hypermedia\rest_url()
+at tests/Unit/Hypermedia/EndpointTest.php:225</error>
+        </testcase>
+      </testsuite>
+      <testsuite name="HyperPress\Tests\Unit\MainTest" file="Main (HyperPress\Tests\Unit\Main)" tests="11" assertions="23" errors="2" failures="4" skipped="1" time="0.020032">
+        <testcase name="Plugin initialization" file="Main (HyperPress\Tests\Unit\Main)::Plugin initialization" class="HyperPress\Tests\Unit\MainTest" classname="HyperPress.Tests.Unit.MainTest" assertions="3" time="0.004479"/>
+        <testcase name="Bootstrap file exists" file="Main (HyperPress\Tests\Unit\Main)::Bootstrap file exists" class="HyperPress\Tests\Unit\MainTest" classname="HyperPress.Tests.Unit.MainTest" assertions="3" time="0.000244"/>
+        <testcase name="Main class file exists" file="Main (HyperPress\Tests\Unit\Main)::Main class file exists" class="HyperPress\Tests\Unit\MainTest" classname="HyperPress.Tests.Unit.MainTest" assertions="3" time="0.000231"/>
+        <testcase name="Main class structure" file="Main (HyperPress\Tests\Unit\Main)::Main class structure" class="HyperPress\Tests\Unit\MainTest" classname="HyperPress.Tests.Unit.MainTest" assertions="0" time="0.000394">
+          <error type="Error">Main class structureError: Call to undefined method HyperPress\Tests\Unit\MainTest::assertStringContains()
+at tests/Unit/MainTest.php:42</error>
+        </testcase>
+        <testcase name="Plugin dependencies" file="Main (HyperPress\Tests\Unit\Main)::Plugin dependencies" class="HyperPress\Tests\Unit\MainTest" classname="HyperPress.Tests.Unit.MainTest" assertions="1" time="0.000216"/>
+        <testcase name="Word press integration" file="Main (HyperPress\Tests\Unit\Main)::Word press integration" class="HyperPress\Tests\Unit\MainTest" classname="HyperPress.Tests.Unit.MainTest" assertions="1" time="0.000420">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Word press integrationFailed asserting that false is true.
+at tests/Unit/MainTest.php:61</failure>
+        </testcase>
+        <testcase name="Plugin configuration" file="Main (HyperPress\Tests\Unit\Main)::Plugin configuration" class="HyperPress\Tests\Unit\MainTest" classname="HyperPress.Tests.Unit.MainTest" assertions="0" time="0.000358">
+          <error type="Error">Plugin configurationError: Undefined constant "HyperPress\Tests\Unit\HYPERPRESS_ASSETS_URL"
+at tests/Unit/MainTest.php:78</error>
+        </testcase>
+        <testcase name="Asset enqueueing" file="Main (HyperPress\Tests\Unit\Main)::Asset enqueueing" class="HyperPress\Tests\Unit\MainTest" classname="HyperPress.Tests.Unit.MainTest" assertions="5" time="0.000453">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Asset enqueueingFailed asserting that null is true.
+at tests/Unit/MainTest.php:100</failure>
+        </testcase>
+        <testcase name="Plugin hooks" file="Main (HyperPress\Tests\Unit\Main)::Plugin hooks" class="HyperPress\Tests\Unit\MainTest" classname="HyperPress.Tests.Unit.MainTest" assertions="3" time="0.012003">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Plugin hooksFailed asserting that two strings are equal.
+at tests/Unit/MainTest.php:113</failure>
+        </testcase>
+        <testcase name="Plugin security" file="Main (HyperPress\Tests\Unit\Main)::Plugin security" class="HyperPress\Tests\Unit\MainTest" classname="HyperPress.Tests.Unit.MainTest" assertions="3" time="0.000516">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Plugin securityFailed asserting that two strings are equal.
+at tests/Unit/MainTest.php:125</failure>
+        </testcase>
+        <testcase name="Hypermedia integration" file="Main (HyperPress\Tests\Unit\Main)::Hypermedia integration" class="HyperPress\Tests\Unit\MainTest" classname="HyperPress.Tests.Unit.MainTest" assertions="1" time="0.000718">
+          <skipped/>
+        </testcase>
+      </testsuite>
+      <testsuite name="HyperPress\Tests\Unit\ThemeTest" file="Theme (HyperPress\Tests\Unit\Theme)" tests="8" assertions="19" errors="1" failures="3" skipped="0" time="0.008021">
+        <testcase name="Theme constants exist" file="Theme (HyperPress\Tests\Unit\Theme)::Theme constants exist" class="HyperPress\Tests\Unit\ThemeTest" classname="HyperPress.Tests.Unit.ThemeTest" assertions="4" time="0.003799">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Theme constants existFailed asserting that false is true.
+at tests/Unit/ThemeTest.php:19</failure>
+        </testcase>
+        <testcase name="Hyper press version" file="Theme (HyperPress\Tests\Unit\Theme)::Hyper press version" class="HyperPress\Tests\Unit\ThemeTest" classname="HyperPress.Tests.Unit.ThemeTest" assertions="1" time="0.000229"/>
+        <testcase name="Hyper press directory" file="Theme (HyperPress\Tests\Unit\Theme)::Hyper press directory" class="HyperPress\Tests\Unit\ThemeTest" classname="HyperPress.Tests.Unit.ThemeTest" assertions="2" time="0.001667"/>
+        <testcase name="Hyper press url" file="Theme (HyperPress\Tests\Unit\Theme)::Hyper press url" class="HyperPress\Tests\Unit\ThemeTest" classname="HyperPress.Tests.Unit.ThemeTest" assertions="2" time="0.000659"/>
+        <testcase name="Hyper press assets url" file="Theme (HyperPress\Tests\Unit\Theme)::Hyper press assets url" class="HyperPress\Tests\Unit\ThemeTest" classname="HyperPress.Tests.Unit.ThemeTest" assertions="0" time="0.000398">
+          <error type="Error">Hyper press assets urlError: Undefined constant "HyperPress\Tests\Unit\HYPERPRESS_ASSETS_URL"
+at tests/Unit/ThemeTest.php:41</error>
+        </testcase>
+        <testcase name="Word press constants defined" file="Theme (HyperPress\Tests\Unit\Theme)::Word press constants defined" class="HyperPress\Tests\Unit\ThemeTest" classname="HyperPress.Tests.Unit.ThemeTest" assertions="3" time="0.000254"/>
+        <testcase name="Word press functions mocked" file="Theme (HyperPress\Tests\Unit\Theme)::Word press functions mocked" class="HyperPress\Tests\Unit\ThemeTest" classname="HyperPress.Tests.Unit.ThemeTest" assertions="2" time="0.000464">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Word press functions mockedFailed asserting that false is true.
+at tests/Unit/ThemeTest.php:55</failure>
+        </testcase>
+        <testcase name="Theme helper functions" file="Theme (HyperPress\Tests\Unit\Theme)::Theme helper functions" class="HyperPress\Tests\Unit\ThemeTest" classname="HyperPress.Tests.Unit.ThemeTest" assertions="5" time="0.000551">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Theme helper functionsFailed asserting that two strings are equal.
+at tests/Unit/ThemeTest.php:74</failure>
+        </testcase>
+      </testsuite>
+    </testsuite>
+    <testsuite name="Integration" tests="10" assertions="153" errors="1" failures="0" skipped="0" time="0.006157">
+      <testsuite name="HyperPress\Tests\Integration\HypermediaIntegrationTest" file="Hypermedia Integration (HyperPress\Tests\Integration\HypermediaIntegration)" tests="10" assertions="153" errors="1" failures="0" skipped="0" time="0.006157">
+        <testcase name="H t m x alpine datastar integration" file="Hypermedia Integration (HyperPress\Tests\Integration\HypermediaIntegration)::H t m x alpine datastar integration" class="HyperPress\Tests\Integration\HypermediaIntegrationTest" classname="HyperPress.Tests.Integration.HypermediaIntegrationTest" assertions="4" time="0.002646">
+          <error type="Error">H t m x alpine datastar integrationError: Call to undefined method HyperPress\Tests\Integration\HypermediaIntegrationTest::assertStringContains()
+at tests/Integration/HypermediaIntegrationTest.php:40</error>
+        </testcase>
+        <testcase name="H t m x attributes" file="Hypermedia Integration (HyperPress\Tests\Integration\HypermediaIntegration)::H t m x attributes" class="HyperPress\Tests\Integration\HypermediaIntegrationTest" classname="HyperPress.Tests.Integration.HypermediaIntegrationTest" assertions="21" time="0.000673"/>
+        <testcase name="Alpine directives" file="Hypermedia Integration (HyperPress\Tests\Integration\HypermediaIntegration)::Alpine directives" class="HyperPress\Tests\Integration\HypermediaIntegrationTest" classname="HyperPress.Tests.Integration.HypermediaIntegrationTest" assertions="22" time="0.000267"/>
+        <testcase name="Datastar signals" file="Hypermedia Integration (HyperPress\Tests\Integration\HypermediaIntegration)::Datastar signals" class="HyperPress\Tests\Integration\HypermediaIntegrationTest" classname="HyperPress.Tests.Integration.HypermediaIntegrationTest" assertions="16" time="0.000249"/>
+        <testcase name="Hypermedia template structure" file="Hypermedia Integration (HyperPress\Tests\Integration\HypermediaIntegration)::Hypermedia template structure" class="HyperPress\Tests\Integration\HypermediaIntegrationTest" classname="HyperPress.Tests.Integration.HypermediaIntegrationTest" assertions="12" time="0.000254"/>
+        <testcase name="Rest endpoint integration" file="Hypermedia Integration (HyperPress\Tests\Integration\HypermediaIntegration)::Rest endpoint integration" class="HyperPress\Tests\Integration\HypermediaIntegrationTest" classname="HyperPress.Tests.Integration.HypermediaIntegrationTest" assertions="24" time="0.001050"/>
+        <testcase name="Asset loading strategy" file="Hypermedia Integration (HyperPress\Tests\Integration\HypermediaIntegration)::Asset loading strategy" class="HyperPress\Tests\Integration\HypermediaIntegrationTest" classname="HyperPress.Tests.Integration.HypermediaIntegrationTest" assertions="24" time="0.000275"/>
+        <testcase name="Cache strategy" file="Hypermedia Integration (HyperPress\Tests\Integration\HypermediaIntegration)::Cache strategy" class="HyperPress\Tests\Integration\HypermediaIntegrationTest" classname="HyperPress.Tests.Integration.HypermediaIntegrationTest" assertions="18" time="0.000267"/>
+        <testcase name="Security integration" file="Hypermedia Integration (HyperPress\Tests\Integration\HypermediaIntegration)::Security integration" class="HyperPress\Tests\Integration\HypermediaIntegrationTest" classname="HyperPress.Tests.Integration.HypermediaIntegrationTest" assertions="6" time="0.000242"/>
+        <testcase name="Performance optimization" file="Hypermedia Integration (HyperPress\Tests\Integration\HypermediaIntegration)::Performance optimization" class="HyperPress\Tests\Integration\HypermediaIntegrationTest" classname="HyperPress.Tests.Integration.HypermediaIntegrationTest" assertions="6" time="0.000235"/>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>
