@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.3] - 2024-12-07
+## [1.0.3] - 2026-01-08
 
 ### Fixed
 - Fixed test environment compatibility by allowing `HYPERFIELDS_TESTING_MODE` constant to bypass ABSPATH checks

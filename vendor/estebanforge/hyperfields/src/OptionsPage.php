@@ -120,7 +120,15 @@ class OptionsPage
     public function register(): void
     {
         $this->loadOptions();
-        add_action('admin_menu', $this->addMenuPage(...));
+
+        // Check if we're currently in the admin_menu hook execution
+        // If called during admin_menu, register directly; otherwise hook into admin_menu
+        if (doing_filter('admin_menu')) {
+            $this->addMenuPage();
+        } else {
+            add_action('admin_menu', $this->addMenuPage(...));
+        }
+
         add_action('admin_init', $this->registerSettings(...));
         add_action('admin_enqueue_scripts', $this->enqueueAssets(...));
     }

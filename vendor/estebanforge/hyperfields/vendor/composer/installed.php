@@ -110,9 +110,9 @@
             'dev_requirement' => true,
         ),
         'phpunit/php-code-coverage' => array(
-            'pretty_version' => '11.0.11',
-            'version' => '11.0.11.0',
-            'reference' => '4f7722aa9a7b76aa775e2d9d4e95d1ea16eeeef4',
+            'pretty_version' => '11.0.12',
+            'version' => '11.0.12.0',
+            'reference' => '2c1ed04922802c15e1de5d7447b4856de949cf56',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpunit/php-code-coverage',
             'aliases' => array(),
