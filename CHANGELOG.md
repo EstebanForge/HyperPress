@@ -1,5 +1,8 @@
 # Changelog
 
+# 3.0.5 / 2026-01-XX
+- **NEW:** Added `hyperpress/render/invalid_route_output` filter to replace the invalid route/missing template response with custom HTML or a `.html`/`.htm` file.
+
 # 3.0.4 / 2026-01-08
 - **NEW:** Added Pest v4 testing framework with PHPUnit v12 support
 - **NEW:** Added pestphp/pest-plugin-browser for browser testing capabilities
