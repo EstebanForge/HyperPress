@@ -198,6 +198,22 @@ add_filter('hyperpress/render/register_template_path', function($paths) {
 });
 ```
 
+## Override Invalid Route Response
+
+When a template is missing or an invalid route is requested, you can return a simple HTML response or a `.html`/`.htm` file path. This only runs for these error types: `missing-template-name`, `invalid-route`, `template-not-found`.
+
+```php
+add_filter('hyperpress/render/invalid_route_output', function($output, $error_type, $template_name, $template_path) {
+    return plugin_dir_path(__FILE__) . 'hypermedia/invalid-route.html';
+}, 10, 4);
+```
+
+```php
+add_filter('hyperpress/render/invalid_route_output', function($output, $error_type, $template_name) {
+    return '<h1>Not found</h1><p>The requested template is missing.</p>';
+}, 10, 3);
+```
+
 ## Customize Sanitization
 
 Modify the sanitization process for parameters:

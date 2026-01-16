@@ -167,6 +167,35 @@ class Render
         $base_url = home_url($current_endpoint . '/' . $endpoint_version);
         $plugin_name = 'HyperPress';
 
+        /**
+         * Filters the HTML output for invalid route requests.
+         *
+         * @since 3.0.5
+         *
+         * @param string|null $custom_output String HTML or a .html/.htm file path.
+         * @param string $error_type Error type: missing-template-name, invalid-route, template-not-found.
+         * @param string $template_name Requested template name.
+         * @param string $template_path Resolved template path (if any).
+         * @param array $context Context for building a response.
+         */
+        if (in_array($error_type, ['missing-template-name', 'invalid-route', 'template-not-found'], true)) {
+            $custom_output = apply_filters('hyperpress/render/invalid_route_output', null, $error_type, $template_name, $template_path, [
+                'current_endpoint' => $current_endpoint,
+                'endpoint_version' => $endpoint_version,
+                'base_url' => $base_url,
+                'plugin_name' => $plugin_name,
+            ]);
+
+            if (is_string($custom_output) && $custom_output !== '') {
+                if ($this->renderCustomDeveloperInfoHtmlFile($custom_output)) {
+                    die();
+                }
+
+                echo $custom_output;
+                die();
+            }
+        }
+
         // Only show debug info if WP_DEBUG is enabled or user can manage options
         $show_debug = defined('WP_DEBUG') && WP_DEBUG || current_user_can('manage_options');
 
@@ -368,6 +397,76 @@ class Render
         </html>
 <?php
                 die();
+    }
+
+    /**
+     * Render a custom developer info page from an allowed file, if provided.
+     *
+     * @since 3.0.5
+     * @param string $custom_output Custom output string or file path.
+     * @return bool True when a file was rendered.
+     */
+    protected function renderCustomDeveloperInfoHtmlFile($custom_output)
+    {
+        $allowed_roots = array_filter([
+            get_template_directory(),
+            get_stylesheet_directory(),
+            defined('HYPERPRESS_INSTANCE_LOADED_PATH') ? dirname(HYPERPRESS_INSTANCE_LOADED_PATH) : null,
+        ], 'is_string');
+
+        $candidates = [$custom_output];
+        foreach ($allowed_roots as $root) {
+            $candidates[] = rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($custom_output, DIRECTORY_SEPARATOR);
+        }
+
+        foreach ($candidates as $candidate) {
+            $resolved = realpath($candidate);
+            if ($resolved === false) {
+                continue;
+            }
+
+            $ext = strtolower(pathinfo($resolved, PATHINFO_EXTENSION));
+            if (!in_array($ext, ['html', 'htm'], true)) {
+                continue;
+            }
+
+            if (!$this->isAllowedCustomResponsePath($resolved, $allowed_roots)) {
+                continue;
+            }
+
+            readfile($resolved);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Validate custom response path against known safe roots.
+     *
+     * @since 3.0.5
+     * @param string $path Resolved file path.
+     * @param array $allowed_roots Allowed root directories.
+     * @return bool
+     */
+    protected function isAllowedCustomResponsePath($path, array $allowed_roots)
+    {
+        $path = rtrim($path, DIRECTORY_SEPARATOR);
+
+        foreach ($allowed_roots as $root) {
+            $root_real = realpath($root);
+            if ($root_real === false) {
+                continue;
+            }
+
+            $root_prefix = rtrim($root_real, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            if (strncmp($path, $root_prefix, strlen($root_prefix)) === 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
