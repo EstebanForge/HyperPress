@@ -49,7 +49,7 @@ You can pass data to templates using URL parameters via GET or POST.
 /wp-html/v1/related-posts?category_id=5
 ```
 
-All parameters and values are available inside your template as an array named `$hmvals`.
+All parameters and values are available inside your template as an array named `$hp_vals`.
 
 ## No Swap Response Templates
 
