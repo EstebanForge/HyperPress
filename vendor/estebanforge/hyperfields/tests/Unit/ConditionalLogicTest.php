@@ -309,8 +309,9 @@ class ConditionalLogicTest extends \PHPUnit\Framework\TestCase
         $reflection = new \ReflectionClass(ConditionalLogic::class);
         $method = $reflection->getMethod('evaluateCondition');
 
+        $instance = $reflection->newInstanceWithoutConstructor();
         $result = $method->invoke(
-            new \ReflectionClass(ConditionalLogic::class)->newInstanceWithoutConstructor(),
+            $instance,
             'value',
             'CUSTOM_OP',
             'compare'
