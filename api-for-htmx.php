@@ -22,3 +22,15 @@ defined('ABSPATH') || exit;
 // Load the shared bootstrap file.
 require_once __DIR__ . '/bootstrap.php';
 
+// Ensure the initialization hook is registered.
+// This handles the case where bootstrap.php was loaded early (e.g., via Composer)
+// and couldn't register the hook because WordPress wasn't ready.
+if (function_exists('hyperpress_select_and_load_latest') && !has_action('after_setup_theme', 'hyperpress_select_and_load_latest')) {
+    add_action('after_setup_theme', 'hyperpress_select_and_load_latest', 0);
+}
+
+// Ensure HyperFields is also initialized if it's being used as a library
+if (function_exists('hyperfields_select_and_load_latest') && !has_action('after_setup_theme', 'hyperfields_select_and_load_latest')) {
+    add_action('after_setup_theme', 'hyperfields_select_and_load_latest', 0);
+}
+
