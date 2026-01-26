@@ -52,8 +52,25 @@ $current_hyperfields_instance_path = null;
 // Check if we're running as a plugin (one of the entry files exists) or as a library
 if ($plugin_file_path && file_exists($plugin_file_path)) {
     // Plugin mode: read version from the main plugin file
-    $hyperfields_plugin_data = get_file_data($plugin_file_path, ['Version' => 'Version'], false);
-    $current_hyperfields_instance_version = $hyperfields_plugin_data['Version'] ?? '1.0.3';
+    if (function_exists('get_file_data')) {
+        $hyperfields_plugin_data = get_file_data($plugin_file_path, ['Version' => 'Version'], false);
+        $current_hyperfields_instance_version = $hyperfields_plugin_data['Version'] ?? '1.0.3';
+    } else {
+        // Fallback: Try composer.json first
+        $composer_json_path = __DIR__ . '/composer.json';
+        if (file_exists($composer_json_path)) {
+            $composer_data = json_decode(file_get_contents($composer_json_path), true);
+            $current_hyperfields_instance_version = $composer_data['version'] ?? '1.0.3';
+        } else {
+             // Fallback: Regex parse the plugin file
+            $plugin_content = file_get_contents($plugin_file_path, false, null, 0, 8192);
+            if ($plugin_content && preg_match('/^[ \t\/*#@]*Version:\s*(.*)$/mi', $plugin_content, $matches)) {
+                $current_hyperfields_instance_version = trim($matches[1]);
+            } else {
+                $current_hyperfields_instance_version = '1.0.3';
+            }
+        }
+    }
     $current_hyperfields_instance_path = realpath($plugin_file_path);
 } else {
     // Library mode: try to get version from composer.json or use a fallback
@@ -84,8 +101,10 @@ $GLOBALS['hyperfields_api_candidates'][$current_hyperfields_instance_path] = [
 ];
 
 // Use 'after_setup_theme' to ensure this runs after the theme is loaded.
-if (!has_action('after_setup_theme', 'hyperfields_select_and_load_latest')) {
-    add_action('after_setup_theme', 'hyperfields_select_and_load_latest', 0);
+if (function_exists('has_action') && function_exists('add_action')) {
+    if (!has_action('after_setup_theme', 'hyperfields_select_and_load_latest')) {
+        add_action('after_setup_theme', 'hyperfields_select_and_load_latest', 0);
+    }
 }
 
 if (!function_exists('hyperfields_run_initialization_logic')) {

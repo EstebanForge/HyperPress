@@ -1,7 +1,7 @@
 {
     "name": "estebanforge/hyperpress",
     "description": "Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.",
-    "type": "wordpress-plugin",
+    "type": "library",
     "version": "3.0.5",
     "license": "GPL-2.0-or-later",
     "authors": [
