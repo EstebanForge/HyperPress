@@ -3,10 +3,15 @@
 declare(strict_types=1);
 
 /**
- * FieldGroup class for the fluent API.
+ * Facade for HyperBlocks\FieldGroup.
+ *
+ * This facade maintains backward compatibility by extending the HyperBlocks FieldGroup class.
+ * Any HyperPress-specific functionality can be added here.
  */
 
 namespace HyperPress\Blocks;
+
+use HyperBlocks\FieldGroup as HyperBlocksFieldGroup;
 
 // Prevent direct file access.
 if (!defined('ABSPATH')) {
@@ -14,64 +19,38 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Represents a reusable group of fields.
+ * Facade class for FieldGroup, extending HyperBlocks\FieldGroup.
  */
-class FieldGroup
+class FieldGroup extends HyperBlocksFieldGroup
 {
-    /**
-     * The field group name.
-     *
-     * @var string
-     */
-    public string $name;
-
-    /**
-     * The field group ID.
-     *
-     * @var string
-     */
-    public string $id;
-
-    /**
-     * The fields in the group.
-     *
-     * @var Field[]
-     */
-    public array $fields = [];
-
     /**
      * Constructor.
      *
-     * @param string $name The field group name.
-     * @param string $id   The field group ID.
+     * @param string $id The field group ID.
+     * @param string $title The field group title.
+     * @param array $fields Optional array of Field objects.
      */
-    private function __construct(string $name, string $id)
+    public function __construct(string $id, string $title, array $fields = [])
     {
-        $this->name = $name;
-        $this->id = $id;
+        parent::__construct($id, $title, $fields);
     }
 
     /**
-     * Create a new FieldGroup instance.
+     * Add HyperPress-specific behavior if needed.
      *
-     * @param string $name The field group name.
-     * @param string $id   The field group ID.
+     * This method can be used to add any HyperPress-specific extensions
+     * to the base FieldGroup functionality.
+     *
+     * @param array $options Additional options.
      * @return self
      */
-    public static function make(string $name, string $id): self
+    public function withHyperPressOptions(array $options = []): self
     {
-        return new self($name, $id);
-    }
-
-    /**
-     * Add fields to the group.
-     *
-     * @param Field[] $fields An array of Field objects.
-     * @return self
-     */
-    public function addFields(array $fields): self
-    {
-        $this->fields = array_merge($this->fields, $fields);
+        // Add any HyperPress-specific options here
+        if (isset($options['hypermedia'])) {
+            // Store hypermedia-specific settings
+            $this->metadata['hypermedia'] = $options['hypermedia'];
+        }
 
         return $this;
     }
