@@ -24,7 +24,8 @@
     "require": {
         "php": ">=8.1",
         "starfederation/datastar-php": "^1.0",
-        "estebanforge/hyperfields": "^1"
+        "estebanforge/hyperfields": "^1",
+        "estebanforge/hyperblocks": "^1"
     },
     "require-dev": {
         "phpunit/phpunit": "^12",
@@ -41,7 +42,6 @@
         "test:fast": "php -d pcov.enabled=1 vendor/bin/pest --coverage-html coverage-html --coverage-text",
         "test:summary": "php -d pcov.enabled=1 vendor/bin/pest --coverage-text",
         "test:clover": "php -d pcov.enabled=1 vendor/bin/pest --coverage-clover coverage.xml",
-        "test:setup": "php setup-sqlite-db.php",
         "test:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --coverage-html coverage-xdebug-html --coverage-text",
         "test:coverage:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --coverage-html coverage-xdebug-html --coverage-text",
         "test:summary:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --coverage-text",
