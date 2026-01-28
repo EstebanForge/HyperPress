@@ -1,0 +1,52 @@
+# Composer
+/vendor/
+composer.lock
+
+# Testing
+.phpunit.cache/
+/coverage/
+coverage-html/
+coverage-xdebug-html/
+coverage.xml
+coverage-xdebug.xml
+
+# WordPress
+/wordpress/
+/wordpress-tests-lib/
+/wp-tests-config.php
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
+/tmp/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build artifacts
+/dist/
+/build/
+*.min.js
+*.min.css
+
+# Documentation
+/node_modules/

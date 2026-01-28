@@ -27,9 +27,13 @@ class Assets
      */
     public function enqueueScripts(): void
     {
+        if (!defined('HYPERFIELDS_PLUGIN_URL')) {
+            return;
+        }
+
         wp_enqueue_script(
             'hyperfields-conditional-fields',
-            HYPERFIELDS_PLUGIN_URL . 'src/js/conditional-fields.js',
+            HYPERFIELDS_PLUGIN_URL . 'assets/js/conditional-fields.js',
             [],
             HYPERFIELDS_VERSION,
             true

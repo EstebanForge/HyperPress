@@ -1,0 +1,90 @@
+{
+    "name": "estebanforge/hyperblocks",
+    "description": "HyperBlocks: A powerful block library for WordPress with fluent API and field integration.",
+    "type": "library",
+    "version": "1.0.0-dev",
+    "license": "GPL-2.0-or-later",
+    "keywords": [
+        "wordpress",
+        "gutenberg",
+        "blocks",
+        "fluent-api",
+        "fields"
+    ],
+    "authors": [
+        {
+            "name": "Esteban Cuevas",
+            "email": "esteban@actitud.xyz",
+            "homepage": "https://github.com/EstebanForge"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../HyperFields"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "estebanforge/hyperfields": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0",
+        "brain/monkey": "^2.6",
+        "mockery/mockery": "^1.6",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "squizlabs/php_codesniffer": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "HyperBlocks\\": "src/"
+        },
+        "files": [
+            "bootstrap.php",
+            "src/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "HyperBlocks\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "php -d pcov.enabled=1 vendor/bin/phpunit --colors=always",
+        "test:unit": "php -d pcov.enabled=1 vendor/bin/phpunit tests/Unit --colors=always",
+        "test:integration": "php -d pcov.enabled=1 vendor/bin/phpunit tests/Integration --colors=always",
+        "test:coverage": "php -d pcov.enabled=1 vendor/bin/phpunit --coverage-html coverage-html --coverage-text",
+        "cs:fix": "vendor/bin/php-cs-fixer fix",
+        "cs:check": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "cs:sniff": "vendor/bin/phpcs --standard=PSR12 src/",
+        "version-bump": "bash scripts/version-bump.sh",
+        "production": [
+            "@cs:fix",
+            "@test"
+        ],
+        "post-install-cmd": [
+            "@cs:fix"
+        ],
+        "post-update-cmd": [
+            "@cs:fix"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0-dev"
+        }
+    },
+    "support": {
+        "issues": "https://github.com/EstebanForge/HyperBlocks/issues",
+        "source": "https://github.com/EstebanForge/HyperBlocks",
+        "docs": "https://github.com/EstebanForge/HyperBlocks/blob/main/docs/"
+    }
+}

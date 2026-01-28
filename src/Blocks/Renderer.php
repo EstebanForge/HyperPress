@@ -6,13 +6,11 @@ declare(strict_types=1);
  * Facade for HyperBlocks\Renderer.
  *
  * This facade maintains backward compatibility by extending the HyperBlocks Renderer class.
- * It initializes the Renderer with HyperPress-specific configuration.
  */
 
 namespace HyperPress\Blocks;
 
 use HyperBlocks\Renderer as HyperBlocksRenderer;
-use HyperBlocks\Config;
 
 // Prevent direct file access.
 if (!defined('ABSPATH')) {
@@ -25,29 +23,13 @@ if (!defined('ABSPATH')) {
 class Renderer extends HyperBlocksRenderer
 {
     /**
-     * Constructor.
-     *
-     * @param Config|null $config Optional configuration object.
-     */
-    public function __construct(?Config $config = null)
-    {
-        // If no config provided, create from HyperPress constants
-        if (null === $config) {
-            $config = Config::fromHyperPress();
-        }
-
-        // Call parent constructor with config
-        parent::__construct($config);
-    }
-
-    /**
      * Create a Renderer instance configured for HyperPress.
      *
      * @return self
      */
     public static function create(): self
     {
-        return new self(Config::fromHyperPress());
+        return new self();
     }
 
     /**

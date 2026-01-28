@@ -24,6 +24,26 @@ if (defined('HYPERPRESS_BOOTSTRAP_LOADED')) {
 
 define('HYPERPRESS_BOOTSTRAP_LOADED', true);
 
+// Optional dev override: load local HyperFields/HyperBlocks copies before Composer.
+$use_local_libs = defined('HYPERPRESS_USE_LOCAL_LIBS') ? (bool) HYPERPRESS_USE_LOCAL_LIBS : (getenv('HYPERPRESS_USE_LOCAL_LIBS') === '1');
+if ($use_local_libs) {
+    $local_libs = [
+        dirname(__DIR__) . '/HyperFields',
+        dirname(__DIR__) . '/HyperBlocks',
+    ];
+    foreach ($local_libs as $lib_path) {
+        $lib_path = realpath($lib_path) ?: $lib_path;
+        $autoload = $lib_path . '/vendor/autoload.php';
+        if (file_exists($autoload)) {
+            require_once $autoload;
+        }
+        $bootstrap = $lib_path . '/bootstrap.php';
+        if (file_exists($bootstrap)) {
+            require_once $bootstrap;
+        }
+    }
+}
+
 // Composer autoloader.
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
@@ -124,7 +144,9 @@ if (!function_exists('hyperpress_run_initialization_logic')) {
         define('HYPERPRESS_INSTANCE_LOADED', true);
         define('HYPERPRESS_LOADED_VERSION', $plugin_version);
         define('HYPERPRESS_INSTANCE_LOADED_PATH', $plugin_file_path);
-        define('HYPERPRESS_VERSION', $plugin_version);
+        if (!defined('HYPERPRESS_VERSION')) {
+            define('HYPERPRESS_VERSION', $plugin_version);
+        }
 
         // Determine if we're in library mode vs plugin mode (support legacy entry file)
         $basename = $plugin_file_path ? basename($plugin_file_path) : '';
@@ -135,13 +157,17 @@ if (!function_exists('hyperpress_run_initialization_logic')) {
             $plugin_dir = dirname($plugin_file_path);
             define('HYPERPRESS_ABSPATH', trailingslashit($plugin_dir));
             define('HYPERPRESS_BASENAME', 'hyperpress/bootstrap.php');
-            define('HYPERPRESS_PLUGIN_URL', ''); // Not applicable in library mode
+            if (!defined('HYPERPRESS_PLUGIN_URL')) {
+                define('HYPERPRESS_PLUGIN_URL', ''); // Not applicable in library mode
+            }
             define('HYPERPRESS_PLUGIN_FILE', $plugin_file_path);
         } else {
             // Plugin mode: use standard WordPress plugin functions
             define('HYPERPRESS_ABSPATH', plugin_dir_path($plugin_file_path));
             define('HYPERPRESS_BASENAME', plugin_basename($plugin_file_path));
-            define('HYPERPRESS_PLUGIN_URL', plugin_dir_url($plugin_file_path));
+            if (!defined('HYPERPRESS_PLUGIN_URL')) {
+                define('HYPERPRESS_PLUGIN_URL', plugin_dir_url($plugin_file_path));
+            }
             define('HYPERPRESS_PLUGIN_FILE', $plugin_file_path);
         }
 
@@ -202,7 +228,7 @@ if (!function_exists('hyperpress_run_initialization_logic')) {
 
                 // Initialize the blocks REST API
                 if (class_exists('HyperPress\Blocks\RestApi')) {
-                    $blocksRestApi = new HyperPress\Blocks\RestApi();
+                    $blocksRestApi = HyperPress\Blocks\RestApi::getInstance();
                     $blocksRestApi->init();
                 }
             }

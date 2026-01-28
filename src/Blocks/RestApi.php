@@ -6,13 +6,11 @@ declare(strict_types=1);
  * Facade for HyperBlocks\RestApi.
  *
  * This facade maintains backward compatibility by extending the HyperBlocks RestApi class.
- * It initializes the RestApi with HyperPress-specific configuration.
  */
 
 namespace HyperPress\Blocks;
 
 use HyperBlocks\RestApi as HyperBlocksRestApi;
-use HyperBlocks\Config;
 
 // Prevent direct file access.
 if (!defined('ABSPATH')) {
@@ -29,11 +27,7 @@ class RestApi extends HyperBlocksRestApi
      */
     private function __construct()
     {
-        // Create config from HyperPress constants
-        $config = Config::fromHyperPress();
-
-        // Call parent constructor with config
-        parent::__construct($config);
+        parent::__construct();
     }
 
     /**
