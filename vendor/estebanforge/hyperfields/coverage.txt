@@ -1,17 +1,19 @@
 
 
 [1;37;40mCode Coverage Report:        [0m
-[1;37;40m  2025-12-09 23:17:56        [0m
+[1;37;40m  2026-01-21 18:31:23        [0m
 [1;37;40m                             [0m
 [1;37;40m Summary:                    [0m
-[37;41m  Classes: 28.00% (7/25)     [0m
-[30;43m  Methods: 65.45% (216/330)  [0m
-[30;43m  Lines:   58.17% (1039/1786)[0m
+[37;41m  Classes: 26.92% (7/26)     [0m
+[30;43m  Methods: 64.56% (215/333)  [0m
+[30;43m  Lines:   56.58% (1041/1840)[0m
 
+HyperFields\Assets
+  [37;41mMethods:  50.00% ( 1/ 2)[0m   [37;41mLines:  10.00% (  1/ 10)[0m
 HyperFields\ConditionalLogic
   [30;42mMethods: 100.00% (21/21)[0m   [30;42mLines: 100.00% (103/103)[0m
 HyperFields\Container\Container
-  [30;42mMethods:  90.91% (10/11)[0m   [30;43mLines:  71.43% ( 15/ 21)[0m
+  [30;43mMethods:  81.82% ( 9/11)[0m   [30;43mLines:  66.67% ( 14/ 21)[0m
 HyperFields\Container\ContainerFactory
   [30;43mMethods:  75.00% ( 3/ 4)[0m   [30;42mLines:  90.00% (  9/ 10)[0m
 HyperFields\Container\PostMetaContainer
@@ -21,7 +23,7 @@ HyperFields\Container\TermMetaContainer
 HyperFields\Container\UserMetaContainer
   [30;43mMethods:  72.73% ( 8/11)[0m   [30;42mLines:  92.86% ( 65/ 70)[0m
 HyperFields\Field
-  [30;42mMethods:  90.00% (45/50)[0m   [30;42mLines:  93.81% (212/226)[0m
+  [30;43mMethods:  88.00% (44/50)[0m   [30;42mLines:  91.59% (207/226)[0m
 HyperFields\HyperFields
   [30;42mMethods: 100.00% (16/16)[0m   [30;42mLines: 100.00% ( 56/ 56)[0m
 HyperFields\Log
@@ -29,7 +31,7 @@ HyperFields\Log
 HyperFields\OptionField
   [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% ( 30/ 30)[0m
 HyperFields\OptionsPage
-  [30;42mMethods:  90.91% (20/22)[0m   [30;42mLines:  96.23% (153/159)[0m
+  [30;43mMethods:  86.36% (19/22)[0m   [30;42mLines:  95.65% (154/161)[0m
 HyperFields\OptionsSection
   [30;42mMethods: 100.00% ( 9/ 9)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
 HyperFields\PostField
@@ -40,6 +42,8 @@ HyperFields\RepeaterField
   [37;41mMethods:   5.88% ( 1/17)[0m   [37;41mLines:   2.00% (  1/ 50)[0m
 HyperFields\TabsField
   [37;41mMethods:   7.69% ( 1/13)[0m   [37;41mLines:   3.33% (  1/ 30)[0m
+HyperFields\TemplateLoader
+  [37;41mMethods:  14.29% ( 1/ 7)[0m   [37;41mLines:   3.25% (  5/154)[0m
 HyperFields\TermField
   [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% ( 18/ 18)[0m
 HyperFields\UserField

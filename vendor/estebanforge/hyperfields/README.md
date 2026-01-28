@@ -4,12 +4,6 @@ A powerful custom field system for WordPress, providing metaboxes, options pages
 
 ## Installation
 
-### As a Plugin
-
-1. Download the plugin zip file
-2. Upload to your WordPress plugins directory
-3. Activate the plugin
-
 ### As a Composer Library
 
 ```bash

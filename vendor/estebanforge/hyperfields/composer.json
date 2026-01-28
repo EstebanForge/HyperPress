@@ -1,8 +1,8 @@
 {
     "name": "estebanforge/hyperfields",
     "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
-    "type": "wordpress-plugin",
-    "version": "1.0.3",
+    "type": "library",
+    "version": "1.0.8",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
@@ -46,7 +46,10 @@
         "test:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text",
         "test:coverage:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text",
         "test:summary:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-text",
-        "test:clover:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage-xdebug.xml"
+        "test:clover:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage-xdebug.xml",
+        "production": "composer install --no-dev --optimize-autoloader",
+        "version-bump": "bash scripts/version-bump.sh",
+        "setup-hooks": "cp .githooks/* .git/hooks/ && chmod +x .git/hooks/* && echo 'Git hooks installed to .git/hooks/'"
     },
 
     "config": {

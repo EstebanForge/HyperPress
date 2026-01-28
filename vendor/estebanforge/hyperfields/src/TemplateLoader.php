@@ -130,20 +130,26 @@ class TemplateLoader
 
     public static function enqueueAssets(): void
     {
+        $plugin_url = defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : (defined('HYPERFIELDS_PLUGIN_URL') ? HYPERFIELDS_PLUGIN_URL : '');
+        if ($plugin_url === '') {
+            return;
+        }
+        $version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : (defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : '0.0.0');
+
         // Always enqueue admin.css for HyperFields admin pages
         if (is_admin()) {
             wp_enqueue_style(
                 'hyperpress-admin',
-                HYPERPRESS_PLUGIN_URL . 'assets/css/admin.css',
+                $plugin_url . 'assets/css/admin.css',
                 [],
-                HYPERPRESS_VERSION
+                $version
             );
             // In admin, enqueue base JS for HyperFields; CSS is covered by admin.css
             wp_enqueue_script(
                 'hyperpress-conditional-fields',
-                HYPERPRESS_PLUGIN_URL . 'assets/js/conditional-fields.js',
+                $plugin_url . 'assets/js/conditional-fields.js',
                 [],
-                HYPERPRESS_VERSION,
+                $version,
                 true
             );
 
@@ -170,9 +176,9 @@ class TemplateLoader
 
         wp_enqueue_script(
             'hyperpress-conditional-fields',
-            HYPERPRESS_PLUGIN_URL . 'assets/js/conditional-fields.js',
+            $plugin_url . 'assets/js/conditional-fields.js',
             [],
-            HYPERPRESS_VERSION,
+            $version,
             true
         );
 
@@ -194,9 +200,15 @@ class TemplateLoader
     {
         // Enqueue heavy/type-specific assets after fields have rendered (works for admin and frontend)
         if (isset(self::$rendered_field_types['map'])) {
+            $plugin_url = defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : (defined('HYPERFIELDS_PLUGIN_URL') ? HYPERFIELDS_PLUGIN_URL : '');
+            if ($plugin_url === '') {
+                return;
+            }
+            $version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : (defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : '0.0.0');
+
             wp_enqueue_style('hyperpress-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4');
             wp_enqueue_script('hyperpress-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true);
-            wp_enqueue_script('hyperpress-map-field', HYPERPRESS_PLUGIN_URL . 'assets/js/map-field.js', ['hyperpress-leaflet'], HYPERPRESS_VERSION, true);
+            wp_enqueue_script('hyperpress-map-field', $plugin_url . 'assets/js/map-field.js', ['hyperpress-leaflet'], $version, true);
         }
     }
 

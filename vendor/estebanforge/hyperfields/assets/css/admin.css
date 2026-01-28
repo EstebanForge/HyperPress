@@ -1,0 +1,112 @@
+/* HyperFields admin styles */
+.hyperpress-field-wrapper {
+    margin: 0 0 16px;
+}
+
+.hyperpress-field-label {
+    display: block;
+    font-weight: 600;
+    margin: 0 0 6px;
+}
+
+.hyperpress-field-input .description {
+    color: #646970;
+    margin: 6px 0 0;
+}
+
+.hyperpress-field-input .regular-text,
+.hyperpress-field-input select,
+.hyperpress-field-input textarea {
+    max-width: 420px;
+    width: 100%;
+}
+
+.hyperpress-field-input textarea {
+    min-height: 120px;
+}
+
+.hyperpress-field-wrapper .required {
+    color: #d63638;
+    margin-left: 4px;
+}
+
+.hyperpress-map-field .hyperpress-map-canvas {
+    background: #f6f7f7;
+}
+
+.hyperpress-options-wrap {
+    max-width: 920px;
+}
+
+.hyperpress-options-wrap h1 {
+    margin-bottom: 18px;
+}
+
+.hyperpress-options-wrap .nav-tab-wrapper {
+    margin: 0 0 18px;
+}
+
+.hyperpress-options-wrap h2 {
+    margin: 22px 0 8px;
+}
+
+.hyperpress-options-wrap p {
+    margin: 0 0 12px;
+}
+
+.hyperpress-fields-group {
+    margin-top: 16px;
+}
+
+.hyperpress-field-wrapper {
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.hyperpress-field-wrapper:last-child {
+    border-bottom: 0;
+}
+
+.hyperpress-field-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+.hyperpress-field-label {
+    min-width: 220px;
+    font-weight: 600;
+    padding-top: 4px;
+}
+
+.hyperpress-field-input-wrapper label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hyperpress-field-input-wrapper input[type="checkbox"] {
+    margin-top: 0;
+}
+
+.hyperpress-field-input-wrapper .description {
+    display: inline;
+    margin: 0;
+    color: #50575e;
+}
+
+.hyperpress-options-wrap .submit {
+    margin-top: 18px;
+}
+
+@media (max-width: 782px) {
+    .hyperpress-field-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .hyperpress-field-label {
+        min-width: 0;
+        padding-top: 0;
+    }
+}

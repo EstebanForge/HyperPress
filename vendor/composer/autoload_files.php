@@ -9,5 +9,7 @@ return array(
     '13f65e44352b0407f05cb5a5e174612b' => $vendorDir . '/estebanforge/hyperfields/includes/helpers.php',
     '0522701f5d113a2ff6373ccc834dd7d6' => $vendorDir . '/estebanforge/hyperfields/includes/backward-compatibility.php',
     'c1c635284e1ca7836efff979fb09390f' => $vendorDir . '/estebanforge/hyperfields/bootstrap.php',
+    '7a417aa514b484622606bfc8f3893672' => $vendorDir . '/estebanforge/hyperblocks/bootstrap.php',
+    '611bc1f60ae2ec6bee160ee5d1b75d78' => $vendorDir . '/estebanforge/hyperblocks/src/helpers.php',
     'b4e0b991acd5ddad926ebc747d73282f' => $baseDir . '/bootstrap.php',
 );
