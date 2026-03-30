@@ -11,5 +11,5 @@ return array(
     'c1c635284e1ca7836efff979fb09390f' => $vendorDir . '/estebanforge/hyperfields/bootstrap.php',
     '7a417aa514b484622606bfc8f3893672' => $vendorDir . '/estebanforge/hyperblocks/bootstrap.php',
     '611bc1f60ae2ec6bee160ee5d1b75d78' => $vendorDir . '/estebanforge/hyperblocks/src/helpers.php',
-    'b4e0b991acd5ddad926ebc747d73282f' => $baseDir . '/bootstrap.php',
+    '29999a51792ecace5389ce90bf577c3f' => $vendorDir . '/estebanforge/hyperpress-core/bootstrap.php',
 );

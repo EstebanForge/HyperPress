@@ -1,0 +1,3 @@
+{
+    "redefinable-internals": ["is_uploaded_file"]
+}

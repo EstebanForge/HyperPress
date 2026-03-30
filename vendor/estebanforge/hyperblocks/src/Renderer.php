@@ -8,11 +8,9 @@ declare(strict_types=1);
 
 namespace HyperBlocks;
 
-use HyperBlocks\Config;
-
 // Prevent direct file access.
-if (!defined('ABSPATH')) {
-    exit;
+if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
+    return;
 }
 
 /**

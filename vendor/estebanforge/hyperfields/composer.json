@@ -1,60 +1,64 @@
 {
-    "name": "estebanforge/hyperfields",
-    "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
-    "type": "library",
-    "version": "1.0.8",
-    "license": "GPL-2.0-or-later",
-    "authors": [
-        {
-            "name": "Esteban Cuevas",
-            "email": "esteban@actitud.xyz"
-        }
-    ],
-    "minimum-stability": "RC",
-    "prefer-stable": true,
-    "require": {
-        "php": ">=8.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "HyperFields\\": "src/"
-        },
-        "files": [
-            "includes/helpers.php",
-            "includes/backward-compatibility.php",
-            "bootstrap.php"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "HyperFields\\Tests\\": "tests/"
-        }
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^11.0",
-        "brain/monkey": "^2.6",
-        "mockery/mockery": "^1.6"
-    },
-    "scripts": {
-        "test": "php -d pcov.enabled=1 vendor/bin/phpunit --colors=always",
-        "test:unit": "php -d pcov.enabled=1 vendor/bin/phpunit tests/Unit --colors=always",
-        "test:integration": "php -d pcov.enabled=1 vendor/bin/phpunit tests/Integration --colors=always",
-        "test:coverage": "php -d pcov.enabled=1 vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-html --coverage-text",
-        "test:fast": "php -d pcov.enabled=1 vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-html --coverage-text",
-        "test:summary": "php -d pcov.enabled=1 vendor/bin/phpunit --configuration phpunit.xml --coverage-text",
-        "test:clover": "php -d pcov.enabled=1 vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml",
-        "test:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text",
-        "test:coverage:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text",
-        "test:summary:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-text",
-        "test:clover:xdebug": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage-xdebug.xml",
-        "production": "composer install --no-dev --optimize-autoloader",
-        "version-bump": "bash scripts/version-bump.sh",
-        "setup-hooks": "cp .githooks/* .git/hooks/ && chmod +x .git/hooks/* && echo 'Git hooks installed to .git/hooks/'"
-    },
-
-    "config": {
-        "allow-plugins": {
-            "composer/installers": true
-        }
+  "name": "estebanforge/hyperfields",
+  "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
+  "type": "library",
+  "version": "1.1.3",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Esteban Cuevas",
+      "email": "esteban@actitud.xyz"
     }
+  ],
+  "minimum-stability": "RC",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "HyperFields\\": "src/"
+    },
+    "files": [
+      "includes/helpers.php",
+      "includes/backward-compatibility.php",
+      "bootstrap.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "HyperFields\\Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^12.0",
+    "pestphp/pest": "^4.4",
+    "brain/monkey": "^2.6",
+    "mockery/mockery": "^1.6",
+    "friendsofphp/php-cs-fixer": "^3.0"
+  },
+  "scripts": {
+    "test": "bash -lc 'if [ ! -f vendor/bin/pest ]; then composer update --no-interaction --no-progress; fi; php -d pcov.enabled=1 vendor/bin/pest --colors=always'",
+    "test:unit": "php -d pcov.enabled=1 vendor/bin/pest tests/Unit --colors=always",
+    "test:integration": "php -d pcov.enabled=1 vendor/bin/pest tests/Integration --colors=always",
+    "test:coverage": "php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --coverage-html coverage-html --coverage-text",
+    "test:fast": "php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --coverage-html coverage-html --coverage-text",
+    "test:summary": "php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --coverage-text",
+    "test:clover": "php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --coverage-clover coverage.xml",
+    "test:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text",
+    "test:coverage:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text",
+    "test:summary:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --configuration phpunit.xml --coverage-text",
+    "test:clover:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --configuration phpunit.xml --coverage-clover coverage-xdebug.xml",
+    "production": "@php composer install --no-dev --optimize-autoloader",
+    "version-bump": "bash scripts/version-bump.sh",
+    "setup-hooks": "cp .githooks/* .git/hooks/ && chmod +x .git/hooks/* && echo 'Git hooks installed to .git/hooks/'",
+    "cs:fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php",
+    "cs:check": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "pestphp/pest-plugin": true
+    }
+  }
 }

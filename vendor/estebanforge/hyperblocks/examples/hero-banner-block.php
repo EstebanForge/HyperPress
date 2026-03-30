@@ -1,10 +1,9 @@
 <?php
+
 /**
- * Example: Hero Banner Block
+ * Example: Hero Banner Block.
  *
  * This demonstrates how to create a HyperBlocks block using the fluent API.
- *
- * @package HyperBlocks\Examples
  */
 
 use HyperBlocks\Block\Block;
@@ -17,7 +16,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Register the Hero Banner block
+ * Register the Hero Banner block.
  */
 $heroBannerBlock = Block::make('Hero Banner')
     ->setName('hyperblocks-examples/hero-banner')

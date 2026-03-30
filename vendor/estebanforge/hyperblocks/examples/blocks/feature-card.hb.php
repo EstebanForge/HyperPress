@@ -1,6 +1,6 @@
 <?php
 /**
- * Feature Card Block Template
+ * Feature Card Block Template.
  *
  * @var string $title The card title.
  * @var string $description The card description.

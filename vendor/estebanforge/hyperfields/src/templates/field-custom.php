@@ -14,10 +14,13 @@ if (!defined('ABSPATH')) {
 
 $type = $field_data['type'] ?? 'custom';
 $name = $field_data['name'] ?? '';
+$name_attr = $field_data['name_attr'] ?? $name;
 $label = $field_data['label'] ?? '';
 $value = $field_data['value'] ?? '';
 $required = $field_data['required'] ?? false;
 $help = $field_data['help'] ?? '';
+$help_is_html = $field_data['help_is_html'] ?? false;
+$error = isset($field_data['error']) && is_string($field_data['error']) ? $field_data['error'] : '';
 $render_callback = $field_data['render_callback'] ?? '';
 $assets = $field_data['assets'] ?? [];
 
@@ -49,15 +52,24 @@ if (!empty($render_callback) && is_callable($render_callback)) {
                 </label>
             </div>
             <div class="hyperpress-field-input-wrapper">
-                <input type="text"
+                       <input type="text"
                        id="<?php echo esc_attr($name); ?>"
-                       name="<?php echo esc_attr($name); ?>"
+                       name="<?php echo esc_attr($name_attr); ?>"
                        value="<?php echo esc_attr($value); ?>"
                        <?php echo $required ? 'required' : ''; ?>
                        class="regular-text">
 
                 <?php if ($help): ?>
-                    <p class="description"><?php echo esc_html($help); ?></p>
+                    <p class="description">
+                        <?php if ($help_is_html): ?>
+                            <?php echo wp_kses_post($help); ?>
+                        <?php else: ?>
+                            <?php echo esc_html($help); ?>
+                        <?php endif; ?>
+                    </p>
+                <?php endif; ?>
+                <?php if ($error): ?>
+                    <p class="description" style="color:#d63638;"><?php echo esc_html($error); ?></p>
                 <?php endif; ?>
             </div>
         </div>

@@ -12,11 +12,10 @@ use HyperBlocks\Block\Block;
 use HyperBlocks\Block\Field;
 use HyperBlocks\Block\FieldGroup;
 use HyperFields\BlockFieldAdapter;
-use HyperBlocks\Config;
 
 // Prevent direct file access.
-if (!defined('ABSPATH')) {
-    exit;
+if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
+    return;
 }
 
 /**
@@ -496,9 +495,10 @@ final class Registry
      *
      * @return void
      */
-    public function reset(): void
+    public static function reset(): void
     {
-        $this->fluentBlocks = [];
-        $this->fieldGroups = [];
+        $instance = self::getInstance();
+        $instance->fluentBlocks = [];
+        $instance->fieldGroups = [];
     }
 }

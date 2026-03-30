@@ -1,7 +1,26 @@
 # Changelog
 
-# 3.0.5 / 2026-01-XX
+# 3.1.0 / 2026-03-29
 - **NEW:** Added `hyperpress/render/invalid_route_output` filter to replace the invalid route/missing template response with custom HTML or a `.html`/`.htm` file.
+- **ARCHITECTURE:** Converted HyperPress into a thin WordPress plugin adapter that loads `estebanforge/hyperpress-core` from Composer.
+- **ARCHITECTURE:** Composer package type set to `wordpress-plugin`; plugin now depends on `estebanforge/hyperpress-core:^1`.
+- **NEW:** Added a built-in **HyperPress Data Tools** page under `Tools` using HyperFields Export/Import UI for `hyperpress_options`.
+- **FIX:** Added robust load-once guards in adapter bootstrap to prevent duplicate path loading and autoloader collisions.
+- **FIX:** Added defensive WordPress hook guards (`function_exists`) in adapter bootstrap for CLI/test contexts.
+- **FIX:** Restored complete selector hook wiring in plugin entrypoint (`hyperpress`, `hyperfields`, and `hyperblocks` latest-instance selectors).
+- **TESTING:** Added/updated adapter contract tests for bootstrap wiring, plugin entrypoint wiring, and Composer adapter contract.
+- **TESTING:** `composer test` now self-heals by running `composer update` when `vendor/bin/pest` is missing, then executes tests.
+- **DX:** Standardized adapter Composer scripts (`production`, `test`, `test:unit`, `cs:fix`, `cs:check`, `version-bump`).
+- **DX:** Fixed `version-bump` workflow to update all release-critical files in one run:
+  - `composer.json`
+  - plugin entrypoint header (`api-for-htmx.php`)
+  - `README.txt` stable tag
+  - `SECURITY.md` supported versions
+- **RELEASE:** Corrected plugin `.gitignore` for release workflow (keeps `vendor/` tracked, ignores local caches/artifacts, and no longer ignores `scripts/`).
+- **FIX:** HyperFields Export/Import diff preview integration fix included in stack usage:
+  - jsondiffpatch now loads before inline diff render
+  - loading label encoding corrected
+  - explicit fallback message when diff library is unavailable
 
 # 3.0.4 / 2026-01-08
 - **NEW:** Added Pest v4 testing framework with PHPUnit v12 support

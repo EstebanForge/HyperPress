@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+namespace HyperFields\Compatibility;
+
+/**
+ * @deprecated Use WPSettingsCompatibility.
+ */
+final class SettingsCompatibility
+{
+    public static function register(array $config): \HyperFields\OptionsPage
+    {
+        return WPSettingsCompatibility::register($config);
+    }
+}
+

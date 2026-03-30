@@ -1,18 +1,167 @@
 {
     "packages": [
         {
-            "name": "estebanforge/hyperblocks",
-            "version": "dev-main",
-            "version_normalized": "dev-main",
+            "name": "composer/installers",
+            "version": "v2.3.0",
+            "version_normalized": "2.3.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/EstebanForge/HyperBlocks.git",
-                "reference": "ce4b6706d57571b2d525778588ec52389636f109"
+                "url": "https://github.com/composer/installers.git",
+                "reference": "12fb2dfe5e16183de69e784a7b84046c43d97e8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EstebanForge/HyperBlocks/zipball/ce4b6706d57571b2d525778588ec52389636f109",
-                "reference": "ce4b6706d57571b2d525778588ec52389636f109",
+                "url": "https://api.github.com/repos/composer/installers/zipball/12fb2dfe5e16183de69e784a7b84046c43d97e8e",
+                "reference": "12fb2dfe5e16183de69e784a7b84046c43d97e8e",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0 || ^2.0",
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "composer/composer": "^1.10.27 || ^2.7",
+                "composer/semver": "^1.7.2 || ^3.4.0",
+                "phpstan/phpstan": "^1.11",
+                "phpstan/phpstan-phpunit": "^1",
+                "symfony/phpunit-bridge": "^7.1.1",
+                "symfony/process": "^5 || ^6 || ^7"
+            },
+            "time": "2024-06-24T20:46:46+00:00",
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Composer\\Installers\\Plugin",
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                },
+                "plugin-modifies-install-path": true
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Installers\\": "src/Composer/Installers"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kyle Robinson Young",
+                    "email": "kyle@dontkry.com",
+                    "homepage": "https://github.com/shama"
+                }
+            ],
+            "description": "A multi-framework Composer library installer",
+            "homepage": "https://composer.github.io/installers/",
+            "keywords": [
+                "Dolibarr",
+                "Eliasis",
+                "Hurad",
+                "ImageCMS",
+                "Kanboard",
+                "Lan Management System",
+                "MODX Evo",
+                "MantisBT",
+                "Mautic",
+                "Maya",
+                "OXID",
+                "Plentymarkets",
+                "Porto",
+                "RadPHP",
+                "SMF",
+                "Starbug",
+                "Thelia",
+                "Whmcs",
+                "WolfCMS",
+                "agl",
+                "annotatecms",
+                "attogram",
+                "bitrix",
+                "cakephp",
+                "chef",
+                "cockpit",
+                "codeigniter",
+                "concrete5",
+                "concreteCMS",
+                "croogo",
+                "dokuwiki",
+                "drupal",
+                "eZ Platform",
+                "elgg",
+                "expressionengine",
+                "fuelphp",
+                "grav",
+                "installer",
+                "itop",
+                "known",
+                "kohana",
+                "laravel",
+                "lavalite",
+                "lithium",
+                "magento",
+                "majima",
+                "mako",
+                "matomo",
+                "mediawiki",
+                "miaoxing",
+                "modulework",
+                "modx",
+                "moodle",
+                "osclass",
+                "pantheon",
+                "phpbb",
+                "piwik",
+                "ppi",
+                "processwire",
+                "puppet",
+                "pxcms",
+                "reindex",
+                "roundcube",
+                "shopware",
+                "silverstripe",
+                "sydes",
+                "sylius",
+                "tastyigniter",
+                "wordpress",
+                "yawik",
+                "zend",
+                "zikula"
+            ],
+            "support": {
+                "issues": "https://github.com/composer/installers/issues",
+                "source": "https://github.com/composer/installers/tree/v2.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "install-path": "./installers"
+        },
+        {
+            "name": "estebanforge/hyperblocks",
+            "version": "1.0.3",
+            "version_normalized": "1.0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EstebanForge/HyperBlocks.git",
+                "reference": "52b589a3c83532e89d8d8608bee33bda738f37ba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EstebanForge/HyperBlocks/zipball/52b589a3c83532e89d8d8608bee33bda738f37ba",
+                "reference": "52b589a3c83532e89d8d8608bee33bda738f37ba",
                 "shasum": ""
             },
             "require": {
@@ -23,11 +172,11 @@
                 "brain/monkey": "^2.6",
                 "friendsofphp/php-cs-fixer": "^3.0",
                 "mockery/mockery": "^1.6",
-                "phpunit/phpunit": "^11.0",
+                "pestphp/pest": "^4.4",
+                "phpunit/phpunit": "^12.0",
                 "squizlabs/php_codesniffer": "^3.0"
             },
-            "time": "2026-01-28T00:14:09+00:00",
-            "default-branch": true,
+            "time": "2026-03-30T00:16:51+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -45,28 +194,28 @@
                 ]
             },
             "autoload-dev": {
-                "psr-4": {
-                    "HyperBlocks\\Tests\\": "tests/"
-                }
+                "classmap": [
+                    "tests/Unit/"
+                ]
             },
             "scripts": {
                 "test": [
-                    "php -d pcov.enabled=1 vendor/bin/phpunit --colors=always"
+                    "bash -lc 'if [ ! -f vendor/bin/pest ]; then composer update --no-interaction --no-progress; fi; php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --colors=always'"
                 ],
                 "test:unit": [
-                    "php -d pcov.enabled=1 vendor/bin/phpunit tests/Unit --colors=always"
+                    "php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests/Unit --colors=always"
                 ],
                 "test:integration": [
-                    "php -d pcov.enabled=1 vendor/bin/phpunit tests/Integration --colors=always"
+                    "php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests/Integration --colors=always"
                 ],
                 "test:coverage": [
-                    "php -d pcov.enabled=1 vendor/bin/phpunit --coverage-html coverage-html --coverage-text"
+                    "php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --coverage-html coverage-html --coverage-text"
                 ],
                 "cs:fix": [
-                    "vendor/bin/php-cs-fixer fix"
+                    "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
                 ],
                 "cs:check": [
-                    "vendor/bin/php-cs-fixer fix --dry-run --diff"
+                    "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff"
                 ],
                 "cs:sniff": [
                     "vendor/bin/phpcs --standard=PSR12 src/"
@@ -75,14 +224,7 @@
                     "bash scripts/version-bump.sh"
                 ],
                 "production": [
-                    "@cs:fix",
-                    "@test"
-                ],
-                "post-install-cmd": [
-                    "@cs:fix"
-                ],
-                "post-update-cmd": [
-                    "@cs:fix"
+                    "@php composer install --no-dev --optimize-autoloader"
                 ]
             },
             "license": [
@@ -112,17 +254,17 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "dev-main",
-            "version_normalized": "dev-main",
+            "version": "1.1.3",
+            "version_normalized": "1.1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EstebanForge/HyperFields.git",
-                "reference": "d1407ff5d3d74532653b51be03c1a5ff4f343122"
+                "reference": "e8540f78f8faa79ef661aea0cf28dc4de608f7c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EstebanForge/HyperFields/zipball/d1407ff5d3d74532653b51be03c1a5ff4f343122",
-                "reference": "d1407ff5d3d74532653b51be03c1a5ff4f343122",
+                "url": "https://api.github.com/repos/EstebanForge/HyperFields/zipball/e8540f78f8faa79ef661aea0cf28dc4de608f7c5",
+                "reference": "e8540f78f8faa79ef661aea0cf28dc4de608f7c5",
                 "shasum": ""
             },
             "require": {
@@ -130,11 +272,12 @@
             },
             "require-dev": {
                 "brain/monkey": "^2.6",
+                "friendsofphp/php-cs-fixer": "^3.0",
                 "mockery/mockery": "^1.6",
-                "phpunit/phpunit": "^11.0"
+                "pestphp/pest": "^4.4",
+                "phpunit/phpunit": "^12.0"
             },
-            "time": "2026-01-28T00:18:01+00:00",
-            "default-branch": true,
+            "time": "2026-03-30T00:16:07+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -154,46 +297,52 @@
             },
             "scripts": {
                 "test": [
-                    "php -d pcov.enabled=1 vendor/bin/phpunit --colors=always"
+                    "bash -lc 'if [ ! -f vendor/bin/pest ]; then composer update --no-interaction --no-progress; fi; php -d pcov.enabled=1 vendor/bin/pest --colors=always'"
                 ],
                 "test:unit": [
-                    "php -d pcov.enabled=1 vendor/bin/phpunit tests/Unit --colors=always"
+                    "php -d pcov.enabled=1 vendor/bin/pest tests/Unit --colors=always"
                 ],
                 "test:integration": [
-                    "php -d pcov.enabled=1 vendor/bin/phpunit tests/Integration --colors=always"
+                    "php -d pcov.enabled=1 vendor/bin/pest tests/Integration --colors=always"
                 ],
                 "test:coverage": [
-                    "php -d pcov.enabled=1 vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-html --coverage-text"
+                    "php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --coverage-html coverage-html --coverage-text"
                 ],
                 "test:fast": [
-                    "php -d pcov.enabled=1 vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-html --coverage-text"
+                    "php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --coverage-html coverage-html --coverage-text"
                 ],
                 "test:summary": [
-                    "php -d pcov.enabled=1 vendor/bin/phpunit --configuration phpunit.xml --coverage-text"
+                    "php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --coverage-text"
                 ],
                 "test:clover": [
-                    "php -d pcov.enabled=1 vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml"
+                    "php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --coverage-clover coverage.xml"
                 ],
                 "test:xdebug": [
-                    "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text"
+                    "XDEBUG_MODE=coverage vendor/bin/pest --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text"
                 ],
                 "test:coverage:xdebug": [
-                    "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text"
+                    "XDEBUG_MODE=coverage vendor/bin/pest --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text"
                 ],
                 "test:summary:xdebug": [
-                    "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-text"
+                    "XDEBUG_MODE=coverage vendor/bin/pest --configuration phpunit.xml --coverage-text"
                 ],
                 "test:clover:xdebug": [
-                    "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage-xdebug.xml"
+                    "XDEBUG_MODE=coverage vendor/bin/pest --configuration phpunit.xml --coverage-clover coverage-xdebug.xml"
                 ],
                 "production": [
-                    "composer install --no-dev --optimize-autoloader"
+                    "@php composer install --no-dev --optimize-autoloader"
                 ],
                 "version-bump": [
                     "bash scripts/version-bump.sh"
                 ],
                 "setup-hooks": [
                     "cp .githooks/* .git/hooks/ && chmod +x .git/hooks/* && echo 'Git hooks installed to .git/hooks/'"
+                ],
+                "cs:fix": [
+                    "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
+                ],
+                "cs:check": [
+                    "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff"
                 ]
             },
             "license": [
@@ -207,10 +356,107 @@
             ],
             "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
             "support": {
-                "source": "https://github.com/EstebanForge/HyperFields/tree/main",
+                "source": "https://github.com/EstebanForge/HyperFields/tree/1.1.3",
                 "issues": "https://github.com/EstebanForge/HyperFields/issues"
             },
             "install-path": "../estebanforge/hyperfields"
+        },
+        {
+            "name": "estebanforge/hyperpress-core",
+            "version": "1.0.3",
+            "version_normalized": "1.0.3.0",
+            "dist": {
+                "type": "path",
+                "url": "../HyperPress-Core",
+                "reference": "94cd27c4ab80ce1de076c72964a83cdc283c73fd"
+            },
+            "require": {
+                "estebanforge/hyperblocks": "^1.0",
+                "estebanforge/hyperfields": "^1.0",
+                "php": ">=8.1",
+                "starfederation/datastar-php": "^1.0"
+            },
+            "require-dev": {
+                "brain/monkey": "^2",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "pestphp/pest": "^4",
+                "pestphp/pest-plugin-browser": "^4",
+                "phpunit/phpunit": "^12"
+            },
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "HyperPress\\": "src/"
+                },
+                "files": [
+                    "bootstrap.php"
+                ],
+                "exclude-from-classmap": [
+                    "**/vendor/starfederation/datastar-php/**"
+                ]
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "HyperPress\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "bash -lc 'if [ ! -f vendor/bin/pest ]; then composer update --no-interaction --no-progress; fi; php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests --colors=always'"
+                ],
+                "test:unit": [
+                    "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests/Unit --colors=always"
+                ],
+                "test:integration": [
+                    "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests/Integration --colors=always"
+                ],
+                "test:feature": [
+                    "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests/Feature --colors=always"
+                ],
+                "test:coverage": [
+                    "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests --coverage-html coverage-html --coverage-text"
+                ],
+                "test:summary": [
+                    "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests --coverage-text"
+                ],
+                "test:clover": [
+                    "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests --coverage-clover coverage.xml"
+                ],
+                "dump-autoload-prod": [
+                    "@php composer dump-autoload --optimize --no-dev"
+                ],
+                "dump-autoload-dev": [
+                    "@php composer dump-autoload"
+                ],
+                "cs:fix": [
+                    "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
+                ],
+                "cs:check": [
+                    "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff"
+                ],
+                "production": [
+                    "@php composer install --no-dev --optimize-autoloader"
+                ],
+                "version-bump": [
+                    "bash scripts/version-bump.sh"
+                ]
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Esteban Cuevas",
+                    "email": "esteban@actitud.xyz"
+                }
+            ],
+            "description": "Core HyperPress runtime library: routing, rendering, assets, admin options, and hypermedia integrations.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            },
+            "install-path": "../estebanforge/hyperpress-core"
         },
         {
             "name": "starfederation/datastar-php",

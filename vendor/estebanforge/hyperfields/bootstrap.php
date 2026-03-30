@@ -123,7 +123,7 @@ if (!function_exists('hyperfields_register_candidate_for_tests')) {
      */
     function hyperfields_register_candidate_for_tests(): void
     {
-        $current_version = '1.0.0';
+        $current_version = '1.1.0';
         $current_path = null;
         $composer_json_path = __DIR__ . '/composer.json';
         if (file_exists($composer_json_path)) {
@@ -162,9 +162,13 @@ if (defined('HYPERFIELDS_BOOTSTRAP_LOADED')) {
 define('HYPERFIELDS_BOOTSTRAP_LOADED', true);
 
 // Composer autoloader.
-if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+// When loaded from another package's /vendor tree, avoid loading nested vendor/autoload.php
+// to prevent duplicate Composer autoloader class declarations.
+$normalizedDir = str_replace('\\', '/', __DIR__);
+$loadedFromVendorTree = str_contains($normalizedDir, '/vendor/');
+if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
-} else {
+} elseif (!$loadedFromVendorTree) {
     // Display an admin notice if no autoloader is found, but continue so tests can register hooks/candidates.
     add_action('admin_notices', function () {
         echo '<div class="error"><p>' . esc_html__('HyperFields: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'hyperfields') . '</p></div>';
@@ -172,14 +176,14 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 // Get this instance's version and real path (resolving symlinks)
-$current_hyperfields_instance_version = '1.0.0';
+$current_hyperfields_instance_version = '1.1.0';
 $current_hyperfields_instance_path = null;
 
 // Library mode: try to get version from composer.json or use a fallback
 $composer_json_path = __DIR__ . '/composer.json';
 if (file_exists($composer_json_path)) {
     $composer_data = json_decode(file_get_contents($composer_json_path), true);
-    $current_hyperfields_instance_version = $composer_data['version'] ?? '1.0.0';
+    $current_hyperfields_instance_version = $composer_data['version'] ?? '1.1.0';
 }
 // Use bootstrap.php path as fallback for library mode
 $current_hyperfields_instance_path = realpath(__FILE__);

@@ -12,11 +12,27 @@ use PHPUnit\Framework\TestCase;
  */
 class ConfigTest extends TestCase
 {
+    private string $tmpRoot;
+
     protected function setUp(): void
     {
         // Reset Config before each test
         Config::reset();
+        $this->tmpRoot = rtrim(sys_get_temp_dir(), '/\\') . '/hyperblocks-tests';
+        if (!is_dir($this->tmpRoot)) {
+            mkdir($this->tmpRoot, 0777, true);
+        }
         parent::setUp();
+    }
+
+    private function createPath(string $name): string
+    {
+        $path = $this->tmpRoot . '/' . ltrim($name, '/');
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        return $path;
     }
 
     public function testGetDefaultConfig(): void
@@ -55,17 +71,19 @@ class ConfigTest extends TestCase
 
     public function testRegisterBlockPath(): void
     {
-        Config::registerBlockPath('/test/path');
+        $path = $this->createPath('test/path');
+        Config::registerBlockPath($path);
 
         $paths = Config::get('block_paths');
 
-        $this->assertContains('/test/path', $paths);
+        $this->assertContains($path, $paths);
     }
 
     public function testRegisterBlockPathAddsOnlyOnce(): void
     {
-        Config::registerBlockPath('/test/path');
-        Config::registerBlockPath('/test/path');
+        $path = $this->createPath('test/path');
+        Config::registerBlockPath($path);
+        Config::registerBlockPath($path);
 
         $paths = Config::get('block_paths');
 
@@ -74,14 +92,16 @@ class ConfigTest extends TestCase
 
     public function testGetBlockPaths(): void
     {
-        Config::registerBlockPath('/path1');
-        Config::registerBlockPath('/path2');
+        $path1 = $this->createPath('path1');
+        $path2 = $this->createPath('path2');
+        Config::registerBlockPath($path1);
+        Config::registerBlockPath($path2);
 
         $paths = Config::getBlockPaths();
 
         $this->assertCount(2, $paths);
-        $this->assertContains('/path1', $paths);
-        $this->assertContains('/path2', $paths);
+        $this->assertContains($path1, $paths);
+        $this->assertContains($path2, $paths);
     }
 
     public function testGetTemplateExtensions(): void
@@ -168,8 +188,9 @@ class ConfigTest extends TestCase
 
     public function testValidateWithValidConfig(): void
     {
+        $path = $this->createPath('validate/path');
         $config = [
-            'block_paths' => ['/test/path'],
+            'block_paths' => [$path],
             'template_extensions' => '.php,.html',
             'rest_namespace' => 'test/v1',
             'auto_discovery' => true,

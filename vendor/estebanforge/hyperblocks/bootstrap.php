@@ -8,7 +8,6 @@ declare(strict_types=1);
  * This file registers the library instance as a candidate and ensures the newest
  * version is selected and initialized when multiple copies are loaded.
  */
-
 if (!function_exists('hyperblocks_run_initialization_logic')) {
     /**
      * Initialize HyperBlocks with the given base file path and version.
@@ -47,8 +46,8 @@ if (!function_exists('hyperblocks_run_initialization_logic')) {
             define('HYPERBLOCKS_PLUGIN_URL', $plugin_url);
         }
 
-        if (class_exists(\HyperBlocks\WordPress\Bootstrap::class) && function_exists('add_action')) {
-            \HyperBlocks\WordPress\Bootstrap::init();
+        if (class_exists(HyperBlocks\WordPress\Bootstrap::class) && function_exists('add_action')) {
+            HyperBlocks\WordPress\Bootstrap::init();
         }
     }
 }
@@ -88,6 +87,19 @@ if (defined('HYPERBLOCKS_BOOTSTRAP_LOADED')) {
 
 define('HYPERBLOCKS_BOOTSTRAP_LOADED', true);
 
+// Composer autoloader.
+// When loaded from another package's /vendor tree, avoid loading nested vendor/autoload.php
+// to prevent duplicate Composer autoloader class declarations.
+$normalizedDir = str_replace('\\', '/', __DIR__);
+$loadedFromVendorTree = str_contains($normalizedDir, '/vendor/');
+if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+} elseif (!$loadedFromVendorTree && function_exists('add_action')) {
+    add_action('admin_notices', static function (): void {
+        echo '<div class="error"><p>' . esc_html__('HyperBlocks: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'hyperblocks') . '</p></div>';
+    });
+}
+
 // Determine version from composer.json for candidate registration.
 $current_version = '0.0.0';
 $composer_json_path = __DIR__ . '/composer.json';
@@ -110,6 +122,8 @@ $GLOBALS['hyperblocks_api_candidates'][$current_path] = [
     'init_function' => 'hyperblocks_run_initialization_logic',
 ];
 
-if (function_exists('add_action')) {
-    add_action('after_setup_theme', 'hyperblocks_select_and_load_latest', 0);
+if (function_exists('add_action') && function_exists('has_action')) {
+    if (!has_action('after_setup_theme', 'hyperblocks_select_and_load_latest')) {
+        add_action('after_setup_theme', 'hyperblocks_select_and_load_latest', 0);
+    }
 }

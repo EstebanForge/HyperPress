@@ -7,7 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'starfederation\\datastar\\' => array($vendorDir . '/starfederation/datastar-php/src'),
-    'HyperPress\\' => array($baseDir . '/src'),
+    'HyperPress\\' => array($vendorDir . '/estebanforge/hyperpress-core/src'),
     'HyperFields\\' => array($vendorDir . '/estebanforge/hyperfields/src'),
     'HyperBlocks\\' => array($vendorDir . '/estebanforge/hyperblocks/src'),
+    'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src/Composer/Installers'),
 );

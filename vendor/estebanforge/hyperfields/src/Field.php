@@ -193,6 +193,16 @@ class Field
         return $this->name;
     }
 
+    public function setName(string $name): self
+    {
+        if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_-]*$/', $name)) {
+            throw new \InvalidArgumentException('Invalid field name: ' . sanitize_text_field($name));
+        }
+        $this->name = $name;
+
+        return $this;
+    }
+
     public function getLabel(): string
     {
         return $this->label;
@@ -280,6 +290,12 @@ class Field
     {
         // If option_name is an array, it means the OptionsPage has pre-loaded the values.
         if (is_array($this->option_name)) {
+            if (isset($this->args['option_path']) && is_string($this->args['option_path']) && $this->args['option_path'] !== '') {
+                $value = $this->getValueFromPath($this->option_name, $this->args['option_path'], null);
+                if ($value !== null) {
+                    return $value;
+                }
+            }
             Log::debug("Field {$this->name} using pre-loaded values. Value: " . print_r($this->option_name[$this->name] ?? 'NOT SET', true), ['source' => 'hyperpress-fields']);
 
             return $this->option_name[$this->name] ?? $this->default;
@@ -368,7 +384,57 @@ class Field
             'taxonomy' => $this->taxonomy,
             'media_library' => $this->media_library,
             'map_options' => $this->map_options,
+            'args' => $this->args,
+            'input_class' => isset($this->args['input_class']) && is_string($this->args['input_class']) ? $this->args['input_class'] : '',
+            'label_class' => isset($this->args['label_class']) && is_string($this->args['label_class']) ? $this->args['label_class'] : '',
+            'help_is_html' => isset($this->args['help_is_html']) ? (bool) $this->args['help_is_html'] : false,
+            'error' => $this->getFieldError(),
         ];
+    }
+
+    private function getValueFromPath(array $source, string $path, mixed $default = null): mixed
+    {
+        $segments = array_values(array_filter(explode('.', $path), static fn ($segment): bool => $segment !== ''));
+        if ($segments === []) {
+            return $default;
+        }
+
+        $cursor = $source;
+        foreach ($segments as $index => $segment) {
+            if (!is_array($cursor) || !array_key_exists($segment, $cursor)) {
+                return $default;
+            }
+            $value = $cursor[$segment];
+            if ($index === count($segments) - 1) {
+                return $value;
+            }
+            $cursor = $value;
+        }
+
+        return $default;
+    }
+
+    private function getFieldError(): string
+    {
+        if (!function_exists('get_settings_errors') || !$this->option_group) {
+            return '';
+        }
+
+        $errors = get_settings_errors($this->option_group);
+        if (!is_array($errors) || $errors === []) {
+            return '';
+        }
+
+        foreach ($errors as $error) {
+            if (!is_array($error)) {
+                continue;
+            }
+            if (($error['code'] ?? '') === $this->name && isset($error['message']) && is_string($error['message'])) {
+                return $error['message'];
+            }
+        }
+
+        return '';
     }
 
     public function sanitizeValue(mixed $value): mixed

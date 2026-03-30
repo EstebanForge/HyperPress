@@ -3,11 +3,9 @@
 declare(strict_types=1);
 
 /**
- * HyperBlocks - Helper Functions
+ * HyperBlocks - Helper Functions.
  *
  * This file provides convenience functions for working with HyperBlocks.
- *
- * @package HyperBlocks
  */
 
 use HyperBlocks\Block\Block;
@@ -16,8 +14,8 @@ use HyperBlocks\Block\FieldGroup;
 use HyperBlocks\Registry;
 
 // Prevent direct file access.
-if (!defined('ABSPATH')) {
-    exit;
+if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
+    return;
 }
 
 /**
@@ -96,7 +94,7 @@ function hyperblocks_register_field_group(FieldGroup $group): void
  */
 function hyperblocks_register_path(string $path): void
 {
-    \HyperBlocks\Config::registerBlockPath($path);
+    HyperBlocks\Config::registerBlockPath($path);
 }
 
 /**
@@ -108,7 +106,7 @@ function hyperblocks_register_path(string $path): void
  */
 function hyperblocks_config(string $key, mixed $default = null): mixed
 {
-    return \HyperBlocks\Config::get($key, $default);
+    return HyperBlocks\Config::get($key, $default);
 }
 
 /**
@@ -120,7 +118,8 @@ function hyperblocks_config(string $key, mixed $default = null): mixed
  */
 function hyperblocks_render(string $template, array $attributes = []): string
 {
-    $renderer = new \HyperBlocks\Renderer();
+    $renderer = new HyperBlocks\Renderer();
+
     return $renderer->render($template, $attributes);
 }
 

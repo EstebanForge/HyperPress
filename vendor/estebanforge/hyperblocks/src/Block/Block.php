@@ -8,12 +8,12 @@ declare(strict_types=1);
 
 namespace HyperBlocks\Block;
 
-use HyperFields\BlockFieldAdapter;
 use HyperBlocks\Config;
+use HyperFields\BlockFieldAdapter;
 
 // Prevent direct file access.
-if (!defined('ABSPATH')) {
-    exit;
+if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
+    return;
 }
 
 /**
@@ -247,6 +247,7 @@ class Block
         foreach ($this->fields as $field) {
             $adapters[$field->name] = BlockFieldAdapter::fromField($field->getHyperField());
         }
+
         return $adapters;
     }
 
@@ -261,7 +262,7 @@ class Block
             'name' => $this->name,
             'title' => $this->title,
             'icon' => $this->icon,
-            'fields' => array_map(fn($f) => $f->toArray(), $this->fields),
+            'fields' => array_map(fn ($f) => $f->toArray(), $this->fields),
             'field_groups' => $this->field_groups,
             'render_template' => $this->render_template,
         ];
