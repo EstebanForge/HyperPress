@@ -361,9 +361,20 @@ $json = hf_export_options(['my_plugin_options'], 'myp_');
 // Save the JSON somewhere or offer it for download
 file_put_contents('/tmp/backup.json', $json);
 
-// Import from a JSON string
+// Import from a JSON string (merge mode by default)
 $result = hf_import_options($json, ['my_plugin_options'], 'myp_');
 // or: HyperFields::importOptions($json, ['my_plugin_options'], 'myp_');
+
+// Optional replace mode for array options
+$resultReplace = hf_import_options(
+    $json,
+    ['my_plugin_options'],
+    'myp_',
+    ['mode' => 'replace']
+);
+
+// Dry-run diff report before import
+$diff = hf_diff_options($json, ['my_plugin_options'], 'myp_');
 
 if ($result['success']) {
     // Backup transient keys are available if data existed before import
@@ -405,12 +416,17 @@ ExportImport::restoreBackup(
 | Method | Description |
 |---|---|
 | `exportOptions(array $optionNames, string $prefix = ''): string` | Serialize option groups to a JSON string. |
-| `importOptions(string $json, array $allowed = [], string $prefix = ''): array` | Deserialize and write option groups. Returns `['success', 'message', 'backup_keys?']`. |
+| `importOptions(string $json, array $allowed = [], string $prefix = '', array $options = []): array` | Deserialize and write option groups. Supports `mode: merge|replace`. Returns `['success', 'message', 'backup_keys?']`. |
+| `diffOptions(string $json, array $allowed = [], string $prefix = '', array $options = []): array` | Dry-run compare report with `changes` and `skipped` entries. |
 | `restoreBackup(string $backupKey, string $optionName): bool` | Restore an option from the transient backup created during import. |
 | `snapshotOptions(array $optionNames, string $prefix = ''): array` | Read current DB values without encoding to JSON (used by the diff preview). |
 
-Helper function aliases: `hf_export_options()`, `hf_import_options()`.
-Facade aliases: `HyperFields::exportOptions()`, `HyperFields::importOptions()`.
+Helper function aliases: `hf_export_options()`, `hf_import_options()`, `hf_diff_options()`.
+Facade aliases: `HyperFields::exportOptions()`, `HyperFields::importOptions()`, `HyperFields::diffOptions()`.
+
+For generic pages/CPT transfer and pluggable transfer modules, see:
+
+- `docs/transfer-and-content-export-import.md`
 
 ## Field Types Reference
 

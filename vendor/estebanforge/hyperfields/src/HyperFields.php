@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HyperFields;
 
 use HyperFields\Admin\ExportImportUI;
+use HyperFields\Transfer\Manager as TransferManager;
 use HyperFields\Compatibility\WPSettingsCompatibility;
 use HyperFields\Container\ContainerFactory;
 
@@ -366,8 +367,61 @@ class HyperFields
      * @param string $prefix Optional prefix filter: only keys starting with this prefix are imported.
      * @return array Result with 'success', 'message', and optional 'backup_keys'.
      */
-    public static function importOptions(string $jsonString, array $allowedOptionNames = [], string $prefix = ''): array
+    public static function importOptions(string $jsonString, array $allowedOptionNames = [], string $prefix = '', array $options = []): array
     {
-        return ExportImport::importOptions($jsonString, $allowedOptionNames, $prefix);
+        return ExportImport::importOptions($jsonString, $allowedOptionNames, $prefix, $options);
+    }
+
+    /**
+     * Build a dry-run diff report for options import.
+     *
+     * @param string $jsonString JSON export payload.
+     * @param array  $allowedOptionNames Import whitelist for options.
+     * @param string $prefix Optional key prefix filter.
+     * @param array  $options Optional import behavior (for example ['mode' => 'replace']).
+     */
+    public static function diffOptions(string $jsonString, array $allowedOptionNames = [], string $prefix = '', array $options = []): array
+    {
+        return ExportImport::diffOptions($jsonString, $allowedOptionNames, $prefix, $options);
+    }
+
+    /**
+     * Export posts/pages/CPT content to JSON.
+     */
+    public static function exportPosts(array $postTypes, array $options = []): string
+    {
+        return ContentExportImport::exportPosts($postTypes, $options);
+    }
+
+    /**
+     * Snapshot posts/pages/CPT content as arrays for compare workflows.
+     */
+    public static function snapshotPosts(array $postTypes, array $options = []): array
+    {
+        return ContentExportImport::snapshotPosts($postTypes, $options);
+    }
+
+    /**
+     * Import posts/pages/CPT content from JSON.
+     */
+    public static function importPosts(string $jsonString, array $options = []): array
+    {
+        return ContentExportImport::importPosts($jsonString, $options);
+    }
+
+    /**
+     * Dry-run compare for content imports.
+     */
+    public static function diffPosts(string $jsonString, array $options = []): array
+    {
+        return ContentExportImport::diffPosts($jsonString, $options);
+    }
+
+    /**
+     * Create a transfer manager for pluggable module orchestration.
+     */
+    public static function makeTransferManager(): TransferManager
+    {
+        return new TransferManager();
     }
 }

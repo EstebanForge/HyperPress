@@ -27,6 +27,9 @@ class ExportImport
     /** Schema version embedded in every export payload. */
     private const SCHEMA_VERSION = '1.0';
 
+    /** @var array<int, string> */
+    private const SUPPORTED_IMPORT_MODES = ['merge', 'replace'];
+
     /**
      * Export one or more WordPress option groups to a JSON string.
      *
@@ -48,13 +51,9 @@ class ExportImport
             }
 
             $value = get_option($optionName, []);
-            if (!is_array($value)) {
-                // Non-array option values cannot be represented in the export format; skip silently.
-                continue;
-            }
 
             // Apply prefix filter
-            if ($prefix !== '') {
+            if ($prefix !== '' && is_array($value)) {
                 $value = array_filter(
                     $value,
                     static fn($key): bool => strpos((string) $key, $prefix) === 0,
@@ -92,11 +91,13 @@ class ExportImport
      *                                   written.  Empty array means every option name
      *                                   present in the payload is allowed.
      * @param string $prefix             When non-empty, only keys starting with this
-     *                                   prefix are imported (others are silently skipped).
-     *                                   Default '' imports all keys.
+     *                                   prefix are imported for array options (others are skipped).
+     *                                   Scalar option values are imported only when prefix is empty.
+     * @param array  $options            Optional import behavior:
+     *                                   - mode: 'merge'|'replace' (default 'merge')
      * @return array{success: bool, message: string, backup_keys?: array<string, string>}
      */
-    public static function importOptions(string $jsonString, array $allowedOptionNames = [], string $prefix = ''): array
+    public static function importOptions(string $jsonString, array $allowedOptionNames = [], string $prefix = '', array $options = []): array
     {
         if ($jsonString === '') {
             return ['success' => false, 'message' => 'Empty import data.'];
@@ -115,6 +116,7 @@ class ExportImport
         $backupKeys    = [];
         $errors        = [];
         $importedCount = 0;
+        $importMode    = self::resolveImportMode($options);
 
         foreach ($decoded['options'] as $optionName => $incoming) {
             $optionName = sanitize_text_field((string) $optionName);
@@ -124,13 +126,13 @@ class ExportImport
                 continue;
             }
 
-            if (!is_array($incoming)) {
-                $errors[] = "Skipped option '{$optionName}': value is not an array.";
+            if (!is_array($incoming) && !is_scalar($incoming) && $incoming !== null) {
+                $errors[] = "Skipped option '{$optionName}': unsupported value type.";
                 continue;
             }
 
             // Apply prefix filter on the incoming keys
-            if ($prefix !== '') {
+            if ($prefix !== '' && is_array($incoming)) {
                 $incoming = array_filter(
                     $incoming,
                     static fn($key): bool => strpos((string) $key, $prefix) === 0,
@@ -138,28 +140,29 @@ class ExportImport
                 );
             }
 
-            if (empty($incoming)) {
+            if ($prefix !== '' && !is_array($incoming)) {
+                $errors[] = "Skipped option '{$optionName}': scalar values cannot be prefix-filtered.";
+                continue;
+            }
+
+            if (is_array($incoming) && empty($incoming)) {
                 continue;
             }
 
             // Backup existing value using a transient so it auto-expires
-            $existing = get_option($optionName, []);
-            if (is_array($existing) && !empty($existing)) {
+            $existing = get_option($optionName, null);
+            if ($existing !== null && $existing !== []) {
                 $backupKey               = 'hf_backup_' . sanitize_key($optionName) . '_' . time();
                 set_transient($backupKey, $existing, HOUR_IN_SECONDS);
                 $backupKeys[$optionName] = $backupKey;
             }
 
-            // Merge: imported keys overwrite existing; other keys are preserved
-            $merged = array_merge(
-                is_array($existing) ? $existing : [],
-                $incoming
-            );
+            $nextValue = self::buildNextOptionValue($existing, $incoming, $importMode);
 
             // update_option returns false both on DB failure and when the value is unchanged.
             // Count unchanged values as a successful import since the data matches intent.
-            $updated = update_option($optionName, $merged);
-            if ($updated || $existing === $merged) {
+            $updated = update_option($optionName, $nextValue);
+            if ($updated || $existing === $nextValue) {
                 $importedCount++;
             }
         }
@@ -233,11 +236,8 @@ class ExportImport
             }
 
             $value = get_option($optionName, []);
-            if (!is_array($value)) {
-                $value = [];
-            }
 
-            if ($prefix !== '') {
+            if ($prefix !== '' && is_array($value)) {
                 $value = array_filter(
                     $value,
                     static fn($key): bool => strpos((string) $key, $prefix) === 0,
@@ -249,5 +249,116 @@ class ExportImport
         }
 
         return $snapshot;
+    }
+
+    /**
+     * Build a dry-run comparison for an incoming options payload.
+     *
+     * @param string $jsonString JSON payload produced by exportOptions().
+     * @param array  $allowedOptionNames Option write whitelist.
+     * @param string $prefix Optional array-key prefix filter.
+     * @param array  $options Optional behavior:
+     *                        - mode: 'merge'|'replace' (default 'merge')
+     * @return array{
+     *   success: bool,
+     *   message: string,
+     *   changes?: array<string, array{before: mixed, after: mixed}>,
+     *   skipped?: array<int, string>
+     * }
+     */
+    public static function diffOptions(string $jsonString, array $allowedOptionNames = [], string $prefix = '', array $options = []): array
+    {
+        if ($jsonString === '') {
+            return ['success' => false, 'message' => 'Empty import data.'];
+        }
+
+        $decoded = json_decode($jsonString, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return ['success' => false, 'message' => 'Invalid JSON: ' . json_last_error_msg()];
+        }
+
+        if (!is_array($decoded) || !isset($decoded['options']) || !is_array($decoded['options'])) {
+            return ['success' => false, 'message' => 'Invalid export format. Expected a "options" key with an array value.'];
+        }
+
+        $importMode = self::resolveImportMode($options);
+        $changes = [];
+        $skipped = [];
+
+        foreach ($decoded['options'] as $optionName => $incoming) {
+            $optionName = sanitize_text_field((string) $optionName);
+            if ($optionName === '') {
+                continue;
+            }
+
+            if (!empty($allowedOptionNames) && !in_array($optionName, $allowedOptionNames, true)) {
+                $skipped[] = "Skipped '{$optionName}': not in whitelist.";
+                continue;
+            }
+
+            if (!is_array($incoming) && !is_scalar($incoming) && $incoming !== null) {
+                $skipped[] = "Skipped '{$optionName}': unsupported value type.";
+                continue;
+            }
+
+            if ($prefix !== '' && is_array($incoming)) {
+                $incoming = array_filter(
+                    $incoming,
+                    static fn($key): bool => strpos((string) $key, $prefix) === 0,
+                    ARRAY_FILTER_USE_KEY
+                );
+            }
+
+            if ($prefix !== '' && !is_array($incoming)) {
+                $skipped[] = "Skipped '{$optionName}': scalar values cannot be prefix-filtered.";
+                continue;
+            }
+
+            if (is_array($incoming) && empty($incoming)) {
+                continue;
+            }
+
+            $existing = get_option($optionName, null);
+            $nextValue = self::buildNextOptionValue($existing, $incoming, $importMode);
+            if ($existing !== $nextValue) {
+                $changes[$optionName] = [
+                    'before' => $existing,
+                    'after' => $nextValue,
+                ];
+            }
+        }
+
+        return [
+            'success' => true,
+            'message' => empty($changes) ? 'No differences found.' : 'Differences found.',
+            'changes' => $changes,
+            'skipped' => $skipped,
+        ];
+    }
+
+    private static function resolveImportMode(array $options): string
+    {
+        $mode = isset($options['mode']) ? sanitize_text_field((string) $options['mode']) : 'merge';
+        if (!in_array($mode, self::SUPPORTED_IMPORT_MODES, true)) {
+            return 'merge';
+        }
+
+        return $mode;
+    }
+
+    private static function buildNextOptionValue(mixed $existing, mixed $incoming, string $importMode): mixed
+    {
+        if (!is_array($incoming)) {
+            return $incoming;
+        }
+
+        if ($importMode === 'replace') {
+            return $incoming;
+        }
+
+        return array_merge(
+            is_array($existing) ? $existing : [],
+            $incoming
+        );
     }
 }

@@ -31,9 +31,13 @@ class OptionsSection
     private function buildSlug(string $value): string
     {
         if (function_exists('sanitize_title')) {
-            $slug = (string) sanitize_title($value);
-            if ($slug !== '') {
-                return $slug;
+            try {
+                $slug = (string) sanitize_title($value);
+                if ($slug !== '') {
+                    return $slug;
+                }
+            } catch (\Throwable $e) {
+                // In unit tests, WP function shims may report "exists" but throw when not mocked.
             }
         }
 

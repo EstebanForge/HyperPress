@@ -254,16 +254,16 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.1.3",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EstebanForge/HyperFields.git",
-                "reference": "e8540f78f8faa79ef661aea0cf28dc4de608f7c5"
+                "reference": "a36b811dbc022c69c4047b0a0cbedc14cfb4f830"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EstebanForge/HyperFields/zipball/e8540f78f8faa79ef661aea0cf28dc4de608f7c5",
-                "reference": "e8540f78f8faa79ef661aea0cf28dc4de608f7c5",
+                "url": "https://api.github.com/repos/EstebanForge/HyperFields/zipball/a36b811dbc022c69c4047b0a0cbedc14cfb4f830",
+                "reference": "a36b811dbc022c69c4047b0a0cbedc14cfb4f830",
                 "shasum": ""
             },
             "require": {
@@ -353,18 +353,18 @@
             ],
             "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
             "support": {
-                "source": "https://github.com/EstebanForge/HyperFields/tree/1.1.3",
+                "source": "https://github.com/EstebanForge/HyperFields/tree/1.1.4",
                 "issues": "https://github.com/EstebanForge/HyperFields/issues"
             },
-            "time": "2026-03-30T00:16:07+00:00"
+            "time": "2026-03-30T00:37:55+00:00"
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "94cd27c4ab80ce1de076c72964a83cdc283c73fd"
+                "reference": "80ddcfa1ee3e5fbc4dd8fc9d9d1160ac5b5fa367"
             },
             "require": {
                 "estebanforge/hyperblocks": "^1.0",
