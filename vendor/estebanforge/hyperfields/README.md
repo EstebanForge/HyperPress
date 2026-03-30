@@ -8,6 +8,8 @@ It provides:
 - field validation/sanitization
 - conditional logic
 - JSON export/import for options
+- JSON export/import for pages/CPT content
+- pluggable transfer-module orchestration
 
 ## Installation
 

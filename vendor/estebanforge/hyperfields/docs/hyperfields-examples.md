@@ -176,12 +176,26 @@ HyperFields\ExportImport::restoreBackup(
 
 ### Behaviour notes
 
-- Export skips option groups whose value is not an array.
+- Export supports both scalar and array option values.
 - When a `$prefix` is set, only keys starting with that prefix are included in export and import.
-- Import is **additive**: keys not present in the JSON payload are preserved in the existing option.
+- Import defaults to **additive** mode for array options (`merge`), preserving keys not present in the payload.
+- Import also supports `replace` mode for array options.
 - If the whitelist (`$allowedImportOptions`) or prefix filter removes all entries, `importOptions` returns `['success' => false, ...]`.
 - Before overwriting, `importOptions` stores a 1-hour transient backup; the key is returned in `backup_keys`.
 - `restoreBackup` deletes the transient after a successful restore (including when the value was already identical).
+
+### New transfer extensions
+
+HyperFields now also ships:
+
+- `ExportImport::diffOptions(...)` for dry-run compare reporting.
+- import mode options for options payloads (`merge` or `replace`).
+- `ContentExportImport` for generic pages/CPT export/import by `post_type + slug`.
+- `Transfer\Manager` for registering pluggable module exporters/importers/differs.
+
+See:
+
+- `docs/transfer-and-content-export-import.md` for full API reference.
 
 ## 🚧 Optional: Compact Input for Options Pages
 

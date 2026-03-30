@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use HyperFields\Admin\ExportImportUI;
 use HyperFields\Compatibility\WPSettingsCompatibility;
+use HyperFields\ContentExportImport;
 use HyperFields\ExportImport;
 use HyperFields\Field;
 use HyperFields\OptionsPage;
@@ -509,7 +510,77 @@ if (!function_exists('hf_import_options')) {
      * @param string $prefix             Only import keys starting with this prefix. Default '' imports all.
      * @return array{success: bool, message: string, backup_keys?: array<string, string>}
      */
-    function hf_import_options(string $jsonString, array $allowedOptionNames = [], string $prefix = ''): array {
-        return ExportImport::importOptions($jsonString, $allowedOptionNames, $prefix);
+    function hf_import_options(string $jsonString, array $allowedOptionNames = [], string $prefix = '', array $options = []): array {
+        return ExportImport::importOptions($jsonString, $allowedOptionNames, $prefix, $options);
+    }
+}
+
+if (!function_exists('hf_diff_options')) {
+    /**
+     * Build a dry-run diff report for options import.
+     *
+     * @param string $jsonString         JSON produced by hf_export_options().
+     * @param array  $allowedOptionNames Whitelist of option names that may be written.
+     * @param string $prefix             Only include array keys starting with this prefix.
+     * @param array  $options            Optional behavior (for example ['mode' => 'replace']).
+     * @return array
+     */
+    function hf_diff_options(string $jsonString, array $allowedOptionNames = [], string $prefix = '', array $options = []): array {
+        return ExportImport::diffOptions($jsonString, $allowedOptionNames, $prefix, $options);
+    }
+}
+
+if (!function_exists('hf_export_posts')) {
+    /**
+     * Export posts/pages/CPT records to JSON.
+     *
+     * @param array $postTypes Post types to export.
+     * @param array $options Optional export behavior.
+     */
+    function hf_export_posts(array $postTypes, array $options = []): string
+    {
+        return ContentExportImport::exportPosts($postTypes, $options);
+    }
+}
+
+if (!function_exists('hf_snapshot_posts')) {
+    /**
+     * Snapshot posts/pages/CPT records for compare workflows.
+     *
+     * @param array $postTypes Post types to snapshot.
+     * @param array $options Optional snapshot behavior.
+     * @return array
+     */
+    function hf_snapshot_posts(array $postTypes, array $options = []): array
+    {
+        return ContentExportImport::snapshotPosts($postTypes, $options);
+    }
+}
+
+if (!function_exists('hf_import_posts')) {
+    /**
+     * Import posts/pages/CPT records from JSON.
+     *
+     * @param string $jsonString Export payload created by hf_export_posts().
+     * @param array  $options Optional import behavior.
+     * @return array
+     */
+    function hf_import_posts(string $jsonString, array $options = []): array
+    {
+        return ContentExportImport::importPosts($jsonString, $options);
+    }
+}
+
+if (!function_exists('hf_diff_posts')) {
+    /**
+     * Build a dry-run compare report for posts/pages/CPT imports.
+     *
+     * @param string $jsonString Export payload created by hf_export_posts().
+     * @param array  $options Optional compare behavior.
+     * @return array
+     */
+    function hf_diff_posts(string $jsonString, array $options = []): array
+    {
+        return ContentExportImport::diffPosts($jsonString, $options);
     }
 }
