@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace HyperBlocks;
 
 // Prevent direct file access.
-if (!defined('ABSPATH')) {
-    exit;
+if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
+    return;
 }
 
 /**
@@ -149,6 +149,7 @@ class Config
             if (defined('WP_DEBUG') && WP_DEBUG) {
                 error_log("HyperBlocks: Cannot register block path, directory not found: {$path}");
             }
+
             return;
         }
 
@@ -186,6 +187,7 @@ class Config
         }
 
         $extensions = self::$config['template_extensions'] ?? '.hb.php,.php';
+
         return array_map('trim', explode(',', $extensions));
     }
 

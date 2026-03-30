@@ -116,6 +116,73 @@ add_action('init', 'hyperfields_simple_example');
 ->whereTermSlugs(['featured', 'trending']) // Multiple term slugs
 ```
 
+## 📤 Export / Import
+
+HyperFields ships a built-in Export / Import system for WordPress option groups. It provides a visual admin page with jsondiffpatch diff preview and a programmatic API for headless use.
+
+### Register a Data Tools page
+
+The recommended one-call integration for third-party plugins. Must be called inside `admin_menu`:
+
+```php
+add_action('admin_menu', function () {
+    HyperFields\HyperFields::registerDataToolsPage(
+        parentSlug: 'my-plugin',           // Parent menu slug
+        pageSlug:   'my-plugin-data-tools', // Unique page slug
+        options: [
+            'my_plugin_options' => 'My Plugin Settings',
+        ],
+        allowedImportOptions: ['my_plugin_options'], // Whitelist for import
+        prefix:     'myp_',                // Only export/import keys starting with 'myp_'
+        title:      'Data Tools',
+    );
+});
+```
+
+Or with the procedural helper:
+
+```php
+add_action('admin_menu', function () {
+    hf_register_data_tools_page(
+        parentSlug: 'my-plugin',
+        pageSlug:   'my-plugin-data-tools',
+        options:    ['my_plugin_options' => 'My Plugin Settings'],
+    );
+});
+```
+
+### Programmatic API (no UI)
+
+```php
+// Export one or more option groups to JSON
+$json = hf_export_options(['my_plugin_options'], 'myp_');
+
+// Import from JSON — restrict to your own options
+$result = hf_import_options($json, ['my_plugin_options'], 'myp_');
+
+if ($result['success']) {
+    // Import succeeded; backup transient key available
+    $backup_key = $result['backup_keys']['my_plugin_options'] ?? null;
+} else {
+    echo $result['message']; // human-readable error
+}
+
+// Restore from transient backup if something went wrong
+HyperFields\ExportImport::restoreBackup(
+    $result['backup_keys']['my_plugin_options'],
+    'my_plugin_options'
+);
+```
+
+### Behaviour notes
+
+- Export skips option groups whose value is not an array.
+- When a `$prefix` is set, only keys starting with that prefix are included in export and import.
+- Import is **additive**: keys not present in the JSON payload are preserved in the existing option.
+- If the whitelist (`$allowedImportOptions`) or prefix filter removes all entries, `importOptions` returns `['success' => false, ...]`.
+- Before overwriting, `importOptions` stores a 1-hour transient backup; the key is returned in `backup_keys`.
+- `restoreBackup` deletes the transient after a successful restore (including when the value was already identical).
+
 ## 🚧 Optional: Compact Input for Options Pages
 
 To avoid hitting PHP's `max_input_vars` on complex options pages, HyperFields can compact all option inputs into a single POST variable.

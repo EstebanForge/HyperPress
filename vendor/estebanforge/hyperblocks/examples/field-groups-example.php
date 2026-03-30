@@ -1,10 +1,9 @@
 <?php
+
 /**
- * Example: Using Field Groups
+ * Example: Using Field Groups.
  *
  * This demonstrates how to create reusable field groups and use them in multiple blocks.
- *
- * @package HyperBlocks\Examples
  */
 
 use HyperBlocks\Block\Block;
@@ -18,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Create a reusable content field group
+ * Create a reusable content field group.
  */
 $contentFieldGroup = FieldGroup::make('Content Fields', 'content')
     ->setDescription('Common fields for content blocks')
@@ -36,7 +35,7 @@ $contentFieldGroup = FieldGroup::make('Content Fields', 'content')
     ]);
 
 /**
- * Create another reusable field group for settings
+ * Create another reusable field group for settings.
  */
 $settingsFieldGroup = FieldGroup::make('Block Settings', 'settings')
     ->setDescription('Common settings for layout blocks')
@@ -64,14 +63,14 @@ $settingsFieldGroup = FieldGroup::make('Block Settings', 'settings')
             ->setDefault('#ffffff'),
     ]);
 
-/**
+/*
  * Register the field groups
  */
 Registry::getInstance()->registerFieldGroup($contentFieldGroup);
 Registry::getInstance()->registerFieldGroup($settingsFieldGroup);
 
 /**
- * Create blocks that use the field groups
+ * Create blocks that use the field groups.
  */
 
 // Block 1: Feature Card
@@ -97,7 +96,7 @@ $contentBoxBlock = Block::make('Content Box')
     ->addFieldGroup('settings')
     ->setRenderTemplateFile('examples/blocks/content-box.hb.php');
 
-/**
+/*
  * Register the blocks
  */
 Registry::getInstance()->registerFluentBlock($featureCardBlock);

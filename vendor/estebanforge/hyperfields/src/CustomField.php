@@ -6,9 +6,9 @@ namespace HyperFields;
 
 class CustomField extends Field
 {
-    private string $render_callback = '';
-    private string $sanitize_callback = '';
-    private string $validate_callback = '';
+    private $render_callback = '';
+    private $sanitize_callback = '';
+    private $validate_callback = '';
     private array $assets = [];
 
     public static function build(string $name, string $label): self
@@ -16,21 +16,21 @@ class CustomField extends Field
         return new self('custom', $name, $label);
     }
 
-    public function setRenderCallback(string $callback): self
+    public function setRenderCallback(callable|string $callback): self
     {
         $this->render_callback = $callback;
 
         return $this;
     }
 
-    public function setSanitizeCallback(string $callback): self
+    public function setSanitizeCallback(callable|string $callback): self
     {
         $this->sanitize_callback = $callback;
 
         return $this;
     }
 
-    public function setValidateCallback(string $callback): self
+    public function setValidateCallback(callable|string $callback): self
     {
         $this->validate_callback = $callback;
 
@@ -44,17 +44,17 @@ class CustomField extends Field
         return $this;
     }
 
-    public function getRenderCallback(): string
+    public function getRenderCallback(): mixed
     {
         return $this->render_callback;
     }
 
-    public function getSanitizeCallback(): string
+    public function getSanitizeCallback(): mixed
     {
         return $this->sanitize_callback;
     }
 
-    public function getValidateCallback(): string
+    public function getValidateCallback(): mixed
     {
         return $this->validate_callback;
     }

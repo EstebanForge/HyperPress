@@ -1,8 +1,8 @@
 ## Project Overview
 
-HyperPress is a WordPress plugin that integrates hypermedia libraries (HTMX, Alpine.js, Datastar) with WordPress. It provides PHP-based Gutenberg blocks called HyperBlocks and integrates with the decoupled HyperFields plugin/library for custom field functionality, enabling modern interactive web development using primarily PHP instead of JavaScript frameworks.
+HyperPress (`api-for-htmx`) is a thin WordPress plugin adapter. It bootstraps Composer libraries and delegates runtime behavior to `HyperPress-Core`.
 
-**Architecture**: HyperPress now depends on HyperFields as a separate plugin/library via Composer. This decoupled approach allows HyperFields to be used independently while HyperPress provides the hypermedia integration layer.
+**Architecture**: The adapter plugin depends on `estebanforge/hyperpress-core`, which in turn depends on `estebanforge/hyperfields` and `estebanforge/hyperblocks`.
 
 ## Common Development Commands
 

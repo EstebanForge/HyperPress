@@ -4,7 +4,9 @@ composer.lock
 
 # Testing
 .phpunit.cache/
+/.phpunit.result.cache
 /coverage/
+/coverage.txt
 coverage-html/
 coverage-xdebug-html/
 coverage.xml
@@ -50,3 +52,4 @@ yarn-error.log*
 
 # Documentation
 /node_modules/
+.php-cs-fixer.cache

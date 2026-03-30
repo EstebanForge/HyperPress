@@ -1,11 +1,9 @@
-# HyperFields (API and Field Types)
+# HyperFields — API Reference
 
 **Note on Helper Functions:**
-This documentation uses the `hf_` prefix for helper functions (e.g., `hf_get_field()`), which are the canonical names for the HyperFields plugin. For backward compatibility, `hp_` prefixed aliases (e.g., `hp_get_field()`) are also available and function identically.
+This documentation uses the `hf_` prefix for helper functions (e.g. `hf_get_field()`), which are the canonical names for the HyperFields plugin. For backward compatibility, `hp_` prefixed aliases (e.g. `hp_get_field()`) are also available and function identically.
 
 ## API Reference
-
-See below for all available methods, usage patterns, and value operations for HyperFields.
 
 Developer-focused API for saving and retrieving field values across posts, users, terms, and options, plus core helper factories for building admin UIs.
 
@@ -74,6 +72,51 @@ $sec   = HyperFields::makeSection('general', 'General');
 ```
 
 Refer to the HyperFields classes for the available methods on each object. Keep your implementation simple and PHP-first.
+
+## Options Page Features
+
+Recent HyperFields options work added the following capabilities:
+
+- Explicit tab API in `OptionsPage`:
+  - `addTab(string $id, string $title)`
+  - `addSectionToTab(string $tabId, string $sectionId, string $title, string $description = '', array $args = [])`
+- Section metadata in `OptionsSection`:
+  - `slug` for section URL targeting (`?section=...`)
+  - `as_link` to render section entries in a `subsubsub` menu
+  - `allow_html_description` to render section descriptions through `wp_kses_post`
+- Options page rendering/saving behavior now supports:
+  - active tab + active section hidden fields
+  - section menu rendering for linked sections
+  - rendering and sanitizing only the currently active/renderable sections of a tab
+- Additional field and options-page behavior:
+  - `menu_icon` and `menu_position` map to options page menu metadata
+  - `visible` callbacks can skip fields at registration/render time
+  - alias support for `code-editor` / `code_editor` with WordPress code editor behavior
+  - alias support for `wp-editor` / `wp_editor` mapped to HyperFields `rich_text`
+  - alias support for `media` / `video` mapped to HyperFields `image`
+  - `css.input_class` and `css.label_class` mapped to field args
+  - `attributes` + `custom_attributes` merged into rendered input attributes
+  - `validate` and `sanitize` callbacks are executed in the save pipeline
+  - `rows` / `cols` and editor settings (`wpautop`, `teeny`, `tinymce`, `quicktags`, etc.) are passed through
+  - tab/section `option_level` flags write and read nested option paths
+  - legacy custom option classes can be bridged via a legacy option-type map filter
+  - descriptions can be rendered as HTML when required
+  - per-field validation feedback is attached and rendered inline
+
+### Field Template Args (Newly Supported)
+
+Field templates now support these args consistently:
+
+- `input_class`: appended to rendered input controls
+- `label_class`: appended to rendered labels
+- `help_is_html`: renders help/description through `wp_kses_post` instead of escaping
+- `input_type`: override text inputs with `email`, `url`, `number`, etc.
+- `attributes`: additional safe HTML attributes rendered in field inputs
+- `rows` / `cols`: textarea sizing controls
+- `editor_settings`: rich-text editor settings passed into `wp_editor()`
+- `error`: inline field validation message resolved from settings errors
+
+These are exposed through `Field::toArray()` and are available to custom templates/renderers.
 
 
 ## Integration Examples
@@ -210,6 +253,165 @@ $field = HyperFields::makeField('number', 'items_per_page', 'Items Per Page')
 - Use `hf_get_field()` defaults to avoid undefined notices.
 - For options pages, array notation is used where appropriate; compact POST is supported (see Options Compact Input).
 
+## Export / Import
+
+HyperFields includes a complete Export/Import system. It works at two levels: a programmatic API (`ExportImport` class + helper functions) and a ready-made admin UI (`ExportImportUI`) that matches the HyperFields admin look and feel.
+
+### Registering a Data Tools admin page
+
+The recommended approach for third-party developers. One call inside `admin_menu` wires up the submenu page, asset enqueueing, and rendering automatically.
+
+**Via the facade:**
+
+```php
+use HyperFields\HyperFields;
+
+add_action('admin_menu', function () {
+    HyperFields::registerDataToolsPage(
+        parentSlug:           'my-plugin',
+        pageSlug:             'my-plugin-data-tools',
+        options: [
+            'my_plugin_options' => 'My Plugin Settings',
+        ],
+        allowedImportOptions: ['my_plugin_options'],
+        prefix:               'myp_',
+        title:                'Data Tools',
+        capability:           'manage_options',
+    );
+});
+```
+
+**Via the helper function:**
+
+```php
+add_action('admin_menu', function () {
+    hf_register_data_tools_page(
+        parentSlug: 'my-plugin',
+        pageSlug:   'my-plugin-data-tools',
+        options:    ['my_plugin_options' => 'My Plugin Settings'],
+        prefix:     'myp_',
+        title:      'Data Tools',
+    );
+});
+```
+
+**Via the class directly:**
+
+```php
+use HyperFields\Admin\ExportImportUI;
+
+add_action('admin_menu', function () {
+    ExportImportUI::registerPage(
+        parentSlug:           'my-plugin',
+        pageSlug:             'my-plugin-data-tools',
+        options:              ['my_plugin_options' => 'My Plugin Settings'],
+        allowedImportOptions: ['my_plugin_options'],
+        prefix:               'myp_',
+        title:                'Data Tools',
+        capability:           'manage_options',
+    );
+});
+```
+
+### Manual wiring (advanced)
+
+For full control over menu placement and hooks:
+
+```php
+use HyperFields\Admin\ExportImportUI;
+
+// Enqueue assets on the correct admin page
+add_action('admin_enqueue_scripts', function (string $hook): void {
+    if ($hook === 'my-plugin_page_my-plugin-data-tools') {
+        ExportImportUI::enqueuePageAssets();
+    }
+});
+
+// Register the menu and render
+add_action('admin_menu', function (): void {
+    add_submenu_page(
+        'my-plugin',
+        'Data Tools',
+        'Data Tools',
+        'manage_options',
+        'my-plugin-data-tools',
+        function (): void {
+            echo ExportImportUI::render(
+                options:              ['my_plugin_options' => 'My Plugin Settings'],
+                allowedImportOptions: ['my_plugin_options'],
+                prefix:               'myp_',
+                title:                'Data Tools',
+            );
+        }
+    );
+});
+```
+
+The `admin_enqueue_scripts` hook fires before page output begins, which is the correct time to call `wp_enqueue_style` / `wp_enqueue_script`. Calling `enqueuePageAssets()` inside the render callback would be too late.
+
+### Programmatic API (no UI)
+
+Use these when you need to export/import from code, e.g. in a WP-CLI command or a migration script.
+
+```php
+// Export one or more option groups to a JSON string
+$json = hf_export_options(['my_plugin_options'], 'myp_');
+// or: HyperFields::exportOptions(['my_plugin_options'], 'myp_');
+
+// Save the JSON somewhere or offer it for download
+file_put_contents('/tmp/backup.json', $json);
+
+// Import from a JSON string
+$result = hf_import_options($json, ['my_plugin_options'], 'myp_');
+// or: HyperFields::importOptions($json, ['my_plugin_options'], 'myp_');
+
+if ($result['success']) {
+    // Backup transient keys are available if data existed before import
+    foreach ($result['backup_keys'] ?? [] as $optionName => $backupKey) {
+        // Can call ExportImport::restoreBackup($backupKey, $optionName) to undo
+    }
+} else {
+    error_log($result['message']);
+}
+```
+
+### Restoring a backup
+
+`importOptions()` automatically saves a transient backup of each option it overwrites (TTL: 1 hour). The backup key is returned in `$result['backup_keys']`.
+
+```php
+use HyperFields\ExportImport;
+
+ExportImport::restoreBackup(
+    $result['backup_keys']['my_plugin_options'],
+    'my_plugin_options'
+);
+```
+
+### `ExportImportUI` parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `$parentSlug` | string | — | Parent menu slug (e.g. `'my-plugin'` or `'options-general.php'`). |
+| `$pageSlug` | string | — | Unique slug for this page. |
+| `$options` | array | `[]` | Map of WP option name → human-readable label. |
+| `$allowedImportOptions` | array | `[]` | Whitelist of option names that may be written on import. Defaults to all keys in `$options`. |
+| `$prefix` | string | `''` | Only export/import option-array keys starting with this prefix. |
+| `$title` | string | `'Data Export / Import'` | Page heading and menu label. |
+| `$capability` | string | `'manage_options'` | Required WordPress capability. |
+
+### `ExportImport` API
+
+| Method | Description |
+|---|---|
+| `exportOptions(array $optionNames, string $prefix = ''): string` | Serialize option groups to a JSON string. |
+| `importOptions(string $json, array $allowed = [], string $prefix = ''): array` | Deserialize and write option groups. Returns `['success', 'message', 'backup_keys?']`. |
+| `restoreBackup(string $backupKey, string $optionName): bool` | Restore an option from the transient backup created during import. |
+| `snapshotOptions(array $optionNames, string $prefix = ''): array` | Read current DB values without encoding to JSON (used by the diff preview). |
+
+Helper function aliases: `hf_export_options()`, `hf_import_options()`.
+Facade aliases: `HyperFields::exportOptions()`, `HyperFields::importOptions()`.
+
 ## Field Types Reference
 
 This section documents the available HyperFields field types, how to declare them with the factory helpers, how values are saved/retrieved, and any special sanitization or rendering notes.
@@ -218,6 +420,51 @@ Notes and assumptions:
 - All examples use the `hf_field()` factory (alias of `hf_field()` in this codebase).
 - `hf_update_field()` will run `Field::sanitizeValue()` when a `type` is provided in the `$args`.
 - When rendering values in templates always escape output according to the value shape (use `esc_html()`, `esc_url()`, `wp_kses_post()` as appropriate).
+
+### Authoritative Type Matrix
+
+Core HyperFields field types accepted by `Field::make()`:
+
+- `text`
+- `textarea`
+- `number`
+- `email`
+- `url`
+- `color`
+- `date`
+- `datetime`
+- `time`
+- `image`
+- `file`
+- `select`
+- `multiselect`
+- `checkbox`
+- `radio`
+- `radio_image`
+- `rich_text`
+- `hidden`
+- `html`
+- `map`
+- `oembed`
+- `separator`
+- `header_scripts`
+- `footer_scripts`
+- `set`
+- `sidebar`
+- `association`
+- `tabs`
+- `custom`
+- `heading`
+- `media_gallery`
+- `repeater`
+
+Accepted field aliases:
+
+- `choices` -> `radio`
+- `select-multiple` / `select_multiple` -> `multiselect`
+- `wp-editor` / `wp_editor` -> `rich_text`
+- `media` / `video` -> `image`
+- `code-editor` / `code_editor` -> WordPress CodeMirror-backed custom field
 
 ### Text
 
@@ -370,21 +617,20 @@ echo esc_url($url);
 
 Sanitization: validated via `esc_url_raw()`/`esc_url()` semantics; schemes like `javascript:` are removed.
 
-### Media
+### Image (aliases: `media`, `video`)
 
-Reference to an attachment. By default the field returns an attachment ID; configuration may allow returning an array with metadata.
+Reference to an attachment ID. Native HyperFields type is `image`. `media` and `video` aliases are translated to `image`.
 
 Declaration:
 
 ```php
-$field = HyperFields::makeField('media', 'hero_image', 'Hero image');
-$field->setReturn('id'); // or 'array'
+$field = HyperFields::makeField('image', 'hero_image', 'Hero image');
 ```
 
 Save / retrieve:
 
 ```php
-hf_update_field('hero_image', 456, 123, [ 'type' => 'media' ]); // saves attachment ID
+hf_update_field('hero_image', 456, 123, [ 'type' => 'image' ]); // saves attachment ID
 $attachment_id = hf_get_field('hero_image', 123, [ 'default' => 0 ]);
 if ($attachment_id) {
     echo wp_get_attachment_image($attachment_id, 'large');
@@ -492,7 +738,4 @@ Sanitization: validated to expected format; convert to DateTime objects where ne
 - Use `hf_get_field(..., [ 'default' => ... ])` to avoid undefined values.
 - When exposing user-supplied HTML, sanitize on output with `wp_kses_post()` and document the allowed tags.
 - For media and association fields always check existence (attachment/post exists) before rendering links or images.
-
-If you'd like, I can:
-- Normalize other docs in the repo that reference `.hp.php` to match `.hb.php` where appropriate.
-- Generate small example templates under `docs/examples/` demonstrating admin registration and front-end rendering for each field type.
+- For Export/Import: always pass `$allowedImportOptions` to restrict which options a site admin can overwrite. Never leave it empty on a shared/multisite install.

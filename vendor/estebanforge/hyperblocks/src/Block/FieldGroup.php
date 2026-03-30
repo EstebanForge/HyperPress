@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace HyperBlocks\Block;
 
 // Prevent direct file access.
-if (!defined('ABSPATH')) {
-    exit;
+if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
+    return;
 }
 
 /**
@@ -86,7 +86,7 @@ class FieldGroup
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'fields' => array_map(fn($f) => $f->toArray(), $this->fields),
+            'fields' => array_map(fn ($f) => $f->toArray(), $this->fields),
         ];
     }
 }

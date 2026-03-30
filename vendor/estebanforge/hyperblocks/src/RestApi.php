@@ -12,8 +12,8 @@ use HyperBlocks\Block\Field;
 use HyperFields\BlockFieldAdapter;
 
 // Prevent direct file access.
-if (!defined('ABSPATH')) {
-    exit;
+if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
+    return;
 }
 
 /**
@@ -330,6 +330,7 @@ class RestApi
     private function findJsonBlockPath(string $blockName): ?string
     {
         $registry = Registry::getInstance();
+
         return $registry->findJsonBlockPath($blockName);
     }
 

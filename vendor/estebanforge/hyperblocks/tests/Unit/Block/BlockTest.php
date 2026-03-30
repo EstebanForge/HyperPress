@@ -13,10 +13,15 @@ use PHPUnit\Framework\TestCase;
  */
 class BlockTest extends TestCase
 {
+    private string $templateDir;
+
     protected function setUp(): void
     {
         // Reset Config before each test
         \HyperBlocks\Config::reset();
+        $this->templateDir = realpath(__DIR__ . '/../../../examples/blocks') ?: '';
+        $this->assertNotSame('', $this->templateDir);
+        \HyperBlocks\Config::registerBlockPath($this->templateDir);
         parent::setUp();
     }
 
@@ -86,9 +91,9 @@ class BlockTest extends TestCase
     public function testSetRenderTemplateFile(): void
     {
         $block = Block::make('Test')
-            ->setRenderTemplateFile('blocks/test.hb.php');
+            ->setRenderTemplateFile('content-box.hb.php');
 
-        $this->assertEquals('file:blocks/test.hb.php', $block->render_template);
+        $this->assertEquals('file:content-box.hb.php', $block->render_template);
     }
 
     public function testFluentApiChaining(): void
@@ -96,7 +101,7 @@ class BlockTest extends TestCase
         $block = Block::make('Test')
             ->setName('test/block')
             ->setIcon('star')
-            ->setRenderTemplateFile('test.hb.php');
+            ->setRenderTemplateFile('content-box.hb.php');
 
         $this->assertInstanceOf(Block::class, $block);
         $this->assertEquals('test/block', $block->name);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Content Box Block Template
+ * Content Box Block Template.
  *
  * @var string $title The box title.
  * @var string $description The box description.

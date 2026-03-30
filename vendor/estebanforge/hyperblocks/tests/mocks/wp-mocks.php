@@ -3,11 +3,10 @@
 declare(strict_types=1);
 
 /**
- * WordPress Function Mocks
+ * WordPress Function Mocks.
  *
  * Provides mock implementations of WordPress functions for unit testing.
  */
-
 if (!function_exists('add_action')) {
     /**
      * Mock add_action function.
@@ -155,6 +154,7 @@ if (!function_exists('get_option')) {
     function get_option(string $option, mixed $default = false): mixed
     {
         global $_test_options;
+
         return $_test_options[$option] ?? $default;
     }
 }
@@ -167,6 +167,7 @@ if (!function_exists('update_option')) {
     {
         global $_test_options;
         $_test_options[$option] = $value;
+
         return true;
     }
 }
@@ -265,8 +266,7 @@ if (!function_exists('wp_enqueue_script')) {
         array $deps = [],
         string|bool|null $ver = false,
         bool $in_footer = false
-    ): void {
-    }
+    ): void {}
 }
 
 if (!function_exists('wp_enqueue_style')) {
@@ -279,8 +279,7 @@ if (!function_exists('wp_enqueue_style')) {
         array $deps = [],
         string|bool|null $ver = false,
         string $media = 'all'
-    ): void {
-    }
+    ): void {}
 }
 
 if (!function_exists('wp_add_inline_script')) {
@@ -302,8 +301,7 @@ if (!function_exists('register_rest_route')) {
         string $route,
         array $args = [],
         bool $override = false
-    ): bool
-    {
+    ): bool {
         return true;
     }
 }
@@ -312,7 +310,7 @@ if (!function_exists('register_block_type')) {
     /**
      * Mock register_block_type function.
      */
-    function register_block_type(string $block_name, array $args): \WP_Block_Type|false
+    function register_block_type(string $block_name, array $args): WP_Block_Type|false
     {
         return new class {
             public string $name = '';
@@ -351,9 +349,7 @@ if (!class_exists('\WP_REST_Response')) {
      */
     class WP_REST_Response
     {
-        public function __construct(mixed $data = null, int $status = 200, array $headers = [])
-        {
-        }
+        public function __construct(mixed $data = null, int $status = 200, array $headers = []) {}
     }
 }
 

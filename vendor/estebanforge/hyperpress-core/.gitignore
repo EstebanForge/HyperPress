@@ -1,0 +1,20 @@
+/node_modules/
+/vendor/
+
+# Tooling caches
+/.php-cs-fixer.cache
+/.phpunit.result.cache
+/.phpunit.cache/
+
+# Test coverage artifacts
+/coverage/
+/coverage-html/
+/coverage.xml
+/coverage.txt
+/tests/reports/
+
+# Editor/OS noise
+/.idea/
+/.vscode/
+.DS_Store
+*.log

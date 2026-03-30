@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
+    xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
     bootstrap="tests/bootstrap.php"
     colors="true"
     failOnRisky="true"
@@ -18,16 +18,6 @@
             <directory>tests/Integration</directory>
         </testsuite>
     </testsuites>
-
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
-        <exclude>
-            <directory>src/WordPress</directory>
-            <file>src/helpers.php</file>
-        </exclude>
-    </coverage>
 
     <php>
         <env name="WP_TESTS_DIR" value="/tmp/wordpress-tests-lib"/>

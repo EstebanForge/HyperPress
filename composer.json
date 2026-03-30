@@ -1,96 +1,63 @@
 {
-    "name": "estebanforge/hyperpress",
-    "description": "Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.",
-    "type": "library",
-    "version": "3.0.5",
-    "license": "GPL-2.0-or-later",
-    "authors": [
-        {
-            "name": "Esteban Cuevas",
-            "email": "esteban@actitud.xyz"
-        }
-    ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/EstebanForge/HyperFields.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/EstebanForge/HyperBlocks.git"
-        }
-    ],
-    "require": {
-        "php": ">=8.1",
-        "starfederation/datastar-php": "^1.0",
-        "estebanforge/hyperfields": "dev-main as 1.0.999",
-        "estebanforge/hyperblocks": "dev-main@dev"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^12",
-        "pestphp/pest": "^4",
-        "pestphp/pest-plugin-browser": "^4",
-        "brain/monkey": "^2"
-    },
-    "scripts": {
-        "test": "php -d pcov.enabled=1 vendor/bin/pest --colors=always",
-        "test:unit": "php -d pcov.enabled=1 vendor/bin/pest --testsuite=Unit --colors=always",
-        "test:integration": "php -d pcov.enabled=1 vendor/bin/pest --testsuite=Integration --colors=always",
-        "test:feature": "php -d pcov.enabled=1 vendor/bin/pest --testsuite=Feature --colors=always",
-        "test:coverage": "php -d pcov.enabled=1 vendor/bin/pest --coverage-html coverage-html --coverage-text",
-        "test:fast": "php -d pcov.enabled=1 vendor/bin/pest --coverage-html coverage-html --coverage-text",
-        "test:summary": "php -d pcov.enabled=1 vendor/bin/pest --coverage-text",
-        "test:clover": "php -d pcov.enabled=1 vendor/bin/pest --coverage-clover coverage.xml",
-        "test:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --coverage-html coverage-xdebug-html --coverage-text",
-        "test:coverage:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --coverage-html coverage-xdebug-html --coverage-text",
-        "test:summary:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --coverage-text",
-        "test:clover:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --coverage-clover coverage-xdebug.xml",
-        "cs:fix": "php-cs-fixer fix",
-        "dump-autoload-prod": "@php composer dump-autoload --optimize --no-dev",
-        "dump-autoload-dev": "@php composer dump-autoload",
-        "dev": "composer update --no-dev --no-scripts -W estebanforge/hyperfields estebanforge/hyperblocks",
-        "production": [
-            "@cs-fix",
-            "@dump-autoload-prod"
-        ],
-        "post-install-cmd": [
-            "@cs-fix",
-            "@dump-autoload-prod",
-            "php .ci/setup-sqlite-dropin.php"
-        ],
-        "post-update-cmd": [
-            "@cs-fix",
-            "@dump-autoload-prod",
-            "php .ci/setup-sqlite-dropin.php"
-        ],
-        "version-bump": "php .ci/version-bump.php"
-    },
-    "autoload": {
-        "psr-4": {
-            "HyperPress\\": "src/"
-        },
-        "files": [
-            "bootstrap.php"
-        ],
-        "exclude-from-classmap": [
-            "**/vendor/starfederation/datastar-php/**"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "HyperPress\\Tests\\": "tests/"
-        }
-    },
-    "config": {
-        "github-protocols": [
-            "https"
-        ],
-        "preferred-install": "dist",
-        "allow-plugins": {
-            "composer/installers": true,
-            "pestphp/pest-plugin": true
-        }
+  "name": "estebanforge/hyperpress",
+  "description": "WordPress plugin adapter for HyperPress. Loads HyperPress Core and bundled Hyper libraries.",
+  "type": "wordpress-plugin",
+  "version": "3.1.0",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Esteban Cuevas",
+      "email": "esteban@actitud.xyz"
     }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../HyperPress-Core",
+      "options": {
+        "symlink": false
+      }
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/EstebanForge/HyperFields.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/EstebanForge/HyperBlocks.git"
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "composer/installers": "^2.0",
+    "estebanforge/hyperpress-core": "^1"
+  },
+  "scripts": {
+    "dump-autoload-prod": "@php composer dump-autoload --optimize --no-dev",
+    "dump-autoload-dev": "@php composer dump-autoload",
+    "production": "@php composer install --no-dev --optimize-autoloader",
+    "test": "bash -lc 'if [ ! -f vendor/bin/pest ]; then composer update --no-interaction --no-progress; fi; php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --colors=always'",
+    "test:unit": "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests/Unit --colors=always",
+    "test:coverage": "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --coverage-html coverage-html --coverage-text",
+    "cs:fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php",
+    "cs:check": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff",
+    "version-bump": "bash scripts/version-bump.sh"
+  },
+  "config": {
+    "github-protocols": [
+      "https"
+    ],
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "composer/installers": true,
+      "pestphp/pest-plugin": true
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^12.0",
+    "pestphp/pest": "^4.4",
+    "friendsofphp/php-cs-fixer": "^3.0"
+  }
 }

@@ -1,0 +1,79 @@
+{
+  "name": "estebanforge/hyperpress-core",
+  "description": "Core HyperPress runtime library: routing, rendering, assets, admin options, and hypermedia integrations.",
+  "type": "library",
+  "version": "1.0.3",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Esteban Cuevas",
+      "email": "esteban@actitud.xyz"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/EstebanForge/HyperFields.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/EstebanForge/HyperBlocks.git"
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "starfederation/datastar-php": "^1.0",
+    "estebanforge/hyperfields": "^1.0",
+    "estebanforge/hyperblocks": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^12",
+    "pestphp/pest": "^4",
+    "pestphp/pest-plugin-browser": "^4",
+    "brain/monkey": "^2",
+    "friendsofphp/php-cs-fixer": "^3.0"
+  },
+  "scripts": {
+    "test": "bash -lc 'if [ ! -f vendor/bin/pest ]; then composer update --no-interaction --no-progress; fi; php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests --colors=always'",
+    "test:unit": "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests/Unit --colors=always",
+    "test:integration": "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests/Integration --colors=always",
+    "test:feature": "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests/Feature --colors=always",
+    "test:coverage": "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests --coverage-html coverage-html --coverage-text",
+    "test:summary": "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests --coverage-text",
+    "test:clover": "php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests --coverage-clover coverage.xml",
+    "dump-autoload-prod": "@php composer dump-autoload --optimize --no-dev",
+    "dump-autoload-dev": "@php composer dump-autoload",
+    "cs:fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php",
+    "cs:check": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff",
+    "production": "@php composer install --no-dev --optimize-autoloader",
+    "version-bump": "bash scripts/version-bump.sh"
+  },
+  "autoload": {
+    "psr-4": {
+      "HyperPress\\": "src/"
+    },
+    "files": [
+      "bootstrap.php"
+    ],
+    "exclude-from-classmap": [
+      "**/vendor/starfederation/datastar-php/**"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "HyperPress\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "github-protocols": [
+      "https"
+    ],
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "composer/installers": true,
+      "pestphp/pest-plugin": true
+    }
+  }
+}

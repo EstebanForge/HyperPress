@@ -1,6 +1,6 @@
 <?php
 /**
- * Hero Banner Block Template
+ * Hero Banner Block Template.
  *
  * @var string $heading The main heading text.
  * @var string $subheading The subheading or description.

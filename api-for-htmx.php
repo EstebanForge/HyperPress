@@ -34,3 +34,7 @@ if (function_exists('hyperfields_select_and_load_latest') && !has_action('after_
     add_action('after_setup_theme', 'hyperfields_select_and_load_latest', 0);
 }
 
+// Ensure HyperBlocks is also initialized if it's being used as a library
+if (function_exists('hyperblocks_select_and_load_latest') && !has_action('after_setup_theme', 'hyperblocks_select_and_load_latest')) {
+    add_action('after_setup_theme', 'hyperblocks_select_and_load_latest', 0);
+}

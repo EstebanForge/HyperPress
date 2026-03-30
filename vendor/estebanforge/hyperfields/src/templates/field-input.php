@@ -11,7 +11,43 @@ $value = $field_data['value'] ?? '';
 $placeholder = $field_data['placeholder'] ?? '';
 $required = $field_data['required'] ?? false;
 $help = $field_data['help'] ?? '';
+$help_is_html = $field_data['help_is_html'] ?? false;
 $options = $field_data['options'] ?? [];
+$input_class = trim((string) ($field_data['input_class'] ?? ''));
+$label_class = trim((string) ($field_data['label_class'] ?? ''));
+$error = isset($field_data['error']) && is_string($field_data['error']) ? $field_data['error'] : '';
+$attributes = isset($field_data['args']['attributes']) && is_array($field_data['args']['attributes'])
+    ? $field_data['args']['attributes']
+    : [];
+$rows = isset($field_data['args']['rows']) ? (int) $field_data['args']['rows'] : 4;
+$cols = isset($field_data['args']['cols']) ? (int) $field_data['args']['cols'] : 50;
+$input_type = isset($field_data['args']['input_type']) && is_string($field_data['args']['input_type'])
+    ? $field_data['args']['input_type']
+    : 'text';
+
+$render_attributes = static function (array $attrs): string {
+    if ($attrs === []) {
+        return '';
+    }
+    $pairs = [];
+    foreach ($attrs as $attr_name => $attr_value) {
+        if (!is_string($attr_name) || $attr_name === '' || str_starts_with(strtolower($attr_name), 'on')) {
+            continue;
+        }
+        if (is_bool($attr_value)) {
+            if ($attr_value) {
+                $pairs[] = esc_attr($attr_name);
+            }
+            continue;
+        }
+        if ($attr_value === null) {
+            continue;
+        }
+        $pairs[] = esc_attr($attr_name) . '="' . esc_attr((string) $attr_value) . '"';
+    }
+
+    return $pairs !== [] ? ' ' . implode(' ', $pairs) : '';
+};
 
 // Support for conditional_logic: pass as data-hp-conditional-logic attribute for JS
 $conditional_logic = $field_data['conditional_logic'] ?? null;
@@ -25,7 +61,7 @@ if ($conditional_logic) {
 <div class="hyperpress-field-wrapper" <?php echo $conditional_attr; ?>>
     <div class="hyperpress-field-row">
         <div class="hyperpress-field-label">
-            <label for="<?php echo esc_attr($name); ?>">
+            <label for="<?php echo esc_attr($name); ?>" class="<?php echo esc_attr($label_class); ?>">
                 <?php echo esc_html($label); ?>
                 <?php if ($required): ?><span class="required">*</span><?php endif; ?>
             </label>
@@ -33,21 +69,24 @@ if ($conditional_logic) {
         <div class="hyperpress-field-input-wrapper">
             <?php switch ($type):
                 case 'text': ?>
-                    <input type="text"
+                    <input type="<?php echo esc_attr($input_type); ?>"
                         id="<?php echo esc_attr($name); ?>"
                         name="<?php echo esc_attr($name_attr); ?>"
                         value="<?php echo esc_attr($value); ?>"
                         placeholder="<?php echo esc_attr($placeholder); ?>"
                         <?php echo $required ? 'required' : ''; ?>
-                        class="regular-text">
+                        <?php echo $render_attributes($attributes); ?>
+                        class="regular-text <?php echo esc_attr($input_class); ?>">
                 <?php break;
                 case 'textarea': ?>
                     <textarea id="<?php echo esc_attr($name); ?>"
                         name="<?php echo esc_attr($name_attr); ?>"
                         placeholder="<?php echo esc_attr($placeholder); ?>"
                         <?php echo $required ? 'required' : ''; ?>
-                        class="large-text"
-                        rows="4"><?php echo esc_textarea($value); ?></textarea>
+                        <?php echo $render_attributes($attributes); ?>
+                        class="large-text <?php echo esc_attr($input_class); ?>"
+                        rows="<?php echo esc_attr((string) max(1, $rows)); ?>"
+                        cols="<?php echo esc_attr((string) max(1, $cols)); ?>"><?php echo esc_textarea($value); ?></textarea>
                 <?php break;
                 case 'number': ?>
                     <input type="number"
@@ -56,7 +95,8 @@ if ($conditional_logic) {
                         value="<?php echo esc_attr($value); ?>"
                         placeholder="<?php echo esc_attr($placeholder); ?>"
                         <?php echo $required ? 'required' : ''; ?>
-                        class="regular-text">
+                        <?php echo $render_attributes($attributes); ?>
+                        class="regular-text <?php echo esc_attr($input_class); ?>">
                 <?php break;
                 case 'email': ?>
                     <input type="email"
@@ -65,7 +105,8 @@ if ($conditional_logic) {
                         value="<?php echo esc_attr($value); ?>"
                         placeholder="<?php echo esc_attr($placeholder); ?>"
                         <?php echo $required ? 'required' : ''; ?>
-                        class="regular-text">
+                        <?php echo $render_attributes($attributes); ?>
+                        class="regular-text <?php echo esc_attr($input_class); ?>">
                 <?php break;
                 case 'url': ?>
                     <input type="url"
@@ -74,7 +115,8 @@ if ($conditional_logic) {
                         value="<?php echo esc_attr($value); ?>"
                         placeholder="<?php echo esc_attr($placeholder); ?>"
                         <?php echo $required ? 'required' : ''; ?>
-                        class="regular-text">
+                        <?php echo $render_attributes($attributes); ?>
+                        class="regular-text <?php echo esc_attr($input_class); ?>">
                 <?php break;
                 case 'color': ?>
                     <input type="color"
@@ -82,7 +124,8 @@ if ($conditional_logic) {
                         name="<?php echo esc_attr($name_attr); ?>"
                         value="<?php echo esc_attr($value); ?>"
                         <?php echo $required ? 'required' : ''; ?>
-                        class="hyperpress-color-picker">
+                        <?php echo $render_attributes($attributes); ?>
+                        class="hyperpress-color-picker <?php echo esc_attr($input_class); ?>">
                 <?php break;
                 case 'date': ?>
                     <input type="date"
@@ -91,7 +134,8 @@ if ($conditional_logic) {
                         value="<?php echo esc_attr($value); ?>"
                         placeholder="<?php echo esc_attr($placeholder); ?>"
                         <?php echo $required ? 'required' : ''; ?>
-                        class="regular-text">
+                        <?php echo $render_attributes($attributes); ?>
+                        class="regular-text <?php echo esc_attr($input_class); ?>">
                 <?php break;
                 case 'datetime': ?>
                     <input type="datetime-local"
@@ -100,7 +144,8 @@ if ($conditional_logic) {
                         value="<?php echo esc_attr($value); ?>"
                         placeholder="<?php echo esc_attr($placeholder); ?>"
                         <?php echo $required ? 'required' : ''; ?>
-                        class="regular-text">
+                        <?php echo $render_attributes($attributes); ?>
+                        class="regular-text <?php echo esc_attr($input_class); ?>">
                 <?php break;
                 case 'time': ?>
                     <input type="time"
@@ -109,13 +154,15 @@ if ($conditional_logic) {
                         value="<?php echo esc_attr($value); ?>"
                         placeholder="<?php echo esc_attr($placeholder); ?>"
                         <?php echo $required ? 'required' : ''; ?>
-                        class="regular-text">
+                        <?php echo $render_attributes($attributes); ?>
+                        class="regular-text <?php echo esc_attr($input_class); ?>">
                 <?php break;
                 case 'select': ?>
                     <select id="<?php echo esc_attr($name); ?>"
                         name="<?php echo esc_attr($name_attr); ?>"
                         <?php echo $required ? 'required' : ''; ?>
-                        class="regular-text">
+                        <?php echo $render_attributes($attributes); ?>
+                        class="regular-text <?php echo esc_attr($input_class); ?>">
                         <?php foreach ($options as $option_value => $option_label): ?>
                             <option value="<?php echo esc_attr($option_value); ?>" <?php selected($value, $option_value); ?>>
                                 <?php echo esc_html($option_label); ?>
@@ -128,7 +175,8 @@ if ($conditional_logic) {
                         name="<?php echo esc_attr($name_attr); ?>[]"
                         multiple
                         <?php echo $required ? 'required' : ''; ?>
-                        class="regular-text">
+                        <?php echo $render_attributes($attributes); ?>
+                        class="regular-text <?php echo esc_attr($input_class); ?>">
                         <?php foreach ($options as $option_value => $option_label): ?>
                             <option value="<?php echo esc_attr($option_value); ?>" <?php selected(is_array($value) && in_array($option_value, $value)); ?>>
                                 <?php echo esc_html($option_label); ?>
@@ -145,7 +193,8 @@ if ($conditional_logic) {
                             name="<?php echo esc_attr($name_attr); ?>"
                             value="1"
                             <?php checked($value, '1'); ?>
-                            <?php echo $required ? 'required' : ''; ?>>
+                            <?php echo $required ? 'required' : ''; ?>
+                            <?php echo $render_attributes($attributes); ?>>
                         <?php echo esc_html($label); ?>
                     </label>
                 <?php break;
@@ -156,7 +205,8 @@ if ($conditional_logic) {
                                 name="<?php echo esc_attr($name_attr); ?>"
                                 value="<?php echo esc_attr($option_value); ?>"
                                 <?php checked($value, $option_value); ?>
-                                <?php echo $required ? 'required' : ''; ?>>
+                                <?php echo $required ? 'required' : ''; ?>
+                                <?php echo $render_attributes($attributes); ?>>
                             <?php echo esc_html($option_label); ?>
                         </label>
                     <?php endforeach; ?>
@@ -205,7 +255,8 @@ if ($conditional_logic) {
                             value="<?php echo esc_attr($value); ?>"
                             placeholder="<?php echo esc_attr($placeholder); ?>"
                             <?php echo $required ? 'required' : ''; ?>
-                            class="regular-text">
+                            <?php echo $render_attributes($attributes); ?>
+                            class="regular-text <?php echo esc_attr($input_class); ?>">
                         <button type="button" class="button hyperpress-upload-button" data-field="<?php echo esc_attr($name); ?>" data-type="file">
                             <?php _e('Select File', 'api-for-htmx'); ?>
                         </button>
@@ -230,7 +281,16 @@ if ($conditional_logic) {
             endswitch; ?>
 
             <?php if ($help): ?>
-                <p class="description"><?php echo esc_html($help); ?></p>
+                <p class="description">
+                    <?php if ($help_is_html): ?>
+                        <?php echo wp_kses_post($help); ?>
+                    <?php else: ?>
+                        <?php echo esc_html($help); ?>
+                    <?php endif; ?>
+                </p>
+            <?php endif; ?>
+            <?php if ($error): ?>
+                <p class="description" style="color:#d63638;"><?php echo esc_html($error); ?></p>
             <?php endif; ?>
         </div>
     </div>

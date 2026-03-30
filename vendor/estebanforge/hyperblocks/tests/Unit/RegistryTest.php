@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace HyperBlocks\Tests\Unit;
 
-use HyperBlocks\Registry;
 use HyperBlocks\Block\Block;
 use HyperBlocks\Block\Field;
 use HyperBlocks\Block\FieldGroup;
+use HyperBlocks\Registry;
 use PHPUnit\Framework\TestCase;
 
 /**

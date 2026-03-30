@@ -3,11 +3,9 @@
 declare(strict_types=1);
 
 /**
- * WordPress Bootstrap for HyperBlocks
+ * WordPress Bootstrap for HyperBlocks.
  *
  * This file handles WordPress-specific initialization and integration.
- *
- * @package HyperBlocks
  */
 
 namespace HyperBlocks\WordPress;
@@ -17,8 +15,8 @@ use HyperBlocks\Registry;
 use HyperBlocks\RestApi;
 
 // Prevent direct file access.
-if (!defined('ABSPATH')) {
-    exit;
+if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
+    return;
 }
 
 /**
@@ -180,6 +178,7 @@ class Bootstrap
 
         // Render
         $renderer = new \HyperBlocks\Renderer();
+
         return $renderer->render($blockDef->render_template, $attributes);
     }
 

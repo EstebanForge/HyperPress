@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * PHPUnit Bootstrap
+ * PHPUnit Bootstrap.
  */
 
 // Prevent direct file access.
@@ -28,7 +28,7 @@ require_once $autoloader;
 require_once __DIR__ . '/mocks/wp-mocks.php';
 
 // Initialize Config for testing
-\HyperBlocks\Config::reset();
+HyperBlocks\Config::reset();
 
 // Define test constants
 define('HYPERBLOCKS_PATH', __DIR__ . '/..');
@@ -36,7 +36,7 @@ define('WP_DEBUG', true);
 define('WP_CONTENT_DIR', sys_get_temp_dir() . '/wp-content');
 
 // Ensure Config is initialized
-\HyperBlocks\Config::init();
+HyperBlocks\Config::init();
 
 // Register test block path
-\HyperBlocks\Config::registerBlockPath(__DIR__ . '/../examples/blocks');
+HyperBlocks\Config::registerBlockPath(__DIR__ . '/../examples/blocks');

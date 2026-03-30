@@ -18,6 +18,11 @@ $label = $field_data['label'] ?? '';
 $value = $field_data['value'] ?? '';
 $required = $field_data['required'] ?? false;
 $help = $field_data['help'] ?? '';
+$help_is_html = $field_data['help_is_html'] ?? false;
+$error = isset($field_data['error']) && is_string($field_data['error']) ? $field_data['error'] : '';
+$editor_settings_overrides = isset($field_data['args']['editor_settings']) && is_array($field_data['args']['editor_settings'])
+    ? $field_data['args']['editor_settings']
+    : [];
 
 // Editor settings
 $editor_settings = [
@@ -33,6 +38,10 @@ $editor_settings = [
     ],
 ];
 
+if ($editor_settings_overrides !== []) {
+    $editor_settings = array_merge($editor_settings, $editor_settings_overrides);
+}
+
 // Allow customization via filter
 $editor_settings = apply_filters('hyperpress/fields/rich_text_editor_settings', $editor_settings, $name);
 ?>
@@ -47,7 +56,16 @@ $editor_settings = apply_filters('hyperpress/fields/rich_text_editor_settings', 
         <?php wp_editor($value, $name, $editor_settings); ?>
 
         <?php if ($help): ?>
-            <p class="description"><?php echo esc_html($help); ?></p>
+            <p class="description">
+                <?php if ($help_is_html): ?>
+                    <?php echo wp_kses_post($help); ?>
+                <?php else: ?>
+                    <?php echo esc_html($help); ?>
+                <?php endif; ?>
+            </p>
+        <?php endif; ?>
+        <?php if ($error): ?>
+            <p class="description" style="color:#d63638;"><?php echo esc_html($error); ?></p>
         <?php endif; ?>
     </div>
 </div>

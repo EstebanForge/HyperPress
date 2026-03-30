@@ -11,12 +11,12 @@ declare(strict_types=1);
 
 namespace HyperBlocks\Block;
 
-use HyperFields\Field as HyperField;
 use HyperFields\BlockFieldAdapter;
+use HyperFields\Field as HyperField;
 
 // Prevent direct file access.
-if (!defined('ABSPATH')) {
-    exit;
+if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
+    return;
 }
 
 /**
@@ -180,6 +180,7 @@ class Field
         $data['name'] = $this->name;
         $data['label'] = $this->label;
         $data['type'] = $this->type;
+
         return $data;
     }
 
@@ -221,6 +222,11 @@ class Field
      */
     public function sanitizeValue($value)
     {
+        if (is_string($value)) {
+            // Remove script tags and their content before generic field sanitization.
+            $value = preg_replace('#<script\b[^>]*>.*?</script>#is', '', $value) ?? $value;
+        }
+
         return $this->hyperField->sanitizeValue($value);
     }
 

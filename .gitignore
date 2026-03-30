@@ -1,17 +1,27 @@
-./wp-org-assets/htmx-api-wp-logo.psd
-/node_modules/
-deploy.sh
-deploy-notag.sh
-TODO.md
-.wp-org-assets/htmx-api-wp-logo.psd
-rules-wordpress.md
-.php-cs-fixer.cache
+# IDE / OS
+.DS_Store
+.vscode/
 
-# Test artifacts
-scripts/
-coverage/
-coverage-html/
-.phpunit.result.cache
-.phpunit.cache/
-wp-content/
-deploy-readme-only.sh
+# Local development dependencies
+/node_modules/
+
+# Local tooling caches
+/.php-cs-fixer.cache
+/.phpunit.cache/
+/.phpunit.result.cache
+
+# Local test artifacts
+/coverage/
+/coverage-html/
+/coverage.xml
+/coverage.txt
+/wp-content/
+
+# Project-specific local notes/scripts not part of release
+/TODO.md
+/rules-wordpress.md
+/deploy-notag.sh
+
+# Keep release/runtime dependencies committed for WordPress distribution.
+# Do NOT ignore /vendor/ in this repository.
+
