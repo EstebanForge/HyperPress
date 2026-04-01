@@ -34,14 +34,6 @@ final class LibraryBootstrap
             define('HYPERFIELDS_PLUGIN_URL', $plugin_url);
         }
 
-        if (!defined('HYPERPRESS_PLUGIN_URL')) {
-            define('HYPERPRESS_PLUGIN_URL', HYPERFIELDS_PLUGIN_URL);
-        }
-
-        if (!defined('HYPERPRESS_VERSION')) {
-            define('HYPERPRESS_VERSION', $version);
-        }
-
         $helpers = HYPERFIELDS_ABSPATH . 'includes/helpers.php';
         if (file_exists($helpers)) {
             require_once $helpers;
