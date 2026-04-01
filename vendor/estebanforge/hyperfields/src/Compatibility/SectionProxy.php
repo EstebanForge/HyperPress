@@ -9,15 +9,28 @@ final class SectionProxy
     private array $options = [];
     private bool $option_level = false;
 
+    /** @var string */
+    private string $tabKey;
+    /** @var string */
+    private string $id;
+    /** @var string */
+    private string $title;
+    /** @var array */
+    private array $args;
+
     /**
      *   construct.
      */
     public function __construct(
-        private readonly string $tabKey,
-        private readonly string $id,
-        private readonly string $title,
-        private readonly array $args = []
+        string $tabKey,
+        string $id,
+        string $title,
+        array $args = []
     ) {
+        $this->tabKey = $tabKey;
+        $this->id = $id;
+        $this->title = $title;
+        $this->args = $args;
     }
 
     /**

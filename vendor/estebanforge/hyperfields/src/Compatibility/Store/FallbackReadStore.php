@@ -6,13 +6,20 @@ namespace HyperFields\Compatibility\Store;
 
 final class FallbackReadStore implements StoreInterface
 {
+    /** @var StoreInterface */
+    private StoreInterface $primary;
+    /** @var StoreInterface */
+    private StoreInterface $fallback;
+
     /**
      *   construct.
      */
     public function __construct(
-        private readonly StoreInterface $primary,
-        private readonly StoreInterface $fallback
+        StoreInterface $primary,
+        StoreInterface $fallback
     ) {
+        $this->primary = $primary;
+        $this->fallback = $fallback;
     }
 
     /**

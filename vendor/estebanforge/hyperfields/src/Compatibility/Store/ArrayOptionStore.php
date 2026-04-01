@@ -6,11 +6,15 @@ namespace HyperFields\Compatibility\Store;
 
 final class ArrayOptionStore implements StoreInterface
 {
+    /** @var string */
+    private string $option_name;
+
     /**
      *   construct.
      */
-    public function __construct(private readonly string $option_name)
+    public function __construct(string $option_name)
     {
+        $this->option_name = $option_name;
     }
 
     /**

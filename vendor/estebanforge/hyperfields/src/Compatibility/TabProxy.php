@@ -12,13 +12,20 @@ final class TabProxy
     private array $sections = [];
     private bool $option_level = false;
 
+    /** @var string */
+    private string $key;
+    /** @var string */
+    private string $label;
+
     /**
      *   construct.
      */
     public function __construct(
-        private readonly string $key,
-        private readonly string $label
+        string $key,
+        string $label
     ) {
+        $this->key = $key;
+        $this->label = $label;
     }
 
     /**
