@@ -101,8 +101,18 @@ rm -rf "$SVNPATH/trunk/vendor/estebanforge/hyperpress-core/coverage-html"
 rm -rf "$SVNPATH/trunk/vendor/estebanforge/hyperpress-core/.ci"
 rm -rf "$SVNPATH/trunk/vendor/estebanforge/hyperpress-core/scripts"
 rm -rf "$SVNPATH/trunk/vendor/estebanforge/hyperfields/tests"
-find "$SVNPATH/trunk/vendor/estebanforge/hyperfields/vendor" -mindepth 1 -maxdepth 1 ! -name 'autoload.php' -exec rm -rf {} +
-echo "<?php // Stub: classes loaded by parent autoloader" > "$SVNPATH/trunk/vendor/estebanforge/hyperfields/vendor/autoload.php"
+rm -rf "$SVNPATH/trunk/vendor/estebanforge/hyperblocks/tests"
+
+# Stub nested vendor/ dirs — classes are already registered by the top-level autoloader.
+# Keeps the autoload.php path valid while eliminating duplicate/redundant packages.
+STUB_AUTOLOAD="<?php // Stub: classes loaded by parent autoloader"
+for pkg in hyperfields hyperpress-core hyperblocks; do
+    nested="$SVNPATH/trunk/vendor/estebanforge/$pkg/vendor"
+    if [ -d "$nested" ]; then
+        find "$nested" -mindepth 1 -maxdepth 1 ! -name 'autoload.php' -exec rm -rf {} +
+        echo "$STUB_AUTOLOAD" > "$nested/autoload.php"
+    fi
+done
 
 echo "Ignoring github specific & deployment script"
 svn propset svn:ignore "deploy.sh
