@@ -9,6 +9,11 @@ class PostField extends Field
     private int $post_id;
     private string $meta_key_prefix = '';
 
+    /**
+     * ForPost.
+     *
+     * @return self
+     */
     public static function forPost(int $post_id, string $type, string $name, string $label): self
     {
         $field = new self($type, $name, $label);
@@ -18,6 +23,11 @@ class PostField extends Field
         return $field;
     }
 
+    /**
+     * SetMetaKeyPrefix.
+     *
+     * @return self
+     */
     public function setMetaKeyPrefix(string $prefix): self
     {
         $this->meta_key_prefix = $prefix;
@@ -25,13 +35,23 @@ class PostField extends Field
         return $this;
     }
 
+    /**
+     * GetMetaKey.
+     *
+     * @return string
+     */
     public function getMetaKey(): string
     {
         $key = $this->meta_key_prefix . $this->getName();
 
-        return apply_filters('hyperpress/fields/post_field_meta_key', $key, $this->getName(), $this->post_id);
+        return apply_filters('hyperfields/post_field_meta_key', $key, $this->getName(), $this->post_id);
     }
 
+    /**
+     * GetValue.
+     *
+     * @return mixed
+     */
     public function getValue(): mixed
     {
         $value = get_post_meta($this->post_id, $this->getMetaKey(), true);
@@ -43,6 +63,11 @@ class PostField extends Field
         return $this->sanitizeValue($value);
     }
 
+    /**
+     * SetValue.
+     *
+     * @return bool
+     */
     public function setValue(mixed $value): bool
     {
         $sanitized_value = $this->sanitizeValue($value);
@@ -54,11 +79,21 @@ class PostField extends Field
         return update_post_meta($this->post_id, $this->getMetaKey(), $sanitized_value) !== false;
     }
 
+    /**
+     * DeleteValue.
+     *
+     * @return bool
+     */
     public function deleteValue(): bool
     {
         return delete_post_meta($this->post_id, $this->getMetaKey()) !== false;
     }
 
+    /**
+     * GetPostId.
+     *
+     * @return int
+     */
     public function getPostId(): int
     {
         return $this->post_id;

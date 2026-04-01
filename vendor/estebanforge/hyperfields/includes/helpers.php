@@ -11,6 +11,7 @@ use HyperFields\OptionsPage;
 use HyperFields\OptionsSection;
 use HyperFields\RepeaterField;
 use HyperFields\TabsField;
+use HyperFields\Validation\SchemaValidator;
 
 // Exit if accessed directly (but allow test environment to proceed).
 if (!defined('ABSPATH') && !defined('HYPERFIELDS_TESTING_MODE')) {
@@ -102,7 +103,7 @@ if (!function_exists('hf_resolve_field_context')) {
         $context = [
             'type' => 'option',
             'object_id' => 0,
-            'option_group' => $args['option_group'] ?? apply_filters('hyperfields/helpers/default_option_group', 'hyperfields_options'),
+            'option_group' => $args['option_group'] ?? apply_filters('hyperfields/default_option_group', 'hyperfields_options'),
         ];
 
         if (is_array($source)) {
@@ -201,7 +202,7 @@ if (!function_exists('hf_maybe_sanitize_field_value')) {
         }
 
         // Allow external sanitization via filter when no type is provided
-        return apply_filters('hyperfields/helpers/update_field_sanitize', $value, $name, $args);
+        return apply_filters('hyperfields/update_field_sanitize', $value, $name, $args);
     }
 }
 
@@ -492,12 +493,13 @@ if (!function_exists('hf_export_options')) {
     /**
      * Export one or more WordPress option groups to a JSON string.
      *
-     * @param array  $optionNames Option names to export.
-     * @param string $prefix      Only export keys starting with this prefix. Default '' exports all keys.
+     * @param array               $optionNames Option names to export.
+     * @param string              $prefix      Only export keys starting with this prefix.
+     * @param array<string,array> $schemaMap   Optional schema rules keyed by option name.
      * @return string JSON string ready for download or storage.
      */
-    function hf_export_options(array $optionNames, string $prefix = ''): string {
-        return ExportImport::exportOptions($optionNames, $prefix);
+    function hf_export_options(array $optionNames, string $prefix = '', array $schemaMap = []): string {
+        return ExportImport::exportOptions($optionNames, $prefix, $schemaMap);
     }
 }
 
@@ -582,5 +584,66 @@ if (!function_exists('hf_diff_posts')) {
     function hf_diff_posts(string $jsonString, array $options = []): array
     {
         return ContentExportImport::diffPosts($jsonString, $options);
+    }
+}
+
+// ──────────────────────────────────────────────────────────────────────
+//  Schema validation helpers
+// ──────────────────────────────────────────────────────────────────────
+
+if (!function_exists('hf_validate_value')) {
+    /**
+     * Validate a single value against a schema rule.
+     *
+     * @param string $fieldName Human-readable field name (for error messages).
+     * @param mixed  $value     The value to validate.
+     * @param array  $rule      Schema rule: { type, max?, min?, pattern?, enum?, format?, fields? }.
+     * @return string|null      Error message on failure, null on success.
+     */
+    function hf_validate_value(string $fieldName, mixed $value, array $rule): ?string
+    {
+        return SchemaValidator::validate($fieldName, $value, $rule);
+    }
+}
+
+if (!function_exists('hf_validate_schema')) {
+    /**
+     * Validate a keyed map of values against a keyed map of schema rules.
+     *
+     * @param array<string,mixed> $values    Values to validate.
+     * @param array<string,array> $schemaMap Schema rules keyed by field name.
+     * @param string              $prefix    Optional prefix for error field names.
+     * @return array<int,string>             Error messages (empty = all valid).
+     */
+    function hf_validate_schema(array $values, array $schemaMap, string $prefix = ''): array
+    {
+        return SchemaValidator::validateMap($values, $schemaMap, $prefix);
+    }
+}
+
+if (!function_exists('hf_is_valid')) {
+    /**
+     * Check if a value passes validation against a schema rule (boolean shorthand).
+     *
+     * @param mixed $value The value to check.
+     * @param array $rule  Schema rule array.
+     * @return bool
+     */
+    function hf_is_valid(mixed $value, array $rule): bool
+    {
+        return SchemaValidator::isValid($value, $rule);
+    }
+}
+
+if (!function_exists('hf_detect_type')) {
+    /**
+     * Detect the canonical schema type name of a PHP value.
+     *
+     * @param mixed $value
+     * @return string One of: string, integer, double, boolean, array, null.
+     */
+    function hf_detect_type(mixed $value): string
+    {
+        return SchemaValidator::detectType($value);
     }
 }

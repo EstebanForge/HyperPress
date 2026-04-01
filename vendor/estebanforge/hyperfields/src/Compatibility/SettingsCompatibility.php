@@ -9,6 +9,11 @@ namespace HyperFields\Compatibility;
  */
 final class SettingsCompatibility
 {
+    /**
+     * Register.
+     *
+     * @return \HyperFields\OptionsPage
+     */
     public static function register(array $config): \HyperFields\OptionsPage
     {
         return WPSettingsCompatibility::register($config);

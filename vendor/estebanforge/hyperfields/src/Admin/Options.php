@@ -24,6 +24,9 @@ class Options
     private string $option_name = 'hyperpress_options';
     private Main $main;
 
+    /**
+     * @param Main $main HyperPress main plugin instance.
+     */
     public function __construct(Main $main)
     {
         $this->main = $main;
@@ -49,6 +52,11 @@ class Options
         }
     }
 
+    /**
+     * Registers the HyperPress settings page and tabbed sections.
+     *
+     * @return void
+     */
     public function initOptionsPage(): void
     {
         $options = HyperFields::getOptions($this->option_name, []);
@@ -87,6 +95,11 @@ class Options
         ]);
     }
 
+    /**
+     * Builds settings configuration for the General tab.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     private function buildGeneralTabConfig(): array
     {
         return [
@@ -125,6 +138,11 @@ class Options
         ];
     }
 
+    /**
+     * Builds settings configuration for the HTMX tab.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     private function buildHTMXTabConfig(): array
     {
         $available_extensions = HTMXLib::getExtensions($this->main);
@@ -190,6 +208,11 @@ class Options
         ];
     }
 
+    /**
+     * Builds settings configuration for the Alpine Ajax tab.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     private function buildAlpineTabConfig(): array
     {
         return [
@@ -211,6 +234,11 @@ class Options
         ];
     }
 
+    /**
+     * Builds settings configuration for the Datastar tab.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     private function buildDatastarTabConfig(): array
     {
         return [
@@ -232,6 +260,11 @@ class Options
         ];
     }
 
+    /**
+     * Builds settings configuration for the About tab.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     private function buildAboutTabConfig(): array
     {
         return [
@@ -257,6 +290,11 @@ class Options
         ];
     }
 
+    /**
+     * Returns About tab HTML content.
+     *
+     * @return string
+     */
     private function getAboutHtml(): string
     {
         return '<div class="hyperpress-about-content">'
@@ -267,6 +305,11 @@ class Options
             . '</div>';
     }
 
+    /**
+     * Returns System Information tab HTML content.
+     *
+     * @return string
+     */
     private function getSystemInfoHtml(): string
     {
         $system_info_table = $this->renderSystemInfo($this->getSystemInformation());
@@ -277,6 +320,12 @@ class Options
         </div>';
     }
 
+    /**
+     * Renders the system-information HTML table.
+     *
+     * @param array<string, string> $system_info Label-value pairs.
+     * @return string
+     */
     private function renderSystemInfo(array $system_info): string
     {
         $html = '<div class="hyperpress-system-info"><table class="widefat">';
@@ -295,6 +344,11 @@ class Options
         return $html;
     }
 
+    /**
+     * Collects environment and plugin metadata for display.
+     *
+     * @return array<string, string>
+     */
     private function getSystemInformation(): array
     {
         global $wp_version;
@@ -313,6 +367,11 @@ class Options
         ];
     }
 
+    /**
+     * Returns footer HTML shown in the options page.
+     *
+     * @return string
+     */
     private function getFooterContent(): string
     {
         $plugin_version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7';
@@ -322,6 +381,12 @@ class Options
             . ' <a href="https://actitud.xyz" target="_blank" rel="noopener noreferrer">Actitud Studio</a>.';
     }
 
+    /**
+     * Appends a Settings link in the plugin list table.
+     *
+     * @param array<int, string> $links Existing action links.
+     * @return array<int, string>
+     */
     public function pluginActionLinks(array $links): array
     {
         $links[] = '<a href="' . esc_url(admin_url('options-general.php?page=hyperpress-options')) . '">' . esc_html__('Settings', 'api-for-htmx') . '</a>';
@@ -329,6 +394,11 @@ class Options
         return $links;
     }
 
+    /**
+     * Renders API endpoint helper HTML for the options screen.
+     *
+     * @return string
+     */
     private function renderApiEndpointHtml(): string
     {
         ob_start();

@@ -100,6 +100,17 @@ if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
     });
 }
 
+// Bootstrap HyperFields dependency.
+// When HyperBlocks is loaded standalone (not alongside the HyperFields plugin), we must
+// trigger HyperFields' candidate registration so its after_setup_theme initialisation runs.
+// The guard inside HyperFields' bootstrap.php prevents double-initialisation.
+if (!$loadedFromVendorTree) {
+    $hyperfields_bootstrap = __DIR__ . '/vendor/estebanforge/hyperfields/bootstrap.php';
+    if (file_exists($hyperfields_bootstrap)) {
+        require_once $hyperfields_bootstrap;
+    }
+}
+
 // Determine version from composer.json for candidate registration.
 $current_version = '0.0.0';
 $composer_json_path = __DIR__ . '/composer.json';

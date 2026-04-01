@@ -16,6 +16,11 @@ final class WPSettingsCompatibility
      */
     private static array $registered_lifecycle = [];
 
+    /**
+     * Register.
+     *
+     * @return OptionsPage
+     */
     public static function register(array $config): OptionsPage
     {
         $title = (string) ($config['title'] ?? $config['page_title'] ?? '');
@@ -111,6 +116,11 @@ final class WPSettingsCompatibility
         return $page;
     }
 
+    /**
+     * ResolveHookPrefix.
+     *
+     * @return string
+     */
     private static function resolveHookPrefix(array $config): string
     {
         $prefix = isset($config['hook_prefix']) && is_string($config['hook_prefix'])
@@ -120,6 +130,11 @@ final class WPSettingsCompatibility
         return preg_replace('/[^a-z0-9_]/', '_', strtolower($prefix)) ?: 'hyperfields_settings';
     }
 
+    /**
+     * ResolveTabs.
+     *
+     * @return array
+     */
     private static function resolveTabs(array $config): array
     {
         $tabs = $config['tabs'] ?? [];
@@ -141,6 +156,11 @@ final class WPSettingsCompatibility
         return $normalized;
     }
 
+    /**
+     * SortTabs.
+     *
+     * @return array
+     */
     private static function sortTabs(array $tabs): array
     {
         usort($tabs, static function (array $left, array $right): int {
@@ -153,6 +173,9 @@ final class WPSettingsCompatibility
         return $tabs;
     }
 
+    /**
+     * AttachSectionOptions.
+     */
     private static function attachSectionOptions(
         OptionsPage $page,
         TabProxy $tab_proxy,
@@ -207,6 +230,9 @@ final class WPSettingsCompatibility
         }
     }
 
+    /**
+     * BuildFieldFromOption.
+     */
     private static function buildFieldFromOption(
         string $type,
         array $args,
@@ -270,6 +296,9 @@ final class WPSettingsCompatibility
         return $field;
     }
 
+    /**
+     * BuildRegisteredOptionTypeField.
+     */
     private static function buildRegisteredOptionTypeField(
         string $type,
         array $args,
@@ -300,6 +329,9 @@ final class WPSettingsCompatibility
         return $field;
     }
 
+    /**
+     * BuildCodeEditorField.
+     */
     private static function buildCodeEditorField(
         array $args,
         SectionProxy $section_proxy,
@@ -359,6 +391,11 @@ final class WPSettingsCompatibility
         return $field;
     }
 
+    /**
+     * ApplyCommonFieldArgs.
+     *
+     * @return void
+     */
     private static function applyCommonFieldArgs(Field $field, array $args): void
     {
         if (array_key_exists('default', $args)) {
@@ -467,6 +504,11 @@ final class WPSettingsCompatibility
         }
     }
 
+    /**
+     * MapFieldType.
+     *
+     * @return string
+     */
     private static function mapFieldType(string $type): string
     {
         return match ($type) {
@@ -479,6 +521,11 @@ final class WPSettingsCompatibility
         };
     }
 
+    /**
+     * ResolveLegacyOptionTypeMap.
+     *
+     * @return array
+     */
     private static function resolveLegacyOptionTypeMap(): array
     {
         $map = apply_filters('wp_settings_option_type_map', []);
@@ -486,6 +533,9 @@ final class WPSettingsCompatibility
         return is_array($map) ? $map : [];
     }
 
+    /**
+     * BuildOptionPath.
+     */
     private static function buildOptionPath(
         string $field_name,
         string $tab_slug,
@@ -510,6 +560,9 @@ final class WPSettingsCompatibility
         return implode('.', $parts);
     }
 
+    /**
+     * BuildLegacyOptionTypeField.
+     */
     private static function buildLegacyOptionTypeField(
         string $type,
         array $args,
@@ -535,6 +588,9 @@ final class WPSettingsCompatibility
 
         $settings = new class($option_name)
         {
+            /**
+             *   construct.
+             */
             public function __construct(public string $option_name)
             {
             }
@@ -543,6 +599,9 @@ final class WPSettingsCompatibility
         $tab_slug = $section_proxy->getTabKey();
         $tab = new class($settings, $tab_slug, $tab_option_level)
         {
+            /**
+             *   construct.
+             */
             public function __construct(
                 public object $settings,
                 public string $slug,
@@ -550,6 +609,11 @@ final class WPSettingsCompatibility
             ) {
             }
 
+            /**
+             * Is option level.
+             *
+             * @return bool
+             */
             public function is_option_level(): bool
             {
                 return $this->option_level;
@@ -562,6 +626,9 @@ final class WPSettingsCompatibility
             : $section_proxy->getId();
         $section = new class($tab, $section_slug, $section_option_level)
         {
+            /**
+             *   construct.
+             */
             public function __construct(
                 public object $tab,
                 public string $slug,
@@ -569,6 +636,11 @@ final class WPSettingsCompatibility
             ) {
             }
 
+            /**
+             * Is option level.
+             *
+             * @return bool
+             */
             public function is_option_level(): bool
             {
                 return $this->option_level;
@@ -599,6 +671,11 @@ final class WPSettingsCompatibility
         return $field;
     }
 
+    /**
+     * RegisterLifecycleHooks.
+     *
+     * @return void
+     */
     private static function registerLifecycleHooks(OptionsPage $page, array $config, string $hook_prefix): void
     {
         $option_name = $page->getOptionName();

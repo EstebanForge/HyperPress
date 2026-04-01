@@ -63,6 +63,10 @@ final class LibraryBootstrap
         if (class_exists(TemplateLoader::class)) {
             TemplateLoader::init();
         }
+
+        if (class_exists(\HyperFields\Transfer\AuditLogger::class)) {
+            \HyperFields\Transfer\AuditLogger::init();
+        }
     }
 
     /**

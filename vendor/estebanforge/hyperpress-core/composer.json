@@ -2,7 +2,7 @@
   "name": "estebanforge/hyperpress-core",
   "description": "Core HyperPress runtime library: routing, rendering, assets, admin options, and hypermedia integrations.",
   "type": "library",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "license": "GPL-2.0-or-later",
   "authors": [
     {
@@ -14,16 +14,16 @@
   "prefer-stable": true,
   "repositories": [
     {
-      "type": "vcs",
-      "url": "https://github.com/EstebanForge/HyperFields.git"
+      "type": "path",
+      "url": "../HyperFields"
     },
     {
-      "type": "vcs",
-      "url": "https://github.com/EstebanForge/HyperBlocks.git"
+      "type": "path",
+      "url": "../HyperBlocks"
     }
   ],
   "require": {
-    "php": ">=8.1",
+    "php": ">=8.2",
     "starfederation/datastar-php": "^1.0",
     "estebanforge/hyperfields": "^1.0",
     "estebanforge/hyperblocks": "^1.0"

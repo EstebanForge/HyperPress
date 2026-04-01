@@ -75,8 +75,8 @@ fi
 
 # Update security policy supported versions when present
 if [[ -f "$PROJECT_DIR/SECURITY.md" ]]; then
-  sedi -E "s/^(\|\s*)[0-9]+\.[0-9]+\.[0-9]+(\s*\|\s*:white_check_mark:\s*\|)/\1$NEW_VERSION\2/" "$PROJECT_DIR/SECURITY.md"
-  sedi -E "s/^(\|\s*<)[0-9]+\.[0-9]+\.[0-9]+(\s*\|\s*:x:\s*\|)/\1$NEW_VERSION\2/" "$PROJECT_DIR/SECURITY.md"
+  sedi -E "s/^(\|\s*)[0-9]+\.[0-9]+\.[0-9]+(\s*\|?\s*:white_check_mark:)/\1$NEW_VERSION\2/" "$PROJECT_DIR/SECURITY.md"
+  sedi -E "s/^(\|\s*<)[0-9]+\.[0-9]+\.[0-9]+(\s*\|?\s*:x:)/\1$NEW_VERSION\2/" "$PROJECT_DIR/SECURITY.md"
   echo "  ✓ SECURITY.md"
 fi
 

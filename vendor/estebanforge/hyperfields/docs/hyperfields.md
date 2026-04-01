@@ -399,23 +399,105 @@ ExportImport::restoreBackup(
 );
 ```
 
-### `ExportImportUI` parameters
+### `ExportImportUI::registerPage(...)` parameters
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `$parentSlug` | string | — | Parent menu slug (e.g. `'my-plugin'` or `'options-general.php'`). |
 | `$pageSlug` | string | — | Unique slug for this page. |
-| `$options` | array | `[]` | Map of WP option name → human-readable label. |
+| `$options` | array | `[]` | Map of WP option name -> human-readable label. |
 | `$allowedImportOptions` | array | `[]` | Whitelist of option names that may be written on import. Defaults to all keys in `$options`. |
 | `$prefix` | string | `''` | Only export/import option-array keys starting with this prefix. |
 | `$title` | string | `'Data Export / Import'` | Page heading and menu label. |
 | `$capability` | string | `'manage_options'` | Required WordPress capability. |
+| `$description` | string | `'Export your settings to JSON or import a previously exported file.'` | Intro text shown under the page title. |
+| `$exporter` | `?callable` | `null` | Optional export override callback: `fn(array $selectedNames, string $prefix): string`. |
+| `$previewer` | `?callable` | `null` | Optional preview override callback: `fn(array $decoded, string $json, array $allowed, string $prefix, array $options): array`. |
+| `$importer` | `?callable` | `null` | Optional import override callback: `fn(string $json, array $allowed, string $prefix): array`. |
+| `$exportFormExtras` | `?string` | `null` | Optional raw HTML injected before the export submit row. |
+
+### `ExportImportUI::render(...)` extras
+
+Beyond the shared options above, `render()` also accepts:
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `$optionGroups` | array | `[]` | Optional map `option_key -> group_label` used to group/filter export rows in the UI. |
+
+### `ExportImportUI::renderConfigured(...)`
+
+For immutable config-driven wiring, pass an `ExportImportPageConfig` object:
+
+```php
+use HyperFields\Admin\ExportImportPageConfig;
+use HyperFields\Admin\ExportImportUI;
+
+$config = new ExportImportPageConfig(
+    options: ['my_plugin_options' => 'My Plugin Settings'],
+    optionGroups: ['my_plugin_options' => 'Core'],
+    prefix: 'myp_',
+);
+
+echo ExportImportUI::renderConfigured($config);
+```
+
+### Customizing the import result notice
+
+`ExportImportUI` exposes filters/actions so plugin authors can replace or extend the default import success/error notice.
+
+```php
+add_filter('hyperfields/import/ui_notice_message', function (string $message, array $importResult, bool $importSuccess): string {
+    if (!$importSuccess) {
+        return $message;
+    }
+
+    return $message . ' Additional post-import checks are queued.';
+}, 10, 3);
+
+add_filter('hyperfields/import/ui_notice_extra_html', function (string $html, array $importResult, bool $importSuccess): string {
+    if (!$importSuccess) {
+        return $html;
+    }
+
+    return $html . '<p><em>Custom details from your plugin can be rendered here.</em></p>';
+}, 10, 3);
+
+add_action('hyperfields/import/ui_notice_after', function (array $importResult, bool $importSuccess): void {
+    if ($importSuccess) {
+        echo '<div class="notice notice-info"><p>Additional status panel.</p></div>';
+    }
+}, 10, 2);
+```
+
+Available hooks:
+- `hyperfields/import/ui_notice_type` (`success|error|warning|info`)
+- `hyperfields/import/ui_notice_message`
+- `hyperfields/import/ui_notice_extra_html`
+- `hyperfields/import/ui_notice_after`
+
+### Built-in transfer logs screen
+
+`ExportImportUI` now integrates a built-in transfer logs screen (rendered by
+`Admin\TransferLogsUI`), accessed via the
+`View transfer logs` link shown at the bottom-right of the Data Tools page.
+
+Features:
+- paginated log table
+- operation shown with source context (`export (via admin)`, `import (via cli)`, etc.)
+- lazy retention pruning (using HyperFields audit retention filters)
+- date header rendered in the configured WordPress site timezone
+
+To hide the logs UI for a specific integration:
+
+```php
+add_filter('hyperfields/transfer_logs/ui_enabled', '__return_false');
+```
 
 ### `ExportImport` API
 
 | Method | Description |
 |---|---|
-| `exportOptions(array $optionNames, string $prefix = ''): string` | Serialize option groups to a JSON string. |
+| `exportOptions(array $optionNames, string $prefix = '', array $schemaMap = []): string` | Serialize option groups to a JSON string with typed-node schemas. |
 | `importOptions(string $json, array $allowed = [], string $prefix = '', array $options = []): array` | Deserialize and write option groups. Supports `mode: merge|replace`. Returns `['success', 'message', 'backup_keys?']`. |
 | `diffOptions(string $json, array $allowed = [], string $prefix = '', array $options = []): array` | Dry-run compare report with `changes` and `skipped` entries. |
 | `restoreBackup(string $backupKey, string $optionName): bool` | Restore an option from the transient backup created during import. |

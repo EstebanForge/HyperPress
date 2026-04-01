@@ -13,6 +13,11 @@ class RepeaterField extends Field
     private int $min_rows = 0;
     private int $max_rows = 0;
 
+    /**
+     * AddSubField.
+     *
+     * @return self
+     */
     public function addSubField(Field $field): self
     {
         $this->sub_fields[$field->getName()] = $field;
@@ -20,6 +25,11 @@ class RepeaterField extends Field
         return $this;
     }
 
+    /**
+     * AddSubFields.
+     *
+     * @return self
+     */
     public function addSubFields(array $fields): self
     {
         foreach ($fields as $field) {
@@ -29,6 +39,11 @@ class RepeaterField extends Field
         return $this;
     }
 
+    /**
+     * SetLabelTemplate.
+     *
+     * @return self
+     */
     public function setLabelTemplate(string $template): self
     {
         $this->label_template = $template;
@@ -36,6 +51,11 @@ class RepeaterField extends Field
         return $this;
     }
 
+    /**
+     * SetCollapsible.
+     *
+     * @return self
+     */
     public function setCollapsible(bool $collapsible = true): self
     {
         $this->collapsible = $collapsible;
@@ -43,6 +63,11 @@ class RepeaterField extends Field
         return $this;
     }
 
+    /**
+     * SetCollapsed.
+     *
+     * @return self
+     */
     public function setCollapsed(bool $collapsed = true): self
     {
         $this->collapsed = $collapsed;
@@ -50,6 +75,11 @@ class RepeaterField extends Field
         return $this;
     }
 
+    /**
+     * SetMinRows.
+     *
+     * @return self
+     */
     public function setMinRows(int $min): self
     {
         $this->min_rows = max(0, $min);
@@ -57,6 +87,11 @@ class RepeaterField extends Field
         return $this;
     }
 
+    /**
+     * SetMaxRows.
+     *
+     * @return self
+     */
     public function setMaxRows(int $max): self
     {
         $this->max_rows = max(0, $max);
@@ -64,36 +99,71 @@ class RepeaterField extends Field
         return $this;
     }
 
+    /**
+     * GetSubFields.
+     *
+     * @return array
+     */
     public function getSubFields(): array
     {
         return $this->sub_fields;
     }
 
+    /**
+     * GetLabelTemplate.
+     *
+     * @return string
+     */
     public function getLabelTemplate(): string
     {
         return $this->label_template;
     }
 
+    /**
+     * IsCollapsible.
+     *
+     * @return bool
+     */
     public function isCollapsible(): bool
     {
         return $this->collapsible;
     }
 
+    /**
+     * IsCollapsed.
+     *
+     * @return bool
+     */
     public function isCollapsed(): bool
     {
         return $this->collapsed;
     }
 
+    /**
+     * GetMinRows.
+     *
+     * @return int
+     */
     public function getMinRows(): int
     {
         return $this->min_rows;
     }
 
+    /**
+     * GetMaxRows.
+     *
+     * @return int
+     */
     public function getMaxRows(): int
     {
         return $this->max_rows;
     }
 
+    /**
+     * SanitizeValue.
+     *
+     * @return mixed
+     */
     public function sanitizeValue(mixed $value): mixed
     {
         if (!is_array($value)) {
@@ -117,6 +187,11 @@ class RepeaterField extends Field
         return $sanitized;
     }
 
+    /**
+     * ValidateValue.
+     *
+     * @return bool
+     */
     public function validateValue(mixed $value): bool
     {
         if (!is_array($value)) {
@@ -136,6 +211,11 @@ class RepeaterField extends Field
         return true;
     }
 
+    /**
+     * ToArray.
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         return array_merge(parent::toArray(), [
@@ -148,6 +228,11 @@ class RepeaterField extends Field
         ]);
     }
 
+    /**
+     * Make.
+     *
+     * @return self
+     */
     public static function make(string $name, string $label, string $type = 'repeater'): self
     {
         return new self($type, $name, $label);

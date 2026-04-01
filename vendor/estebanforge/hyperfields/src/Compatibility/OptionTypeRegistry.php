@@ -11,6 +11,9 @@ final class OptionTypeRegistry
      */
     private static array $types = [];
 
+    /**
+     * Register.
+     */
     public static function register(
         string $type,
         callable $render,
@@ -32,6 +35,11 @@ final class OptionTypeRegistry
         return self::$types[$type] ?? null;
     }
 
+    /**
+     * Has.
+     *
+     * @return bool
+     */
     public static function has(string $type): bool
     {
         return isset(self::$types[$type]);

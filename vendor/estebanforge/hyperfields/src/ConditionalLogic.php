@@ -27,21 +27,39 @@ class ConditionalLogic
         'NOT EMPTY',
     ];
 
+    /**
+     * If.
+     *
+     * @return self
+     */
     public static function if(string $fieldName): self
     {
         return new self($fieldName);
     }
 
+    /**
+     * Where.
+     *
+     * @return self
+     */
     public static function where(string $fieldName): self
     {
         return new self($fieldName);
     }
 
+    /**
+     *   construct.
+     */
     private function __construct(string $fieldName)
     {
         $this->field_name = $fieldName;
     }
 
+    /**
+     * Equals.
+     *
+     * @return self
+     */
     public function equals(mixed $value): self
     {
         $this->operator = '=';
@@ -50,6 +68,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * NotEquals.
+     *
+     * @return self
+     */
     public function notEquals(mixed $value): self
     {
         $this->operator = '!=';
@@ -58,6 +81,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * GreaterThan.
+     *
+     * @return self
+     */
     public function greaterThan(mixed $value): self
     {
         $this->operator = '>';
@@ -66,6 +94,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * LessThan.
+     *
+     * @return self
+     */
     public function lessThan(mixed $value): self
     {
         $this->operator = '<';
@@ -74,6 +107,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * GreaterThanOrEqual.
+     *
+     * @return self
+     */
     public function greaterThanOrEqual(mixed $value): self
     {
         $this->operator = '>=';
@@ -82,6 +120,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * LessThanOrEqual.
+     *
+     * @return self
+     */
     public function lessThanOrEqual(mixed $value): self
     {
         $this->operator = '<=';
@@ -90,6 +133,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * In.
+     *
+     * @return self
+     */
     public function in(array $values): self
     {
         $this->operator = 'IN';
@@ -98,6 +146,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * NotIn.
+     *
+     * @return self
+     */
     public function notIn(array $values): self
     {
         $this->operator = 'NOT IN';
@@ -106,6 +159,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * Contains.
+     *
+     * @return self
+     */
     public function contains(string $value): self
     {
         $this->operator = 'CONTAINS';
@@ -114,6 +172,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * NotContains.
+     *
+     * @return self
+     */
     public function notContains(string $value): self
     {
         $this->operator = 'NOT CONTAINS';
@@ -122,6 +185,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * Empty.
+     *
+     * @return self
+     */
     public function empty(): self
     {
         $this->operator = 'EMPTY';
@@ -130,6 +198,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * NotEmpty.
+     *
+     * @return self
+     */
     public function notEmpty(): self
     {
         $this->operator = 'NOT EMPTY';
@@ -138,6 +211,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * And.
+     *
+     * @return self
+     */
     public function and(string $fieldName): self
     {
         $this->conditions[] = [
@@ -153,6 +231,11 @@ class ConditionalLogic
         return $this;
     }
 
+    /**
+     * Or.
+     *
+     * @return self
+     */
     public function or(string $fieldName): self
     {
         $this->relation = 'OR';
@@ -160,6 +243,11 @@ class ConditionalLogic
         return $this->and($fieldName);
     }
 
+    /**
+     * Evaluate.
+     *
+     * @return bool
+     */
     public function evaluate(array $values): bool
     {
         $conditions = $this->conditions;
@@ -185,6 +273,11 @@ class ConditionalLogic
         return !in_array(false, $results, true);
     }
 
+    /**
+     * EvaluateCondition.
+     *
+     * @return bool
+     */
     private function evaluateCondition(mixed $fieldValue, string $operator, mixed $compareValue): bool
     {
         switch ($operator) {
@@ -213,10 +306,15 @@ class ConditionalLogic
             case 'NOT EMPTY':
                 return !empty($fieldValue);
             default:
-                return (bool) apply_filters('hyperpress/fields/conditional_logic_evaluate', false, $fieldValue, $operator, $compareValue);
+                return (bool) apply_filters('hyperfields/conditional_logic_evaluate', false, $fieldValue, $operator, $compareValue);
         }
     }
 
+    /**
+     * ToArray.
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         $conditions = $this->conditions;
@@ -235,6 +333,11 @@ class ConditionalLogic
         ];
     }
 
+    /**
+     * Factory.
+     *
+     * @return self
+     */
     public static function factory(array $conditions): self
     {
         $logic = new self('');

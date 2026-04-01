@@ -29,11 +29,19 @@ class OptionsPage
      */
     private array $compatibility_field_errors = [];
 
+    /**
+     * Make.
+     *
+     * @return self
+     */
     public static function make(string $page_title, string $menu_slug, string $prefix = ''): self
     {
         return new self($page_title, $menu_slug, $prefix);
     }
 
+    /**
+     *   construct.
+     */
     private function __construct(string $page_title, string $menu_slug, string $prefix = '')
     {
         $this->page_title = $page_title;
@@ -46,6 +54,11 @@ class OptionsPage
         $this->prefix = $prefix;
     }
 
+    /**
+     * SetMenuTitle.
+     *
+     * @return self
+     */
     public function setMenuTitle(string $menu_title): self
     {
         $this->menu_title = $menu_title;
@@ -53,6 +66,11 @@ class OptionsPage
         return $this;
     }
 
+    /**
+     * SetCapability.
+     *
+     * @return self
+     */
     public function setCapability(string $capability): self
     {
         $this->capability = $capability;
@@ -60,6 +78,11 @@ class OptionsPage
         return $this;
     }
 
+    /**
+     * SetParentSlug.
+     *
+     * @return self
+     */
     public function setParentSlug(string $parent_slug): self
     {
         $this->parent_slug = $parent_slug;
@@ -67,6 +90,11 @@ class OptionsPage
         return $this;
     }
 
+    /**
+     * SetIconUrl.
+     *
+     * @return self
+     */
     public function setIconUrl(string $icon_url): self
     {
         $this->icon_url = $icon_url;
@@ -74,6 +102,11 @@ class OptionsPage
         return $this;
     }
 
+    /**
+     * SetPosition.
+     *
+     * @return self
+     */
     public function setPosition(?int $position): self
     {
         $this->position = $position;
@@ -81,6 +114,11 @@ class OptionsPage
         return $this;
     }
 
+    /**
+     * SetOptionName.
+     *
+     * @return self
+     */
     public function setOptionName(string $option_name): self
     {
         $this->option_name = $option_name;
@@ -88,6 +126,11 @@ class OptionsPage
         return $this;
     }
 
+    /**
+     * SetFooterContent.
+     *
+     * @return self
+     */
     public function setFooterContent(string $footer_content): self
     {
         $this->footer_content = $footer_content;
@@ -95,6 +138,11 @@ class OptionsPage
         return $this;
     }
 
+    /**
+     * SetPrefix.
+     *
+     * @return self
+     */
     public function setPrefix(string $prefix): self
     {
         $this->prefix = $prefix;
@@ -102,16 +150,31 @@ class OptionsPage
         return $this;
     }
 
+    /**
+     * GetPrefix.
+     *
+     * @return string
+     */
     public function getPrefix(): string
     {
         return $this->prefix;
     }
 
+    /**
+     * GetOptionName.
+     *
+     * @return string
+     */
     public function getOptionName(): string
     {
         return $this->option_name;
     }
 
+    /**
+     * AddTab.
+     *
+     * @return self
+     */
     public function addTab(string $id, string $title): self
     {
         if (!isset($this->tabs[$id])) {
@@ -124,6 +187,11 @@ class OptionsPage
         return $this;
     }
 
+    /**
+     * AddSection.
+     *
+     * @return OptionsSection
+     */
     public function addSection(string $id, string $title, string $description = ''): OptionsSection
     {
         $section = new OptionsSection($id, $title, $description);
@@ -134,6 +202,9 @@ class OptionsPage
         return $section;
     }
 
+    /**
+     * AddSectionToTab.
+     */
     public function addSectionToTab(
         string $tab_id,
         string $id,
@@ -152,6 +223,11 @@ class OptionsPage
         return $section;
     }
 
+    /**
+     * AddSectionObject.
+     *
+     * @return self
+     */
     public function addSectionObject(OptionsSection $section): self
     {
         $this->sections[$section->getId()] = $section;
@@ -166,6 +242,11 @@ class OptionsPage
         return $this;
     }
 
+    /**
+     * AttachSectionToTab.
+     *
+     * @return void
+     */
     private function attachSectionToTab(string $tab_id, string $section_id): void
     {
         if (!isset($this->tabs[$tab_id])) {
@@ -177,6 +258,11 @@ class OptionsPage
         }
     }
 
+    /**
+     * AddField.
+     *
+     * @return self
+     */
     public function addField(Field $field): self
     {
         if ($this->prefix !== '' && strpos($field->getName(), $this->prefix) !== 0) {
@@ -187,6 +273,11 @@ class OptionsPage
         return $this;
     }
 
+    /**
+     * Register.
+     *
+     * @return void
+     */
     public function register(): void
     {
         $this->loadOptions();
@@ -203,12 +294,22 @@ class OptionsPage
         add_action('admin_enqueue_scripts', $this->enqueueAssets(...));
     }
 
+    /**
+     * LoadOptions.
+     *
+     * @return void
+     */
     private function loadOptions(): void
     {
         $saved_options = get_option($this->option_name, []);
         $this->option_values = array_merge($this->default_values, $saved_options);
     }
 
+    /**
+     * AddMenuPage.
+     *
+     * @return void
+     */
     public function addMenuPage(): void
     {
         if ($this->parent_slug === 'menu') {
@@ -234,6 +335,11 @@ class OptionsPage
         }
     }
 
+    /**
+     * RegisterSettings.
+     *
+     * @return void
+     */
     public function registerSettings(): void
     {
         // Register a single settings group and option for all sections/tabs.
@@ -262,6 +368,11 @@ class OptionsPage
         }
     }
 
+    /**
+     * RenderPage.
+     *
+     * @return void
+     */
     public function renderPage(): void
     {
         $active_tab = $this->getActiveTab();
@@ -322,6 +433,11 @@ class OptionsPage
 <?php
     }
 
+    /**
+     * SanitizeOptions.
+     *
+     * @return array
+     */
     public function sanitizeOptions(?array $input): array
     {
         // When compact input is enabled, reconstruct $input from the single compacted POST variable
@@ -402,6 +518,11 @@ class OptionsPage
         return $output;
     }
 
+    /**
+     * ValidateCompatibilityField.
+     *
+     * @return ?string
+     */
     private function validateCompatibilityField(Field $field, mixed $value): ?string
     {
         $args = $field->getArgs();
@@ -468,6 +589,11 @@ class OptionsPage
         return [false, null];
     }
 
+    /**
+     * SetValueByPath.
+     *
+     * @return array
+     */
     private function setValueByPath(array $target, string $path, mixed $value): array
     {
         $segments = array_values(array_filter(explode('.', $path), static fn ($segment): bool => $segment !== ''));
@@ -491,6 +617,11 @@ class OptionsPage
         return $target;
     }
 
+    /**
+     * GetActiveTab.
+     *
+     * @return string
+     */
     private function getActiveTab(): string
     {
         // On POST (save), check for hidden field
@@ -507,6 +638,11 @@ class OptionsPage
         return $tab_keys[0] ?? 'main';
     }
 
+    /**
+     * RenderTabs.
+     *
+     * @return void
+     */
     private function renderTabs(): void
     {
         if (empty($this->tabs)) {
@@ -568,6 +704,11 @@ class OptionsPage
         return $non_linked;
     }
 
+    /**
+     * GetActiveSection.
+     *
+     * @return string
+     */
     private function getActiveSection(string $tab_id): string
     {
         if (!empty($_POST['hyperpress_active_section']) && is_string($_POST['hyperpress_active_section'])) {
@@ -595,6 +736,11 @@ class OptionsPage
         return '';
     }
 
+    /**
+     * RenderSectionMenu.
+     *
+     * @return void
+     */
     private function renderSectionMenu(string $tab_id): void
     {
         $linked = [];
@@ -625,6 +771,11 @@ class OptionsPage
         echo '</ul>';
     }
 
+    /**
+     * EnqueueAssets.
+     *
+     * @return void
+     */
     public function enqueueAssets(string $hook_suffix): void
     {
         if (

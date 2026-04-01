@@ -11,11 +11,19 @@ class Registry
     private array $field_groups = [];
     private array $contexts = [];
 
+    /**
+     *   construct.
+     */
     private function __construct()
     {
         // Private constructor for singleton
     }
 
+    /**
+     * GetInstance.
+     *
+     * @return self
+     */
     public static function getInstance(): self
     {
         if (self::$instance === null) {
@@ -25,6 +33,11 @@ class Registry
         return self::$instance;
     }
 
+    /**
+     * RegisterField.
+     *
+     * @return self
+     */
     public function registerField(string $context, string|Field $name_or_field, ?Field $field = null): self
     {
         // Handle both old and new signatures
@@ -46,11 +59,21 @@ class Registry
         return $this;
     }
 
+    /**
+     * GetFields.
+     *
+     * @return array
+     */
     public function getFields(string $context): array
     {
         return array_values($this->fields[$context] ?? []);
     }
 
+    /**
+     * RegisterFieldGroup.
+     *
+     * @return self
+     */
     public function registerFieldGroup(string $name, array $fields): self
     {
         $this->field_groups[$name] = $fields;
@@ -58,41 +81,81 @@ class Registry
         return $this;
     }
 
+    /**
+     * GetField.
+     *
+     * @return ?Field
+     */
     public function getField(string $context, string $name): ?Field
     {
         return $this->fields[$context][$name] ?? null;
     }
 
+    /**
+     * GetFieldGroup.
+     *
+     * @return ?array
+     */
     public function getFieldGroup(string $name): ?array
     {
         return $this->field_groups[$name] ?? null;
     }
 
+    /**
+     * GetFieldsByContext.
+     *
+     * @return array
+     */
     public function getFieldsByContext(string $context): array
     {
         return $this->fields[$context] ?? [];
     }
 
+    /**
+     * GetAllFields.
+     *
+     * @return array
+     */
     public function getAllFields(): array
     {
         return $this->fields;
     }
 
+    /**
+     * GetAllFieldGroups.
+     *
+     * @return array
+     */
     public function getAllFieldGroups(): array
     {
         return $this->field_groups;
     }
 
+    /**
+     * HasField.
+     *
+     * @return bool
+     */
     public function hasField(string $context, string $name): bool
     {
         return isset($this->fields[$context][$name]);
     }
 
+    /**
+     * HasFieldGroup.
+     *
+     * @return bool
+     */
     public function hasFieldGroup(string $name): bool
     {
         return isset($this->field_groups[$name]);
     }
 
+    /**
+     * RemoveField.
+     *
+     * @return self
+     */
     public function removeField(string $context, string $name): self
     {
         if (isset($this->fields[$context][$name])) {
@@ -102,6 +165,11 @@ class Registry
         return $this;
     }
 
+    /**
+     * RemoveFieldGroup.
+     *
+     * @return self
+     */
     public function removeFieldGroup(string $name): self
     {
         if (isset($this->field_groups[$name])) {
@@ -111,11 +179,21 @@ class Registry
         return $this;
     }
 
+    /**
+     * ContainerExists.
+     *
+     * @return bool
+     */
     public function containerExists(string $context): bool
     {
         return isset($this->fields[$context]) && !empty($this->fields[$context]);
     }
 
+    /**
+     * RemoveContainer.
+     *
+     * @return self
+     */
     public function removeContainer(string $context): self
     {
         if (isset($this->fields[$context])) {
@@ -125,6 +203,11 @@ class Registry
         return $this;
     }
 
+    /**
+     * Clear.
+     *
+     * @return self
+     */
     public function clear(): self
     {
         $this->fields = [];
@@ -134,6 +217,11 @@ class Registry
         return $this;
     }
 
+    /**
+     * RegisterPostFields.
+     *
+     * @return self
+     */
     public function registerPostFields(array $fields): self
     {
         foreach ($fields as $name => $field) {
@@ -143,6 +231,11 @@ class Registry
         return $this;
     }
 
+    /**
+     * RegisterUserFields.
+     *
+     * @return self
+     */
     public function registerUserFields(array $fields): self
     {
         foreach ($fields as $name => $field) {
@@ -152,6 +245,11 @@ class Registry
         return $this;
     }
 
+    /**
+     * RegisterTermFields.
+     *
+     * @return self
+     */
     public function registerTermFields(array $fields): self
     {
         foreach ($fields as $name => $field) {
@@ -161,6 +259,11 @@ class Registry
         return $this;
     }
 
+    /**
+     * RegisterOptionFields.
+     *
+     * @return self
+     */
     public function registerOptionFields(array $fields): self
     {
         foreach ($fields as $name => $field) {
@@ -170,6 +273,11 @@ class Registry
         return $this;
     }
 
+    /**
+     * Init.
+     *
+     * @return self
+     */
     public function init(): self
     {
         add_action('init', [$this, 'registerAll']);
@@ -177,12 +285,22 @@ class Registry
         return $this;
     }
 
+    /**
+     * RegisterAll.
+     *
+     * @return void
+     */
     public function registerAll(): void
     {
-        do_action('hyperpress/fields/register');
+        do_action('hyperfields/register');
         $this->registerAdminHooks();
     }
 
+    /**
+     * RegisterAdminHooks.
+     *
+     * @return void
+     */
     private function registerAdminHooks(): void
     {
         if (!is_admin()) {
@@ -201,6 +319,11 @@ class Registry
         add_action('edited_term', [$this, 'saveTermFields']);
     }
 
+    /**
+     * RegisterPostMetaBoxes.
+     *
+     * @return void
+     */
     public function registerPostMetaBoxes(): void
     {
         $post_fields = $this->getFieldsByContext('post');
@@ -218,6 +341,11 @@ class Registry
         );
     }
 
+    /**
+     * RenderPostMetaBox.
+     *
+     * @return void
+     */
     public function renderPostMetaBox(): void
     {
         $post_fields = $this->getFieldsByContext('post');
@@ -232,6 +360,11 @@ class Registry
         }
     }
 
+    /**
+     * RenderUserFields.
+     *
+     * @return void
+     */
     public function renderUserFields(): void
     {
         $user_fields = $this->getFieldsByContext('user');
@@ -244,6 +377,11 @@ class Registry
         }
     }
 
+    /**
+     * RenderTermFields.
+     *
+     * @return void
+     */
     public function renderTermFields(): void
     {
         $term_fields = $this->getFieldsByContext('term');
@@ -256,6 +394,11 @@ class Registry
         }
     }
 
+    /**
+     * RenderFieldInput.
+     *
+     * @return void
+     */
     private function renderFieldInput(Field $field): void
     {
         $value = '';
@@ -296,6 +439,11 @@ class Registry
         include __DIR__ . '/templates/field-input.php';
     }
 
+    /**
+     * SavePostFields.
+     *
+     * @return void
+     */
     public function savePostFields(int $post_id): void
     {
         if (!isset($_POST['hyperpress_post_fields_nonce'])) {
@@ -324,6 +472,11 @@ class Registry
         }
     }
 
+    /**
+     * SaveUserFields.
+     *
+     * @return void
+     */
     public function saveUserFields(int $user_id): void
     {
         if (!current_user_can('edit_user', $user_id)) {
@@ -340,6 +493,11 @@ class Registry
         }
     }
 
+    /**
+     * SaveTermFields.
+     *
+     * @return void
+     */
     public function saveTermFields(int $term_id): void
     {
         if (!current_user_can('manage_categories')) {

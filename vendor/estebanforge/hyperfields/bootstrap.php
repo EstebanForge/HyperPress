@@ -75,6 +75,11 @@ if (!function_exists('hyperfields_run_initialization_logic')) {
         if (class_exists('HyperFields\TemplateLoader')) {
             HyperFields\TemplateLoader::init();
         }
+
+        // Initialize transfer audit logger (hooks + lazy schema setup).
+        if (class_exists('HyperFields\Transfer\AuditLogger')) {
+            HyperFields\Transfer\AuditLogger::init();
+        }
     }
 }
 

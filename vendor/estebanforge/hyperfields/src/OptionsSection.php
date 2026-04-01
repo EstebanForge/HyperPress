@@ -14,6 +14,9 @@ class OptionsSection
     private bool $allow_html_description = false;
     private array $fields = [];
 
+    /**
+     *   construct.
+     */
     public function __construct(string $id, string $title, string $description = '', array $args = [])
     {
         $this->id = $id;
@@ -28,6 +31,11 @@ class OptionsSection
             : false;
     }
 
+    /**
+     * BuildSlug.
+     *
+     * @return string
+     */
     private function buildSlug(string $value): string
     {
         if (function_exists('sanitize_title')) {
@@ -47,6 +55,11 @@ class OptionsSection
         return trim((string) $slug, '-');
     }
 
+    /**
+     * SetDescription.
+     *
+     * @return self
+     */
     public function setDescription(string $description): self
     {
         $this->description = $description;
@@ -54,36 +67,71 @@ class OptionsSection
         return $this;
     }
 
+    /**
+     * GetId.
+     *
+     * @return string
+     */
     public function getId(): string
     {
         return $this->id;
     }
 
+    /**
+     * GetTitle.
+     *
+     * @return string
+     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
+    /**
+     * GetDescription.
+     *
+     * @return string
+     */
     public function getDescription(): string
     {
         return $this->description;
     }
 
+    /**
+     * GetSlug.
+     *
+     * @return string
+     */
     public function getSlug(): string
     {
         return $this->slug;
     }
 
+    /**
+     * IsLinkSection.
+     *
+     * @return bool
+     */
     public function isLinkSection(): bool
     {
         return $this->as_link;
     }
 
+    /**
+     * AllowsHtmlDescription.
+     *
+     * @return bool
+     */
     public function allowsHtmlDescription(): bool
     {
         return $this->allow_html_description;
     }
 
+    /**
+     * AddField.
+     *
+     * @return self
+     */
     public function addField(Field $field): self
     {
         $this->fields[$field->getName()] = $field;
@@ -92,11 +140,21 @@ class OptionsSection
         return $this;
     }
 
+    /**
+     * GetFields.
+     *
+     * @return array
+     */
     public function getFields(): array
     {
         return $this->fields;
     }
 
+    /**
+     * Render.
+     *
+     * @return void
+     */
     public function render(): void
     {
         if ($this->description) {
@@ -108,6 +166,11 @@ class OptionsSection
         }
     }
 
+    /**
+     * Make.
+     *
+     * @return self
+     */
     public static function make(string $id, string $title, string $description = '', array $args = []): self
     {
         return new self($id, $title, $description, $args);

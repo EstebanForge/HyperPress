@@ -20,7 +20,6 @@ if (!defined('ABSPATH')) {
  * Create a reusable content field group.
  */
 $contentFieldGroup = FieldGroup::make('Content Fields', 'content')
-    ->setDescription('Common fields for content blocks')
     ->addFields([
         Field::make('text', 'title', 'Title')
             ->setRequired(true)
@@ -38,7 +37,6 @@ $contentFieldGroup = FieldGroup::make('Content Fields', 'content')
  * Create another reusable field group for settings.
  */
 $settingsFieldGroup = FieldGroup::make('Block Settings', 'settings')
-    ->setDescription('Common settings for layout blocks')
     ->addFields([
         Field::make('select', 'alignment', 'Text Alignment')
             ->setOptions([
@@ -77,7 +75,6 @@ Registry::getInstance()->registerFieldGroup($settingsFieldGroup);
 $featureCardBlock = Block::make('Feature Card')
     ->setName('hyperblocks-examples/feature-card')
     ->setIcon('media-text')
-    ->setDescription('A feature card with content and settings.')
     ->addFieldGroup('content')
     ->addFieldGroup('settings')
     ->addFields([
@@ -91,7 +88,6 @@ $featureCardBlock = Block::make('Feature Card')
 $contentBoxBlock = Block::make('Content Box')
     ->setName('hyperblocks-examples/content-box')
     ->setIcon('box')
-    ->setDescription('A simple content box with content and settings.')
     ->addFieldGroup('content')
     ->addFieldGroup('settings')
     ->setRenderTemplateFile('examples/blocks/content-box.hb.php');

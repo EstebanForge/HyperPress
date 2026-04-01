@@ -1,5 +1,49 @@
 # Changelog
 
+## [1.1.9] - 2026-04-01
+
+### Added
+- Transfer audit logging runtime with dedicated classes:
+  - `Transfer\AuditLogger` hook subscriber for options/content/manager transfer flows
+  - `Transfer\AuditLogStorage` dedicated DB storage (`{wp_prefix}hyperfields_transfer_logs`) with lazy schema setup and pruning
+  - `Transfer\AuditContext` request-scoped manager-depth guard to avoid nested duplicate logs
+- Built-in transfer logs admin screen via `Admin\TransferLogsUI`, integrated into `ExportImportUI` with a contextual `View transfer logs` link.
+- `ExportImportUI` extensibility upgrades:
+  - `renderConfigured(ExportImportPageConfig $config)` entrypoint
+  - custom `exporter`, `previewer`, and `importer` callables
+  - optional `exportFormExtras` HTML injection point in export form
+  - option group labels support in `render(..., array $optionGroups = [])`
+- Transfer Manager envelope customization via `Transfer\SchemaConfig` and `Manager::withSchema(...)`.
+- Automatic transfer-audit hook initialization in `LibraryBootstrap::init()`.
+- Typed-node schema validation for option import/export via `Validation\SchemaValidator`.
+- `ContentExportImport` API for post/content JSON export/import/diff flows.
+- `Transfer\Manager` pluggable module registry for export/import/diff orchestration.
+- New facade and helper methods for content transfer:
+  - `HyperFields::exportPosts()`, `snapshotPosts()`, `importPosts()`, `diffPosts()`, `makeTransferManager()`
+  - `hf_export_posts()`, `hf_snapshot_posts()`, `hf_import_posts()`, `hf_diff_posts()`
+- Strategy support expansion (`__strategy`) for transfer payload behavior control.
+- Expanded transfer/bootstrap docs:
+  - `docs/transfer-and-content-export-import.md`
+  - `docs/library-bootstrap.md`
+
+### Changed
+- Documentation refreshed for transfer logging, Transfer Manager schema configuration, and `ExportImportUI` extension points.
+- `ExportImport` updated to align with transfer-manager, typed-node, and schema-aware flows.
+- `ExportImportUI` overhauled with richer export selection/filter UX and improved diff/import experience.
+- Export options filter layout and admin styling/scripts refactored (`assets/js/admin-options.js`, `assets/css/admin.css`).
+- Core docs updated with content transfer and extensible manager guidance.
+- Composer/library metadata and README refreshed for library-first usage.
+- Packaging cleanup for library distribution:
+  - adjusted bootstrap/composer metadata
+  - stopped shipping committed Composer vendor autoload artifacts
+- Repository ignore rules updated for generated/vendor files.
+- Minimum supported PHP version raised to `8.2`.
+
+### Fixed
+- Data Tools UI regressions in export/import rendering and request handling.
+- Post-overhaul code quality and test alignment fixes in `ExportImportUI`.
+- Release metadata/version bump consistency updates.
+
 ## [1.1.0] - 2026-03-28
 
 ### Added
