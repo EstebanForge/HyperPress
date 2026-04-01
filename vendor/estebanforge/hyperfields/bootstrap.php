@@ -51,14 +51,6 @@ if (!function_exists('hyperfields_run_initialization_logic')) {
         require_once HYPERFIELDS_ABSPATH . 'includes/helpers.php';
         require_once HYPERFIELDS_ABSPATH . 'includes/backward-compatibility.php';
 
-        if (!defined('HYPERPRESS_PLUGIN_URL')) {
-            define('HYPERPRESS_PLUGIN_URL', HYPERFIELDS_PLUGIN_URL);
-        }
-
-        if (!defined('HYPERPRESS_VERSION')) {
-            define('HYPERPRESS_VERSION', $plugin_version);
-        }
-
         // Initialize the fields system
         if (class_exists('HyperFields\Registry')) {
             $fieldsRegistry = HyperFields\Registry::getInstance();
