@@ -1,5 +1,15 @@
 # Changelog
 
+# 3.1.1 / 2026-04-01
+- **FIX:** Synced plugin header `Version` to `3.1.1` (was stale at `3.0.5`).
+- **FIX:** `README.txt` `Stable tag` corrected to `3.1.1` with proper spacing.
+- **FIX:** `SECURITY.md` supported version bumped to `3.1.1`.
+- **FIX:** `scripts/version-bump.sh` SECURITY.md sed patterns now match the actual table format (no trailing pipe after emoji).
+- **DEPS:** Removed VCS repository entries for `estebanforge/hyperfields` and `estebanforge/hyperblocks` from `composer.json`; both packages resolve via Packagist in CI/production and via path repos in local monorepo development.
+- **DEPS:** Added path repository entries for `../HyperFields` and `../HyperBlocks` with `symlink: false` so local development mirrors files into `vendor/` (required for WordPress.org distribution where `vendor/` is committed).
+- **DEPS:** PHP floor corrected from `>=8.1` to `>=8.2`, matching the effective minimum set by HyperFields and HyperBlocks.
+- **DEPS:** Vendored `estebanforge/hyperfields` updated to 1.1.9; `estebanforge/hyperblocks` updated to 1.0.4 (includes HyperFields bootstrap chaining for standalone use).
+
 # 3.1.0 / 2026-03-29
 - **NEW:** Added `hyperpress/render/invalid_route_output` filter to replace the invalid route/missing template response with custom HTML or a `.html`/`.htm` file.
 - **ARCHITECTURE:** Converted HyperPress into a thin WordPress plugin adapter that loads `estebanforge/hyperpress-core` from Composer.
