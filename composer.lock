@@ -251,11 +251,11 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.1.9",
+            "version": "1.1.10",
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "20843b13bafad593fbf045dea0fda519284db70e"
+                "reference": "bb762a4ec653b493be936d8ac16d8dd7f806a66f"
             },
             "require": {
                 "php": ">=8.2"
@@ -354,7 +354,7 @@
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "ec618c4b6e580847a98606e0dd69c8fa47a6532a"
+                "reference": "8e3fc735d909573005a9881ea7cad97d25ced899"
             },
             "require": {
                 "estebanforge/hyperblocks": "^1.0",
