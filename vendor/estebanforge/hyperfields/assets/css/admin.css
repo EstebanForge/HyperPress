@@ -99,6 +99,91 @@
     margin-top: 18px;
 }
 
+.hf-export-options {
+    margin-top: 16px;
+}
+
+.hf-export-options-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.hf-export-options-toolbar > div {
+    display: inline-flex;
+    gap: 8px;
+}
+
+.hf-export-options-table-wrap {
+    max-height: 480px;
+    overflow: auto;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.hf-export-options-table {
+    margin: 0;
+    border: 0;
+}
+
+.hf-export-options-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #f6f7f7;
+}
+
+.hf-export-options-table .hf-export-option-select-column {
+    width: 100px;
+    text-align: right;
+}
+
+.hf-export-options-table .hf-export-option-checkbox-cell {
+    text-align: right;
+    vertical-align: middle;
+}
+
+.hf-export-options-table .hf-export-option-checkbox-cell input[type="checkbox"] {
+    margin: 0;
+}
+
+.hf-export-options-filter {
+    margin-top: 10px;
+}
+
+.hf-export-options-filter-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.hf-export-options-filter-header > label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.hf-export-options-filter-header .description {
+    margin: 0;
+    font-weight: 400;
+}
+
+.hf-export-options-filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.hf-export-options-filter-controls input[type="search"] {
+    flex: 1 1 360px;
+    min-width: 0;
+    max-width: none;
+}
+
 @media (max-width: 782px) {
     .hyperpress-field-row {
         flex-direction: column;
@@ -108,5 +193,14 @@
     .hyperpress-field-label {
         min-width: 0;
         padding-top: 0;
+    }
+
+    .hf-export-options-filter-controls {
+        flex-wrap: wrap;
+    }
+
+    .hf-export-options-filter-header {
+        flex-wrap: wrap;
+        gap: 6px;
     }
 }

@@ -54,6 +54,21 @@ if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
     });
 }
 
+// Bootstrap HyperFields and HyperBlocks dependencies.
+// When HyperPress-Core is loaded standalone (no upstream plugin bootstrapping them first),
+// trigger each library's candidate registration so their after_setup_theme initialisation
+// runs. Guards inside each library's bootstrap.php prevent double-initialisation.
+if (!$loadedFromVendorTree) {
+    foreach ([
+        __DIR__ . '/vendor/estebanforge/hyperfields/bootstrap.php',
+        __DIR__ . '/vendor/estebanforge/hyperblocks/bootstrap.php',
+    ] as $dep_bootstrap) {
+        if (file_exists($dep_bootstrap)) {
+            require_once $dep_bootstrap;
+        }
+    }
+}
+
 // Note: Do not initialize Blocks Registry or REST API here to avoid duplicate hooks.
 // They are initialized later inside hyperpress_run_initialization_logic() once per instance.
 

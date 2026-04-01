@@ -33,6 +33,11 @@ class Field
     private ?string $html_content = null;
     protected array $args = [];
 
+    /**
+     * SetHtml.
+     *
+     * @return self
+     */
     public function setHtml(string $html): self
     {
         $this->html_content = $html;
@@ -40,6 +45,11 @@ class Field
         return $this;
     }
 
+    /**
+     * SetHtmlContent.
+     *
+     * @return self
+     */
     public function setHtmlContent(string $html): self
     {
         return $this->setHtml($html);
@@ -80,6 +90,9 @@ class Field
         'repeater',
     ];
 
+    /**
+     *   construct.
+     */
     protected function __construct(string $type, string $name, string $label)
     {
         if (!in_array($type, self::VALID_TYPES, true)) {
@@ -96,11 +109,21 @@ class Field
         $this->label = $label;
     }
 
+    /**
+     * Make.
+     *
+     * @return self
+     */
     public static function make(string $type, string $name, string $label): self
     {
         return new self($type, $name, $label);
     }
 
+    /**
+     * SetDefault.
+     *
+     * @return self
+     */
     public function setDefault(mixed $default): self
     {
         $this->default = $default;
@@ -108,6 +131,11 @@ class Field
         return $this;
     }
 
+    /**
+     * SetPlaceholder.
+     *
+     * @return self
+     */
     public function setPlaceholder(?string $placeholder): self
     {
         $this->placeholder = $placeholder;
@@ -115,6 +143,11 @@ class Field
         return $this;
     }
 
+    /**
+     * SetRequired.
+     *
+     * @return self
+     */
     public function setRequired(bool $required = true): self
     {
         $this->required = $required;
@@ -122,6 +155,11 @@ class Field
         return $this;
     }
 
+    /**
+     * SetHelp.
+     *
+     * @return self
+     */
     public function setHelp(?string $help): self
     {
         $this->help = $help;
@@ -129,6 +167,11 @@ class Field
         return $this;
     }
 
+    /**
+     * SetDescription.
+     *
+     * @return self
+     */
     public function setDescription(?string $description): self
     {
         $this->help = $description;
@@ -136,6 +179,11 @@ class Field
         return $this;
     }
 
+    /**
+     * SetOptions.
+     *
+     * @return self
+     */
     public function setOptions(array $options): self
     {
         $this->options = $options;
@@ -143,6 +191,11 @@ class Field
         return $this;
     }
 
+    /**
+     * SetValidation.
+     *
+     * @return self
+     */
     public function setValidation(array $validation): self
     {
         $this->validation = $validation;
@@ -150,6 +203,11 @@ class Field
         return $this;
     }
 
+    /**
+     * SetConditionalLogic.
+     *
+     * @return self
+     */
     public function setConditionalLogic(array $conditional_logic): self
     {
         $this->conditional_logic = $conditional_logic;
@@ -157,6 +215,11 @@ class Field
         return $this;
     }
 
+    /**
+     * SetContext.
+     *
+     * @return self
+     */
     public function setContext(string $context): self
     {
         $this->context = $context;
@@ -164,6 +227,11 @@ class Field
         return $this;
     }
 
+    /**
+     * SetStorageType.
+     *
+     * @return self
+     */
     public function setStorageType(string $storage_type): self
     {
         $this->storage_type = $storage_type;
@@ -171,6 +239,11 @@ class Field
         return $this;
     }
 
+    /**
+     * SetMultiple.
+     *
+     * @return self
+     */
     public function setMultiple(bool $multiple = true): self
     {
         $this->multiple = $multiple;
@@ -178,21 +251,41 @@ class Field
         return $this;
     }
 
+    /**
+     * IsMultiple.
+     *
+     * @return bool
+     */
     public function isMultiple(): bool
     {
         return $this->multiple;
     }
 
+    /**
+     * GetType.
+     *
+     * @return string
+     */
     public function getType(): string
     {
         return $this->type;
     }
 
+    /**
+     * GetName.
+     *
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * SetName.
+     *
+     * @return self
+     */
     public function setName(string $name): self
     {
         if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_-]*$/', $name)) {
@@ -203,66 +296,131 @@ class Field
         return $this;
     }
 
+    /**
+     * GetLabel.
+     *
+     * @return string
+     */
     public function getLabel(): string
     {
         return $this->label;
     }
 
+    /**
+     * GetDefault.
+     *
+     * @return mixed
+     */
     public function getDefault(): mixed
     {
         return $this->default;
     }
 
+    /**
+     * GetPlaceholder.
+     *
+     * @return ?string
+     */
     public function getPlaceholder(): ?string
     {
         return $this->placeholder;
     }
 
+    /**
+     * IsRequired.
+     *
+     * @return bool
+     */
     public function isRequired(): bool
     {
         return $this->required;
     }
 
+    /**
+     * GetHelp.
+     *
+     * @return ?string
+     */
     public function getHelp(): ?string
     {
         return $this->help;
     }
 
+    /**
+     * GetDescription.
+     *
+     * @return ?string
+     */
     public function getDescription(): ?string
     {
         return $this->help;
     }
 
+    /**
+     * GetOptions.
+     *
+     * @return array
+     */
     public function getOptions(): array
     {
         return $this->options;
     }
 
+    /**
+     * GetHtml.
+     *
+     * @return string
+     */
     public function getHtml(): string
     {
         return $this->html_content ?? '';
     }
 
+    /**
+     * GetValidation.
+     *
+     * @return array
+     */
     public function getValidation(): array
     {
         return $this->validation;
     }
 
+    /**
+     * GetConditionalLogic.
+     *
+     * @return array
+     */
     public function getConditionalLogic(): array
     {
         return $this->conditional_logic;
     }
 
+    /**
+     * GetContext.
+     *
+     * @return string
+     */
     public function getContext(): string
     {
         return $this->context;
     }
 
+    /**
+     * GetStorageType.
+     *
+     * @return string
+     */
     public function getStorageType(): string
     {
         return $this->storage_type;
     }
 
+    /**
+     * AddArg.
+     *
+     * @return self
+     */
     public function addArg(string $key, mixed $value): self
     {
         $this->args[$key] = $value;
@@ -270,6 +428,11 @@ class Field
         return $this;
     }
 
+    /**
+     * SetOptionValues.
+     *
+     * @return self
+     */
     public function setOptionValues(array $values, ?string $option_group = null): self
     {
         Log::debug("Field {$this->name} setting option values: " . print_r($values, true), ['source' => 'hyperpress-fields']);
@@ -281,11 +444,19 @@ class Field
         return $this;
     }
 
+    /**
+     * GetOptionName.
+     *
+     * @return string|array|null
+     */
     public function getOptionName(): string|array|null
     {
         return $this->option_name;
     }
 
+    /**
+     * GetValue.
+     */
     public function getValue()
     {
         // If option_name is an array, it means the OptionsPage has pre-loaded the values.
@@ -316,16 +487,31 @@ class Field
         return $this->default;
     }
 
+    /**
+     * GetArgs.
+     *
+     * @return array
+     */
     public function getArgs(): array
     {
         return $this->args;
     }
 
+    /**
+     * SetArgs.
+     *
+     * @return void
+     */
     protected function setArgs(array $args): void
     {
         $this->args = array_merge($this->args, $args);
     }
 
+    /**
+     * Render.
+     *
+     * @return void
+     */
     public function render(array $args = []): void
     {
         $value = $this->getValue();
@@ -337,11 +523,21 @@ class Field
         TemplateLoader::renderField($field_data, $value);
     }
 
+    /**
+     * GetOptionValue.
+     *
+     * @return mixed
+     */
     public function getOptionValue(): mixed
     {
         return get_option($this->name, $this->default);
     }
 
+    /**
+     * GetNameAttr.
+     *
+     * @return string
+     */
     public function getNameAttr(): string
     {
 
@@ -362,6 +558,11 @@ class Field
         return $this->option_name ? sprintf('%s[%s]', $this->option_name, $this->name) : $this->name;
     }
 
+    /**
+     * ToArray.
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         return [
@@ -392,6 +593,11 @@ class Field
         ];
     }
 
+    /**
+     * GetValueFromPath.
+     *
+     * @return mixed
+     */
     private function getValueFromPath(array $source, string $path, mixed $default = null): mixed
     {
         $segments = array_values(array_filter(explode('.', $path), static fn ($segment): bool => $segment !== ''));
@@ -414,6 +620,11 @@ class Field
         return $default;
     }
 
+    /**
+     * GetFieldError.
+     *
+     * @return string
+     */
     private function getFieldError(): string
     {
         if (!function_exists('get_settings_errors') || !$this->option_group) {
@@ -437,6 +648,11 @@ class Field
         return '';
     }
 
+    /**
+     * SanitizeValue.
+     *
+     * @return mixed
+     */
     public function sanitizeValue(mixed $value): mixed
     {
         switch ($this->type) {
@@ -495,10 +711,15 @@ class Field
             case 'gravity_form':
                 return absint($value);
             default:
-                return apply_filters("hyperpress/fields/sanitize_{$this->type}", $value, $this->type);
+                return apply_filters("hyperfields/sanitize_{$this->type}", $value, $this->type);
         }
     }
 
+    /**
+     * SanitizeSetValue.
+     *
+     * @return array
+     */
     private function sanitizeSetValue(mixed $value): array
     {
         if (!is_array($value)) {
@@ -532,6 +753,11 @@ class Field
         return $sanitized;
     }
 
+    /**
+     * SanitizeArrayValue.
+     *
+     * @return array
+     */
     private function sanitizeArrayValue(mixed $value): array
     {
         if (!is_array($value)) {
@@ -541,6 +767,11 @@ class Field
         return array_map('sanitize_text_field', $value);
     }
 
+    /**
+     * SanitizeMapValue.
+     *
+     * @return array
+     */
     private function sanitizeMapValue(mixed $value): array
     {
         if (!is_array($value)) {
@@ -554,6 +785,11 @@ class Field
         ];
     }
 
+    /**
+     * SanitizeComplexValue.
+     *
+     * @return array
+     */
     private function sanitizeComplexValue(mixed $value): array
     {
         if (!is_array($value)) {
@@ -563,6 +799,11 @@ class Field
         return array_map([$this, 'sanitizeNestedValue'], $value);
     }
 
+    /**
+     * SanitizeNestedValue.
+     *
+     * @return mixed
+     */
     private function sanitizeNestedValue(mixed $value): mixed
     {
         if (is_array($value)) {
@@ -572,6 +813,11 @@ class Field
         return sanitize_text_field((string) $value);
     }
 
+    /**
+     * SanitizeAssociationValue.
+     *
+     * @return array
+     */
     private function sanitizeAssociationValue(mixed $value): array
     {
         if (!is_array($value)) {
@@ -581,6 +827,11 @@ class Field
         return array_map('absint', $value);
     }
 
+    /**
+     * SanitizeSelectValue.
+     *
+     * @return string
+     */
     private function sanitizeSelectValue(mixed $value): string
     {
         if (empty($this->options)) {
@@ -592,6 +843,11 @@ class Field
         return in_array($value, $allowed_values, true) ? (string) $value : (string) $allowed_values[0];
     }
 
+    /**
+     * ValidateValue.
+     *
+     * @return bool
+     */
     public function validateValue(mixed $value): bool
     {
         if ($this->required && empty($value)) {
@@ -607,6 +863,11 @@ class Field
         return true;
     }
 
+    /**
+     * ApplyValidationRule.
+     *
+     * @return bool
+     */
     private function applyValidationRule(mixed $value, string $rule, mixed $param): bool
     {
         switch ($rule) {
@@ -627,7 +888,7 @@ class Field
             case 'float':
                 return filter_var($value, FILTER_VALIDATE_FLOAT) !== false;
             default:
-                return apply_filters("hyperpress/fields/validation_{$rule}", true, $value, $param, $this);
+                return apply_filters("hyperfields/validation_{$rule}", true, $value, $param, $this);
         }
     }
 }

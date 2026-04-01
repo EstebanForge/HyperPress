@@ -23,6 +23,9 @@ class OptionsMigration
     private string $migration_version_key = 'hyperpress_migration_version';
     private Main $main;
 
+    /**
+     * @param Main $main HyperPress main plugin instance.
+     */
     public function __construct(Main $main)
     {
         $this->main = $main;

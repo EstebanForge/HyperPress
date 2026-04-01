@@ -6,17 +6,30 @@ namespace HyperFields\Compatibility\Store;
 
 final class DualWriteStore implements StoreInterface
 {
+    /**
+     *   construct.
+     */
     public function __construct(
         private readonly StoreInterface $primary,
         private readonly StoreInterface $secondary
     ) {
     }
 
+    /**
+     * Get.
+     *
+     * @return mixed
+     */
     public function get(string $key, mixed $default = null): mixed
     {
         return $this->primary->get($key, $default);
     }
 
+    /**
+     * Set.
+     *
+     * @return bool
+     */
     public function set(string $key, mixed $value): bool
     {
         $first = $this->primary->set($key, $value);
@@ -25,6 +38,11 @@ final class DualWriteStore implements StoreInterface
         return $first || $second;
     }
 
+    /**
+     * Delete.
+     *
+     * @return bool
+     */
     public function delete(string $key): bool
     {
         $first = $this->primary->delete($key);
@@ -33,6 +51,11 @@ final class DualWriteStore implements StoreInterface
         return $first || $second;
     }
 
+    /**
+     * All.
+     *
+     * @return array
+     */
     public function all(): array
     {
         return array_merge($this->secondary->all(), $this->primary->all());

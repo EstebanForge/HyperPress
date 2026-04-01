@@ -2,7 +2,7 @@
   "name": "estebanforge/hyperfields",
   "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
   "type": "library",
-  "version": "1.1.4",
+  "version": "1.1.9",
   "license": "GPL-2.0-or-later",
   "authors": [
     {
@@ -13,7 +13,7 @@
   "minimum-stability": "RC",
   "prefer-stable": true,
   "require": {
-    "php": ">=8.1"
+    "php": ">=8.2"
   },
   "autoload": {
     "psr-4": {
@@ -31,11 +31,11 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "^12.0",
-    "pestphp/pest": "^4.4",
-    "brain/monkey": "^2.6",
-    "mockery/mockery": "^1.6",
-    "friendsofphp/php-cs-fixer": "^3.0"
+    "phpunit/phpunit": "^12",
+    "pestphp/pest": "^4",
+    "brain/monkey": "^2",
+    "mockery/mockery": "^1",
+    "friendsofphp/php-cs-fixer": "^3"
   },
   "scripts": {
     "test": "bash -lc 'if [ ! -f vendor/bin/pest ]; then composer update --no-interaction --no-progress; fi; php -d pcov.enabled=1 vendor/bin/pest --colors=always'",

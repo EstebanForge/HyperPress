@@ -9,6 +9,11 @@ class OptionField extends Field
     private string $option_name;
     private string $option_group = 'hyperpress_fields';
 
+    /**
+     * ForOption.
+     *
+     * @return self
+     */
     public static function forOption(string $option_name, string $type, string $name, string $label): self
     {
         $field = new self($type, $name, $label);
@@ -19,6 +24,11 @@ class OptionField extends Field
         return $field;
     }
 
+    /**
+     * SetOptionGroup.
+     *
+     * @return self
+     */
     public function setOptionGroup(string $group): self
     {
         $this->option_group = $group;
@@ -26,16 +36,31 @@ class OptionField extends Field
         return $this;
     }
 
+    /**
+     * GetOptionName.
+     *
+     * @return string
+     */
     public function getOptionName(): string
     {
-        return apply_filters('hyperpress/fields/option_field_name', $this->option_name, $this->getName());
+        return apply_filters('hyperfields/option_field_name', $this->option_name, $this->getName());
     }
 
+    /**
+     * GetOptionGroup.
+     *
+     * @return string
+     */
     public function getOptionGroup(): string
     {
         return $this->option_group;
     }
 
+    /**
+     * GetValue.
+     *
+     * @return mixed
+     */
     public function getValue(): mixed
     {
         $value = get_option($this->getOptionName());
@@ -52,6 +77,11 @@ class OptionField extends Field
         return $this->sanitizeValue($value);
     }
 
+    /**
+     * SetValue.
+     *
+     * @return bool
+     */
     public function setValue(mixed $value): bool
     {
         $sanitized_value = $this->sanitizeValue($value);
@@ -72,6 +102,11 @@ class OptionField extends Field
         return update_option($this->getOptionName(), $sanitized_value);
     }
 
+    /**
+     * DeleteValue.
+     *
+     * @return bool
+     */
     public function deleteValue(): bool
     {
         $current_options = get_option($this->getOptionName(), []);

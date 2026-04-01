@@ -8,6 +8,11 @@ class TemplateLoader
     private static array $template_cache = [];
     private static array $rendered_field_types = [];
 
+    /**
+     * Init.
+     *
+     * @return void
+     */
     public static function init(): void
     {
         self::$template_dir = __DIR__ . '/templates/';
@@ -18,6 +23,11 @@ class TemplateLoader
         add_action('wp_print_footer_scripts', [__CLASS__, 'enqueueLateAssets']);
     }
 
+    /**
+     * RenderField.
+     *
+     * @return void
+     */
     public static function renderField(array $field_data, mixed $value = null): void
     {
         $type = $field_data['type'] ?? 'text';
@@ -44,7 +54,7 @@ class TemplateLoader
         }
 
         // Allow template override via filter
-        $template_file = apply_filters('hyperpress/fields/template', $template_file, $type, $field_data);
+        $template_file = apply_filters('hyperfields/template', $template_file, $type, $field_data);
 
         if (file_exists($template_file)) {
 
@@ -56,6 +66,11 @@ class TemplateLoader
         }
     }
 
+    /**
+     * GetTemplateFile.
+     *
+     * @return ?string
+     */
     private static function getTemplateFile(string $type): ?string
     {
         // Check cache first
@@ -72,7 +87,7 @@ class TemplateLoader
         }
 
         // Check for type-specific templates in theme
-        $theme_template = get_template_directory() . '/hyperpress/fields/field-' . $type . '.php';
+        $theme_template = get_template_directory() . '/hyperfields/fields/field-' . $type . '.php';
         if (file_exists($theme_template)) {
             self::$template_cache[$type] = $theme_template;
 
@@ -81,7 +96,7 @@ class TemplateLoader
 
         // Check child theme
         if (is_child_theme()) {
-            $child_template = get_stylesheet_directory() . '/hyperpress/fields/field-' . $type . '.php';
+            $child_template = get_stylesheet_directory() . '/hyperfields/fields/field-' . $type . '.php';
             if (file_exists($child_template)) {
                 self::$template_cache[$type] = $child_template;
 
@@ -94,6 +109,11 @@ class TemplateLoader
         return null;
     }
 
+    /**
+     * RenderFallback.
+     *
+     * @return void
+     */
     private static function renderFallback(array $field_data): void
     {
         $type = $field_data['type'] ?? 'text';
@@ -128,6 +148,11 @@ class TemplateLoader
 <?php
     }
 
+    /**
+     * EnqueueAssets.
+     *
+     * @return void
+     */
     public static function enqueueAssets(): void
     {
         $plugin_url = defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : (defined('HYPERFIELDS_PLUGIN_URL') ? HYPERFIELDS_PLUGIN_URL : '');
@@ -196,6 +221,11 @@ class TemplateLoader
         ]);
     }
 
+    /**
+     * EnqueueLateAssets.
+     *
+     * @return void
+     */
     public static function enqueueLateAssets(): void
     {
         // Enqueue heavy/type-specific assets after fields have rendered (works for admin and frontend)
@@ -212,6 +242,11 @@ class TemplateLoader
         }
     }
 
+    /**
+     * GetSupportedFieldTypes.
+     *
+     * @return array
+     */
     public static function getSupportedFieldTypes(): array
     {
         $types = [
@@ -246,6 +281,6 @@ class TemplateLoader
             'custom',
         ];
 
-        return apply_filters('hyperpress/fields/supported_field_types', $types);
+        return apply_filters('hyperfields/supported_field_types', $types);
     }
 }

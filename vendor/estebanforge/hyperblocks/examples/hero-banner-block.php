@@ -21,7 +21,6 @@ if (!defined('ABSPATH')) {
 $heroBannerBlock = Block::make('Hero Banner')
     ->setName('hyperblocks-examples/hero-banner')
     ->setIcon('cover-image')
-    ->setDescription('A hero banner with heading, subheading, and background image.')
     ->addFields([
         Field::make('text', 'heading', 'Heading')
             ->setDefault('Welcome to Our Website')

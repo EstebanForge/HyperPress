@@ -9,17 +9,30 @@ class BlockFieldAdapter
     private Field $field;
     private array $block_attributes;
 
+    /**
+     *   construct.
+     */
     public function __construct(Field $field, array $block_attributes = [])
     {
         $this->field = $field;
         $this->block_attributes = $block_attributes;
     }
 
+    /**
+     * FromField.
+     *
+     * @return self
+     */
     public static function fromField(Field $field, array $blockAttributes = []): self
     {
         return new self($field, $blockAttributes);
     }
 
+    /**
+     * GetValue.
+     *
+     * @return mixed
+     */
     public function getValue(): mixed
     {
         $field_name = $this->field->getName();
@@ -28,22 +41,42 @@ class BlockFieldAdapter
         return $this->block_attributes[$field_name] ?? $default;
     }
 
+    /**
+     * SetValue.
+     *
+     * @return void
+     */
     public function setValue(mixed $value): void
     {
         // Block attributes are handled by Gutenberg, not stored directly
         // This method exists for interface consistency
     }
 
+    /**
+     * GetField.
+     *
+     * @return Field
+     */
     public function getField(): Field
     {
         return $this->field;
     }
 
+    /**
+     * GetAttributeName.
+     *
+     * @return string
+     */
     public function getAttributeName(): string
     {
         return $this->field->getName();
     }
 
+    /**
+     * ToBlockAttribute.
+     *
+     * @return array
+     */
     public function toBlockAttribute(): array
     {
         $fieldType = $this->field->getType();
@@ -75,11 +108,21 @@ class BlockFieldAdapter
         ];
     }
 
+    /**
+     * SanitizeForBlock.
+     *
+     * @return mixed
+     */
     public function sanitizeForBlock(mixed $value): mixed
     {
         return $this->field->sanitizeValue($value);
     }
 
+    /**
+     * ValidateForBlock.
+     *
+     * @return bool
+     */
     public function validateForBlock(mixed $value): bool
     {
         return $this->field->validateValue($value);
