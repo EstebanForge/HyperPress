@@ -19,6 +19,18 @@
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
+// Version of the WordPress plugin adapter. Always reflects the installed plugin version,
+// regardless of which HyperPress-Core library version is active underneath.
+if (!defined('HYPERPRESS_PLUGIN_VERSION')) {
+    if (function_exists('get_file_data')) {
+        $hyperpress_file_data = get_file_data(__FILE__, ['Version' => 'Version'], false);
+        define('HYPERPRESS_PLUGIN_VERSION', $hyperpress_file_data['Version'] ?? '0.0.0');
+    } else {
+        define('HYPERPRESS_PLUGIN_VERSION', '0.0.0');
+    }
+    unset($hyperpress_file_data);
+}
+
 // Load the shared bootstrap file.
 require_once __DIR__ . '/bootstrap.php';
 
