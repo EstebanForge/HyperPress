@@ -300,7 +300,7 @@ class Options
         global $wp_version;
 
         $options = HyperFields::getOptions($this->option_name, []);
-        $plugin_version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7';
+        $plugin_version = defined('HYPERPRESS_PLUGIN_VERSION') ? HYPERPRESS_PLUGIN_VERSION : (defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7');
         $php_version = PHP_VERSION;
         $wp_ver = $wp_version ?? get_bloginfo('version');
 
@@ -352,7 +352,7 @@ class Options
 
     private function getFooterContent(): string
     {
-        $plugin_version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7';
+        $plugin_version = defined('HYPERPRESS_PLUGIN_VERSION') ? HYPERPRESS_PLUGIN_VERSION : (defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7');
 
         return '<span>' . __('Active Instance: Plugin v', 'api-for-htmx') . esc_html($plugin_version) . '</span><br />'
             . __('Proudly brought to you by', 'api-for-htmx')
