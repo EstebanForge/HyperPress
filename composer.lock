@@ -255,7 +255,7 @@
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "bb762a4ec653b493be936d8ac16d8dd7f806a66f"
+                "reference": "050edb6042141b0c30def08d7f54350b9a9ce838"
             },
             "require": {
                 "php": ">=8.2"
