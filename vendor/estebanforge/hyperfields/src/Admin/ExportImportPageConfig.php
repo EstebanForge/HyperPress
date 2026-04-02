@@ -7,53 +7,25 @@ namespace HyperFields\Admin;
 /**
  * Immutable configuration for ExportImportUI.
  */
-final class ExportImportPageConfig
+final readonly class ExportImportPageConfig
 {
-    /** @var array<string, string> */
-    public array $options;
-    /** @var array<int, string> */
-    public array $allowedImportOptions;
-    /** @var array<string, string> */
-    public array $optionGroups;
-    public string $prefix;
-    public string $title;
-    public string $description;
-    /** @var mixed */
-    public $exporter;
-    /** @var mixed */
-    public $previewer;
-    /** @var mixed */
-    public $importer;
-    public ?string $exportFormExtras;
-
     /**
      * @param array<string, string> $options
      * @param array<int, string>    $allowedImportOptions
      * @param array<string, string> $optionGroups
      */
     public function __construct(
-        array $options = [],
-        array $allowedImportOptions = [],
-        array $optionGroups = [],
-        string $prefix = '',
-        string $title = 'Data Export / Import',
-        string $description = 'Export your settings to JSON or import a previously exported file.',
-        $exporter = null,
-        $previewer = null,
-        $importer = null,
-        ?string $exportFormExtras = null,
-    ) {
-        $this->options = $options;
-        $this->allowedImportOptions = $allowedImportOptions;
-        $this->optionGroups = $optionGroups;
-        $this->prefix = $prefix;
-        $this->title = $title;
-        $this->description = $description;
-        $this->exporter = $exporter;
-        $this->previewer = $previewer;
-        $this->importer = $importer;
-        $this->exportFormExtras = $exportFormExtras;
-    }
+        public array $options = [],
+        public array $allowedImportOptions = [],
+        public array $optionGroups = [],
+        public string $prefix = '',
+        public string $title = 'Data Export / Import',
+        public string $description = 'Export your settings to JSON or import a previously exported file.',
+        public mixed $exporter = null,
+        public mixed $previewer = null,
+        public mixed $importer = null,
+        public ?string $exportFormExtras = null,
+    ) {}
 
     /**
      * Returns allowed import options, defaulting to all registered option keys.

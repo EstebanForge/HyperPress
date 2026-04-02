@@ -140,6 +140,7 @@ return array(
     'HyperFields\\Container\\TermMetaContainer' => $vendorDir . '/estebanforge/hyperfields/src/Container/TermMetaContainer.php',
     'HyperFields\\Container\\UserMetaContainer' => $vendorDir . '/estebanforge/hyperfields/src/Container/UserMetaContainer.php',
     'HyperFields\\ContentExportImport' => $vendorDir . '/estebanforge/hyperfields/src/ContentExportImport.php',
+    'HyperFields\\ContentTransferAdapter' => $vendorDir . '/estebanforge/hyperfields/src/ContentTransferAdapter.php',
     'HyperFields\\CustomField' => $vendorDir . '/estebanforge/hyperfields/src/CustomField.php',
     'HyperFields\\ExportImport' => $vendorDir . '/estebanforge/hyperfields/src/ExportImport.php',
     'HyperFields\\Field' => $vendorDir . '/estebanforge/hyperfields/src/Field.php',

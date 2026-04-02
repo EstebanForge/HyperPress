@@ -141,6 +141,7 @@ class ContentExportImport
      *                        - include_private_meta: bool (default false)
      *                        - include_meta_keys: string[] allowlist
      *                        - exclude_meta_keys: string[] denylist
+     *                        - normalization_profile: string (optional row normalization profile key)
      * @return array{
      *   success: bool,
      *   message: string,
@@ -200,6 +201,13 @@ class ContentExportImport
             if (!is_array($row)) {
                 $stats['skipped']++;
                 $errors[] = 'Skipped content row: invalid payload item type.';
+                continue;
+            }
+
+            $row = self::normalizeImportRow($row, $options);
+            if (!is_array($row)) {
+                $stats['skipped']++;
+                $errors[] = 'Skipped content row: normalizer returned invalid payload item type.';
                 continue;
             }
 
@@ -445,6 +453,44 @@ class ContentExportImport
     }
 
     /**
+     * Allows extensions to normalize one incoming row before import decisions.
+     *
+     * Supports two filter layers:
+     * - `hyperfields/content_import/normalize_row` for global rules.
+     * - `hyperfields/content_import/normalize_row/profile_{profile}` for a
+     *   named profile declared by import option `normalization_profile`.
+     *
+     * @param array<string, mixed> $row
+     * @param array<string, mixed> $options
+     * @return array<string, mixed>
+     */
+    private static function normalizeImportRow(array $row, array $options): array
+    {
+        $postType = sanitize_key((string) ($row['post_type'] ?? ''));
+        $slug = sanitize_title((string) ($row['slug'] ?? ($row['post_name'] ?? '')));
+
+        /** @var mixed $normalized */
+        $normalized = apply_filters('hyperfields/content_import/normalize_row', $row, $postType, $slug, $options);
+        if (!is_array($normalized)) {
+            return $row;
+        }
+
+        $profile = sanitize_key((string) ($options['normalization_profile'] ?? ''));
+        if ($profile === '') {
+            return $normalized;
+        }
+
+        $hook = 'hyperfields/content_import/normalize_row/profile_' . $profile;
+        /** @var mixed $profileNormalized */
+        $profileNormalized = apply_filters($hook, $normalized, $postType, $slug, $options);
+        if (!is_array($profileNormalized)) {
+            return $normalized;
+        }
+
+        return $profileNormalized;
+    }
+
+    /**
      * Produce a dry-run compare report for an incoming content payload.
      *
      * @param string $jsonString Export JSON from exportPosts().
@@ -597,6 +643,13 @@ class ContentExportImport
             }
         }
 
+        if ($resolved === null) {
+            $trashedByDesiredSlug = self::resolveTrashedPostByDesiredSlug($postType, $slug);
+            if ($trashedByDesiredSlug !== null) {
+                $resolved = $trashedByDesiredSlug;
+            }
+        }
+
         /**
          * Filters resolved existing post candidate for an import row.
          *
@@ -616,6 +669,45 @@ class ContentExportImport
         }
 
         return null;
+    }
+
+    /**
+     * Finds a trashed post by desired slug metadata for slug ownership recovery.
+     *
+     * WordPress may rename trashed post slugs and keep the original desired slug
+     * in `_wp_desired_post_slug`. Matching this allows imports to update/restore
+     * the intended trashed record instead of creating a new suffixed slug.
+     *
+     * @return object|null
+     */
+    private static function resolveTrashedPostByDesiredSlug(string $postType, string $slug): ?object
+    {
+        $matches = get_posts([
+            'post_type' => $postType,
+            'post_status' => 'trash',
+            'posts_per_page' => 1,
+            'orderby' => 'ID',
+            'order' => 'DESC',
+            'suppress_filters' => false,
+            'meta_query' => [
+                [
+                    'key' => '_wp_desired_post_slug',
+                    'value' => $slug,
+                    'compare' => '=',
+                ],
+            ],
+        ]);
+
+        if (!is_array($matches) || empty($matches)) {
+            return null;
+        }
+
+        $candidate = $matches[0] ?? null;
+        if (!is_object($candidate) || !isset($candidate->ID)) {
+            return null;
+        }
+
+        return $candidate;
     }
 
     /**
@@ -905,7 +997,7 @@ class ContentExportImport
     }
 
     /**
-     * @param array<string, array<int, mixed>> $metaPayload
+     * @param array<string, mixed> $metaPayload
      */
     private static function applyPostMeta(int $postId, array $metaPayload, array $settings, bool $dryRun, string $metaMode): int
     {
@@ -920,7 +1012,7 @@ class ContentExportImport
         $incoming = [];
         foreach ($metaPayload as $key => $values) {
             $metaKey = (string) $key;
-            if ($metaKey === '' || !is_array($values)) {
+            if ($metaKey === '') {
                 continue;
             }
 
@@ -936,7 +1028,7 @@ class ContentExportImport
                 continue;
             }
 
-            $incoming[$metaKey] = $values;
+            $incoming[$metaKey] = self::normalizeIncomingMetaValues($values);
         }
 
         if (empty($incoming)) {
@@ -979,6 +1071,26 @@ class ContentExportImport
         }
 
         return $updated;
+    }
+
+    /**
+     * Normalizes one incoming meta value into add_post_meta-compatible values list.
+     *
+     * Accepts both payload shapes:
+     * - scalar/object as one logical meta value (wrapped as single-item list)
+     * - list arrays as multi-value meta payload
+     */
+    private static function normalizeIncomingMetaValues(mixed $value): array
+    {
+        if (!is_array($value)) {
+            return [$value];
+        }
+
+        if (array_is_list($value)) {
+            return $value;
+        }
+
+        return [$value];
     }
 
     /**

@@ -25,13 +25,6 @@ namespace HyperFields\Transfer;
  */
 class SchemaConfig
 {
-    /** @var string */
-    public string $type;
-    /** @var int */
-    public int $schema_version;
-    /** @var array<string, mixed> */
-    public array $extra;
-
     /**
      * @param string               $type           Value for the top-level "type" key.
      * @param int                  $schema_version Value for the top-level "schema_version" key.
@@ -41,14 +34,10 @@ class SchemaConfig
      *                                             ignored if present here.
      */
     public function __construct(
-        string $type = 'hyperfields_transfer_bundle',
-        int $schema_version = 1,
-        array $extra = [],
-    ) {
-        $this->type = $type;
-        $this->schema_version = $schema_version;
-        $this->extra = $extra;
-    }
+        public readonly string $type = 'hyperfields_transfer_bundle',
+        public readonly int $schema_version = 1,
+        public readonly array $extra = [],
+    ) {}
 
     /**
      * Reserved envelope keys that callers may not override via $extra.

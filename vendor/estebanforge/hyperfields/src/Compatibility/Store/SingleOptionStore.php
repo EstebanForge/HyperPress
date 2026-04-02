@@ -6,15 +6,11 @@ namespace HyperFields\Compatibility\Store;
 
 final class SingleOptionStore implements StoreInterface
 {
-    /** @var string */
-    private string $prefix;
-
     /**
      *   construct.
      */
-    public function __construct(string $prefix = '')
+    public function __construct(private readonly string $prefix = '')
     {
-        $this->prefix = $prefix;
     }
 
     /**
