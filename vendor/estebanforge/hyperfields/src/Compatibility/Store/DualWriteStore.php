@@ -6,20 +6,13 @@ namespace HyperFields\Compatibility\Store;
 
 final class DualWriteStore implements StoreInterface
 {
-    /** @var StoreInterface */
-    private StoreInterface $primary;
-    /** @var StoreInterface */
-    private StoreInterface $secondary;
-
     /**
      *   construct.
      */
     public function __construct(
-        StoreInterface $primary,
-        StoreInterface $secondary
+        private readonly StoreInterface $primary,
+        private readonly StoreInterface $secondary
     ) {
-        $this->primary = $primary;
-        $this->secondary = $secondary;
     }
 
     /**

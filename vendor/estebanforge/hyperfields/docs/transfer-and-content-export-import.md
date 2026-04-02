@@ -434,6 +434,7 @@ $result = ContentExportImport::importPosts(
         'include_private_meta' => false,
         'include_meta_keys' => [],
         'exclude_meta_keys' => ['_edit_lock'],
+        'normalization_profile' => '', // optional profile key for row normalization hooks
     ]
 );
 ```
@@ -452,10 +453,14 @@ Import matching rules:
   and only treats it as the same record when both `post_type` and `slug` also match.
 - Otherwise (or when ID check fails), existing records are resolved by
   `get_page_by_path($slug, OBJECT, $post_type)`.
+- If canonical slug lookup misses, HyperFields also checks trashed records by
+  `_wp_desired_post_slug` to preserve slug ownership during restore flows.
 
 Custom rule hooks:
 - `hyperfields/content_import/resolve_existing_post` lets you override how an existing destination post is resolved.
 - `hyperfields/content_import/row_decision` lets you decide per row whether to `create`, `merge`, `delete`, `recreate`, or `skip` (with optional `target_id`).
+- `hyperfields/content_import/normalize_row` lets you normalize incoming rows before matching/writes.
+- `hyperfields/content_import/normalize_row/profile_{profile}` lets you attach reusable profile-specific normalizers via `normalization_profile`.
 
 ### Content row strategies (`__strategy`)
 
@@ -716,6 +721,8 @@ Resulting bundle shape:
 | `hyperfields/import/after` | Action | `ExportImport::importOptions()` | `$result, $decoded, $allowedOptionNames, $prefix, $options` |
 | `hyperfields/content_export/after` | Action | `ContentExportImport::exportPosts()` | `$result, $payload, $postTypes, $options` |
 | `hyperfields/content_export/row_strategy` | Filter | `ContentExportImport::normalizeExportPost()` | `$strategy, $post` |
+| `hyperfields/content_import/normalize_row` | Filter | `ContentExportImport::importPosts()` | `$row, $postType, $slug, $options` |
+| `hyperfields/content_import/normalize_row/profile_{profile}` | Filter | `ContentExportImport::importPosts()` | `$row, $postType, $slug, $options` |
 | `hyperfields/content_import/resolve_existing_post` | Filter | `ContentExportImport::resolveExistingPost()` | `$resolved, $row, $postType, $slug` |
 | `hyperfields/content_import/row_decision` | Filter | `ContentExportImport::importPosts()` | `$decision, $row, $postType, $slug, $options` |
 | `hyperfields/content_import/after` | Action | `ContentExportImport::importPosts()` | `$result, $decoded, $options` |
