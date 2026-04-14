@@ -152,6 +152,7 @@ return array(
     'HyperFields\\OptionsPage' => $vendorDir . '/estebanforge/hyperfields/src/OptionsPage.php',
     'HyperFields\\OptionsSection' => $vendorDir . '/estebanforge/hyperfields/src/OptionsSection.php',
     'HyperFields\\PostField' => $vendorDir . '/estebanforge/hyperfields/src/PostField.php',
+    'HyperFields\\ReactField' => $vendorDir . '/estebanforge/hyperfields/src/ReactField.php',
     'HyperFields\\Registry' => $vendorDir . '/estebanforge/hyperfields/src/Registry.php',
     'HyperFields\\RepeaterField' => $vendorDir . '/estebanforge/hyperfields/src/RepeaterField.php',
     'HyperFields\\SeparatorField' => $vendorDir . '/estebanforge/hyperfields/src/SeparatorField.php',

@@ -104,8 +104,8 @@ class ExportImportUI
         );
 
         // Determine the hook suffix WordPress will assign to this page
-        $parentBase   = str_replace('.php', '', basename($parentSlug));
-        $hookSuffix   = ($parentBase === 'options-general' ? 'settings' : $parentBase) . '_page_' . $pageSlug;
+        $parentBase = str_replace('.php', '', basename($parentSlug));
+        $hookSuffix = ($parentBase === 'options-general' ? 'settings' : $parentBase) . '_page_' . $pageSlug;
 
         // Enqueue HyperFields admin CSS + diff assets on this page only
         add_action('admin_enqueue_scripts', static function (string $hook) use ($hookSuffix): void {
@@ -135,16 +135,16 @@ class ExportImportUI
     public static function renderConfigured(ExportImportPageConfig $config): string
     {
         return self::render(
-            options:              $config->options,
+            options: $config->options,
             allowedImportOptions: $config->resolvedAllowedImportOptions(),
-            optionGroups:         $config->optionGroups,
-            prefix:               $config->prefix,
-            title:                $config->title,
-            description:          $config->description,
-            exporter:             $config->exporter,
-            previewer:            $config->previewer,
-            importer:             $config->importer,
-            exportFormExtras:     $config->exportFormExtras,
+            optionGroups: $config->optionGroups,
+            prefix: $config->prefix,
+            title: $config->title,
+            description: $config->description,
+            exporter: $config->exporter,
+            previewer: $config->previewer,
+            importer: $config->importer,
+            exportFormExtras: $config->exportFormExtras,
         );
     }
 
@@ -158,12 +158,12 @@ class ExportImportUI
     {
         TemplateLoader::enqueueAssets();
         $pluginUrl = defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : (defined('HYPERFIELDS_PLUGIN_URL') ? HYPERFIELDS_PLUGIN_URL : '');
-        $version   = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : (defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : '0.0.0');
+        $version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : (defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : '0.0.0');
 
         if ($pluginUrl !== '') {
             wp_enqueue_script(
                 'hyperpress-admin-options',
-                $pluginUrl . 'assets/js/admin-options.js',
+                $pluginUrl . 'assets/js/hyperfields-admin.js',
                 [],
                 $version,
                 false
@@ -231,7 +231,7 @@ class ExportImportUI
         }
 
         // ---------- Handle: Export ----------
-        $exportJson  = '';
+        $exportJson = '';
         $exportError = '';
         if (
             isset($_POST['hf_export_submit'])
@@ -259,9 +259,9 @@ class ExportImportUI
 
         // ---------- Handle: Preview upload ----------
         $previewTransientKey = '';
-        $previewError        = '';
-        $currentSnapshot     = [];
-        $incomingData        = [];
+        $previewError = '';
+        $currentSnapshot = [];
+        $incomingData = [];
         if (
             isset($_POST['hf_preview_submit'])
             && isset($_POST['hf_preview_nonce'])
@@ -269,13 +269,13 @@ class ExportImportUI
             && isset($_FILES['hf_import_file'])
             && is_array($_FILES['hf_import_file'])
         ) {
-            $file          = $_FILES['hf_import_file'];
+            $file = $_FILES['hf_import_file'];
             $previewResult = self::handlePreview($file, $allowedImportOptions, $prefix, $options, $previewer);
 
             if ($previewResult['success']) {
                 $previewTransientKey = $previewResult['transient_key'];
-                $currentSnapshot     = $previewResult['current'];
-                $incomingData        = $previewResult['incoming'];
+                $currentSnapshot = $previewResult['current'];
+                $incomingData = $previewResult['incoming'];
             } else {
                 $previewError = $previewResult['message'];
             }
@@ -284,7 +284,7 @@ class ExportImportUI
         // ---------- Handle: Confirm import ----------
         $importMessage = '';
         $importSuccess = false;
-        $importResult  = [];
+        $importResult = [];
         if (
             isset($_POST['hf_confirm_submit'])
             && isset($_POST['hf_confirm_nonce'])
@@ -315,21 +315,21 @@ class ExportImportUI
 
         ob_start();
         self::renderHtml(
-            title:               $title,
-            description:         $description,
-            options:             $options,
-            optionGroups:        $optionGroups,
-            prefix:              $prefix,
-            exportJson:          $exportJson,
-            exportError:         $exportError,
+            title: $title,
+            description: $description,
+            options: $options,
+            optionGroups: $optionGroups,
+            prefix: $prefix,
+            exportJson: $exportJson,
+            exportError: $exportError,
             previewTransientKey: $previewTransientKey,
-            previewError:        $previewError,
-            currentSnapshot:     $currentSnapshot,
-            incomingData:        $incomingData,
-            importMessage:       $importMessage,
-            importSuccess:       $importSuccess,
-            importResult:        $importResult,
-            exportFormExtras:    $exportFormExtras,
+            previewError: $previewError,
+            currentSnapshot: $currentSnapshot,
+            incomingData: $incomingData,
+            importMessage: $importMessage,
+            importSuccess: $importSuccess,
+            importResult: $importResult,
+            exportFormExtras: $exportFormExtras,
         );
 
         return (string) ob_get_clean();
@@ -347,167 +347,167 @@ class ExportImportUI
     private static function enqueueDiffAssets(): void
     {
         if (function_exists('wp_add_inline_style')) {
-            wp_add_inline_style('hyperpress-admin', <<<CSS
-textarea.hf-json-codeblock {
-    background: #0f172a;
-    border: 1px solid #1f2937;
-    border-radius: 8px;
-    color: #e5e7eb;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-    font-size: 14px;
-    line-height: 1.45;
-    padding: 16px;
-}
-textarea.hf-json-codeblock:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 1px #2563eb;
-}
-.hf-json-copy-wrap {
-    position: relative;
-    display: block;
-    width: 100%;
-    overflow: hidden;
-    border-radius: 8px;
-}
-.hf-json-copy-button.is-copied {
-    border-color: #00a32a;
-    color: #00a32a;
-}
-.hf-export-options-toolbar-row {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 16px;
-    flex-wrap: wrap;
-    width: 100%;
-}
-.hf-export-group-dropdown,
-.hf-export-group-details {
-    flex: 0 1 auto;
-    margin-right: auto;
-}
-.hf-export-group-dropdown {
-    position: relative;
-    z-index: 20;
-}
-.hf-export-options-group-selector.card {
-    margin: 0;
-    min-width: 320px;
-    max-width: 560px;
-    flex: 1 1 420px;
-    padding: 12px 16px;
-}
-.hf-export-options-group-selector-label {
-    margin: 0 0 8px 0;
-}
-.hf-export-group-summary {
-    width: 100%;
-    min-width: 220px;
-    position: relative;
-    display: block;
-    text-align: left;
-    min-height: 0;
-    line-height: 1.4;
-    padding-left: 14px;
-    padding-right: 40px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-}
-[data-hf-export-group-summary-label] {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding-right: 28px;
-    line-height: 1.4;
-}
-.hf-export-group-summary .dashicons {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    font-size: 20px;
-    line-height: 20px;
-    margin: 0;
-    transition: transform 120ms ease-in-out;
-}
-.hf-export-group-dropdown.is-open .hf-export-group-summary .dashicons {
-    transform: translateY(-50%) rotate(180deg);
-}
-.hf-export-group-panel {
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    right: auto;
-    width: 300px;
-    min-width: 220px;
-    max-width: 300px;
-    max-height: 280px;
-    overflow: auto;
-    border: 1px solid #dcdcde;
-    background: #fff;
-    border-radius: 4px;
-    padding: 8px 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-}
-.hf-export-group-panel[hidden] {
-    display: none;
-}
-.hf-export-group-option {
-    display: block;
-    margin: 6px 0;
-}
-.hf-export-options-toolbar-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-left: auto;
-}
-.hf-export-options-toolbar {
-    width: 100%;
-}
-.hf-export-options-table tbody tr {
-    cursor: pointer;
-}
-/* Import diff — diff2html overrides */
-#hf-diff-container {
-    overflow: auto !important;
-    max-height: 70vh !important;
-    display: block !important;
-}
-#hf-diff-container .d2h-wrapper,
-#hf-diff-container .d2h-file-wrapper {
-    overflow: visible !important;
-    max-height: none !important;
-    height: auto !important;
-    margin-bottom: 0 !important;
-}
-#hf-diff-container .d2h-file-collapse,
-#hf-diff-container .d2h-moved-tag {
-    display: none !important;
-}
-/* Horizontal scroll for long lines */
-#hf-diff-container .d2h-code-side {
-    overflow-x: auto;
-    overflow-y: visible;
-}
-#hf-diff-container .d2h-file-header {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-#hf-diff-container .d2h-code-line-ctn {
-    word-break: break-word;
-    white-space: pre-wrap;
-}
-body .hyperpress-options-wrap.hf-diff-view {
-    max-width: none;
-}
-CSS);
+            wp_add_inline_style('hyperpress-admin', <<<'CSS'
+                textarea.hf-json-codeblock {
+                    background: #0f172a;
+                    border: 1px solid #1f2937;
+                    border-radius: 8px;
+                    color: #e5e7eb;
+                    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+                    font-size: 14px;
+                    line-height: 1.45;
+                    padding: 16px;
+                }
+                textarea.hf-json-codeblock:focus {
+                    border-color: #2563eb;
+                    box-shadow: 0 0 0 1px #2563eb;
+                }
+                .hf-json-copy-wrap {
+                    position: relative;
+                    display: block;
+                    width: 100%;
+                    overflow: hidden;
+                    border-radius: 8px;
+                }
+                .hf-json-copy-button.is-copied {
+                    border-color: #00a32a;
+                    color: #00a32a;
+                }
+                .hf-export-options-toolbar-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap: 16px;
+                    flex-wrap: wrap;
+                    width: 100%;
+                }
+                .hf-export-group-dropdown,
+                .hf-export-group-details {
+                    flex: 0 1 auto;
+                    margin-right: auto;
+                }
+                .hf-export-group-dropdown {
+                    position: relative;
+                    z-index: 20;
+                }
+                .hf-export-options-group-selector.card {
+                    margin: 0;
+                    min-width: 320px;
+                    max-width: 560px;
+                    flex: 1 1 420px;
+                    padding: 12px 16px;
+                }
+                .hf-export-options-group-selector-label {
+                    margin: 0 0 8px 0;
+                }
+                .hf-export-group-summary {
+                    width: 100%;
+                    min-width: 220px;
+                    position: relative;
+                    display: block;
+                    text-align: left;
+                    min-height: 0;
+                    line-height: 1.4;
+                    padding-left: 14px;
+                    padding-right: 40px;
+                    padding-top: 6px;
+                    padding-bottom: 6px;
+                }
+                [data-hf-export-group-summary-label] {
+                    display: block;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    padding-right: 28px;
+                    line-height: 1.4;
+                }
+                .hf-export-group-summary .dashicons {
+                    position: absolute;
+                    right: 12px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 20px;
+                    height: 20px;
+                    font-size: 20px;
+                    line-height: 20px;
+                    margin: 0;
+                    transition: transform 120ms ease-in-out;
+                }
+                .hf-export-group-dropdown.is-open .hf-export-group-summary .dashicons {
+                    transform: translateY(-50%) rotate(180deg);
+                }
+                .hf-export-group-panel {
+                    position: absolute;
+                    top: calc(100% + 6px);
+                    left: 0;
+                    right: auto;
+                    width: 300px;
+                    min-width: 220px;
+                    max-width: 300px;
+                    max-height: 280px;
+                    overflow: auto;
+                    border: 1px solid #dcdcde;
+                    background: #fff;
+                    border-radius: 4px;
+                    padding: 8px 12px;
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+                    z-index: 1000;
+                }
+                .hf-export-group-panel[hidden] {
+                    display: none;
+                }
+                .hf-export-group-option {
+                    display: block;
+                    margin: 6px 0;
+                }
+                .hf-export-options-toolbar-actions {
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    margin-left: auto;
+                }
+                .hf-export-options-toolbar {
+                    width: 100%;
+                }
+                .hf-export-options-table tbody tr {
+                    cursor: pointer;
+                }
+                /* Import diff — diff2html overrides */
+                #hf-diff-container {
+                    overflow: auto !important;
+                    max-height: 70vh !important;
+                    display: block !important;
+                }
+                #hf-diff-container .d2h-wrapper,
+                #hf-diff-container .d2h-file-wrapper {
+                    overflow: visible !important;
+                    max-height: none !important;
+                    height: auto !important;
+                    margin-bottom: 0 !important;
+                }
+                #hf-diff-container .d2h-file-collapse,
+                #hf-diff-container .d2h-moved-tag {
+                    display: none !important;
+                }
+                /* Horizontal scroll for long lines */
+                #hf-diff-container .d2h-code-side {
+                    overflow-x: auto;
+                    overflow-y: visible;
+                }
+                #hf-diff-container .d2h-file-header {
+                    position: sticky;
+                    top: 0;
+                    z-index: 10;
+                }
+                #hf-diff-container .d2h-code-line-ctn {
+                    word-break: break-word;
+                    white-space: pre-wrap;
+                }
+                body .hyperpress-options-wrap.hf-diff-view {
+                    max-width: none;
+                }
+                CSS);
         }
     }
 
@@ -565,6 +565,7 @@ CSS);
         // Custom previewer: delegate validation, diffing, and snapshot entirely.
         if ($previewer !== null) {
             $result = call_user_func($previewer, $decoded, $jsonString, $allowedImportOptions, $prefix, $options);
+
             return is_array($result) ? $result : ['success' => false, 'message' => __('The custom previewer returned an invalid result.', 'hyperfields')];
         }
 
@@ -585,7 +586,7 @@ CSS);
             if ($prefix !== '') {
                 $value = array_filter(
                     $value,
-                    static fn($k): bool => strpos((string) $k, $prefix) === 0,
+                    static fn ($k): bool => strpos((string) $k, $prefix) === 0,
                     ARRAY_FILTER_USE_KEY
                 );
             }
@@ -631,7 +632,7 @@ CSS);
     ): void {
         $hasDiff = $previewTransientKey !== '' && !empty($incomingData);
         $strategySummary = $hasDiff ? self::buildStrategySummary($incomingData) : [];
-        $cancelUrl  = admin_url('admin.php?page=' . esc_attr(sanitize_text_field(wp_unslash($_GET['page'] ?? ''))));
+        $cancelUrl = admin_url('admin.php?page=' . esc_attr(sanitize_text_field(wp_unslash($_GET['page'] ?? ''))));
         $groupLabels = [];
         foreach ($options as $optKey => $_optLabel) {
             $groupLabel = (string) ($optionGroups[$optKey] ?? 'Other');
@@ -860,7 +861,7 @@ CSS);
                 </fieldset>
 
                 <?php if ($exportFormExtras !== null): ?>
-                    <?php echo $exportFormExtras; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Caller controls HTML. ?>
+                    <?php echo $exportFormExtras; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Caller controls HTML.?>
                 <?php endif; ?>
 
                 <p class="submit">
@@ -910,7 +911,7 @@ CSS);
 
             <?php endif; ?>
 
-            <?php else: // Import diff preview ?>
+            <?php else: // Import diff preview?>
 
             <!-- ====== DIFF PREVIEW SECTION ====== -->
             <h2><?php esc_html_e('Import Preview', 'hyperfields'); ?></h2>

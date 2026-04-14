@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0] - 2026-04-07
+
+### Added
+- `context7.json` — Context7 service integration configuration for `estebanforge/hyperpress-core`, enabling AI-powered documentation and code examples lookup via the Context7 platform.
+
+### Changed
+- `composer.json` — bumped version to 1.1.0; refreshed `composer.lock` with latest dependency upgrades (108 packages reinstalled from lock file).
+
 ## [1.0.5] - 2026-04-01
 
 ### Changed

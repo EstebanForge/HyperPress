@@ -151,24 +151,24 @@
         },
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.0.5",
-            "version_normalized": "1.0.5.0",
+            "version": "1.1.0",
+            "version_normalized": "1.1.0.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "1fed956e5f62f2eb803fc5fe8e75b110fd514444"
+                "reference": "04df30926ce0002f647b2c55de47a2dd1df4c3e1"
             },
             "require": {
-                "estebanforge/hyperfields": "^1.0",
+                "estebanforge/hyperfields": "^1",
                 "php": ">=8.1"
             },
             "require-dev": {
-                "brain/monkey": "^2.6",
-                "friendsofphp/php-cs-fixer": "^3.0",
-                "mockery/mockery": "^1.6",
-                "pestphp/pest": "^4.4",
-                "phpunit/phpunit": "^12.0",
-                "squizlabs/php_codesniffer": "^3.0"
+                "brain/monkey": "^2",
+                "friendsofphp/php-cs-fixer": "^3",
+                "mockery/mockery": "^1",
+                "pestphp/pest": "^4",
+                "phpunit/phpunit": "^12",
+                "squizlabs/php_codesniffer": "^3"
             },
             "type": "library",
             "extra": {
@@ -251,12 +251,12 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.1.11",
-            "version_normalized": "1.1.11.0",
+            "version": "1.2.0",
+            "version_normalized": "1.2.0.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "b9e5d54f59b25835bb11f6c6e8acfec75dab935f"
+                "reference": "4f5a7b9d584d56ebedebfaffe33d16d2f07832bb"
             },
             "require": {
                 "php": ">=8.2"
@@ -287,7 +287,7 @@
             },
             "scripts": {
                 "test": [
-                    "bash -lc 'if [ ! -f vendor/bin/pest ]; then composer update --no-interaction --no-progress; fi; php -d pcov.enabled=1 vendor/bin/pest --colors=always'"
+                    "bash -lc 'if [ ! -f vendor/bin/pest ]; then composer update --no-interaction --no-progress; fi; if php -m | grep -qi pcov; then php -d pcov.enabled=1 vendor/bin/pest --colors=always; elif php -m | grep -qi xdebug; then XDEBUG_MODE=coverage vendor/bin/pest --colors=always; else vendor/bin/pest --colors=always; fi'"
                 ],
                 "test:unit": [
                     "php -d pcov.enabled=1 vendor/bin/pest tests/Unit --colors=always"
@@ -319,7 +319,11 @@
                 "test:clover:xdebug": [
                     "XDEBUG_MODE=coverage vendor/bin/pest --configuration phpunit.xml --coverage-clover coverage-xdebug.xml"
                 ],
+                "build-assets": [
+                    "bash -lc 'if command -v npm >/dev/null 2>&1; then npm run build && echo \"✓ React assets built successfully\"; else echo \"⚠ npm not found, skipping React asset build. Install Node.js to build React assets.\"; fi'"
+                ],
                 "production": [
+                    "@build-assets",
                     "@php composer install --no-dev --optimize-autoloader"
                 ],
                 "version-bump": [
@@ -353,12 +357,12 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.0.6",
-            "version_normalized": "1.0.6.0",
+            "version": "1.1.0",
+            "version_normalized": "1.1.0.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "2f4cce32abfa93442bcc08e3e156a10b8d5fbc5c"
+                "reference": "25acae248bdc0b0046dad24098a917cc587d25e3"
             },
             "require": {
                 "estebanforge/hyperblocks": "^1.0",

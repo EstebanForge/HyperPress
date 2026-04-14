@@ -24,6 +24,9 @@ $input_class = trim((string) ($field_data['input_class'] ?? ''));
 $label_class = trim((string) ($field_data['label_class'] ?? ''));
 $error = isset($field_data['error']) && is_string($field_data['error']) ? $field_data['error'] : '';
 
+// Check if enhanced multiselect is enabled (default true)
+$enhanced_enabled = isset($field_data['enhanced']) ? (bool) $field_data['enhanced'] : true;
+
 $value = is_array($value) ? $value : [$value];
 ?>
 
@@ -34,8 +37,47 @@ $value = is_array($value) ? $value : [$value];
     </label>
 
     <div class="hyperpress-field-input">
-        <select id="<?php echo esc_attr($name); ?>" 
-                name="<?php echo esc_attr($name_attr); ?>[]" 
+        <?php if ($enhanced_enabled): ?>
+        <!-- Enhanced Multiselect Interface -->
+        <div class="hf-multiselect-container" data-field-name="<?php echo esc_attr($name); ?>">
+            <input type="text"
+                   class="hf-multiselect-search regular-text"
+                   placeholder="<?php esc_attr_e('Search options...', 'hyperfields'); ?>"
+                   autocomplete="off" />
+
+            <div class="hf-multiselect-selected">
+                <?php
+                $selected_count = 0;
+            foreach ($options as $option_value => $option_label):
+                if (in_array($option_value, $value)):
+                    $selected_count++;
+                    ?>
+                    <span class="hf-multiselect-tag" data-value="<?php echo esc_attr($option_value); ?>">
+                        <?php echo esc_html($option_label); ?>
+                        <span class="hf-multiselect-remove">&times;</span>
+                    </span>
+                <?php
+                endif;
+            endforeach;
+
+            if ($selected_count === 0): ?>
+                    <span class="hf-multiselect-placeholder"><?php esc_html_e('No items selected', 'hyperfields'); ?></span>
+                <?php endif; ?>
+            </div>
+
+            <div class="hf-multiselect-options" style="display: none;">
+                <?php foreach ($options as $option_value => $option_label): ?>
+                    <div class="hf-multiselect-option <?php echo in_array($option_value, $value) ? 'selected' : ''; ?>"
+                         data-value="<?php echo esc_attr($option_value); ?>">
+                        <?php echo esc_html($option_label); ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php else: ?>
+        <!-- Standard HTML Multiselect -->
+        <select id="<?php echo esc_attr($name); ?>"
+                name="<?php echo esc_attr($name_attr); ?>[]"
                 multiple
                 <?php echo $required ? 'required' : ''; ?>
                 class="regular-text hyperpress-multiselect <?php echo esc_attr($input_class); ?>"
@@ -46,6 +88,7 @@ $value = is_array($value) ? $value : [$value];
                 </option>
             <?php endforeach; ?>
         </select>
+        <?php endif; ?>
 
         <?php if ($help): ?>
             <p class="description">

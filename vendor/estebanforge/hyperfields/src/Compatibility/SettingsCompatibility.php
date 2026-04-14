@@ -19,4 +19,3 @@ final class SettingsCompatibility
         return WPSettingsCompatibility::register($config);
     }
 }
-

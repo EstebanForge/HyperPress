@@ -294,3 +294,4 @@ if ($conditional_logic) {
             <?php endif; ?>
         </div>
     </div>
+</div>

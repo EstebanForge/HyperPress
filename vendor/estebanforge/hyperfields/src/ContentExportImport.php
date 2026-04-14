@@ -4,6 +4,19 @@ declare(strict_types=1);
 
 namespace HyperFields;
 
+use function current_time;
+use function get_post;
+use function get_post_meta;
+use function get_posts;
+use function get_site_url;
+use function maybe_unserialize;
+use function sanitize_key;
+use function sanitize_text_field;
+use function sanitize_title;
+use function wp_insert_post;
+use function wp_json_encode;
+use function wp_update_post;
+
 /**
  * Generic export/import utility for post-like configuration content.
  *
@@ -78,7 +91,7 @@ class ContentExportImport
             'message' => is_string($encoded) ? 'Content exported successfully.' : 'Failed to encode content export payload.',
         ];
 
-        /**
+        /*
          * Fires after HyperFields has finished content export.
          *
          * @param array $result
@@ -500,6 +513,7 @@ class ContentExportImport
     public static function diffPosts(string $jsonString, array $options = []): array
     {
         $options['dry_run'] = true;
+
         return self::importPosts($jsonString, $options);
     }
 
@@ -510,7 +524,7 @@ class ContentExportImport
      */
     private static function dispatchContentImportAfter(array $result, array $decoded, array $options): void
     {
-        /**
+        /*
          * Fires after HyperFields has finished content import (including dry runs).
          *
          * @param array $result
@@ -682,7 +696,7 @@ class ContentExportImport
      */
     private static function resolveTrashedPostByDesiredSlug(string $postType, string $slug): ?object
     {
-        $matches = get_posts([
+        $matches = \get_posts([
             'post_type' => $postType,
             'post_status' => 'trash',
             'posts_per_page' => 1,
@@ -791,8 +805,7 @@ class ContentExportImport
         bool $createMissing,
         bool $updateExisting,
         string $rowStrategy = ''
-    ): array
-    {
+    ): array {
         if ($rowStrategy === 'skip') {
             return [
                 'action' => 'skip',
@@ -901,7 +914,7 @@ class ContentExportImport
     private static function normalizeSettings(array $options): array
     {
         $postStatus = isset($options['post_status']) && is_array($options['post_status'])
-            ? array_values(array_filter(array_map(static fn($status): string => sanitize_key((string) $status), $options['post_status'])))
+            ? array_values(array_filter(array_map(static fn ($status): string => sanitize_key((string) $status), $options['post_status'])))
             : ['publish', 'draft', 'private'];
 
         return [
@@ -988,7 +1001,7 @@ class ContentExportImport
             }
 
             $meta[$metaKey] = array_map(
-                static fn($value): mixed => maybe_unserialize($value),
+                static fn ($value): mixed => maybe_unserialize($value),
                 $values
             );
         }
@@ -1165,7 +1178,7 @@ class ContentExportImport
             return 'unknown error';
         }
 
-        /** @var object{get_error_message: callable} $error */
+        /* @var object{get_error_message: callable} $error */
         return (string) $error->get_error_message();
     }
 }

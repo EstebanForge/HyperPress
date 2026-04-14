@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace HyperFields;
 
-use HyperFields\Log;
-
 class Field
 {
     private ?string $option_group = null;
@@ -211,6 +209,25 @@ class Field
     public function setConditionalLogic(array $conditional_logic): self
     {
         $this->conditional_logic = $conditional_logic;
+
+        return $this;
+    }
+
+    /**
+     * SetEnhanced.
+     * Enable enhanced UI for multiselect fields (search + tags).
+     *
+     * @param bool $enhanced Whether to enable enhanced mode.
+     * @return self
+     */
+    public function setEnhanced(bool $enhanced = true): self
+    {
+        $this->args['enhanced'] = $enhanced;
+
+        // Trigger asset loading when enhanced mode is used
+        if ($enhanced) {
+            do_action('hyperfields_enhanced_multiselect');
+        }
 
         return $this;
     }

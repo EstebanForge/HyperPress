@@ -34,4 +34,3 @@ interface StoreInterface
      */
     public function all(): array;
 }
-

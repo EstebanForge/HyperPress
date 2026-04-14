@@ -2,7 +2,7 @@
   "name": "estebanforge/hyperfields",
   "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
   "type": "library",
-  "version": "1.1.11",
+  "version": "1.2.0",
   "license": "GPL-2.0-or-later",
   "authors": [
     {
@@ -38,7 +38,7 @@
     "friendsofphp/php-cs-fixer": "^3"
   },
   "scripts": {
-    "test": "bash -lc 'if [ ! -f vendor/bin/pest ]; then composer update --no-interaction --no-progress; fi; php -d pcov.enabled=1 vendor/bin/pest --colors=always'",
+    "test": "bash -lc 'if [ ! -f vendor/bin/pest ]; then composer update --no-interaction --no-progress; fi; if php -m | grep -qi pcov; then php -d pcov.enabled=1 vendor/bin/pest --colors=always; elif php -m | grep -qi xdebug; then XDEBUG_MODE=coverage vendor/bin/pest --colors=always; else vendor/bin/pest --colors=always; fi'",
     "test:unit": "php -d pcov.enabled=1 vendor/bin/pest tests/Unit --colors=always",
     "test:integration": "php -d pcov.enabled=1 vendor/bin/pest tests/Integration --colors=always",
     "test:coverage": "php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml --coverage-html coverage-html --coverage-text",
@@ -49,7 +49,8 @@
     "test:coverage:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --configuration phpunit.xml --coverage-html coverage-xdebug-html --coverage-text",
     "test:summary:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --configuration phpunit.xml --coverage-text",
     "test:clover:xdebug": "XDEBUG_MODE=coverage vendor/bin/pest --configuration phpunit.xml --coverage-clover coverage-xdebug.xml",
-    "production": "@php composer install --no-dev --optimize-autoloader",
+    "build-assets": "bash -lc 'if command -v npm >/dev/null 2>&1; then npm run build && echo \"✓ React assets built successfully\"; else echo \"⚠ npm not found, skipping React asset build. Install Node.js to build React assets.\"; fi'",
+    "production": ["@build-assets", "@php composer install --no-dev --optimize-autoloader"],
     "version-bump": "bash scripts/version-bump.sh",
     "setup-hooks": "cp .githooks/* .git/hooks/ && chmod +x .git/hooks/* && echo 'Git hooks installed to .git/hooks/'",
     "cs:fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php",

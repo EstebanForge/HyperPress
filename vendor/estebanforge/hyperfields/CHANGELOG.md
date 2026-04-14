@@ -1,5 +1,130 @@
 # Changelog
 
+## [1.2.0] - 2026-04-12
+
+### Added
+- **React Integration** - Modern UI components for options pages with PHP-only API
+  - `ReactField` class extends `Field` with React rendering capabilities
+  - Automatic React asset loading when `ReactField` instances are detected
+  - Supports 10 field types: text, textarea, number, email, url, color, image, checkbox, select
+  - Uses WordPress `@wordpress/components` for consistent admin UI
+  - Media library integration for image fields with live preview
+  - WordPress color picker with alpha channel support
+  - Progressive enhancement - HTML works, React is opt-in
+  - Zero breaking changes - existing code continues to work unchanged
+
+- **ReactField API**:
+  - `ReactField::make()` - Create React-enhanced fields
+  - `setReactProp()` - Pass custom props to React components
+  - `setReactComponent()` - Override default React component
+  - `setUseReact()` - Enable/disable React per field
+  - `getReactComponent()` - Get component name for field type
+  - `getReactProps()` - Get all props for React component
+
+- **Build System**:
+  - Webpack 5 configuration for React asset compilation
+  - Babel preset for JSX transformation
+  - Build commands: `build`, `build:dev`, `watch`, `clean`
+  - Optimized production builds with source maps
+  - WordPress externals (wp-element, wp-components, wp-block-editor)
+
+- **React Components** (`assets/js/src/components/`):
+  - `TextField.jsx` - Modern text input with validation
+  - `TextareaField.jsx` - Multi-line text with rows config
+  - `NumberField.jsx` - Number input with min/max/step
+  - `EmailField.jsx` - Email validation
+  - `UrlField.jsx` - URL input validation
+  - `ColorField.jsx` - WordPress color picker
+  - `ImageField.jsx` - Media library integration with thumbnail preview
+  - `CheckboxField.jsx` - Toggle checkbox
+  - `SelectField.jsx` - Dropdown select
+
+- **Enhanced CSS**:
+  - Modern WooCommerce-inspired design system
+  - CSS variables for theming (--hf-color-primary, etc.)
+  - Card layout with better spacing and typography
+  - Improved tabs and field rows
+  - Responsive design with mobile-first approach
+  - Dark mode support via `@media (prefers-color-scheme: dark)`
+  - React-specific styles in `assets/css/react-fields.css`
+
+- **OptionsPage Integration**:
+  - Auto-detection of `ReactField` instances
+  - Automatic enqueuing of wp-element, wp-components, wp-block-editor
+  - Data bridge via `wp_localize_script()` to `window.hyperfieldsReactData`
+  - React root container (`#hyperpress-react-root`) for component mounting
+  - Hidden input synchronization for form submission
+
+- **Developer Experience**:
+  - One-line change from `Field::make()` to `ReactField::make()`
+  - No React knowledge required
+  - PHP-only API maintained
+  - Optional custom React props per field
+
+- **Documentation**:
+  - `REACT_EXAMPLES.md` - Complete developer guide
+  - `IMPLEMENTATION_SUMMARY.md` - Implementation details
+  - `VERSION_BUMP_GUIDE.md` - Version management guide
+  - `examples/react-test.php` - Working test file
+
+- **Build Automation**:
+  - `composer build-assets` script for standalone asset building
+  - `composer production` now automatically builds React assets
+  - Graceful fallback when npm is not available
+  - Cross-platform support (Linux, macOS, Windows)
+
+- **Version Management**:
+  - Updated `scripts/version-bump.sh` to handle all version locations
+  - Now updates: composer.json, package.json, bootstrap.php, src/OptionsPage.php
+  - Synchronizes fallback versions across all files
+
+### Changed
+- **CSS Refresh** - Modernized `assets/css/hyperfields-admin.css` with:
+  - CSS variable-based theming system
+  - Card layout replacing dated field styling
+  - Better spacing, typography, and visual hierarchy
+  - Improved tabs with active state styling
+  - Responsive design improvements
+  - Dark mode compatibility
+
+- **OptionsPage Enhancements**:
+  - Added `reactFieldsToRender` property for React field tracking
+  - `getReactFields()` method to collect React fields from sections
+  - `hasReactFields()` method to check for React presence
+  - `enqueueReactAssets()` method for React dependency loading
+  - Modified `renderPage()` to include React root container
+
+- **Build System**:
+  - Added `package.json` with React dependencies
+  - Added `webpack.config.js` for asset compilation
+  - Updated `composer.json` scripts to integrate React builds
+
+- **Composer Scripts**:
+  - Added `build-assets` script
+  - Updated `production` script to run asset builds automatically
+
+### Fixed
+- **ImageField Component**:
+  - Added null check for `wp.media` object
+  - Improved error handling for media attachment loading
+  - Fallback to number input when MediaUpload unavailable
+
+- **Build System**:
+  - Fixed webpack externals configuration for WordPress dependencies
+  - Added `@wordpress/block-editor` to dependencies
+  - Resolved module resolution issues
+
+### Performance
+- React assets are minified in production builds
+- Source maps generated for development debugging
+- Lazy loading of React components only when needed
+
+### Developer Experience
+- Zero breaking changes - existing fields work unchanged
+- Opt-in React rendering - choose which fields benefit from modern UI
+- Mixed rendering - use React for complex fields, HTML for simple ones
+- Full backward compatibility maintained
+
 ## [1.1.9] - 2026-04-01
 
 ### Added
@@ -30,7 +155,7 @@
 - Documentation refreshed for transfer logging, Transfer Manager schema configuration, and `ExportImportUI` extension points.
 - `ExportImport` updated to align with transfer-manager, typed-node, and schema-aware flows.
 - `ExportImportUI` overhauled with richer export selection/filter UX and improved diff/import experience.
-- Export options filter layout and admin styling/scripts refactored (`assets/js/admin-options.js`, `assets/css/admin.css`).
+- Export options filter layout and admin styling/scripts refactored (`assets/js/hyperfields-admin.js`, `assets/css/hyperfields-admin.css`).
 - Core docs updated with content transfer and extensible manager guidance.
 - Composer/library metadata and README refreshed for library-first usage.
 - Packaging cleanup for library distribution:

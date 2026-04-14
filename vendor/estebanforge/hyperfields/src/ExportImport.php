@@ -11,7 +11,7 @@ use HyperFields\Validation\SchemaValidator;
  *
  * Provides static methods for exporting one or more WordPress option groups to
  * JSON and re-importing them, with optional prefix filtering and whitelisting for
- * security.  No admin UI is included here – see {@see \HyperFields\Admin\ExportImportUI}
+ * security.  No admin UI is included here – see {@see Admin\ExportImportUI}
  * for a plug-and-play UI component.
  *
  * Every exported option is wrapped in a typed-node envelope:
@@ -87,7 +87,7 @@ class ExportImport
             if ($prefix !== '' && is_array($value)) {
                 $value = array_filter(
                     $value,
-                    static fn($key): bool => strpos((string) $key, $prefix) === 0,
+                    static fn ($key): bool => strpos((string) $key, $prefix) === 0,
                     ARRAY_FILTER_USE_KEY
                 );
             }
@@ -113,7 +113,7 @@ class ExportImport
             'message' => is_string($encoded) ? 'Options exported successfully.' : 'Failed to encode export payload.',
         ];
 
-        /**
+        /*
          * Fires after HyperFields has finished exporting options.
          *
          * @param array $result     Export result metadata.
@@ -167,10 +167,10 @@ class ExportImport
             return $result;
         }
 
-        $backupKeys    = [];
-        $errors        = [];
+        $backupKeys = [];
+        $errors = [];
         $importedCount = 0;
-        $importMode    = self::resolveImportMode($options);
+        $importMode = self::resolveImportMode($options);
 
         foreach ($decoded['options'] as $optionName => $incoming) {
             $optionName = sanitize_text_field((string) $optionName);
@@ -216,7 +216,7 @@ class ExportImport
             if ($prefix !== '' && is_array($incoming)) {
                 $incoming = array_filter(
                     $incoming,
-                    static fn($key): bool => strpos((string) $key, $prefix) === 0,
+                    static fn ($key): bool => strpos((string) $key, $prefix) === 0,
                     ARRAY_FILTER_USE_KEY
                 );
             }
@@ -235,7 +235,7 @@ class ExportImport
             $existing = get_option($optionName, $missingMarker);
             $hasExisting = ($existing !== $missingMarker);
             if ($existing !== null && $existing !== []) {
-                $backupKey               = 'hf_backup_' . sanitize_key($optionName) . '_' . time();
+                $backupKey = 'hf_backup_' . sanitize_key($optionName) . '_' . time();
                 set_transient($backupKey, $existing, HOUR_IN_SECONDS);
                 $backupKeys[$optionName] = $backupKey;
             }
@@ -302,7 +302,7 @@ class ExportImport
         string $prefix,
         array $options
     ): void {
-        /**
+        /*
          * Fires after HyperFields has finished importing options.
          *
          * @param array  $result             Import result.
@@ -328,8 +328,8 @@ class ExportImport
             return false;
         }
 
-        $existing  = get_option(sanitize_text_field($optionName));
-        $restored  = update_option(sanitize_text_field($optionName), $backup);
+        $existing = get_option(sanitize_text_field($optionName));
+        $restored = update_option(sanitize_text_field($optionName), $backup);
         $unchanged = ($restored === false && $backup === $existing);
         if ($restored || $unchanged) {
             delete_transient($backupKey);
@@ -360,7 +360,7 @@ class ExportImport
             if ($prefix !== '' && is_array($value)) {
                 $value = array_filter(
                     $value,
-                    static fn($key): bool => strpos((string) $key, $prefix) === 0,
+                    static fn ($key): bool => strpos((string) $key, $prefix) === 0,
                     ARRAY_FILTER_USE_KEY
                 );
             }
@@ -438,7 +438,7 @@ class ExportImport
             if ($prefix !== '' && is_array($incoming)) {
                 $incoming = array_filter(
                     $incoming,
-                    static fn($key): bool => strpos((string) $key, $prefix) === 0,
+                    static fn ($key): bool => strpos((string) $key, $prefix) === 0,
                     ARRAY_FILTER_USE_KEY
                 );
             }

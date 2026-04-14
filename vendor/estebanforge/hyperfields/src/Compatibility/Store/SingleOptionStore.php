@@ -9,9 +9,7 @@ final class SingleOptionStore implements StoreInterface
     /**
      *   construct.
      */
-    public function __construct(private readonly string $prefix = '')
-    {
-    }
+    public function __construct(private readonly string $prefix = '') {}
 
     /**
      * Get.
@@ -63,4 +61,3 @@ final class SingleOptionStore implements StoreInterface
         return $this->prefix . $key;
     }
 }
-

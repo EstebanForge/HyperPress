@@ -673,6 +673,73 @@ echo esc_html($scheme);
 
 Sanitization: value validated against provided choices when available.
 
+### Multiselect (Enhanced)
+
+Multi-select input with enhanced UI featuring search and tag-based selection.
+
+**Enhanced Mode (Default):**
+- Search box to filter options by text
+- Selected items shown as removable tags
+- Click to select/deselect from dropdown
+- Modern, intuitive interface similar to popular UI libraries
+
+**Standard Mode:**
+- Traditional HTML select element with multiple selection
+- Requires Ctrl/Cmd + Click to select multiple items
+
+Declaration (enhanced mode - default):
+
+```php
+$field = HyperFields::makeField('multiselect', 'featured_categories', 'Featured Categories');
+$field->setOptions([
+    'technology' => 'Technology',
+    'design' => 'Design',
+    'marketing' => 'Marketing'
+]);
+// Enhanced mode is enabled by default
+```
+
+Declaration (standard mode):
+
+```php
+$field = HyperFields::makeField('multiselect 'legacy_multiselect', 'Legacy MultiSelect');
+$field->setOptions([
+    'tech' => 'Technology',
+    'design' => 'Design'
+]);
+$field->setEnhanced(false); // Disable enhanced mode
+```
+
+Save / retrieve:
+
+```php
+// Save array of values
+hf_update_field('featured_categories', ['technology', 'design'], 'options', [ 'type' => 'multiselect' ]);
+
+// Retrieve as array
+$categories = hf_get_field('featured_categories', 'options', [ 'default' => [] ]);
+foreach ($categories as $category) {
+    echo esc_html($category) . '<br>';
+}
+```
+
+**Features:**
+- **Enhanced mode enabled by default** for all multiselect fields
+- Real-time search filtering of options
+- Visual tag-based selection management
+- Click-to-select/deselect interface
+- Keyboard support (Escape closes dropdown)
+- Backward compatible with standard mode via `setEnhanced(false)`
+- Maintains full compatibility with existing data structure
+
+**Usage Tips:**
+- Use enhanced mode for better UX when dealing with many options (> 5)
+- Use standard mode for simple selections or when you need native browser behavior
+- Both modes save/return the same data structure (array of selected values)
+- Enhanced mode automatically loads required CSS/JS assets
+
+Sanitization: array of values; each value is validated against available options when applicable.
+
 ### Color
 
 Hex color values; sanitized via `esc_attr()` on render and validated on save.

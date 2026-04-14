@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.0] - 2026-04-14
+
+### Added
+- Context7 integration: `context7.json` added for documentation package management and discoverability.
+
 ## [1.0.4] - 2026-04-01
 
 ### Added

@@ -202,6 +202,7 @@ final class ContentTransferAdapter
         }
 
         ksort($normalized);
+
         return $normalized;
     }
 }

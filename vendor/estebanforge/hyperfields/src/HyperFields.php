@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace HyperFields;
 
 use HyperFields\Admin\ExportImportUI;
-use HyperFields\Transfer\Manager as TransferManager;
 use HyperFields\Compatibility\WPSettingsCompatibility;
 use HyperFields\Container\ContainerFactory;
+use HyperFields\Transfer\Manager as TransferManager;
 
 /**
  * HyperFields Facade.
@@ -207,6 +207,7 @@ class HyperFields
     public static function getOptions(string $option_name, array $default = []): array
     {
         $value = get_option($option_name, $default);
+
         return is_array($value) ? $value : $default;
     }
 
@@ -237,7 +238,7 @@ class HyperFields
     {
         $options = get_option($option_name, []);
         $options[$field_name] = $value;
-        
+
         // Debug trace
         // error_log("setFieldValue called for $option_name, $field_name");
 
@@ -254,9 +255,10 @@ class HyperFields
     public static function deleteFieldOption(string $option_name, string $field_name): bool
     {
         $options = get_option($option_name, []);
-        
+
         if (isset($options[$field_name])) {
             unset($options[$field_name]);
+
             return update_option($option_name, $options);
         }
 
@@ -336,13 +338,13 @@ class HyperFields
         string $capability = 'manage_options'
     ): void {
         ExportImportUI::registerPage(
-            parentSlug:           $parentSlug,
-            pageSlug:             $pageSlug,
-            options:              $options,
+            parentSlug: $parentSlug,
+            pageSlug: $pageSlug,
+            options: $options,
             allowedImportOptions: $allowedImportOptions,
-            prefix:               $prefix,
-            title:                $title,
-            capability:           $capability,
+            prefix: $prefix,
+            title: $title,
+            capability: $capability,
         );
     }
 

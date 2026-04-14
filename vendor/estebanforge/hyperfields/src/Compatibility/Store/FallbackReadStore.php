@@ -12,8 +12,7 @@ final class FallbackReadStore implements StoreInterface
     public function __construct(
         private readonly StoreInterface $primary,
         private readonly StoreInterface $fallback
-    ) {
-    }
+    ) {}
 
     /**
      * Get.
@@ -60,4 +59,3 @@ final class FallbackReadStore implements StoreInterface
         return array_merge($this->fallback->all(), $this->primary->all());
     }
 }
-

@@ -12,8 +12,7 @@ final class DualWriteStore implements StoreInterface
     public function __construct(
         private readonly StoreInterface $primary,
         private readonly StoreInterface $secondary
-    ) {
-    }
+    ) {}
 
     /**
      * Get.
@@ -61,4 +60,3 @@ final class DualWriteStore implements StoreInterface
         return array_merge($this->secondary->all(), $this->primary->all());
     }
 }
-

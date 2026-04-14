@@ -9,9 +9,7 @@ final class ArrayOptionStore implements StoreInterface
     /**
      *   construct.
      */
-    public function __construct(private readonly string $option_name)
-    {
-    }
+    public function __construct(private readonly string $option_name) {}
 
     /**
      * Get.
@@ -73,4 +71,3 @@ final class ArrayOptionStore implements StoreInterface
         return is_array($data) ? $data : [];
     }
 }
-
