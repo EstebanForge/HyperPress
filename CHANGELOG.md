@@ -1,5 +1,34 @@
 # Changelog
 
+# 3.2.0 / 2026-04-14
+- **DEPS:** Updated `estebanforge/hyperfields` to 1.2.0 (Major Feature: React Integration)
+  - **NEW:** `ReactField` class extends `Field` with modern React-powered UI components for options pages
+  - **NEW:** Automatic React asset loading when `ReactField` instances are detected
+  - **NEW:** Supports 10 field types with React components: text, textarea, number, email, url, color, image, checkbox, select
+  - **NEW:** Uses WordPress `@wordpress/components` for consistent admin UI experience
+  - **NEW:** Media library integration for image fields with live thumbnail preview
+  - **NEW:** WordPress color picker with alpha channel support for color fields
+  - **NEW:** Progressive enhancement approach - HTML fields work as-is, React is opt-in via `ReactField::make()`
+  - **NEW:** Zero breaking changes - existing `Field::make()` code continues to work unchanged
+  - **NEW:** ReactField API methods: `setReactProp()`, `setReactComponent()`, `setUseReact()`, `getReactComponent()`, `getReactProps()`
+  - **NEW:** Build system with Webpack 5 configuration for React asset compilation
+  - **NEW:** Enhanced CSS with WooCommerce-inspired design system, CSS variables, responsive design, and dark mode support
+  - **NEW:** One-line migration from `Field::make()` to `ReactField::make()` for modern UI
+  - **NEW:** Complete documentation: React examples, implementation guide, and version bump guide
+  - **NEW:** `composer build-assets` script for standalone asset building
+  - **NEW:** `composer production` now automatically builds React assets when npm is available
+  - **IMPROVED:** OptionsPage integration with auto-detection and enqueuing of React dependencies
+  - **FIX:** ImageField component null check for `wp.media` object with graceful fallback
+  - **DX:** Mixed rendering supported - use React for complex fields, HTML for simple ones
+- **DEPS:** Updated `estebanforge/hyperblocks` to 1.1.0
+  - **NEW:** Context7 integration for AI-powered documentation and code examples lookup
+  - **NEW:** `context7.json` configuration package management
+- **DEPS:** Updated `estebanforge/hyperpress-core` to 1.1.0
+  - **NEW:** Context7 integration for improved documentation discoverability
+  - **UPDATED:** Refreshed `composer.lock` with latest dependency upgrades
+- **DX:** Enhanced build automation with graceful npm detection and fallback
+- **DX:** Cross-platform React asset build support (Linux, macOS, Windows)
+
 # 3.1.1 / 2026-04-01
 - **FIX:** Synced plugin header `Version` to `3.1.1` (was stale at `3.0.5`).
 - **FIX:** `README.txt` `Stable tag` corrected to `3.1.1` with proper spacing.
