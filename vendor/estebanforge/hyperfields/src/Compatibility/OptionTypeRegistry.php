@@ -45,4 +45,3 @@ final class OptionTypeRegistry
         return isset(self::$types[$type]);
     }
 }
-

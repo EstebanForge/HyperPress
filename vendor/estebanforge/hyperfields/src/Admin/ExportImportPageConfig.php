@@ -6,8 +6,11 @@ namespace HyperFields\Admin;
 
 /**
  * Immutable configuration for ExportImportUI.
+ *
+ * Keep this as a normal class (not `readonly class`) to satisfy WordPress.org plugin
+ * directory commit-hook parsing requirements; per-property readonly keeps immutability.
  */
-final readonly class ExportImportPageConfig
+final class ExportImportPageConfig
 {
     /**
      * @param array<string, string> $options
@@ -15,16 +18,16 @@ final readonly class ExportImportPageConfig
      * @param array<string, string> $optionGroups
      */
     public function __construct(
-        public array $options = [],
-        public array $allowedImportOptions = [],
-        public array $optionGroups = [],
-        public string $prefix = '',
-        public string $title = 'Data Export / Import',
-        public string $description = 'Export your settings to JSON or import a previously exported file.',
-        public mixed $exporter = null,
-        public mixed $previewer = null,
-        public mixed $importer = null,
-        public ?string $exportFormExtras = null,
+        public readonly array $options = [],
+        public readonly array $allowedImportOptions = [],
+        public readonly array $optionGroups = [],
+        public readonly string $prefix = '',
+        public readonly string $title = 'Data Export / Import',
+        public readonly string $description = 'Export your settings to JSON or import a previously exported file.',
+        public readonly mixed $exporter = null,
+        public readonly mixed $previewer = null,
+        public readonly mixed $importer = null,
+        public readonly ?string $exportFormExtras = null,
     ) {}
 
     /**

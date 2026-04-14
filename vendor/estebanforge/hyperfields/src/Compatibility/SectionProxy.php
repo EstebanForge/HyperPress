@@ -17,8 +17,7 @@ final class SectionProxy
         private readonly string $id,
         private readonly string $title,
         private readonly array $args = []
-    ) {
-    }
+    ) {}
 
     /**
      * Add option.

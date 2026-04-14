@@ -373,7 +373,7 @@ KEY user_id (user_id)
      */
     private static function siteDateTime(?int $timestamp = null): string
     {
-        $timestamp = $timestamp ?? time();
+        $timestamp ??= time();
 
         if (function_exists('wp_date')) {
             return wp_date('Y-m-d H:i:s', $timestamp);

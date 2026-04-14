@@ -133,7 +133,7 @@ class SchemaValidator
         $errors = [];
 
         foreach ($values as $key => $value) {
-            $key  = (string) $key;
+            $key = (string) $key;
             $rule = $schemaMap[$key] ?? null;
 
             if ($rule === null) {
@@ -141,7 +141,7 @@ class SchemaValidator
             }
 
             $qualifiedName = $prefix !== '' ? sprintf('%s.%s', $prefix, $key) : $key;
-            $error         = self::validate($qualifiedName, $value, $rule);
+            $error = self::validate($qualifiedName, $value, $rule);
 
             if ($error !== null) {
                 $errors[] = $error;
@@ -358,14 +358,14 @@ class SchemaValidator
     {
         foreach ($value as $fieldName => $fieldValue) {
             $fieldName = (string) $fieldName;
-            $rule      = $fieldRules[$fieldName] ?? null;
+            $rule = $fieldRules[$fieldName] ?? null;
 
             if ($rule === null) {
                 continue;
             }
 
             $qualifiedName = sprintf('%s.%s', $parentName, $fieldName);
-            $error         = self::validate($qualifiedName, $fieldValue, $rule);
+            $error = self::validate($qualifiedName, $fieldValue, $rule);
 
             if ($error !== null) {
                 return $error;

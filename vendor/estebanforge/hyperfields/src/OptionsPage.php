@@ -28,6 +28,10 @@ class OptionsPage
      * @var array<string, string>
      */
     private array $compatibility_field_errors = [];
+    /**
+     * @var array<int, array>
+     */
+    private array $reactFieldsToRender = [];
 
     /**
      * Make.
@@ -376,11 +380,22 @@ class OptionsPage
     public function renderPage(): void
     {
         $active_tab = $this->getActiveTab();
+        $react_fields = $this->getReactFields($active_tab);
+
+        // If we have React fields, the enqueueAssets method will handle loading React
+        if (!empty($react_fields)) {
+            // Store React fields for later use in enqueueAssets
+            $this->reactFieldsToRender = $react_fields;
+        }
         ?>
-        <div class="wrap hyperpress hyperpress-options-wrap">
-            <h1><?php echo esc_html($this->page_title); ?></h1>
+        <div class="wrap hyperpress hyperpress-options-wrap" id="hyperpress-options-page">
+            <div class="hyperpress-layout__header" data-hyperpress-sticky-header>
+                <div class="hyperpress-layout__header-wrapper">
+                    <h1 class="hyperpress-layout__header-heading"><?php echo esc_html($this->page_title); ?></h1>
+                </div>
+            </div>
             <?php $this->renderTabs(); ?>
-            <form method="post" action="options.php">
+            <form method="post" action="options.php" id="hyperpress-options-form">
                 <input type="hidden" name="hyperpress_active_tab" value="<?php echo esc_attr($active_tab); ?>" />
                 <input type="hidden" name="hyperpress_active_section" value="<?php echo esc_attr($this->getActiveSection($active_tab)); ?>" />
                 <?php
@@ -396,6 +411,7 @@ class OptionsPage
             echo '<input type="hidden" data-hp-keep-name="1" name="' . esc_attr((string) $this->option_name) . '[_compact]" value="1" />';
         }
         $this->renderSectionMenu($active_tab);
+        echo '<div class="wp-header-end hyperpress-notice-catcher" id="hyperpress-layout__notice-catcher"></div>';
         $renderable_sections = $this->getRenderableSectionIds($active_tab);
         foreach ($renderable_sections as $section_id) {
             if (!isset($this->sections[$section_id])) {
@@ -418,19 +434,26 @@ class OptionsPage
             do_settings_fields($this->option_name, $section_id);
             echo '</div>';
         }
+        // React root container - React fields will be rendered here
+        if (!empty($react_fields)) {
+            echo '<div id="hyperpress-react-root" data-hyperpress-react></div>';
+        }
         submit_button(
             esc_html__('Save Changes', 'api-for-htmx'),
-            'primary'
+            'primary',
+            'submit',
+            true,
+            ['class' => 'button button-primary']
         );
-        ?>
-            </form>
-            <?php if ($this->footer_content): ?>
-                <div class="hyperpress-options-footer">
-                    <?php echo wp_kses_post($this->footer_content); ?>
-                </div>
-            <?php endif; ?>
-        </div>
-<?php
+        echo '</form>';
+
+        if ($this->footer_content) {
+            echo '<div class="hyperpress-options-footer">';
+            echo wp_kses_post($this->footer_content);
+            echo '</div>';
+        }
+
+        echo '</div>';
     }
 
     /**
@@ -650,14 +673,18 @@ class OptionsPage
         }
 
         $active_tab = $this->getActiveTab();
-        echo '<h2 class="nav-tab-wrapper">';
+        echo '<nav class="nav-tab-wrapper hyperpress-nav-tab-wrapper" aria-label="' . esc_attr__('Settings sections', 'api-for-htmx') . '">';
         foreach ($this->tabs as $tab_id => $tab) {
-            $class = ($active_tab === $tab_id) ? 'nav-tab-active' : '';
+            $class = 'nav-tab hyperpress-nav-tab';
+            if ($active_tab === $tab_id) {
+                $class .= ' nav-tab-active';
+            }
             $url_base = $this->parent_slug === 'options-general.php' ? 'options-general.php' : 'admin.php';
             $url = add_query_arg(['page' => $this->menu_slug, 'tab' => $tab_id], admin_url($url_base));
-            echo '<a href="' . esc_url($url) . '" class="nav-tab ' . esc_attr($class) . '">' . esc_html($tab['title']) . '</a>';
+            $aria_current = $active_tab === $tab_id ? ' aria-current="page"' : '';
+            echo '<a href="' . esc_url($url) . '" class="' . esc_attr($class) . '"' . $aria_current . '>' . esc_html($tab['title']) . '</a>';
         }
-        echo '</h2>';
+        echo '</nav>';
     }
 
     /**
@@ -758,7 +785,7 @@ class OptionsPage
         }
 
         $active_section = $this->getActiveSection($tab_id);
-        echo '<ul class="subsubsub" style="display: block; width: 100%; margin-bottom: 15px;">';
+        echo '<ul class="subsubsub hyperpress-subsubsub">';
         foreach ($linked as $section) {
             $current = $section->getSlug() === $active_section ? 'current' : '';
             $url_base = $this->parent_slug === 'options-general.php' ? 'options-general.php' : 'admin.php';
@@ -772,32 +799,96 @@ class OptionsPage
     }
 
     /**
+     * Get all ReactField instances for a specific tab.
+     *
+     * @param string $tab_id Tab identifier.
+     * @return array<int, array> Array of React field configurations.
+     */
+    public function getReactFields(string $tab_id): array
+    {
+        $react_fields = [];
+        $sections = $this->getRenderableSectionIds($tab_id);
+
+        foreach ($sections as $section_id) {
+            if (!isset($this->sections[$section_id])) {
+                continue;
+            }
+
+            foreach ($this->sections[$section_id]->getFields() as $field) {
+                // Check if this is a ReactField instance and React is enabled
+                if ($field instanceof ReactField && $field->shouldUseReact()) {
+                    $react_fields[] = [
+                        'name' => $field->getName(),
+                        'type' => $field->getType(),
+                        'label' => $field->getLabel(),
+                        'component' => $field->getReactComponent(),
+                        'props' => $field->getReactProps(),
+                        'value' => $this->option_values[$field->getName()] ?? $field->getDefault(),
+                    ];
+                }
+            }
+        }
+
+        return $react_fields;
+    }
+
+    /**
+     * Check if the current tab has any React fields.
+     *
+     * @param string $tab_id Tab identifier.
+     * @return bool True if React fields are present.
+     */
+    public function hasReactFields(string $tab_id): bool
+    {
+        return !empty($this->getReactFields($tab_id));
+    }
+
+    /**
      * EnqueueAssets.
      *
      * @return void
      */
     public function enqueueAssets(string $hook_suffix): void
     {
-        if (
-            $hook_suffix !== 'settings_page_' . $this->menu_slug
-            && $hook_suffix !== $this->parent_slug . '_page_' . $this->menu_slug
-        ) {
+        $is_exact_settings_hook = $hook_suffix === 'settings_page_' . $this->menu_slug;
+        $is_exact_parent_hook = $hook_suffix === $this->parent_slug . '_page_' . $this->menu_slug;
+        $is_slug_match_hook = strpos($hook_suffix, $this->menu_slug) !== false;
+
+        if (!$is_exact_settings_hook && !$is_exact_parent_hook && !$is_slug_match_hook) {
             return;
         }
 
         TemplateLoader::enqueueAssets();
 
-        // Require a valid plugin URL; skip in library mode where URL is unavailable
-        if (!defined('HYPERPRESS_PLUGIN_URL') || empty(HYPERPRESS_PLUGIN_URL)) {
+        $plugin_url = '';
+        if (defined('HYPERFIELDS_PLUGIN_URL') && is_string(HYPERFIELDS_PLUGIN_URL) && HYPERFIELDS_PLUGIN_URL !== '') {
+            $plugin_url = HYPERFIELDS_PLUGIN_URL;
+        } elseif (function_exists('plugins_url')) {
+            $resolved = plugins_url('', dirname(__DIR__) . '/bootstrap.php');
+            if (is_string($resolved) && $resolved !== '') {
+                $plugin_url = trailingslashit($resolved);
+            }
+        }
+
+        if ($plugin_url === '') {
             return;
         }
 
         // Enqueue admin options JS for HyperFields options pages
+        $admin_options_script_version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7';
+        $admin_options_script_path = dirname(__DIR__) . '/assets/js/hyperfields-admin.js';
+        if (is_file($admin_options_script_path)) {
+            $mtime = filemtime($admin_options_script_path);
+            if ($mtime !== false) {
+                $admin_options_script_version = (string) $mtime;
+            }
+        }
+
         wp_enqueue_script(
             'hyperpress-admin-options',
-            defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL . 'assets/js/admin-options.js' : '',
+            $plugin_url . 'assets/js/hyperfields-admin.js',
             ['jquery'],
-            defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7',
+            $admin_options_script_version,
             true
         );
 
@@ -809,5 +900,96 @@ class OptionsPage
             'optionName' => $this->option_name,
             'activeTab' => $this->getActiveTab(),
         ]);
+
+        // Hide notices before JS relocates them under the sticky header.
+        // Keep selector list centralized to avoid JS/PHP drift.
+        $notice_selectors = implode(', ', [
+            '#wpbody-content > .notice',
+            '#wpbody-content > .update-nag',
+            '#wpbody-content > .updated',
+            '#wpbody-content > .error',
+            '.wrap > .notice',
+            '.wrap > .update-nag',
+            '.wrap > .updated',
+            '.wrap > .error',
+            '.wrap.hyperpress-options-wrap > .notice',
+            '.wrap.hyperpress-options-wrap > .update-nag',
+            '.wrap.hyperpress-options-wrap > .updated',
+            '.wrap.hyperpress-options-wrap > .error',
+            '.wrap > .notice:first-child',
+            '.wrap > .update-nag:first-child',
+            '.wrap > .updated:first-child',
+            '.wrap > .error:first-child',
+        ]);
+
+        wp_add_inline_style('hyperpress-admin', sprintf(
+            '%s { opacity: 0 !important; }',
+            $notice_selectors
+        ));
+
+        // Enqueue React assets if we have React fields to render
+        if (!empty($this->reactFieldsToRender)) {
+            $this->enqueueReactAssets();
+        }
+    }
+
+    /**
+     * Enqueue React assets for rendering ReactField instances.
+     *
+     * @return void
+     */
+    public function enqueueReactAssets(): void
+    {
+        // Enqueue WordPress React dependencies
+        wp_enqueue_script('wp-element');
+        wp_enqueue_script('wp-components');
+        wp_enqueue_script('wp-block-editor');
+        wp_enqueue_script('wp-i18n');
+
+        // Enqueue React app for HyperFields
+        $plugin_url = '';
+        if (defined('HYPERFIELDS_PLUGIN_URL') && is_string(HYPERFIELDS_PLUGIN_URL) && HYPERFIELDS_PLUGIN_URL !== '') {
+            $plugin_url = HYPERFIELDS_PLUGIN_URL;
+        } elseif (function_exists('plugins_url')) {
+            $resolved = plugins_url('', dirname(__DIR__) . '/bootstrap.php');
+            if (is_string($resolved) && $resolved !== '') {
+                $plugin_url = trailingslashit($resolved);
+            }
+        }
+
+        $react_app_path = $plugin_url !== '' ? $plugin_url . 'assets/js/dist/react-fields.js' : '';
+
+        if (empty($react_app_path)) {
+            return;
+        }
+
+        wp_enqueue_script(
+            'hyperfields-react-app',
+            $react_app_path,
+            ['wp-element', 'wp-components', 'wp-block-editor', 'wp-i18n'],
+            defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.1.0',
+            true
+        );
+
+        // Localize data for React app
+        wp_localize_script('hyperfields-react-app', 'hyperfieldsReactData', [
+            'fields' => $this->reactFieldsToRender,
+            'optionName' => $this->option_name,
+            'values' => $this->option_values,
+            'strings' => [
+                'saveChanges' => __('Save Changes', 'hyperfields'),
+                'saving' => __('Saving...', 'hyperfields'),
+                'saved' => __('Saved', 'hyperfields'),
+                'error' => __('Error', 'hyperfields'),
+            ],
+        ]);
+
+        // Enqueue React-specific styles
+        wp_enqueue_style(
+            'hyperfields-react-styles',
+            $plugin_url !== '' ? $plugin_url . 'assets/css/react-fields.css' : '',
+            ['wp-components'],
+            defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.1.0'
+        );
     }
 }

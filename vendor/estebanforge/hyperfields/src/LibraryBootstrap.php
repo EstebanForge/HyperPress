@@ -64,8 +64,8 @@ final class LibraryBootstrap
             TemplateLoader::init();
         }
 
-        if (class_exists(\HyperFields\Transfer\AuditLogger::class)) {
-            \HyperFields\Transfer\AuditLogger::init();
+        if (class_exists(Transfer\AuditLogger::class)) {
+            Transfer\AuditLogger::init();
         }
     }
 

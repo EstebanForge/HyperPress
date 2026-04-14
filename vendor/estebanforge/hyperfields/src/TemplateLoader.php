@@ -161,15 +161,15 @@ class TemplateLoader
         }
         $version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : (defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : '0.0.0');
 
-        // Always enqueue admin.css for HyperFields admin pages
+        // Always enqueue hyperfields-admin.css for HyperFields admin pages
         if (is_admin()) {
             wp_enqueue_style(
                 'hyperpress-admin',
-                $plugin_url . 'assets/css/admin.css',
+                $plugin_url . 'assets/css/hyperfields-admin.css',
                 [],
                 $version
             );
-            // In admin, enqueue base JS for HyperFields; CSS is covered by admin.css
+            // In admin, enqueue base JS for HyperFields; CSS is covered by hyperfields-admin.css
             wp_enqueue_script(
                 'hyperpress-conditional-fields',
                 $plugin_url . 'assets/js/conditional-fields.js',

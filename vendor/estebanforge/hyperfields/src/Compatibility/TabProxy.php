@@ -18,8 +18,7 @@ final class TabProxy
     public function __construct(
         private readonly string $key,
         private readonly string $label
-    ) {
-    }
+    ) {}
 
     /**
      * Add section.

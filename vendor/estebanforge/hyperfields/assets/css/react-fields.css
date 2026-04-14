@@ -1,0 +1,217 @@
+/**
+ * HyperFields React Components Styles
+ *
+ * Styles for React-enhanced fields in the options page.
+ * These complement the base hyperfields-admin.css with React-specific styling.
+ *
+ * @package HyperFields
+ */
+
+/* ==========================================
+   React Fields Container
+   ========================================== */
+
+.hyperpress-react-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.hyperpress-react-field-wrapper {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--hf-color-border-light, #f0f0f0);
+}
+
+.hyperpress-react-field-wrapper:last-child {
+    border-bottom: 0;
+}
+
+/* ==========================================
+   Field Label Overrides
+   ========================================== */
+
+.hyperpress-field-label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--hf-color-text, #1e1e1e);
+    margin-bottom: 8px;
+}
+
+.hyperpress-field-label .required {
+    color: var(--hf-color-danger, #d63638);
+    margin-left: 4px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   Component-Specific Styles
+   ========================================== */
+
+/* Text & Textarea Fields */
+.hyperpress-field-text .components-base-control,
+.hyperpress-field-textarea .components-base-control,
+.hyperpress-field-number .components-base-control,
+.hyperpress-field-email .components-base-control,
+.hyperpress-field-url .components-base-control {
+    margin-bottom: 0;
+}
+
+.hyperpress-field-text .components-text-control__input,
+.hyperpress-field-textarea .components-textarea-control__input,
+.hyperpress-field-number .components-text-control__input,
+.hyperpress-field-email .components-text-control__input,
+.hyperpress-field-url .components-text-control__input {
+    padding: 10px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    border-radius: 4px;
+}
+
+/* Color Field */
+.hyperpress-field-color {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.hyperpress-field-color .components-color-picker {
+    margin-top: 8px;
+}
+
+/* Image Field */
+.hyperpress-field-image {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.hyperpress-image-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.hyperpress-image-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background: var(--hf-color-bg-secondary, #f6f7f7);
+    border-radius: 4px;
+}
+
+.hyperpress-image-preview img {
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Checkbox Field */
+.hyperpress-field-checkbox .components-checkbox-control__label {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--hf-color-text, #1e1e1e);
+}
+
+/* Select Field */
+.hyperpress-field-select .components-select-control__input {
+    padding: 10px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    border-radius: 4px;
+}
+
+/* ==========================================
+   Helper Classes
+   ========================================== */
+
+.description {
+    display: block;
+    margin-top: 8px;
+    color: var(--hf-color-text-secondary, #646970);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ==========================================
+   Responsive Design
+   ========================================== */
+
+@media (max-width: 782px) {
+    .hyperpress-react-field-wrapper {
+        padding: 12px 0;
+    }
+
+    .hyperpress-image-preview {
+        padding: 12px;
+    }
+
+    .hyperpress-image-preview img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+}
+
+/* ==========================================
+   Dark Mode Support
+   ========================================== */
+
+@media (prefers-color-scheme: dark) {
+    .hyperpress-image-preview {
+        background: var(--hf-color-bg-secondary, #2c3338);
+    }
+}
+
+/* ==========================================
+   Loading States
+   ========================================== */
+
+.hyperpress-field-loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.hyperpress-field-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 1;
+}
+
+/* ==========================================
+   Error States
+   ========================================== */
+
+.hyperpress-field-error {
+    border: 1px solid var(--hf-color-danger, #d63638);
+    border-radius: 4px;
+    padding: 12px;
+    background: #fafafa;
+}
+
+.hyperpress-field-error .components-base-control__label {
+    color: var(--hf-color-danger, #d63638);
+}
+
+/* ==========================================
+   Animation & Transitions
+   ========================================== */
+
+.hyperpress-react-field-wrapper {
+    transition: background-color 0.2s ease;
+}
+
+.hyperpress-react-field-wrapper:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+@media (prefers-color-scheme: dark) {
+    .hyperpress-react-field-wrapper:hover {
+        background-color: rgba(255, 255, 255, 0.02);
+    }
+}

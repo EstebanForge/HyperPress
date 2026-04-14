@@ -370,52 +370,62 @@ if (!function_exists('hf_save_field')) {
 
 // Backward compatibility aliases for hp_ prefixed functions (HyperPress era)
 if (!function_exists('hp_get_field')) {
-    function hp_get_field(string $name, $source = null, array $args = []) {
+    function hp_get_field(string $name, $source = null, array $args = [])
+    {
         return hf_get_field($name, $source, $args);
     }
 }
 if (!function_exists('hp_update_field')) {
-    function hp_update_field(string $name, $value, $source = null, array $args = []): bool {
+    function hp_update_field(string $name, $value, $source = null, array $args = []): bool
+    {
         return hf_update_field($name, $value, $source, $args);
     }
 }
 if (!function_exists('hp_save_field')) {
-    function hp_save_field(string $name, $value, $source = null, array $args = []): bool {
+    function hp_save_field(string $name, $value, $source = null, array $args = []): bool
+    {
         return hf_save_field($name, $value, $source, $args);
     }
 }
 if (!function_exists('hp_delete_field')) {
-    function hp_delete_field(string $name, $source = null, array $args = []): bool {
+    function hp_delete_field(string $name, $source = null, array $args = []): bool
+    {
         return hf_delete_field($name, $source, $args);
     }
 }
 if (!function_exists('hp_resolve_field_context')) {
-    function hp_resolve_field_context($source = null, array $args = []): array {
+    function hp_resolve_field_context($source = null, array $args = []): array
+    {
         return hf_resolve_field_context($source, $args);
     }
 }
 if (!function_exists('hp_create_option_page')) {
-    function hp_create_option_page(string $page_title, string $menu_slug, string $prefix = ''): OptionsPage {
+    function hp_create_option_page(string $page_title, string $menu_slug, string $prefix = ''): OptionsPage
+    {
         return hf_option_page($page_title, $menu_slug, $prefix);
     }
 }
 if (!function_exists('hp_create_field')) {
-    function hp_create_field(string $type, string $name, string $label): Field {
+    function hp_create_field(string $type, string $name, string $label): Field
+    {
         return hf_field($type, $name, $label);
     }
 }
 if (!function_exists('hp_create_tabs')) {
-    function hp_create_tabs(string $name, string $label): TabsField {
+    function hp_create_tabs(string $name, string $label): TabsField
+    {
         return hf_tabs($name, $label);
     }
 }
 if (!function_exists('hp_create_repeater')) {
-    function hp_create_repeater(string $name, string $label): RepeaterField {
+    function hp_create_repeater(string $name, string $label): RepeaterField
+    {
         return hf_repeater($name, $label);
     }
 }
 if (!function_exists('hp_create_section')) {
-    function hp_create_section(string $id, string $title): OptionsSection {
+    function hp_create_section(string $id, string $title): OptionsSection
+    {
         return hf_section($id, $title);
     }
 }
@@ -444,13 +454,13 @@ if (!function_exists('hf_register_data_tools_page')) {
         string $capability = 'manage_options'
     ): void {
         ExportImportUI::registerPage(
-            parentSlug:           $parentSlug,
-            pageSlug:             $pageSlug,
-            options:              $options,
+            parentSlug: $parentSlug,
+            pageSlug: $pageSlug,
+            options: $options,
             allowedImportOptions: $allowedImportOptions,
-            prefix:               $prefix,
-            title:                $title,
-            capability:           $capability,
+            prefix: $prefix,
+            title: $title,
+            capability: $capability,
         );
     }
 }
@@ -498,7 +508,8 @@ if (!function_exists('hf_export_options')) {
      * @param array<string,array> $schemaMap   Optional schema rules keyed by option name.
      * @return string JSON string ready for download or storage.
      */
-    function hf_export_options(array $optionNames, string $prefix = '', array $schemaMap = []): string {
+    function hf_export_options(array $optionNames, string $prefix = '', array $schemaMap = []): string
+    {
         return ExportImport::exportOptions($optionNames, $prefix, $schemaMap);
     }
 }
@@ -512,7 +523,8 @@ if (!function_exists('hf_import_options')) {
      * @param string $prefix             Only import keys starting with this prefix. Default '' imports all.
      * @return array{success: bool, message: string, backup_keys?: array<string, string>}
      */
-    function hf_import_options(string $jsonString, array $allowedOptionNames = [], string $prefix = '', array $options = []): array {
+    function hf_import_options(string $jsonString, array $allowedOptionNames = [], string $prefix = '', array $options = []): array
+    {
         return ExportImport::importOptions($jsonString, $allowedOptionNames, $prefix, $options);
     }
 }
@@ -527,7 +539,8 @@ if (!function_exists('hf_diff_options')) {
      * @param array  $options            Optional behavior (for example ['mode' => 'replace']).
      * @return array
      */
-    function hf_diff_options(string $jsonString, array $allowedOptionNames = [], string $prefix = '', array $options = []): array {
+    function hf_diff_options(string $jsonString, array $allowedOptionNames = [], string $prefix = '', array $options = []): array
+    {
         return ExportImport::diffOptions($jsonString, $allowedOptionNames, $prefix, $options);
     }
 }

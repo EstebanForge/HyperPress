@@ -1,0 +1,794 @@
+/* ==========================================
+   HyperFields Admin Styles - Modern Refresh
+   WooCommerce-inspired design with cards,
+   better spacing, and contemporary UI
+   ========================================== */
+
+/*
+ * WordPress Admin CSS variable reference (core-exposed).
+ * Source of scheme overrides: wp-includes/css/dist/base-styles/admin-schemes.css
+ *
+ * Base defaults used across Gutenberg/admin package styles:
+ * --wp-block-synced-color: #7a00df;
+ * --wp-block-synced-color--rgb: 122, 0, 223;
+ * --wp-bound-block-color: var(--wp-block-synced-color);
+ * --wp-editor-canvas-background: #ddd;
+ * --wp-admin-theme-color: #007cba;
+ * --wp-admin-theme-color--rgb: 0, 124, 186;
+ * --wp-admin-theme-color-darker-10: rgb(0, 107, 160.5);
+ * --wp-admin-theme-color-darker-10--rgb: 0, 107, 160.5;
+ * --wp-admin-theme-color-darker-20: #005a87;
+ * --wp-admin-theme-color-darker-20--rgb: 0, 90, 135;
+ * --wp-admin-border-width-focus: 2px; (1.5px on high DPI)
+ *
+ * Admin color-scheme variables (via body.admin-color-*):
+ * light     -> --wp-admin-theme-color: #0085ba;
+ * modern    -> --wp-admin-theme-color: #3858e9;
+ * blue      -> --wp-admin-theme-color: #096484;
+ * coffee    -> --wp-admin-theme-color: #46403c;
+ * ectoplasm -> --wp-admin-theme-color: #523f6d;
+ * midnight  -> --wp-admin-theme-color: #e14d43;
+ * ocean     -> --wp-admin-theme-color: #627c83;
+ * sunrise   -> --wp-admin-theme-color: #dd823b;
+ *
+ * Common component-level accent var:
+ * --wp-components-color-accent (often used with fallback to --wp-admin-theme-color).
+ */
+/* CSS Variables for theming */
+:root {
+    --hf-color-primary: var(--wp-admin-theme-color, #2271b1);
+    --hf-color-text: #070707;
+    --hf-color-text-secondary: #0f0f0f;
+    --hf-color-border: #f0f0f0;
+    --hf-color-border-light: #cccccc;
+    --hf-color-bg: #ffffff;
+    --hf-color-bg-secondary: #f6f7f7;
+    --hf-color-danger: #d63638;
+    --hf-color-white: #ffffff;
+    --hf-color-transparent: transparent;
+    --hf-color-admin-text: #1d2327;
+    --hf-color-admin-text-muted: #50575e;
+    --hf-color-admin-text-subtle: #646970;
+    --hf-color-admin-border: #dcdcde;
+    --hf-color-admin-border-strong: #8c8f94;
+    --hf-color-admin-border-soft: #c3c4c7;
+    --hf-color-admin-accent: var(--wp-components-color-accent, var(--wp-admin-theme-color, #3858e9));
+    --hf-color-admin-accent-hover: var(--wp-components-color-accent-darker-10, var(--wp-admin-theme-color-darker-10, #2145e6));
+    --hf-color-tag-bg: #fbfbfc;
+    --hf-color-danger-bg: #fef7f7;
+    --hf-color-scrollbar: #888888;
+    --hf-color-focus-inverse: #555555;
+    --hf-color-header-shadow: rgba(85, 93, 102, 0.3);
+    --hf-color-focus-ring: rgba(var(--wp-admin-theme-color--rgb, 34, 113, 177), 0.1);
+    --hf-color-dropdown-shadow: rgba(0, 0, 0, 0.12);
+    --hf-radius: 8px;
+    --hf-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --hf-transition: 0.2s ease;
+    --hf-select-arrow-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23646970' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+}
+
+/* ==========================================
+   Layout & Containers
+   ========================================== */
+
+.hyperpress-options-wrap {
+    margin: 0.5rem 1rem 0 0;
+    --hf-header-bleed-x: 20px;
+    --hf-header-bleed-top: 8px;
+}
+
+.hyperpress-options-wrap h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.hyperpress-options-wrap .hyperpress-layout__header-heading {
+    font-size: 1.1rem;
+}
+
+/* ==========================================
+   Modern Tabs
+   ========================================== */
+
+.hyperpress-options-wrap .hyperpress-layout__header {
+    position: sticky;
+    top: 32px;
+    z-index: 30;
+    margin: 0;
+    padding: 0 0 1rem 0;
+    background: var(--hf-color-transparent);
+    transition: box-shadow var(--hf-transition);
+}
+
+.hyperpress-options-wrap .hyperpress-layout__header::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: calc(-1 * var(--hf-header-bleed-top));
+    right: calc(-1 * var(--hf-header-bleed-x));
+    bottom: 0;
+    left: calc(-1 * var(--hf-header-bleed-x));
+    background: var(--hf-color-white);
+}
+
+.hyperpress-options-wrap .hyperpress-layout__header.is-scrolled {
+    box-shadow: 0 8px 16px 0 var(--hf-color-header-shadow);
+}
+
+.hyperpress-options-wrap .hyperpress-layout__header-wrapper {
+    margin-bottom: 0;
+}
+
+.hyperpress-options-wrap .nav-tab-wrapper.hyperpress-nav-tab-wrapper {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 20px;
+    padding: 0;
+    background: var(--hf-color-transparent);
+    border-bottom: 1px solid var(--hf-color-admin-border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 28px;
+    align-items: flex-end;
+}
+
+.hyperpress-options-wrap .nav-tab-wrapper.hyperpress-nav-tab-wrapper::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    right: calc(-1 * var(--hf-header-bleed-x));
+    bottom: 0;
+    left: calc(-1 * var(--hf-header-bleed-x));
+    background: var(--hf-color-white);
+}
+
+.hyperpress-options-wrap .hyperpress-nav-tab-wrapper .hyperpress-nav-tab.nav-tab {
+    margin: 0;
+    padding: 14px 0 15px;
+    min-width: 50px;
+    border: none;
+    border-bottom: 3px solid var(--hf-color-transparent);
+    background: var(--hf-color-transparent);
+    color: var(--hf-color-admin-text-muted);
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.hyperpress-options-wrap .hyperpress-nav-tab-wrapper .hyperpress-nav-tab.nav-tab:hover {
+    color: var(--hf-color-admin-accent);
+    background: var(--hf-color-transparent);
+}
+
+.hyperpress-options-wrap .hyperpress-nav-tab-wrapper .hyperpress-nav-tab.nav-tab:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.hyperpress-options-wrap .hyperpress-nav-tab-wrapper .hyperpress-nav-tab.nav-tab.nav-tab-active {
+    color: var(--hf-color-admin-text);
+    border-bottom-color: var(--hf-color-admin-accent);
+    background: var(--hf-color-transparent);
+}
+
+.hyperpress-options-wrap .subsubsub.hyperpress-subsubsub {
+    float: none;
+    display: block;
+    width: 100%;
+    margin: 0 0 20px;
+    padding: 0 0 12px;
+    border-bottom: 1px solid var(--hf-color-admin-border);
+}
+
+.hyperpress-options-wrap .subsubsub.hyperpress-subsubsub li {
+    margin: 0;
+    list-style: none;
+}
+
+.hyperpress-options-wrap .subsubsub.hyperpress-subsubsub a {
+    color: var(--hf-color-admin-accent);
+    text-decoration: none;
+}
+
+.hyperpress-options-wrap .subsubsub.hyperpress-subsubsub a:hover {
+    color: var(--hf-color-admin-accent-hover);
+    text-decoration: underline;
+}
+
+.hyperpress-options-wrap .subsubsub.hyperpress-subsubsub a.current {
+    color: var(--hf-color-admin-text);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.hyperpress-options-wrap .hyperpress-notice-catcher {
+    margin: 0;
+    padding: 0;
+}
+
+.hyperpress-options-wrap .hyperpress-notice-catcher + .notice,
+.hyperpress-options-wrap .hyperpress-notice-catcher + .update-nag,
+.hyperpress-options-wrap .hyperpress-notice-catcher + .updated,
+.hyperpress-options-wrap .hyperpress-notice-catcher + .error {
+    margin-top: 0;
+}
+
+/* Notice relocate/enter transition */
+.hyperpress-options-wrap .notice.hf-notice-relocating,
+.hyperpress-options-wrap .update-nag.hf-notice-relocating,
+.hyperpress-options-wrap .updated.hf-notice-relocating,
+.hyperpress-options-wrap .error.hf-notice-relocating {
+    transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.hyperpress-options-wrap .notice.hf-notice-relocating.hf-notice-pending,
+.hyperpress-options-wrap .update-nag.hf-notice-relocating.hf-notice-pending,
+.hyperpress-options-wrap .updated.hf-notice-relocating.hf-notice-pending,
+.hyperpress-options-wrap .error.hf-notice-relocating.hf-notice-pending {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+.hyperpress-options-wrap .notice.hf-notice-relocating.hf-notice-enter,
+.hyperpress-options-wrap .update-nag.hf-notice-relocating.hf-notice-enter,
+.hyperpress-options-wrap .updated.hf-notice-relocating.hf-notice-enter,
+.hyperpress-options-wrap .error.hf-notice-relocating.hf-notice-enter {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hyperpress-tabs-wrapper {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--hf-color-border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.hyperpress-tab {
+    padding: 12px 20px;
+    background: var(--hf-color-transparent);
+    border: none;
+    border-bottom: 2px solid var(--hf-color-transparent);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--hf-color-text-secondary);
+    transition: all var(--hf-transition);
+    white-space: nowrap;
+    position: relative;
+}
+
+.hyperpress-tab:hover {
+    color: var(--hf-color-text);
+    background: var(--hf-color-bg-secondary);
+}
+
+.hyperpress-tab:focus {
+    outline: 2px solid var(--hf-color-primary);
+    outline-offset: -2px;
+}
+
+.hyperpress-tab.active {
+    color: var(--hf-color-primary);
+    border-bottom-color: var(--hf-color-primary);
+    font-weight: 600;
+}
+
+/* ==========================================
+   Card Layout
+   ========================================== */
+
+.hyperpress-card {
+    background: var(--hf-color-bg);
+    border-radius: var(--hf-radius);
+    box-shadow: var(--hf-shadow);
+    padding: 24px;
+    margin-bottom: 20px;
+    border: 1px solid var(--hf-color-border-light);
+}
+
+.hyperpress-card:last-child {
+    margin-bottom: 0;
+}
+
+.hyperpress-fields-group {
+    margin-top: 20px;
+}
+
+/* ==========================================
+   Section Headings
+   ========================================== */
+
+.hyperpress-options-wrap h2 {
+    margin: 0 0 16px;
+    padding-bottom: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--hf-color-text);
+    border-bottom: 1px solid var(--hf-color-border-light);
+}
+
+.hyperpress-options-wrap p {
+    margin: 0 0 12px;
+    color: var(--hf-color-text-secondary);
+    line-height: 1.6;
+}
+
+/* ==========================================
+   Field Rows
+   ========================================== */
+
+.hyperpress-field-wrapper {
+    padding: 16px 0;
+    transition: background-color var(--hf-transition);
+}
+
+.hyperpress-field-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.hyperpress-field-label {
+    font-weight: 600;
+    font-size: 14px;
+    padding-top: 4px;
+}
+
+.hyperpress-field-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hyperpress-field-input-wrapper label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.hyperpress-field-input-wrapper input[type="checkbox"],
+.hyperpress-field-input-wrapper input[type="radio"] {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.hyperpress-field-input-wrapper .description {
+    display: block;
+    margin: 0;
+    color: var(--hf-color-text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ==========================================
+   Input Styling
+   ========================================== */
+
+.hyperpress-field-input .regular-text,
+.hyperpress-field-input input[type="text"],
+.hyperpress-field-input input[type="url"],
+.hyperpress-field-input input[type="email"],
+.hyperpress-field-input input[type="number"],
+.hyperpress-field-input input[type="color"],
+.hyperpress-field-input select,
+.hyperpress-field-input textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--hf-color-border);
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: border-color var(--hf-transition), box-shadow var(--hf-transition);
+}
+
+.hyperpress-field-input .regular-text:focus,
+.hyperpress-field-input input[type="text"]:focus,
+.hyperpress-field-input input[type="url"]:focus,
+.hyperpress-field-input input[type="email"]:focus,
+.hyperpress-field-input input[type="number"]:focus,
+.hyperpress-field-input select:focus,
+.hyperpress-field-input textarea:focus {
+    outline: none;
+    border-color: var(--hf-color-primary);
+    box-shadow: 0 0 0 3px var(--hf-color-focus-ring);
+}
+
+.hyperpress-field-input textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.hyperpress-field-input select {
+    cursor: pointer;
+    appearance: none;
+    background-image: var(--hf-select-arrow-icon);
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+/* ==========================================
+   Required Field Indicator
+   ========================================== */
+
+.hyperpress-field-wrapper .required {
+    color: var(--hf-color-danger);
+    margin-left: 4px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   Submit Button
+   ========================================== */
+
+.hyperpress-options-wrap .submit {
+    margin-top: 24px;
+    padding: 20px 0;
+    border-top: 1px solid var(--hf-color-border-light);
+}
+
+.hyperpress-options-wrap .submit .button-primary {
+    transition: background-color var(--hf-transition);
+}
+
+.hyperpress-options-wrap .submit .button-primary:hover {
+
+}
+
+/* ==========================================
+   Map Field
+   ========================================== */
+
+.hyperpress-map-field .hyperpress-map-canvas {
+    background: var(--hf-color-bg-secondary);
+    border-radius: 4px;
+    border: 1px solid var(--hf-color-border);
+}
+
+/* ==========================================
+   Export Options Table
+   ========================================== */
+
+.hf-export-options {
+    margin-top: 16px;
+}
+
+.hf-export-options-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.hf-export-options-toolbar > div {
+    display: inline-flex;
+    gap: 8px;
+}
+
+.hf-export-options-table-wrap {
+    max-height: 480px;
+    overflow: auto;
+    border: 1px solid var(--hf-color-border);
+    border-radius: var(--hf-radius);
+    background: var(--hf-color-bg);
+}
+
+.hf-export-options-table {
+    margin: 0;
+    border: 0;
+}
+
+.hf-export-options-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--hf-color-bg-secondary);
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 1px solid var(--hf-color-border);
+}
+
+.hf-export-options-table .hf-export-option-select-column {
+    width: 100px;
+    text-align: right;
+}
+
+.hf-export-options-table .hf-export-option-checkbox-cell {
+    text-align: right;
+    vertical-align: middle;
+}
+
+.hf-export-options-table .hf-export-option-checkbox-cell input[type="checkbox"] {
+    margin: 0;
+}
+
+.hf-export-options-filter {
+    margin-top: 10px;
+}
+
+.hf-export-options-filter-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.hf-export-options-filter-header > label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.hf-export-options-filter-header .description {
+    margin: 0;
+    font-weight: 400;
+}
+
+.hf-export-options-filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.hf-export-options-filter-controls input[type="search"] {
+    flex: 1 1 360px;
+    min-width: 0;
+    max-width: none;
+}
+
+/* ==========================================
+   Enhanced Multiselect Styles
+   ========================================== */
+
+.hf-multiselect-container {
+    position: relative;
+    border: 1px solid var(--hf-color-admin-border-strong);
+    padding: 8px;
+    background: var(--hf-color-white);
+    border-radius: 4px;
+    max-width: 130ch;
+    box-sizing: border-box;
+}
+
+.hf-multiselect-search {
+    width: 100%;
+    min-height: 34px;
+    padding: 5px 9px;
+    margin-bottom: 8px;
+    border: 1px solid var(--hf-color-admin-border-strong);
+    border-radius: 3px;
+    font-size: 14px;
+    line-height: 1.4;
+    box-sizing: border-box;
+    background: var(--hf-color-white);
+    color: var(--hf-color-admin-text);
+}
+
+.hf-multiselect-search:focus {
+    outline: none;
+    border-color: var(--hf-color-primary);
+    box-shadow: 0 0 0 1px var(--hf-color-primary);
+}
+
+.hf-multiselect-selected {
+    min-height: 32px;
+    padding: 4px;
+    margin-bottom: 8px;
+    border: 1px solid var(--hf-color-admin-border);
+    border-radius: 3px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    background: var(--hf-color-white);
+}
+
+.hf-multiselect-placeholder {
+    color: var(--hf-color-admin-text-subtle);
+    padding: 5px;
+}
+
+.hf-multiselect-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--hf-color-tag-bg);
+    color: var(--hf-color-admin-text);
+    border: 1px solid var(--hf-color-admin-border-soft);
+    padding: 2px 7px;
+    border-radius: 2px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.hf-multiselect-remove {
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1;
+    color: var(--hf-color-admin-text-subtle);
+    border-radius: 2px;
+    padding: 1px 2px;
+}
+
+.hf-multiselect-remove:hover {
+    color: var(--hf-color-danger);
+    background: var(--hf-color-danger-bg);
+}
+
+.hf-multiselect-options {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--hf-color-admin-border-strong);
+    border-radius: 3px;
+    background: var(--hf-color-white);
+    position: absolute;
+    top: 100%;
+    left: 8px;
+    width: calc(100% - 16px);
+    margin-top: 2px;
+    z-index: 1000;
+    box-shadow: 0 1px 3px var(--hf-color-dropdown-shadow);
+    display: none;
+}
+
+.hf-multiselect-option {
+    padding: 7px 10px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--hf-color-admin-border);
+    transition: background-color var(--hf-transition), color var(--hf-transition);
+    color: var(--hf-color-admin-text);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.hf-multiselect-option:last-child {
+    border-bottom: none;
+}
+
+.hf-multiselect-option:hover {
+    background-color: var(--hf-color-bg-secondary);
+}
+
+.hf-multiselect-option.selected {
+    background-color: var(--hf-color-white);
+    color: var(--hf-color-admin-text);
+    font-weight: 500;
+    position: relative;
+    padding-right: 28px;
+}
+
+.hf-multiselect-option.selected::after {
+    content: "✓";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--hf-color-admin-accent);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.hf-multiselect-option.selected:hover {
+    background-color: var(--hf-color-bg-secondary);
+}
+
+.hf-multiselect-option.hf-multiselect-option-focused {
+    background-color: var(--hf-color-focus-inverse);
+    color: var(--hf-color-white);
+    box-shadow: inset 0 0 0 1px var(--hf-color-admin-border-soft);
+    outline: none;
+}
+
+/* Scrollbar styling for options list */
+.hf-multiselect-options::-webkit-scrollbar {
+    width: 8px;
+}
+
+.hf-multiselect-options::-webkit-scrollbar-track {
+    background: var(--hf-color-bg-secondary);
+    border-radius: 4px;
+}
+
+.hf-multiselect-options::-webkit-scrollbar-thumb {
+    background: var(--hf-color-scrollbar);
+    border-radius: 4px;
+}
+
+.hf-multiselect-options::-webkit-scrollbar-thumb:hover {
+    background: var(--hf-color-focus-inverse);
+}
+
+/* ==========================================
+   Responsive Design
+   ========================================== */
+
+@media (max-width: 782px) {
+    .hyperpress-options-wrap {
+        margin: 0;
+        padding: 16px;
+    }
+
+    .hyperpress-options-wrap h1 {
+        font-size: 24px;
+    }
+
+    .hyperpress-options-wrap .hyperpress-layout__header {
+        top: 46px;
+        margin: 0;
+        padding: 0 0 1rem 0;
+    }
+
+    .hyperpress-field-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .hyperpress-field-label {
+        padding-top: 0;
+    }
+
+    .hyperpress-tabs-wrapper {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .hyperpress-options-wrap .nav-tab-wrapper.hyperpress-nav-tab-wrapper {
+        flex-wrap: nowrap;
+        gap: 0 20px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .hyperpress-options-wrap .hyperpress-nav-tab-wrapper .hyperpress-nav-tab.nav-tab {
+        font-size: 14px;
+    }
+
+    .hyperpress-options-wrap .subsubsub.hyperpress-subsubsub {
+        padding: 12px 0;
+        margin-bottom: 20px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+    }
+
+    .hf-export-options-filter-controls {
+        flex-wrap: wrap;
+    }
+
+    .hf-export-options-filter-header {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+}
+
+/* ==========================================
+   Dark Mode Support (future-proofing)
+   ========================================== */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --hf-color-text: #f0f0f1;
+        --hf-color-text-secondary: #787878;
+        --hf-color-border: #3c434a;
+        --hf-color-border-light: #cccccc;
+        --hf-color-bg: #1d2327;
+        --hf-color-bg-secondary: #161b1e;
+    }
+}

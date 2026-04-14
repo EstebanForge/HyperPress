@@ -202,6 +202,7 @@ class ComposerStaticInitc7db29f2924cd24a3bcee7e30edc65e6
         'HyperFields\\OptionsPage' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/OptionsPage.php',
         'HyperFields\\OptionsSection' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/OptionsSection.php',
         'HyperFields\\PostField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/PostField.php',
+        'HyperFields\\ReactField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/ReactField.php',
         'HyperFields\\Registry' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Registry.php',
         'HyperFields\\RepeaterField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/RepeaterField.php',
         'HyperFields\\SeparatorField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/SeparatorField.php',

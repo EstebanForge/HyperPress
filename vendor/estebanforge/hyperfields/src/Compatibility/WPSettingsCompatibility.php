@@ -181,8 +181,7 @@ final class WPSettingsCompatibility
         TabProxy $tab_proxy,
         SectionProxy $section_proxy,
         \HyperFields\OptionsSection $section
-    ): void
-    {
+    ): void {
         $type_map = self::resolveLegacyOptionTypeMap();
         $section_args = $section_proxy->getArgs();
         $section_slug = isset($section_args['slug']) && is_string($section_args['slug']) && $section_args['slug'] !== ''
@@ -586,19 +585,15 @@ final class WPSettingsCompatibility
             : sanitize_key($section_proxy->getId() . '_' . $type);
         $label = isset($args['label']) && is_string($args['label']) ? $args['label'] : '';
 
-        $settings = new class($option_name)
-        {
+        $settings = new class($option_name) {
             /**
              *   construct.
              */
-            public function __construct(public string $option_name)
-            {
-            }
+            public function __construct(public string $option_name) {}
         };
 
         $tab_slug = $section_proxy->getTabKey();
-        $tab = new class($settings, $tab_slug, $tab_option_level)
-        {
+        $tab = new class($settings, $tab_slug, $tab_option_level) {
             /**
              *   construct.
              */
@@ -606,8 +601,7 @@ final class WPSettingsCompatibility
                 public object $settings,
                 public string $slug,
                 private bool $option_level
-            ) {
-            }
+            ) {}
 
             /**
              * Is option level.
@@ -624,8 +618,7 @@ final class WPSettingsCompatibility
         $section_slug = isset($section_args['slug']) && is_string($section_args['slug']) && $section_args['slug'] !== ''
             ? $section_args['slug']
             : $section_proxy->getId();
-        $section = new class($tab, $section_slug, $section_option_level)
-        {
+        $section = new class($tab, $section_slug, $section_option_level) {
             /**
              *   construct.
              */
@@ -633,8 +626,7 @@ final class WPSettingsCompatibility
                 public object $tab,
                 public string $slug,
                 private bool $option_level
-            ) {
-            }
+            ) {}
 
             /**
              * Is option level.

@@ -2,7 +2,7 @@
   "name": "estebanforge/hyperblocks",
   "description": "HyperBlocks: A powerful block library for WordPress with fluent API and field integration.",
   "type": "library",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "license": "GPL-2.0-or-later",
   "keywords": [
     "wordpress",
@@ -26,15 +26,15 @@
   ],
   "require": {
     "php": ">=8.1",
-    "estebanforge/hyperfields": "^1.0"
+    "estebanforge/hyperfields": "^1"
   },
   "require-dev": {
-    "phpunit/phpunit": "^12.0",
-    "pestphp/pest": "^4.4",
-    "brain/monkey": "^2.6",
-    "mockery/mockery": "^1.6",
-    "friendsofphp/php-cs-fixer": "^3.0",
-    "squizlabs/php_codesniffer": "^3.0"
+    "phpunit/phpunit": "^12",
+    "pestphp/pest": "^4",
+    "brain/monkey": "^2",
+    "mockery/mockery": "^1",
+    "friendsofphp/php-cs-fixer": "^3",
+    "squizlabs/php_codesniffer": "^3"
   },
   "autoload": {
     "psr-4": {

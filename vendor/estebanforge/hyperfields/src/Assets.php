@@ -38,5 +38,17 @@ class Assets
             HYPERFIELDS_VERSION,
             true
         );
+
+        // Only enqueue enhanced multiselect JS if we have enhanced multiselects on the page
+        global $pagenow;
+        if ($pagenow === 'options-general.php' || did_action('hyperfields_enhanced_multiselect')) {
+            wp_enqueue_script(
+                'hyperfields-multiselect-enhanced',
+                HYPERFIELDS_PLUGIN_URL . 'assets/js/multiselect-enhanced.js',
+                ['jquery'],
+                HYPERFIELDS_VERSION,
+                true
+            );
+        }
     }
 }

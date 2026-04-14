@@ -128,7 +128,7 @@ class Manager
             ]
         );
 
-        /**
+        /*
          * Fires after Transfer Manager export completes.
          *
          * @param array $result
@@ -281,7 +281,7 @@ class Manager
             'errors' => $errors,
         ];
 
-        /**
+        /*
          * Fires after Transfer Manager import completes.
          *
          * @param array $result
