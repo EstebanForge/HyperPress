@@ -75,7 +75,7 @@ done
 
 # Update WordPress.org readme stable tag when present
 if [[ -f "$PROJECT_DIR/README.txt" ]]; then
-  if sedi -E "s/(Stable tag:)[[:space:]]*[0-9]+\.[0-9]+\.[0-9]+/\1 $NEW_VERSION/" "$PROJECT_DIR/README.txt"; then
+  if sedi -E "s/^Stable tag: .*/Stable tag: $NEW_VERSION/" "$PROJECT_DIR/README.txt"; then
     FILES_UPDATED+=("README.txt (Stable tag)")
   fi
 fi
