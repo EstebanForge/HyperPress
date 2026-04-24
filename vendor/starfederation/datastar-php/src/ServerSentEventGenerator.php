@@ -44,7 +44,11 @@ class ServerSentEventGenerator
      */
     public static function readSignals(): array
     {
-        $input = $_GET[Consts::DATASTAR_KEY] ?? file_get_contents('php://input');
+        if (in_array($_SERVER['REQUEST_METHOD'], ['GET', 'DELETE'])) {
+            $input = $_GET[Consts::DATASTAR_KEY];
+        } else {
+            $input = file_get_contents('php://input');
+        }
         $signals = $input ? json_decode($input, true) : [];
 
         return is_array($signals) ? $signals : [];

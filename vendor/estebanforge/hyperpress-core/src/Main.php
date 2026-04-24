@@ -241,8 +241,8 @@ class Main
                 'version' => '0.12.4',
             ],
             'datastar' => [
-                'url' => 'https://cdn.jsdelivr.net/gh/starfederation/datastar@main/bundles/datastar.js',
-                'version' => '1.0.0',
+                'url' => 'https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.1/bundles/datastar.js',
+                'version' => '1.0.1',
             ],
             'htmx_extensions' => [
                 'sse' => [

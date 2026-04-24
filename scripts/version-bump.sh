@@ -6,6 +6,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 PACKAGE_NAME="$(basename "$PROJECT_DIR")"
 
+cd "$PROJECT_DIR" || exit 1
+
 CURRENT_VERSION=$(awk -F'"' '/"version":/{print $4; exit}' "$PROJECT_DIR/composer.json")
 
 if [[ -z "${CURRENT_VERSION:-}" ]]; then
@@ -54,31 +56,46 @@ echo ""
 echo "  Bumping: $CURRENT_VERSION -> $NEW_VERSION"
 echo ""
 
+FILES_UPDATED=()
+
 # Update composer.json version field
-sedi "s/\"version\": \"$CURRENT_VERSION\"/\"version\": \"$NEW_VERSION\"/" "$PROJECT_DIR/composer.json"
-echo "  ✓ composer.json"
+if sedi "s/\"version\": \"$CURRENT_VERSION\"/\"version\": \"$NEW_VERSION\"/" "$PROJECT_DIR/composer.json"; then
+  FILES_UPDATED+=("composer.json")
+fi
 
 # Update WordPress plugin header version if present
 for candidate in hyperpress.php api-for-htmx.php hyperfields.php hyperblocks.php; do
   file="$PROJECT_DIR/$candidate"
   if [[ -f "$file" ]]; then
-    sedi -E "s/^(\s*\*\s*Version:\s*).*/\1$NEW_VERSION/" "$file"
-    echo "  ✓ $candidate"
+    if sedi -E "s/(\* Version:) +[0-9]+\.[0-9]+\.[0-9]+/\1 $NEW_VERSION/" "$file"; then
+      FILES_UPDATED+=("$candidate (header)")
+    fi
   fi
 done
 
 # Update WordPress.org readme stable tag when present
 if [[ -f "$PROJECT_DIR/README.txt" ]]; then
-  sedi -E "s/^(Stable tag:\s*).*/\1$NEW_VERSION/" "$PROJECT_DIR/README.txt"
-  echo "  ✓ README.txt (Stable tag)"
+  if sedi -E "s/(Stable tag:)[[:space:]]*[0-9]+\.[0-9]+\.[0-9]+/\1 $NEW_VERSION/" "$PROJECT_DIR/README.txt"; then
+    FILES_UPDATED+=("README.txt (Stable tag)")
+  fi
 fi
 
 # Update security policy supported versions when present
 if [[ -f "$PROJECT_DIR/SECURITY.md" ]]; then
-  sedi -E "s/^(\|\s*)[0-9]+\.[0-9]+\.[0-9]+(\s*\|?\s*:white_check_mark:)/\1$NEW_VERSION\2/" "$PROJECT_DIR/SECURITY.md"
-  sedi -E "s/^(\|\s*<)[0-9]+\.[0-9]+\.[0-9]+(\s*\|?\s*:x:)/\1$NEW_VERSION\2/" "$PROJECT_DIR/SECURITY.md"
-  echo "  ✓ SECURITY.md"
+  # Update current version row (| X.Y.Z | :white_check_mark: |)
+  if sedi -E "s/^[|][[:space:]]*[0-9]+\.[0-9]+\.[0-9]+[[:space:]]*[|][[:space:]]*:white_check_mark:/| $NEW_VERSION | :white_check_mark:/" "$PROJECT_DIR/SECURITY.md"; then
+    FILES_UPDATED+=("SECURITY.md (current version)")
+  fi
+  # Update previous version marker (| <X.Y.Z | :x: |)
+  if sedi -E "s/^[|][[:space:]]*<[0-9]+\.[0-9]+\.[0-9]+[[:space:]]*[|]/| <$NEW_VERSION |/" "$PROJECT_DIR/SECURITY.md"; then
+    FILES_UPDATED+=("SECURITY.md (previous marker)")
+  fi
 fi
+
+echo "  ✓ Files updated:"
+for file in "${FILES_UPDATED[@]}"; do
+  echo "    - $file"
+done
 
 echo ""
 echo "┌─────────────────────────────────────┐"
@@ -86,6 +103,7 @@ echo "│  Version bumped to $NEW_VERSION"
 echo "└─────────────────────────────────────┘"
 echo ""
 echo "  Next steps:"
-echo "    1. Update changelog/release notes"
-echo "    2. composer production"
-echo "    3. git add -A && git commit -m 'Bump version to $NEW_VERSION'"
+echo "    1. Update CHANGELOG.md with release notes"
+echo "    2. Run: composer run production"
+echo "    3. Commit: git add -A && git commit -m 'Bump version to $NEW_VERSION'"
+echo ""

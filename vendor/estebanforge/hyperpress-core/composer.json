@@ -2,7 +2,7 @@
   "name": "estebanforge/hyperpress-core",
   "description": "Core HyperPress runtime library: routing, rendering, assets, admin options, and hypermedia integrations.",
   "type": "library",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "GPL-2.0-or-later",
   "authors": [
     {

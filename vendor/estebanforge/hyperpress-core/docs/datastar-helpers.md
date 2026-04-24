@@ -40,16 +40,16 @@ Frontend HTML to consume the SSE endpoint:
 
 ```html
 <!-- Container for the Datastar component -->
-<div data-signals-delay="400">
+<div data-signals:delay="400">
     <h1>Datastar SDK Demo</h1>
     <p>SSE events will be streamed from the backend to the frontend.</p>
 
     <div>
         <label for="delay">Delay in milliseconds</label>
-        <input data-bind-delay id="delay" type="number" step="100" min="0" />
+        <input data-bind:delay id="delay" type="number" step="100" min="0" />
     </div>
 
-    <button data-on-click="@get('<?php echo hp_get_endpoint_url('my-sse-endpoint'); ?>')">
+    <button data-on:click="@get('<?php echo hp_get_endpoint_url('my-sse-endpoint'); ?>')">
         Start
     </button>
 </div>
@@ -59,9 +59,9 @@ Frontend HTML to consume the SSE endpoint:
 ```
 
 This demonstrates:
-- Setting initial signal values with `data-signals-delay`.
-- Binding signals to inputs with `data-bind-delay`.
-- Triggering the SSE stream with a button using `data-on-click`.
+- Setting initial signal values with `data-signals:delay`.
+- Binding signals to inputs with `data-bind:delay`.
+- Triggering the SSE stream with a button using `data-on:click`.
 
 The server receives the `delay` signal to control the stream speed while the `#message` div updates in real time.
 
@@ -282,33 +282,33 @@ Here's a complete frontend-backend example showing how all helper functions work
 **Frontend HTML:**
 ```html
 <!-- Live search with real-time validation -->
-<div data-signals-query="" data-signals-results="[]" data-signals-loading="false">
+<div data-signals:query="" data-signals:results="[]" data-signals:loading="false">
     <h3>User Search</h3>
 
     <!-- Search input with live validation -->
     <input
         type="text"
-        data-bind-query
-        data-on-input="@get('<?php hp_endpoint_url('search-users-validate'); ?>')"
+        data-bind:query
+        data-on:input="@get('<?php hp_endpoint_url('search-users-validate'); ?>')"
         placeholder="Search users..."
     />
 
     <!-- Search button -->
     <button
-        data-on-click="@get('<?php hp_endpoint_url('search-users'); ?>')"
-        data-bind-disabled="loading"
+        data-on:click="@get('<?php hp_endpoint_url('search-users'); ?>')"
+        data-bind:disabled="$loading"
     >
-        <span data-show="!loading">Search</span>
-        <span data-show="loading">Searching...</span>
+        <span data-show="!$loading">Search</span>
+        <span data-show="$loading">Searching...</span>
     </button>
 
     <!-- Results container -->
-    <div id="search-results" data-show="results.length > 0">
+    <div id="search-results" data-show="$results.length > 0">
         <!-- Results will be populated via SSE -->
     </div>
 
     <!-- No results message -->
-    <div data-show="results.length === 0 && !loading && query.length > 0">
+    <div data-show="$results.length === 0 && !$loading && $query.length > 0">
         No users found
     </div>
 </div>
@@ -393,7 +393,7 @@ foreach ($users as $user) {
     $results_html .= sprintf(
         '<div class="user-item" data-user-id="%d">
             <strong>%s</strong> (%s)
-            <button data-on-click="@get(\'%s\', {user_id: %d})">View Details</button>
+            <button data-on:click="@get(\'%s\', {user_id: %d})">View Details</button>
         </div>',
         $user->ID,
         esc_html($user->display_name),
@@ -443,32 +443,32 @@ Here's a complete example showing how to integrate rate limiting with user feedb
 **Frontend HTML:**
 ```html
 <!-- Rate limit aware interface -->
-<div data-signals-rate_limited="false" data-signals-requests_remaining="30">
+<div data-signals:rate_limited="false" data-signals:requests_remaining="30">
     <h3>Real-time Chat</h3>
 
     <!-- Rate limit status display -->
-    <div id="rate-limit-status" data-show="rate_limited">
+    <div id="rate-limit-status" data-show="$rate_limited">
         <div class="warning">Rate limit reached. Please wait before sending more messages.</div>
     </div>
 
     <!-- Requests remaining indicator -->
-    <div class="rate-info" data-show="!rate_limited && requests_remaining <= 10">
-        <small>Requests remaining: <span data-text="requests_remaining"></span></small>
+    <div class="rate-info" data-show="!$rate_limited && $requests_remaining <= 10">
+        <small>Requests remaining: <span data-text="$requests_remaining"></span></small>
     </div>
 
     <!-- Chat input -->
     <input
         type="text"
-        data-bind-message
-        data-on-keyup.enter="@get('<?php hp_endpoint_url('send-message'); ?>')"
-        data-bind-disabled="rate_limited"
+        data-bind:message
+        data-on:keyup.enter="@get('<?php hp_endpoint_url('send-message'); ?>')"
+        data-bind:disabled="$rate_limited"
         placeholder="Type your message..."
     />
 
     <!-- Send button -->
     <button
-        data-on-click="@get('<?php hp_endpoint_url('send-message'); ?>')"
-        data-bind-disabled="rate_limited"
+        data-on:click="@get('<?php hp_endpoint_url('send-message'); ?>')"
+        data-bind:disabled="$rate_limited"
     >
         Send Message
     </button>
@@ -555,7 +555,7 @@ hp_ds_execute_script("
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
     // Brief success indicator
-    const input = document.querySelector('[data-bind-message]');
+    const input = document.querySelector('[data-bind\\:message]');
     input.style.borderColor = '#28a745';
     setTimeout(() => { input.style.borderColor = ''; }, 1000);
 ");

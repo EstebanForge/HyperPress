@@ -590,19 +590,20 @@ class Assets
         // Datastar Configuration
         if ($datastar_loaded) {
             $inline_script_parts[] = "
-    // Datastar: Auto-configure nonces using official method
-    document.addEventListener('DOMContentLoaded', function() {
-        if (typeof window.ds !== 'undefined') {
-            // Set global fetch headers for all Datastar requests
-            const nonce = getHyperPressNonce();
-            if (nonce) {
-                // Use Datastar's official method to set default headers
-                window.ds.store.upsertSignal('fetchHeaders', {
-                    'X-WP-Nonce': nonce
-                });
+    // Datastar v1.0+: Auto-configure nonces for all Datastar fetch requests
+    (function() {
+        const originalFetch = window.fetch;
+        window.fetch = async (...args) => {
+            const [resource, config = {}] = args;
+            if (config.headers && (config.headers['Datastar-Request'] || config.headers['datastar-request'])) {
+                const nonce = getHyperPressNonce();
+                if (nonce && !config.headers['X-WP-Nonce'] && !config.headers['x-wp-nonce']) {
+                    config.headers['X-WP-Nonce'] = nonce;
+                }
             }
-        }
-    });";
+            return originalFetch(resource, config);
+        };
+    })();";
         }
 
         // Close the IIFE
