@@ -264,33 +264,29 @@ if (!empty($_POST) && (!isset($hp_nonce) || !wp_verify_nonce(sanitize_text_field
                 </p>
 
                 <div class="demo-examples"
-                    data-store='{"message": "", "inputData": "Hello Datastar!", "loading": false}'>
+                    data-signals='{"message": "", "inputData": "Hello Datastar!", "loading": false}'>
 
                     <div class="example-item">
                         <h4>Simple GET Request</h4>
-                        <button data-on-click="$$get('<?php echo hp_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=simple_get')"
-                            data-header="X-WP-Nonce:<?php echo wp_create_nonce('hyperpress_nonce'); ?>"
-                            data-on-load-start="loading = true"
-                            data-on-load-end="loading = false"
+                        <button data-on:click="@get('<?php echo hp_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=simple_get')"
+                            data-indicator:loading
                             class="button">
-                            <span data-show="!loading">Load Content</span>
-                            <span data-show="loading">Loading...</span>
+                            <span data-show="!$loading">Load Content</span>
+                            <span data-show="$loading">Loading...</span>
                         </button>
-                        <div data-show="message" data-text="message" class="response-area"></div>
+                        <div data-show="$message" data-text="$message" class="response-area"></div>
                     </div>
 
                     <div class="example-item">
                         <h4>POST with Data Binding</h4>
-                        <input type="text" data-model="inputData" placeholder="Enter some text" class="input-field">
-                        <button data-on-click="$$post('<?php echo hp_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'post_data', user_data: inputData})"
-                            data-header="X-WP-Nonce:<?php echo wp_create_nonce('hyperpress_nonce'); ?>"
-                            data-on-load-start="loading = true"
-                            data-on-load-end="loading = false"
+                        <input type="text" data-bind="inputData" placeholder="Enter some text" class="input-field">
+                        <button data-on:click="@post('<?php echo hp_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'post_data', user_data: $inputData})"
+                            data-indicator:loading
                             class="button">
-                            <span data-show="!loading">Send Data</span>
-                            <span data-show="loading">Sending...</span>
+                            <span data-show="!$loading">Send Data</span>
+                            <span data-show="$loading">Sending...</span>
                         </button>
-                        <p data-show="inputData">You typed: <strong data-text="inputData"></strong></p>
+                        <p data-show="$inputData">You typed: <strong data-text="$inputData"></strong></p>
                     </div>
 
                     <div style="text-align: center; margin-top: 20px;">

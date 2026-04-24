@@ -58,17 +58,5 @@ $response_data = [
 // Merge any extra data
 $response_data = array_merge($response_data, $extra_data);
 
-// Send appropriate headers for Datastar store merging
-if (!headers_sent()) {
-    // For Datastar, we can send data that gets merged into the store
-    header('Content-Type: text/vnd.datastar');
-
-    // Send a merge fragment that updates the store
-    echo 'data: merge ' . wp_json_encode($response_data) . "\n\n";
-} else {
-    // Fallback to standard response
-    hp_send_header_response(
-        wp_create_nonce('hyperpress_nonce'),
-        $response_data
-    );
-}
+// Update signals on the client side using the v1.0 compatible helper
+hp_ds_patch_signals($response_data);

@@ -363,7 +363,7 @@ class Options
             __('PHP Version', 'api-for-htmx') => $php_version,
             __('Plugin Version', 'api-for-htmx') => $plugin_version,
             __('Active Library', 'api-for-htmx') => ucfirst($options['active_library'] ?? 'datastar'),
-            __('Datastar SDK', 'api-for-htmx') => __('Available (v1.0.0-RC.3)', 'api-for-htmx'),
+            __('Datastar SDK', 'api-for-htmx') => __('Available (v1.0.1)', 'api-for-htmx'),
         ];
     }
 

@@ -33,7 +33,7 @@ if (!isset($hp_vals['action']) || $hp_vals['action'] != 'datastar_do_something')
 	</pre>
 
   <div class="datastar-examples"
-    data-store='{"message": "", "postData": "Hello from Datastar!", "formData": {"name": "", "email": ""}, "loading": false}'>
+    data-signals='{"message": "", "postData": "Hello from Datastar!", "formData": {"name": "", "email": ""}, "loading": false}'>
 
     <h4>Datastar Examples:</h4>
 
@@ -41,47 +41,41 @@ if (!isset($hp_vals['action']) || $hp_vals['action'] != 'datastar_do_something')
     <div class="example-section">
       <h5>Example 1: GET Request</h5>
       <button
-        data-on-click="$$get('<?php echo hp_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=simple_get&timestamp=' + Date.now())"
-        data-header="X-WP-Nonce:<?php echo wp_create_nonce('hyperpress_nonce'); ?>"
-        data-on-load-start="loading = true"
-        data-on-load-end="loading = false"
+        data-on:click="@get('<?php echo hp_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=simple_get&timestamp=' + Date.now())"
+        data-indicator:loading
         class="button button-primary">
-        <span data-show="!loading">Simple GET Request</span>
-        <span data-show="loading">Loading...</span>
+        <span data-show="!$loading">Simple GET Request</span>
+        <span data-show="$loading">Loading...</span>
       </button>
-      <div data-show="message" data-text="message" class="response-area"></div>
+      <div data-show="$message" data-text="$message" class="response-area"></div>
     </div>
 
     <!-- Example 2: POST request with data -->
     <div class="example-section">
       <h5>Example 2: POST Request with Data</h5>
       <input type="text"
-        data-model="postData"
+        data-bind="postData"
         placeholder="Enter some data"
         class="regular-text">
       <button
-        data-on-click="$$post('<?php echo hp_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'post_with_data', user_data: postData, timestamp: Date.now()})"
-        data-header="X-WP-Nonce:<?php echo wp_create_nonce('hyperpress_nonce'); ?>"
-        data-on-load-start="loading = true"
-        data-on-load-end="loading = false"
+        data-on:click="@post('<?php echo hp_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'post_with_data', user_data: $postData, timestamp: Date.now()})"
+        data-indicator:loading
         class="button button-primary">
-        <span data-show="!loading">POST with Data</span>
-        <span data-show="loading">Posting...</span>
+        <span data-show="!$loading">POST with Data</span>
+        <span data-show="$loading">Posting...</span>
       </button>
     </div>
 
     <!-- Example 3: Form submission -->
     <div class="example-section">
       <h5>Example 3: Form Submission</h5>
-      <form data-on-submit="$$post('<?php echo hp_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'form_submission', name: formData.name, email: formData.email})"
-        data-header="X-WP-Nonce:<?php echo wp_create_nonce('hyperpress_nonce'); ?>"
-        data-on-load-start="loading = true"
-        data-on-load-end="loading = false">
+      <form data-on:submit="@post('<?php echo hp_get_endpoint_url('datastar-demo'); ?>', {action: 'datastar_do_something', demo_type: 'form_submission', name: $formData.name, email: $formData.email})"
+        data-indicator:loading>
         <p>
           <label for="ds-demo-name">Name:</label>
           <input type="text"
             id="ds-demo-name"
-            data-model="formData.name"
+            data-bind="formData.name"
             required
             class="regular-text">
         </p>
@@ -89,13 +83,13 @@ if (!isset($hp_vals['action']) || $hp_vals['action'] != 'datastar_do_something')
           <label for="ds-demo-email">Email:</label>
           <input type="email"
             id="ds-demo-email"
-            data-model="formData.email"
+            data-bind="formData.email"
             required
             class="regular-text">
         </p>
-        <button type="submit" class="button button-primary" data-bind-disabled="loading">
-          <span data-show="!loading">Submit Form</span>
-          <span data-show="loading">Submitting...</span>
+        <button type="submit" class="button button-primary" data-bind:disabled="$loading">
+          <span data-show="!$loading">Submit Form</span>
+          <span data-show="$loading">Submitting...</span>
         </button>
       </form>
     </div>
@@ -105,25 +99,23 @@ if (!isset($hp_vals['action']) || $hp_vals['action'] != 'datastar_do_something')
       <h5>Example 4: Real-time Data Binding</h5>
       <p>Type in the input below and see real-time updates:</p>
       <input type="text"
-        data-model="postData"
+        data-bind="postData"
         placeholder="Type something..."
         class="regular-text">
-      <p>You typed: <strong data-text="postData"></strong></p>
-      <p>Length: <span data-text="postData.length"></span> characters</p>
+      <p>You typed: <strong data-text="$postData"></strong></p>
+      <p>Length: <span data-text="$postData.length"></span> characters</p>
     </div>
 
     <!-- Example 5: Server-sent Events (SSE) simulation -->
     <div class="example-section">
       <h5>Example 5: Fetch with Merge</h5>
       <button
-        data-on-click="$$get('<?php echo hp_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=fetch_merge&timestamp=' + Date.now())"
-        data-header="X-WP-Nonce:<?php echo wp_create_nonce('hyperpress_nonce'); ?>"
-        data-merge-store
+        data-on:click="@get('<?php echo hp_get_endpoint_url('datastar-demo'); ?>?action=datastar_do_something&demo_type=fetch_merge&timestamp=' + Date.now())"
         class="button button-primary">
         Fetch and Merge Data
       </button>
-      <div data-show="serverTime">
-        <p>Server time: <span data-text="serverTime"></span></p>
+      <div data-show="$serverTime">
+        <p>Server time: <span data-text="$serverTime"></span></p>
       </div>
     </div>
   </div>

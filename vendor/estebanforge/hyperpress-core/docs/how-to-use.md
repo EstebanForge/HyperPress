@@ -106,7 +106,7 @@ Same as `hp_get_endpoint_url()` but echoes the result directly. Useful for templ
 </div>
 
 // Datastar usage
-<div data-on-click="@get('<?php hp_endpoint_url('user-profile'); ?>')">
+<div data-on:click="@get('<?php hp_endpoint_url('user-profile'); ?>')">
     Load Profile
 </div>
 

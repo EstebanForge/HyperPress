@@ -251,12 +251,12 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.2.0",
-            "version_normalized": "1.2.0.0",
+            "version": "1.2.1",
+            "version_normalized": "1.2.1.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "4f5a7b9d584d56ebedebfaffe33d16d2f07832bb"
+                "reference": "16125a0c45fc6e58185cadaea7b66865009db83e"
             },
             "require": {
                 "php": ">=8.2"
@@ -357,12 +357,12 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.1.0",
-            "version_normalized": "1.1.0.0",
+            "version": "1.1.1",
+            "version_normalized": "1.1.1.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "25acae248bdc0b0046dad24098a917cc587d25e3"
+                "reference": "8885e250c32b62678d916281fe74bbd2cf8b216f"
             },
             "require": {
                 "estebanforge/hyperblocks": "^1.0",
@@ -454,17 +454,17 @@
         },
         {
             "name": "starfederation/datastar-php",
-            "version": "1.0.0-RC.5",
-            "version_normalized": "1.0.0.0-RC5",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/starfederation/datastar-php.git",
-                "reference": "3120e35d6a38c7ea99fbbd281d27e9b8e663e208"
+                "reference": "0114ec8e5f38f5ebb4f5c54deed21bf95ea39f11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/starfederation/datastar-php/zipball/3120e35d6a38c7ea99fbbd281d27e9b8e663e208",
-                "reference": "3120e35d6a38c7ea99fbbd281d27e9b8e663e208",
+                "url": "https://api.github.com/repos/starfederation/datastar-php/zipball/0114ec8e5f38f5ebb4f5c54deed21bf95ea39f11",
+                "reference": "0114ec8e5f38f5ebb4f5c54deed21bf95ea39f11",
                 "shasum": ""
             },
             "require": {
@@ -475,7 +475,7 @@
                 "craftcms/phpstan": "dev-main",
                 "pestphp/pest": "^3.5"
             },
-            "time": "2025-12-17T14:44:50+00:00",
+            "time": "2026-04-16T18:20:32+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
