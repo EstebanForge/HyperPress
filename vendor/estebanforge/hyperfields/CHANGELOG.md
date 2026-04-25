@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.2] - 2026-04-25
+
+### Fixed
+- **Multiselect Form Submission** - Added hidden select element for proper form data submission
+  - Added `hf-multiselect-hidden` class to hidden select element in multiselect template
+  - Updated JavaScript to prioritize finding hidden select by class before falling back to name-based search
+  - Ensures proper value submission when multiselect field is used in forms
+
+### Changed
+- Improved multiselect field JavaScript selector logic for more robust element detection
+- Enhanced multiselect template with dedicated hidden select for form handling
+
 ## [1.2.0] - 2026-04-12
 
 ### Added

@@ -8,11 +8,11 @@
     "packages": [
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "04df30926ce0002f647b2c55de47a2dd1df4c3e1"
+                "reference": "5a15a095fa9a3b8968b82902628839af1374b592"
             },
             "require": {
                 "estebanforge/hyperfields": "^1",
@@ -104,11 +104,11 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "16125a0c45fc6e58185cadaea7b66865009db83e"
+                "reference": "7aae4f39478630e10826f2faecbb174dfc166e25"
             },
             "require": {
                 "php": ">=8.2"
