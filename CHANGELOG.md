@@ -1,5 +1,16 @@
 # Changelog
 
+# 3.2.2 / 2026-04-25
+- **FIX:** Fixed multiselect field form submission in HyperFields
+  - Added hidden `<select class="hf-multiselect-hidden">` to multiselect template for proper form submission
+  - Updated `multiselect-enhanced.js` to prefer sibling hidden select over name-based lookup (with fallback)
+  - Resolves issue where multiselect values were not submitted with forms
+- **DEPS:** Updated Datastar JS library from 1.0.0-beta.11 to 1.0.1
+- **DEPS:** Bumped bundled vendor package metadata (HyperFields, HyperBlocks, HyperPress-Core)
+- **RELEASE:** Updated plugin header version to 3.2.2
+- **RELEASE:** Updated README.txt stable tag to 3.2.2
+- **RELEASE:** Updated SECURITY.md supported version to 3.2.2
+
 # 3.2.0 / 2026-04-14
 - **DEPS:** Updated `estebanforge/hyperfields` to 1.2.0 (Major Feature: React Integration)
   - **NEW:** `ReactField` class extends `Field` with modern React-powered UI components for options pages
