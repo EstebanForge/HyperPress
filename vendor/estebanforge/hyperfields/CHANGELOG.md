@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.3] - 2026-04-25
+
+### Changed
+- **PHP Compatibility** - Lowered minimum PHP version from 8.2 to 8.1
+  - All code features compatible with PHP 8.1+ (uses `public readonly` properties)
+  - No `readonly class` or other PHP 8.2+ specific features
+  - Improves WordPress ecosystem compatibility
+
 ## [1.2.2] - 2026-04-25
 
 ### Fixed
