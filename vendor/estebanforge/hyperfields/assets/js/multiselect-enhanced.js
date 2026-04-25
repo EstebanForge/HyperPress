@@ -18,13 +18,10 @@
             var $options = $optionsList.find('.hf-multiselect-option');
             var fieldName = $container.data('field-name');
 
-            // Store original select element if exists
-            var $originalSelect = $('select[name="' + fieldName + '"]');
-            if ($originalSelect.length) {
-                $originalSelect.css({
-                    'position': 'absolute',
-                    'left': '-9999px'
-                });
+            // Find the hidden select element (either by class or by name as fallback)
+            var $originalSelect = $container.siblings('select.hf-multiselect-hidden').first();
+            if ($originalSelect.length === 0) {
+                $originalSelect = $('select[name="' + fieldName + '"]');
             }
 
             // Search functionality

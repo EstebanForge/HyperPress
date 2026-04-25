@@ -38,6 +38,19 @@ $value = is_array($value) ? $value : [$value];
 
     <div class="hyperpress-field-input">
         <?php if ($enhanced_enabled): ?>
+        <!-- Hidden select for form submission -->
+        <select id="<?php echo esc_attr($name); ?>"
+                name="<?php echo esc_attr($name_attr); ?>[]"
+                multiple
+                style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; overflow: hidden;"
+                class="hf-multiselect-hidden">
+            <?php foreach ($options as $option_value => $option_label): ?>
+                <option value="<?php echo esc_attr($option_value); ?>" <?php selected(in_array($option_value, $value)); ?>>
+                    <?php echo esc_html($option_label); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
         <!-- Enhanced Multiselect Interface -->
         <div class="hf-multiselect-container" data-field-name="<?php echo esc_attr($name); ?>">
             <input type="text"
