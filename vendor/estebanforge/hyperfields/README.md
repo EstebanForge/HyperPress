@@ -61,7 +61,7 @@ See [`docs/transfer-and-content-export-import.md`](docs/transfer-and-content-exp
 
 ## Requirements
 
-- PHP 8.2+
+- PHP 8.1+
 
 ## Testing
 
