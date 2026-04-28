@@ -11,6 +11,10 @@ declare(strict_types=1);
  * @since 1.0.0
  */
 
+if (!defined('HYPERFIELDS_DEFAULT_VERSION')) {
+    define('HYPERFIELDS_DEFAULT_VERSION', '1.2.4');
+}
+
 // Define global functions BEFORE early-return guards so they're always available.
 // Tests that run in separate processes need these functions even when HYPERFIELDS_BOOTSTRAP_LOADED is set.
 if (!function_exists('hyperfields_run_initialization_logic')) {
@@ -120,7 +124,7 @@ if (!function_exists('hyperfields_register_candidate_for_tests')) {
      */
     function hyperfields_register_candidate_for_tests(): void
     {
-        $current_version = '1.1.0';
+        $current_version = HYPERFIELDS_DEFAULT_VERSION;
         $current_path = null;
         $composer_json_path = __DIR__ . '/composer.json';
         if (file_exists($composer_json_path)) {
@@ -163,6 +167,9 @@ define('HYPERFIELDS_BOOTSTRAP_LOADED', true);
 // to prevent duplicate Composer autoloader class declarations.
 $normalizedDir = str_replace('\\', '/', __DIR__);
 $loadedFromVendorTree = str_contains($normalizedDir, '/vendor/');
+if (!$loadedFromVendorTree && function_exists('wp_normalize_path') && file_exists(__DIR__ . '/vendor/autoload_packages.php')) {
+    require_once __DIR__ . '/vendor/autoload_packages.php';
+}
 if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 } elseif (!$loadedFromVendorTree) {
@@ -173,14 +180,14 @@ if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 // Get this instance's version and real path (resolving symlinks)
-$current_hyperfields_instance_version = '1.1.0';
+$current_hyperfields_instance_version = HYPERFIELDS_DEFAULT_VERSION;
 $current_hyperfields_instance_path = null;
 
 // Library mode: try to get version from composer.json or use a fallback
 $composer_json_path = __DIR__ . '/composer.json';
 if (file_exists($composer_json_path)) {
     $composer_data = json_decode(file_get_contents($composer_json_path), true);
-    $current_hyperfields_instance_version = $composer_data['version'] ?? '1.1.0';
+    $current_hyperfields_instance_version = $composer_data['version'] ?? HYPERFIELDS_DEFAULT_VERSION;
 }
 // Use bootstrap.php path as fallback for library mode
 $current_hyperfields_instance_path = realpath(__FILE__);

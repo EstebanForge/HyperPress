@@ -11,4 +11,5 @@ return array(
     'HyperFields\\' => array($vendorDir . '/estebanforge/hyperfields/src'),
     'HyperBlocks\\' => array($vendorDir . '/estebanforge/hyperblocks/src'),
     'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src/Composer/Installers'),
+    'Automattic\\Jetpack\\Autoloader\\' => array($vendorDir . '/automattic/jetpack-autoloader/src'),
 );

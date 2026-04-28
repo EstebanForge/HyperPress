@@ -1,5 +1,12 @@
 # Changelog
 
+# 3.2.4 / 2026-04-28
+- **FIX:** Datastar PHP SDK namespace references now use upstream `starfederation\datastar\...` class names in bundled HyperPress-Core helpers/runtime checks, restoring compatibility with current `starfederation/datastar-php` autoloading.
+- **FIX:** Guarded Jetpack `vendor/autoload_packages.php` loading to WordPress runtime contexts only (`function_exists('wp_normalize_path')`) to prevent CLI/test fatal errors.
+- **DEPS:** Added/activated Jetpack autoloader integration in bundled stack.
+- **RELEASE:** Updated plugin package version to `3.2.4`.
+- **CREDITS:** Thanks @web-maverick1 on GitHub for the heads up.
+
 # 3.2.2 / 2026-04-25
 - **FIX:** Fixed multiselect field form submission in HyperFields
   - Added hidden `<select class="hf-multiselect-hidden">` to multiselect template for proper form submission

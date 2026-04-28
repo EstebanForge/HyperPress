@@ -45,6 +45,9 @@ if ($use_local_libs) {
 // this package's nested vendor/autoload.php to prevent duplicate Composer loader classes.
 $normalizedDir = str_replace('\\', '/', __DIR__);
 $loadedFromVendorTree = str_contains($normalizedDir, '/vendor/');
+if (!$loadedFromVendorTree && function_exists('wp_normalize_path') && file_exists(__DIR__ . '/vendor/autoload_packages.php')) {
+    require_once __DIR__ . '/vendor/autoload_packages.php';
+}
 if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 } elseif (!$loadedFromVendorTree) {
