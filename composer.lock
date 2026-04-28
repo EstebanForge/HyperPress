@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe71c3754fd41ecff0d8df1dc5bb03d2",
+    "content-hash": "56f84a8493b7511a3f327f971d859ea7",
     "packages": [
         {
             "name": "automattic/jetpack-autoloader",
@@ -418,11 +418,11 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.1.5",
+            "version": "1.1.6",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "6281ade4473bcd962f7afcba6f535352b6aeefb8"
+                "reference": "bfb6703f44b0007123309ff548028258c82a9f07"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
