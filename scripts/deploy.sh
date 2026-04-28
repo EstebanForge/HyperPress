@@ -15,7 +15,22 @@ GITPATH="$CURRENTDIR/" # this file should be in the base of your git repository
 # svn config
 SVNPATH="/tmp/$PLUGINSLUG" # path to a temp SVN repo. No trailing slash required and don't add trunk.
 SVNURL="http://plugins.svn.wordpress.org/$PLUGINSLUG/" # Remote SVN repo on wordpress.org, with no trailing slash
-SVNUSER="TCattd" # your svn username
+
+# Prompt for SVN username interactively
+echo "========================================="
+echo "WordPress.org SVN Deployment"
+echo "========================================="
+echo ""
+read -rp "Enter your WordPress.org SVN username: " SVNUSER
+
+if [ -z "$SVNUSER" ]; then
+    echo "Error: SVN username cannot be empty."
+    exit 1
+fi
+
+echo ""
+echo "SVN username set to: $SVNUSER"
+echo ""
 
 # Detect default branch (main or master)
 MAIN_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^.*/@@')
@@ -156,9 +171,9 @@ fi
 echo "Changing directory to SVN and committing to trunk"
 cd "$SVNPATH/trunk/"
 # Delete missing files
-svn status | grep "^\!" | awk '{print $2}' | xargs -r svn delete
+svn status | grep "^\!" | awk '{print $2}' | xargs -r svn delete || true
 # Add all new files that are not set to be ignored
-svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs -r svn add
+svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs -r svn add || true
 echo "committing to trunk"
 svn commit --username="$SVNUSER" -m "$COMMITMSG" || exit 1
 
