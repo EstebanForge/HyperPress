@@ -92,6 +92,9 @@ define('HYPERBLOCKS_BOOTSTRAP_LOADED', true);
 // to prevent duplicate Composer autoloader class declarations.
 $normalizedDir = str_replace('\\', '/', __DIR__);
 $loadedFromVendorTree = str_contains($normalizedDir, '/vendor/');
+if (!$loadedFromVendorTree && function_exists('wp_normalize_path') && file_exists(__DIR__ . '/vendor/autoload_packages.php')) {
+    require_once __DIR__ . '/vendor/autoload_packages.php';
+}
 if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 } elseif (!$loadedFromVendorTree && function_exists('add_action')) {

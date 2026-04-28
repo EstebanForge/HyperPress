@@ -18,10 +18,10 @@ When you run `composer version-bump`, the following files are updated:
 - **Location**: `/package.json`
 
 ### 3. ✅ bootstrap.php
-**Lines**: 123, 176
-- **Line 123**: Test helper fallback version: `$current_version = '1.1.0';`
-- **Line 176**: Instance fallback version: `$current_hyperfields_instance_version = '1.1.0';`
-- **Note**: Both are fallbacks when composer.json cannot be read
+- Updates the single-source default version constant:
+  - `define('HYPERFIELDS_DEFAULT_VERSION', 'X.Y.Z');`
+- Legacy-safe behavior: also replaces any remaining exact old-version literals.
+- **Note**: this default is used when composer.json cannot be read.
 
 ### 4. ✅ src/OptionsPage.php
 **Lines**: 860, 905, 927
@@ -64,7 +64,7 @@ composer version-bump
 
   ✓ composer.json
   ✓ package.json
-  ✓ bootstrap.php (fallback versions)
+  ✓ bootstrap.php (default/fallback versions)
   ✓ src/OptionsPage.php (fallback versions)
 
 ┌─────────────────────────────────────┐

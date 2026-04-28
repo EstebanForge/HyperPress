@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use HyperFields\HyperFields;
-use HyperPress\starfederation\datastar\ServerSentEventGenerator;
+use starfederation\datastar\ServerSentEventGenerator;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH') && !defined('HYPERPRESS_TESTING_MODE')) {

@@ -2,7 +2,7 @@
   "name": "estebanforge/hyperfields",
   "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
   "type": "library",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "license": "GPL-2.0-or-later",
   "authors": [
     {
@@ -13,7 +13,8 @@
   "minimum-stability": "RC",
   "prefer-stable": true,
   "require": {
-    "php": ">=8.1"
+    "php": ">=8.1",
+    "automattic/jetpack-autoloader": "^2"
   },
   "autoload": {
     "psr-4": {
@@ -59,6 +60,7 @@
   "config": {
     "allow-plugins": {
       "composer/installers": true,
+      "automattic/jetpack-autoloader": true,
       "pestphp/pest-plugin": true
     }
   }

@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.1.5] - 2026-04-28
+
+### Added
+- Jetpack Autoloader integration for Composer package conflict management.
+  - Added `automattic/jetpack-autoloader` dependency.
+  - Enabled Composer plugin allow-list entry for Jetpack Autoloader.
+
+### Changed
+- Bootstrap loading flow now attempts `vendor/autoload_packages.php` before `vendor/autoload.php` when running outside a vendor tree.
+- `composer.json` — bumped package version to `1.1.5`.
+
+## [1.1.4] - 2026-04-28
+
+### Fixed
+- Datastar PHP SDK namespace references now use upstream `starfederation\datastar\...` class names in helpers, runtime bootstrap checks, and SDK detection (`includes/helpers.php`, `src/Main.php`, `src/Libraries/DatastarLib.php`), restoring compatibility with current `starfederation/datastar-php` autoloading.
+
+### Changed
+- `composer.json` — bumped package version to `1.1.4`.
+
+### Credits
+- Thanks @web-maverick1 on GitHub for the heads up.
+
 ## [1.1.0] - 2026-04-07
 
 ### Added

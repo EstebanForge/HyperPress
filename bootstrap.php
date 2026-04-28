@@ -44,6 +44,19 @@ $adapter_main_file = file_exists(__DIR__ . '/hyperpress.php')
     ? __DIR__ . '/hyperpress.php'
     : __DIR__ . '/api-for-htmx.php';
 
+// Load Jetpack packages autoloader first when present (required by jetpack-autoloader).
+if (function_exists('wp_normalize_path')) {
+    $autoload_packages_candidates = [
+        __DIR__ . '/vendor/autoload_packages.php',
+        dirname(__DIR__) . '/HyperPress-Core/vendor/autoload_packages.php',
+    ];
+    foreach ($autoload_packages_candidates as $autoload_packages) {
+        if (hyperpress_adapter_require_once_path($autoload_packages)) {
+            break;
+        }
+    }
+}
+
 // Load Composer autoloader from plugin package first, local monorepo fallback second.
 $autoload_candidates = [
     __DIR__ . '/vendor/autoload.php',

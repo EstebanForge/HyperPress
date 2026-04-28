@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.3] - 2026-04-28
+
+### Added
+- Jetpack Autoloader integration for Composer package conflict management.
+  - Added `automattic/jetpack-autoloader` dependency.
+  - Enabled Composer plugin allow-list entry for Jetpack Autoloader.
+
+### Changed
+- Bootstrap loading flow now attempts `vendor/autoload_packages.php` before `vendor/autoload.php` when running outside a vendor tree.
+
 ## [1.1.0] - 2026-04-14
 
 ### Added

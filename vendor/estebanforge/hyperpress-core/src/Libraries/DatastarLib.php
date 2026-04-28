@@ -140,7 +140,7 @@ class DatastarLib
      */
     public static function loadSdk(): bool
     {
-        return class_exists('HyperPress\starfederation\datastar\Consts');
+        return class_exists('starfederation\datastar\Consts');
     }
 
     /**
@@ -150,6 +150,6 @@ class DatastarLib
      */
     private function isSdkLoaded(): bool
     {
-        return class_exists('HyperPress\starfederation\datastar\Consts');
+        return class_exists('starfederation\datastar\Consts');
     }
 }
