@@ -304,23 +304,6 @@ class Options
         $php_version = PHP_VERSION;
         $wp_ver = $wp_version ?? get_bloginfo('version');
 
-        // Get HyperFields version from composer.json (library mode) or plugin header (plugin mode)
-        $hyperfields_version = '1.0.0'; // Default fallback
-        if (defined('HYPERPRESS_ABSPATH')) {
-            $hyperfields_composer_path = rtrim(HYPERPRESS_ABSPATH, '/') . '/vendor/estebanforge/hyperfields/composer.json';
-            if (file_exists($hyperfields_composer_path)) {
-                $composer_data = json_decode(file_get_contents($hyperfields_composer_path), true);
-                $hyperfields_version = $composer_data['version'] ?? $hyperfields_version;
-            } else {
-                // Try plugin path inside wp-content if present
-                $plugin_composer = WP_CONTENT_DIR . '/plugins/hyperfields/composer.json';
-                if (file_exists($plugin_composer)) {
-                    $composer_data = json_decode(file_get_contents($plugin_composer), true);
-                    $hyperfields_version = $composer_data['version'] ?? $hyperfields_version;
-                }
-            }
-        }
-
         // Datastar SDK: try to read installed.json produced by composer in vendor/composer
         $datastar_version = 'v1.0.0-RC.3'; // fallback (keep existing default)
         if (defined('HYPERPRESS_ABSPATH')) {
@@ -340,14 +323,15 @@ class Options
             }
         }
 
-        return [
+        $info = [
             __('WordPress Version', 'api-for-htmx') => $wp_ver,
             __('PHP Version', 'api-for-htmx') => $php_version,
             __('Plugin Version', 'api-for-htmx') => $plugin_version,
-            __('HyperFields Library', 'api-for-htmx') => $hyperfields_version,
             __('Active Library', 'api-for-htmx') => ucfirst($options['active_library'] ?? 'datastar'),
             __('Datastar SDK', 'api-for-htmx') => $datastar_version,
         ];
+
+        return apply_filters('hyperpress/about/system_info', $info);
     }
 
     private function getFooterContent(): string

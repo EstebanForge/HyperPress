@@ -143,3 +143,45 @@ if (
     register_activation_hook($adapter_main_file, ['HyperPress\\Admin\\Activation', 'activate']);
     register_deactivation_hook($adapter_main_file, ['HyperPress\\Admin\\Activation', 'deactivate']);
 }
+
+// Enrich the About page system-info table with vendored library versions.
+if (function_exists('add_filter')) {
+    add_filter('hyperpress/about/system_info', static function (array $info): array {
+        $library_versions = [];
+
+        if (defined('HYPERFIELDS_VERSION')) {
+            $library_versions[__('HyperFields Library', 'api-for-htmx')] = HYPERFIELDS_VERSION;
+        }
+        if (defined('HYPERBLOCKS_VERSION')) {
+            $library_versions[__('HyperBlocks Library', 'api-for-htmx')] = HYPERBLOCKS_VERSION;
+        }
+        if (defined('HYPERPRESS_VERSION')) {
+            $library_versions[__('HyperPress Core', 'api-for-htmx')] = HYPERPRESS_VERSION;
+        }
+
+        if (empty($library_versions)) {
+            return $info;
+        }
+
+        // Insert library versions after the Plugin Version row.
+        $insert_after = __('Plugin Version', 'api-for-htmx');
+        $result = [];
+        $inserted = false;
+        foreach ($info as $key => $value) {
+            $result[$key] = $value;
+            if (!$inserted && $key === $insert_after) {
+                foreach ($library_versions as $lib_key => $lib_value) {
+                    $result[$lib_key] = $lib_value;
+                }
+                $inserted = true;
+            }
+        }
+
+        // Fallback: append at the end if Plugin Version key was not found.
+        if (!$inserted) {
+            $result = array_merge($result, $library_versions);
+        }
+
+        return $result;
+    });
+}
