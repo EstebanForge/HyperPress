@@ -89,9 +89,9 @@ else
     git tag -a "$PLUGINVERSION" -m "Tagging version $PLUGINVERSION"
 fi
 
-echo "Pushing latest commit to origin, with tags"
+echo "Pushing latest commit to origin, with tag $PLUGINVERSION"
 git push origin "$MAIN_BRANCH"
-git push origin "$MAIN_BRANCH" --tags
+git push origin "refs/tags/$PLUGINVERSION"
 
 echo
 echo "Ensuring we're on the $MAIN_BRANCH branch"
