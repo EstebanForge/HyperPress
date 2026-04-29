@@ -2,7 +2,7 @@
   "name": "estebanforge/hyperpress",
   "description": "WordPress plugin adapter for HyperPress. Loads HyperPress Core and bundled Hyper libraries.",
   "type": "wordpress-plugin",
-  "version": "3.2.5",
+  "version": "3.2.6",
   "license": "GPL-2.0-or-later",
   "authors": [
     {
