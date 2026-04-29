@@ -41,7 +41,7 @@ hp_is_library_mode(): bool
 
 - Detects if HyperPress is loaded as a Composer library vs active plugin.
 
-## Datastar (SSE) Integration
+## Datastar (SSE / HTML) Integration
 
 ```php
 hp_ds_sse(): ?ServerSentEventGenerator
@@ -51,9 +51,11 @@ hp_ds_remove_elements(string $selector, array $options = []): void
 hp_ds_patch_signals(mixed $signals, array $options = []): void
 hp_ds_execute_script(string $script, array $options = []): void
 hp_ds_location(string $url): void
+hp_ds_send_html(string $html): void
 ```
 
-- Real-time UI updates via SSE with patch/remove/signals/script/location helpers.
+- `hp_ds_patch_*` helpers stream updates via SSE (`text/event-stream`).
+- `hp_ds_send_html()` returns raw HTML (`text/html`) for Datastar `@get`/`@post` to morph by element ID, or for HTMX/Alpine AJAX. No SSE connection.
 
 ### Rate Limiting (SSE)
 

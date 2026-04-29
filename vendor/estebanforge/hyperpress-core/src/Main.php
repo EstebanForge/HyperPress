@@ -128,7 +128,7 @@ class Main
             'htmx_version' => '1.9.10',
             'htmx_extensions' => [],
             'alpine_version' => '3.13.3',
-            'datastar_version' => '1.0.0-rc.1',
+            'datastar_version' => '1.0.1',
             'datastar_load_in_admin' => false,
         ];
 

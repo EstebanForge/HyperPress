@@ -2,7 +2,7 @@
   "name": "estebanforge/hyperpress-core",
   "description": "Core HyperPress runtime library: routing, rendering, assets, admin options, and hypermedia integrations.",
   "type": "library",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "license": "GPL-2.0-or-later",
   "authors": [
     {
@@ -10,7 +10,7 @@
       "email": "esteban@actitud.xyz"
     }
   ],
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "prefer-stable": true,
   "repositories": [
     {
@@ -25,16 +25,16 @@
   "require": {
     "php": ">=8.2",
     "automattic/jetpack-autoloader": "^2",
-    "starfederation/datastar-php": "^1.0",
-    "estebanforge/hyperfields": "^1.0",
-    "estebanforge/hyperblocks": "^1.0"
+    "starfederation/datastar-php": "^1",
+    "estebanforge/hyperfields": "^1",
+    "estebanforge/hyperblocks": "^1"
   },
   "require-dev": {
     "phpunit/phpunit": "^12",
     "pestphp/pest": "^4",
     "pestphp/pest-plugin-browser": "^4",
     "brain/monkey": "^2",
-    "friendsofphp/php-cs-fixer": "^3.0"
+    "friendsofphp/php-cs-fixer": "^3"
   },
   "scripts": {
     "test": "bash -lc 'if [ ! -f vendor/bin/pest ]; then composer update --no-interaction --no-progress; fi; php -d auto_prepend_file=tests/preload.php -d pcov.enabled=1 vendor/bin/pest --configuration phpunit.xml tests --colors=always'",

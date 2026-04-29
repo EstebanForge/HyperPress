@@ -27,7 +27,7 @@ return array(
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/src/helpers.php'
 	),
 	'29999a51792ecace5389ce90bf577c3f' => array(
-		'version' => '1.1.6.0',
+		'version' => '1.1.7.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/bootstrap.php'
 	),
 );

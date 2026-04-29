@@ -358,6 +358,27 @@ if (!function_exists('hp_ds_location')) {
 }
 
 /*
+ * Sends a plain HTML response with text/html content type.
+ *
+ * Use this helper when your endpoint should return raw HTML to be consumed
+ * by Datastar's @get/@post actions (which auto-detect text/html responses)
+ * or by HTMX/Alpine AJAX, without opening an SSE connection.
+ *
+ * @since 3.2.5
+ * @param string $html The HTML content to send.
+ * @return void
+ */
+if (!function_exists('hp_ds_send_html')) {
+    function hp_ds_send_html(string $html): void
+    {
+        if (!headers_sent()) {
+            header('Content-Type: text/html; charset=utf-8');
+        }
+        echo $html;
+    }
+}
+
+/*
  * Check if current request is rate limited for Datastar SSE endpoints.
  *
  * Provides configurable rate limiting for SSE connections to prevent abuse
