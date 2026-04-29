@@ -17,6 +17,12 @@ Use `hp_validate_request(array $hmvals = null, string $action = null): bool` to 
 - Supports both new (`hyperpress_nonce`) and legacy (`hxwp_nonce`) nonce formats.
 - For SSE (Datastar) endpoints, validation differs because the connection model is not a standard form POST. Combine nonce checks with capability checks and rate limiting as appropriate.
 
+## Rate Limiting
+
+Use `hp_is_rate_limited()` for generic rate limiting on any HyperPress endpoint (HTML, HTMX, Alpine AJAX, or Datastar `@get`/`@post`). It has no side effects and will not alter response headers.
+
+Use `hp_ds_is_rate_limited()` **only** for Datastar SSE endpoints. It internally initializes the SSE generator, which sends `text/event-stream` headers. Using it in a regular HTML endpoint will switch the response content type away from `text/html`.
+
 ```php
 // Basic nonce validation (works for all hypermedia libraries)
 if (!hp_validate_request()) {

@@ -2,6 +2,8 @@
 
 These functions provide direct integration with Datastar's Server-Sent Events (SSE) capabilities for real-time updates.
 
+> **Rate limiting for non-SSE endpoints:** If your template returns plain HTML (consumed by Datastar `@get`/`@post`, HTMX, or Alpine AJAX), use `hp_is_rate_limited()` instead of `hp_ds_is_rate_limited()`. The generic helper has no side effects and will not switch the response to `text/event-stream`. See the rate limiting section below for both helpers.
+
 ## Quick Start: Minimal SSE Example
 
 This is the smallest possible example to stream updates via SSE from a hypermedia template partial and consume them on the frontend.
@@ -9,7 +11,7 @@ This is the smallest possible example to stream updates via SSE from a hypermedi
 ```php
 // In your hypermedia template partial file, e.g., hypermedia/my-sse-endpoint.hp.php
 
-// Apply rate limiting
+// Apply rate limiting (SSE-specific; sends SSE error feedback when blocked)
 if (hp_ds_is_rate_limited()) {
     return; // Rate limited
 }
@@ -191,17 +193,67 @@ Frontend HTML to consume the HTML endpoint:
 <div id="result">Initial content</div>
 ```
 
-**`hp_ds_is_rate_limited(array $options = []): bool`**
+**`hp_is_rate_limited(array $options = []): bool`**
 
-Checks if current request is rate limited for Datastar SSE endpoints to prevent abuse and protect server resources. Uses WordPress transients for persistence across requests.
+Checks if current request is rate limited. This is the generic, side-effect-free helper for **any** HyperPress endpoint — HTML, HTMX, Alpine AJAX, or Datastar `@get`/`@post`. It does **not** send headers or SSE responses.
+
+Use this in regular `.hp.php` templates that output plain HTML:
 
 ```php
-// Basic rate limiting (10 requests per 60 seconds)
-if (hp_ds_is_rate_limited()) {
+// In a regular HTML endpoint (hypermedia/my-form-handler.hp.php)
+if (hp_is_rate_limited()) {
     hp_die(__('Rate limit exceeded', 'api-for-htmx'));
 }
 
 // Custom rate limiting configuration
+if (hp_is_rate_limited([
+    'requests_per_window' => 30,      // Allow 30 requests
+    'time_window_seconds' => 120,     // Per 2 minutes
+    'identifier' => 'search_' . get_current_user_id(), // Custom identifier
+])) {
+    hp_die(__('Too many requests', 'api-for-htmx'));
+}
+
+// Different rate limits for different actions
+$action = $hp_vals['action'] ?? '';
+
+switch ($action) {
+    case 'search':
+        $rate_config = ['requests_per_window' => 20, 'time_window_seconds' => 60];
+        break;
+    case 'upload':
+        $rate_config = ['requests_per_window' => 5, 'time_window_seconds' => 300];
+        break;
+    default:
+        $rate_config = ['requests_per_window' => 30, 'time_window_seconds' => 60];
+}
+
+if (hp_is_rate_limited($rate_config)) {
+    return; // Rate limited
+}
+```
+
+**Generic Rate Limiting Options:**
+- `requests_per_window` (int): Maximum requests allowed per time window. Default: 10
+- `time_window_seconds` (int): Time window in seconds. Default: 60
+- `identifier` (string): Custom identifier for rate limiting. Default: IP + user ID
+
+---
+
+**`hp_ds_is_rate_limited(array $options = []): bool`**
+
+Checks if current request is rate limited for **Datastar SSE endpoints**. When the request is blocked and `send_sse_response` is `true`, it automatically sends an SSE error response to the client (error element, signals, and console warning). Uses WordPress transients for persistence across requests.
+
+> **Important:** Do not use this helper in regular HTML/HTMX/Alpine endpoints. It internally calls `hp_ds_sse()`, which sends `text/event-stream` headers. Use `hp_is_rate_limited()` for non-SSE endpoints.
+
+```php
+// Basic rate limiting for an SSE endpoint (10 requests per 60 seconds)
+if (hp_ds_is_rate_limited()) {
+    // Rate limit exceeded - SSE error already sent to client
+    return;
+}
+
+// Custom rate limiting configuration with SSE feedback
 if (hp_ds_is_rate_limited([
     'requests_per_window' => 30,      // Allow 30 requests
     'time_window_seconds' => 120,     // Per 2 minutes
@@ -209,7 +261,7 @@ if (hp_ds_is_rate_limited([
     'error_message' => __('Search rate limit exceeded. Please wait.', 'api-for-htmx'),
     'error_selector' => '#search-errors'
 ])) {
-    // Rate limit exceeded - error already sent to client
+    // Rate limit exceeded - error already sent to client via SSE
     return;
 }
 
@@ -241,7 +293,7 @@ if (hp_ds_is_rate_limited($rate_config)) {
 }
 ```
 
-**Rate Limiting Options:**
+**SSE Rate Limiting Options:**
 - `requests_per_window` (int): Maximum requests allowed per time window. Default: 10
 - `time_window_seconds` (int): Time window in seconds. Default: 60
 - `identifier` (string): Custom identifier for rate limiting. Default: IP + user ID

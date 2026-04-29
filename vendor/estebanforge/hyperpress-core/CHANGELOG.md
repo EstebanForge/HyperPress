@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.8] - 2026-04-29
+
+### Added
+- `hp_is_rate_limited()` — generic, side-effect-free rate limit helper for any HyperPress endpoint (HTML, HTMX, Alpine AJAX, Datastar `@get`/`@post`). Does not send headers or SSE responses.
+
+### Fixed
+- `hp_ds_is_rate_limited()` now delegates the actual rate-limit check to `hp_is_rate_limited()` and only sends SSE error feedback when the request is actually blocked. Previously, calling this helper in a non-rate-limited request would still trigger `hp_ds_sse()`, sending `text/event-stream` headers and breaking regular HTML endpoints.
+
+### Changed
+- Demo templates (`datastar-demo.hp.php`, `noswap/datastar-demo.hp.php`) now use `hp_is_rate_limited()` instead of `hp_ds_is_rate_limited()` since they are regular HTML endpoints, not SSE streams.
+- Documentation updated to clearly distinguish `hp_is_rate_limited()` (generic) from `hp_ds_is_rate_limited()` (SSE-only).
+
 ## [1.1.5] - 2026-04-28
 
 ### Added

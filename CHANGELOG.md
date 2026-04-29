@@ -1,5 +1,11 @@
 # Changelog
 
+# 3.2.6 / 2026-04-29
+- **DEPS:** Updated `estebanforge/hyperpress-core` to 1.1.8
+- **NEW:** Added `hp_is_rate_limited()` — generic, side-effect-free rate limit helper for any HyperPress endpoint. Use this in regular HTML/HTMX/Alpine templates; it does not send headers or SSE responses.
+- **FIX:** `hp_ds_is_rate_limited()` no longer sends SSE headers on non-blocked requests. It now delegates the check to `hp_is_rate_limited()` and only sends SSE error feedback when the request is actually rate limited. This fixes the bug where calling `hp_ds_is_rate_limited()` in a regular `.hp.php` template would flip `Content-Type` from `text/html` to `text/event-stream`.
+- **DOCS:** Updated `datastar-helpers.md`, `helper-functions.md`, and `security.md` to clearly distinguish `hp_is_rate_limited()` (generic) from `hp_ds_is_rate_limited()` (SSE-only).
+
 # 3.2.5 / 2026-04-28
 - **NEW:** Added `hp_ds_send_html()` helper for plain `text/html` responses from Datastar endpoints. Returns raw HTML without SSE framing; Datastar's `@get`/`@post` actions auto-detect `text/html` and morph elements by ID.
 - **FIX:** Updated default `datastar_version` from stale `1.0.0-rc.1` to `1.0.1`, matching the CDN bundle already in use.
