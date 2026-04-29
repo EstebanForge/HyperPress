@@ -379,10 +379,67 @@ if (!function_exists('hp_ds_send_html')) {
 }
 
 /*
+ * Check if current request is rate limited.
+ *
+ * Provides configurable rate limiting to prevent abuse and protect server
+ * resources. Uses WordPress transients for persistence.
+ * This helper has no side effects: it does not send headers or SSE responses.
+ *
+ * @since 3.2.6
+ * @param array $options {
+ *     Rate limiting configuration options.
+ *
+ *     @type int    $requests_per_window Maximum requests allowed per time window. Default 10.
+ *     @type int    $time_window_seconds Time window in seconds for rate limiting. Default 60.
+ *     @type string $identifier         Custom identifier for rate limiting. Default uses IP + user ID.
+ * }
+ * @return bool True if rate limited (blocked), false if request is allowed.
+ */
+if (!function_exists('hp_is_rate_limited')) {
+    function hp_is_rate_limited(array $options = []): bool
+    {
+        $defaults = [
+            'requests_per_window' => 10,
+            'time_window_seconds' => 60,
+            'identifier' => '',
+        ];
+
+        $config = array_merge($defaults, $options);
+
+        // Generate unique identifier for this client
+        if (empty($config['identifier'])) {
+            $user_id = get_current_user_id();
+            $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+            $config['identifier'] = 'hp_rate_limit_' . md5($ip_address . '_' . $user_id);
+        } else {
+            $config['identifier'] = 'hp_rate_limit_' . md5($config['identifier']);
+        }
+
+        // Get current request count from transient
+        $current_count = get_transient($config['identifier']);
+        if ($current_count === false) {
+            $current_count = 0;
+        }
+
+        // Check if rate limit exceeded
+        if ($current_count >= $config['requests_per_window']) {
+            return true;
+        }
+
+        // Increment request count
+        set_transient($config['identifier'], $current_count + 1, $config['time_window_seconds']);
+
+        return false;
+    }
+}
+
+/*
  * Check if current request is rate limited for Datastar SSE endpoints.
  *
  * Provides configurable rate limiting for SSE connections to prevent abuse
  * and protect server resources. Uses WordPress transients for persistence.
+ * When rate limited and send_sse_response is true, an SSE error response is
+ * sent automatically.
  *
  * @since 2.1.0
  * @param array $options {
@@ -400,7 +457,6 @@ if (!function_exists('hp_ds_send_html')) {
 if (!function_exists('hp_ds_is_rate_limited')) {
     function hp_ds_is_rate_limited(array $options = []): bool
     {
-        // Default configuration
         $defaults = [
             'requests_per_window' => 10,
             'time_window_seconds' => 60,
@@ -412,7 +468,7 @@ if (!function_exists('hp_ds_is_rate_limited')) {
 
         $config = array_merge($defaults, $options);
 
-        // Generate unique identifier for this client
+        // Build identifier with backward-compatible prefix
         if (empty($config['identifier'])) {
             $user_id = get_current_user_id();
             $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
@@ -421,16 +477,15 @@ if (!function_exists('hp_ds_is_rate_limited')) {
             $config['identifier'] = 'hpds_rate_limit_' . md5($config['identifier']);
         }
 
-        // Get current request count from transient
-        $current_count = get_transient($config['identifier']);
-        if ($current_count === false) {
-            $current_count = 0;
-        }
+        $is_limited = hp_is_rate_limited([
+            'requests_per_window' => $config['requests_per_window'],
+            'time_window_seconds' => $config['time_window_seconds'],
+            'identifier' => $config['identifier'],
+        ]);
 
-        // Check if rate limit exceeded
-        if ($current_count >= $config['requests_per_window']) {
-            // Rate limit exceeded
-            if ($config['send_sse_response'] && hp_ds_sse()) {
+        if ($is_limited && $config['send_sse_response']) {
+            $sse = hp_ds_sse();
+            if ($sse) {
                 // Send error response via SSE
                 hp_ds_patch_elements(
                     '<div class="rate-limit-error error" style="color: #dc3545; background: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 4px; margin: 10px 0;">'
@@ -453,38 +508,9 @@ if (!function_exists('hp_ds_is_rate_limited')) {
                     console.info('" . esc_js(sprintf(__('Requests allowed: %1$d per %2$d seconds', 'api-for-htmx'), $config['requests_per_window'], $config['time_window_seconds'])) . "');
                 ");
             }
-
-            return true; // Rate limited
         }
 
-        // Increment request count
-        $new_count = $current_count + 1;
-        set_transient($config['identifier'], $new_count, $config['time_window_seconds']);
-
-        // Send rate limit status via SSE if available
-        if ($config['send_sse_response'] && hp_ds_sse()) {
-            $remaining_requests = $config['requests_per_window'] - $new_count;
-
-            hp_ds_patch_signals([
-                'rate_limited' => false,
-                'requests_remaining' => $remaining_requests,
-                'total_requests_allowed' => $config['requests_per_window'],
-                'time_window_seconds' => $config['time_window_seconds'],
-            ]);
-
-            // Remove any existing rate limit error messages
-            hp_ds_remove_elements($config['error_selector'] . ' .rate-limit-error');
-
-            // Log remaining requests for debugging
-            if ($remaining_requests <= 5) {
-                // translators: %d: number of remaining requests in the current time window.
-                hp_ds_execute_script("
-                    console.warn('" . esc_js(sprintf(__('Rate limit warning: %d requests remaining in this time window', 'api-for-htmx'), $remaining_requests)) . "');
-                ");
-            }
-        }
-
-        return false; // Request allowed
+        return $is_limited;
     }
 }
 

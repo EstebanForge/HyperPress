@@ -57,14 +57,22 @@ hp_ds_send_html(string $html): void
 - `hp_ds_patch_*` helpers stream updates via SSE (`text/event-stream`).
 - `hp_ds_send_html()` returns raw HTML (`text/html`) for Datastar `@get`/`@post` to morph by element ID, or for HTMX/Alpine AJAX. No SSE connection.
 
-### Rate Limiting (SSE)
+### Rate Limiting
+
+```php
+hp_is_rate_limited(array $options = []): bool
+```
+
+- Generic, side-effect-free rate limiter for **any** endpoint (HTML, HTMX, Alpine AJAX, Datastar `@get`/`@post`).
+- Returns `true` when blocked. Does **not** send headers or SSE responses.
+- Options: `requests_per_window`, `time_window_seconds`, `identifier`.
 
 ```php
 hp_ds_is_rate_limited(array $options = []): bool
 ```
 
-- Returns true when the request is blocked by the rate limiter.
-- Sends SSE feedback (error element + updated signals) when enabled.
+- Rate limiter specifically for **Datastar SSE endpoints**.
+- Returns `true` when blocked. Automatically sends SSE error feedback (patched element + signals + console warning) when `send_sse_response` is `true`.
 - Options include `requests_per_window`, `time_window_seconds`, `identifier`, `send_sse_response`, `error_message`, `error_selector`.
 
 ## Field CRUD

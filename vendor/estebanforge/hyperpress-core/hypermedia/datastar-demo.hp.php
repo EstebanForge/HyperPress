@@ -3,7 +3,7 @@
 defined('ABSPATH') || exit('Direct access not allowed.');
 
 // Rate limiting check
-if (hp_ds_is_rate_limited()) {
+if (hp_is_rate_limited()) {
     return;
 }
 
