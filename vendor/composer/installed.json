@@ -424,12 +424,12 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.1.7",
-            "version_normalized": "1.1.7.0",
+            "version": "1.1.8",
+            "version_normalized": "1.1.8.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "fb75371659be3e0898dcea8d88dd9b95bb94bd32"
+                "reference": "256428cc44f96c5c02ed8837c49890a9d35e6bdd"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
