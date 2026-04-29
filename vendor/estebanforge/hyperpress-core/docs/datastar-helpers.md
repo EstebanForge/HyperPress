@@ -173,6 +173,24 @@ hp_ds_location('/dashboard');
 hp_ds_location('https://example.com/success');
 ```
 
+**`hp_ds_send_html(string $html): void`**
+
+Sends a plain `text/html` response without SSE framing. Use this when your endpoint should return raw HTML to be consumed by Datastar's `@get`/`@post` actions (which auto-detect `text/html` and morph elements by ID), or by HTMX/Alpine AJAX.
+
+```php
+// Return HTML directly — Datastar will morph it by matching element IDs
+hp_ds_send_html('<div id="result">Hello from Datastar!</div>');
+```
+
+Frontend HTML to consume the HTML endpoint:
+
+```html
+<button data-on:click="@get('/endpoint')">
+    Load Content
+</button>
+<div id="result">Initial content</div>
+```
+
 **`hp_ds_is_rate_limited(array $options = []): bool`**
 
 Checks if current request is rate limited for Datastar SSE endpoints to prevent abuse and protect server resources. Uses WordPress transients for persistence across requests.

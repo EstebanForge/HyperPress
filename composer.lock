@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "56f84a8493b7511a3f327f971d859ea7",
+    "content-hash": "9749a34cc96957a2f903e0f9df1fd825",
     "packages": [
         {
             "name": "automattic/jetpack-autoloader",
@@ -418,22 +418,22 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.1.6",
+            "version": "1.1.7",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "bfb6703f44b0007123309ff548028258c82a9f07"
+                "reference": "fb75371659be3e0898dcea8d88dd9b95bb94bd32"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
-                "estebanforge/hyperblocks": "^1.0",
-                "estebanforge/hyperfields": "^1.0",
+                "estebanforge/hyperblocks": "^1",
+                "estebanforge/hyperfields": "^1",
                 "php": ">=8.2",
-                "starfederation/datastar-php": "^1.0"
+                "starfederation/datastar-php": "^1"
             },
             "require-dev": {
                 "brain/monkey": "^2",
-                "friendsofphp/php-cs-fixer": "^3.0",
+                "friendsofphp/php-cs-fixer": "^3",
                 "pestphp/pest": "^4",
                 "pestphp/pest-plugin-browser": "^4",
                 "phpunit/phpunit": "^12"

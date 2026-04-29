@@ -1,5 +1,9 @@
 # Changelog
 
+# 3.2.5 / 2026-04-28
+- **NEW:** Added `hp_ds_send_html()` helper for plain `text/html` responses from Datastar endpoints. Returns raw HTML without SSE framing; Datastar's `@get`/`@post` actions auto-detect `text/html` and morph elements by ID.
+- **FIX:** Updated default `datastar_version` from stale `1.0.0-rc.1` to `1.0.1`, matching the CDN bundle already in use.
+
 # 3.2.4 / 2026-04-28
 - **FIX:** Datastar PHP SDK namespace references now use upstream `starfederation\datastar\...` class names in bundled HyperPress-Core helpers/runtime checks, restoring compatibility with current `starfederation/datastar-php` autoloading.
 - **FIX:** Guarded Jetpack `vendor/autoload_packages.php` loading to WordPress runtime contexts only (`function_exists('wp_normalize_path')`) to prevent CLI/test fatal errors.
