@@ -40,7 +40,7 @@
         'estebanforge/hyperfields' => array(
             'pretty_version' => '1.2.4',
             'version' => '1.2.4.0',
-            'reference' => 'ce3f0f9afd9a4f3f138b9cc7ffce5fa35eead2fb',
+            'reference' => '83b35df0e0f85346a23d2fa633adb18d0f0f693e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../estebanforge/hyperfields',
             'aliases' => array(),
@@ -58,7 +58,7 @@
         'estebanforge/hyperpress-core' => array(
             'pretty_version' => '1.2.0',
             'version' => '1.2.0.0',
-            'reference' => '256428cc44f96c5c02ed8837c49890a9d35e6bdd',
+            'reference' => '5b11daf679aae38de48f9581554aa34287be70e4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../estebanforge/hyperpress-core',
             'aliases' => array(),
