@@ -85,6 +85,7 @@ class ServerSentEventGenerator
      *     mode?: ElementPatchMode|string|null,
      *     namespace?: NamespaceType|string|null,
      *     useViewTransition?: bool|null,
+     *     viewTransitionSelector?: string|null,
      *     eventId?: string|null,
      *     retryDuration?: int|null,
      * } $options

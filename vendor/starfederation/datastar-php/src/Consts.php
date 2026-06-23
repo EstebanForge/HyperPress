@@ -30,6 +30,7 @@ class Consts
     public const NAMESPACE_DATALINE_LITERAL = 'namespace ';
     public const ELEMENTS_DATALINE_LITERAL = 'elements ';
     public const USE_VIEW_TRANSITION_DATALINE_LITERAL = 'useViewTransition ';
+    public const VIEW_TRANSITION_SELECTOR_DATALINE_LITERAL = 'viewTransitionSelector ';
     public const SIGNALS_DATALINE_LITERAL = 'signals ';
     public const ONLY_IF_MISSING_DATALINE_LITERAL = 'onlyIfMissing ';
 }

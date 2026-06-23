@@ -40,6 +40,16 @@ hp_is_library_mode(): bool
 ```
 
 - Detects if HyperPress is loaded as a Composer library vs active plugin.
+- In library mode the `Settings → HyperPress` page is hidden by default. Re-enable it via the `hyperpress/admin/show_menu` filter — see [Developer Configuration → Re-enable the Admin Settings Page in Library Mode](./developer-configuration.md#re-enable-the-admin-settings-page-in-library-mode).
+
+## Options
+
+```php
+hp_get_options(): array
+hp_get_option(string $key, mixed $default = null): mixed
+```
+
+- Read the merged HyperPress option array, or a single key with a fallback. Both go through the `hyperpress/options` filter — see [Developer Configuration → Reading Options in Code](./developer-configuration.md#reading-options-in-code).
 
 ## Datastar (SSE / HTML) Integration
 

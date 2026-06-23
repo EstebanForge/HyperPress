@@ -1,5 +1,17 @@
 # Changelog
 
+# 3.3.0 / 2026-06-23
+- **DEPS:** Updated `estebanforge/hyperpress-core` to 1.2.0.
+- **NEW:** Programmatic configuration surface — library consumers (and theme/plugin authors who want code-only config) now have a single canonical filter for tweaking HyperPress options without touching the admin page:
+  - `hyperpress/options` filter — applied last in the resolution chain, so it always wins over stored database options. Replaces the two legacy filters (`hyperpress/config/default_options`, `hyperpress/assets/default_options`) which are now deprecated and only consulted as a BC fallback.
+  - `hyperpress/configured` action — fires once per request after `Main::run()` has resolved the final options array.
+  - `hp_get_options(): array` and `hp_get_option(string $key, mixed $default = null): mixed` helpers — read the merged options from anywhere.
+  - Full reference and migration recipe: `HyperPress-Core/docs/developer-configuration.md`.
+- **CHANGED:** When HyperPress-Core is consumed as a Composer library (no `hyperpress.php` / `api-for-htmx.php` entry point active), the `Settings → HyperPress` page is hidden by default. Library consumers can opt in by returning a truthy value from the `hyperpress/admin/show_menu` filter. Plugin mode (this adapter active) is unchanged.
+- **CHANGED:** Default `active_library` aligned to `datastar` everywhere (previously `Main::getOptions()` defaulted to `htmx` while `Config` and `Assets` defaulted to `datastar`).
+- **FIX:** `OptionsResolver::defaults()` now synthesizes HTMX extension option keys with underscores (e.g. `load_extension_head_support`) to match the shape Admin writes and stores. `hp_get_option('load_extension_<key>')` now returns the correct value instead of silently defaulting to 0.
+- **FIX:** `Main::$options` is now nullable so any code touching the public property on a frontend request no longer triggers a "Typed property must not be accessed before initialization" fatal.
+
 # 3.2.6 / 2026-04-29
 - **DEPS:** Updated `estebanforge/hyperpress-core` to 1.1.8
 - **NEW:** Added `hp_is_rate_limited()` — generic, side-effect-free rate limit helper for any HyperPress endpoint. Use this in regular HTML/HTMX/Alpine templates; it does not send headers or SSE responses.

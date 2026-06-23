@@ -6,8 +6,10 @@ Detects whether the plugin is running as a WordPress plugin or as a Composer lib
 
 ```php
 if (hp_is_library_mode()) {
-    // Running as composer library - no admin interface
-    // Configure via filters only
+    // Running as composer library - the admin settings page is hidden
+    // by default. Configure via filters, or opt back in:
+    //   add_filter('hyperpress/admin/show_menu', '__return_true');
+    // See developer-configuration.md for the full opt-in recipe.
     add_filter('hyperpress/default_options', function($defaults) {
         $defaults['active_library'] = 'htmx';
         return $defaults;
