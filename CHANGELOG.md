@@ -1,5 +1,9 @@
 # Changelog
 
+# 3.3.1 / 2026-06-23
+- **DEPS:** Refreshed path-repo `composer.lock` references for `estebanforge/hyperfields` and `estebanforge/hyperpress-core` to pull the latest local source (version pins unchanged: hyperfields `1.2.4`, hyperpress-core `1.2.0`). Vendored `estebanforge/hyperblocks` retained at `1.1.3`.
+- **DEPS:** `symfony/console` and friends resolved to `^7.4` (down from `v8.1.0`), restoring the `PHP >= 8.2` floor declared in `composer.json`. `symfony/console v8.1.0` hard-required PHP `>=8.4.1` and was pulling the stack above the plugin's declared minimum.
+
 # 3.3.0 / 2026-06-23
 - **DEPS:** Updated `estebanforge/hyperpress-core` to 1.2.0.
 - **NEW:** Programmatic configuration surface — library consumers (and theme/plugin authors who want code-only config) now have a single canonical filter for tweaking HyperPress options without touching the admin page:

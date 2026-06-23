@@ -322,7 +322,7 @@
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "ce3f0f9afd9a4f3f138b9cc7ffce5fa35eead2fb"
+                "reference": "83b35df0e0f85346a23d2fa633adb18d0f0f693e"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
@@ -429,7 +429,7 @@
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "256428cc44f96c5c02ed8837c49890a9d35e6bdd"
+                "reference": "5b11daf679aae38de48f9581554aa34287be70e4"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
