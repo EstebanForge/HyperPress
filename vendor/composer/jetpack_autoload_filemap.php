@@ -6,46 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir   = dirname($vendorDir);
 
 return array(
-	'6e3fae29631ef280660b3cdad06f25a8' => array(
-		'version' => '3.7.0.0',
-		'path'    => $vendorDir . '/symfony/deprecation-contracts/function.php'
-	),
-	'0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => array(
-		'version' => '1.38.2.0',
-		'path'    => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php'
-	),
-	'320cde22f66dd4f5d3fd621d3e88b98f' => array(
-		'version' => '1.37.0.0',
-		'path'    => $vendorDir . '/symfony/polyfill-ctype/bootstrap.php'
-	),
-	'8825ede83f2f289127722d4e842cf7e8' => array(
-		'version' => '1.38.1.0',
-		'path'    => $vendorDir . '/symfony/polyfill-intl-grapheme/bootstrap.php'
-	),
-	'e69f7f6ee287b969198c3c9d6777bd38' => array(
-		'version' => '1.38.0.0',
-		'path'    => $vendorDir . '/symfony/polyfill-intl-normalizer/bootstrap.php'
-	),
-	'606a39d89246991a373564698c2d8383' => array(
-		'version' => '1.38.1.0',
-		'path'    => $vendorDir . '/symfony/polyfill-php85/bootstrap.php'
-	),
-	'b6b991a57620e2fb6b2f66f03fe9ddc2' => array(
-		'version' => '8.1.0.0',
-		'path'    => $vendorDir . '/symfony/string/Resources/functions.php'
-	),
-	'ad155f8f1cf0d418fe49e248db8c661b' => array(
-		'version' => '3.3.0.0',
-		'path'    => $vendorDir . '/react/promise/src/functions_include.php'
-	),
-	'6124b4c8570aa390c21fafd04a26c69f' => array(
-		'version' => '1.13.4.0',
-		'path'    => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php'
-	),
-	'ec07570ca5a812141189b1fa81503674' => array(
-		'version' => '12.5.29.0',
-		'path'    => $vendorDir . '/phpunit/phpunit/src/Framework/Assert/Functions.php'
-	),
 	'13f65e44352b0407f05cb5a5e174612b' => array(
 		'version' => '1.2.4.0',
 		'path'    => $vendorDir . '/estebanforge/hyperfields/includes/helpers.php'
@@ -58,10 +18,6 @@ return array(
 		'version' => '1.2.4.0',
 		'path'    => $vendorDir . '/estebanforge/hyperfields/bootstrap.php'
 	),
-	'35a6ad97d21e794e7e22a17d806652e4' => array(
-		'version' => '2.4.0.0',
-		'path'    => $vendorDir . '/nunomaduro/termwind/src/Functions.php'
-	),
 	'7a417aa514b484622606bfc8f3893672' => array(
 		'version' => '1.1.3.0',
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/bootstrap.php'
@@ -70,36 +26,8 @@ return array(
 		'version' => '1.1.3.0',
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/src/helpers.php'
 	),
-	'a1cfe24d14977df6878b9bf804af2d1c' => array(
-		'version' => '8.9.4.0',
-		'path'    => $vendorDir . '/nunomaduro/collision/src/Adapters/Phpunit/Autoload.php'
-	),
-	'aadac1114cab8dc19489a7f6dc24c003' => array(
-		'version' => '4.0.2.0',
-		'path'    => $vendorDir . '/pestphp/pest-plugin-arch/src/Autoload.php'
-	),
-	'a4a119a56e50fbb293281d9a48007e0e' => array(
-		'version' => '1.37.0.0',
-		'path'    => $vendorDir . '/symfony/polyfill-php80/bootstrap.php'
-	),
-	'23c18046f52bef3eea034657bafda50f' => array(
-		'version' => '1.38.1.0',
-		'path'    => $vendorDir . '/symfony/polyfill-php81/bootstrap.php'
-	),
-	'9d2b9fc6db0f153a0a149fefb182415e' => array(
-		'version' => '1.38.1.0',
-		'path'    => $vendorDir . '/symfony/polyfill-php84/bootstrap.php'
-	),
 	'29999a51792ecace5389ce90bf577c3f' => array(
 		'version' => '1.2.0.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/bootstrap.php'
-	),
-	'f83ed111c2f97a0449abf067f157f418' => array(
-		'version' => '4.7.3.0',
-		'path'    => $vendorDir . '/pestphp/pest/src/Functions.php'
-	),
-	'7d2876738dc0328edeb8a103c76cd8e7' => array(
-		'version' => '4.7.3.0',
-		'path'    => $vendorDir . '/pestphp/pest/src/Pest.php'
 	),
 );
