@@ -221,6 +221,60 @@ if (!function_exists('hp_is_library_mode')) {
 }
 
 /*
+ * Resolve the merged HyperPress options array.
+ *
+ * Library consumers use this to read or override the active library,
+ * CDN loading, HTMX extension toggles, and every other runtime option.
+ * The result passes through the `hyperpress/options` filter so values
+ * can be tweaked at the call site if needed.
+ *
+ * Example:
+ *
+ *   add_filter('hyperpress/options', function (array $options): array {
+ *       $options['active_library'] = 'htmx';
+ *       $options['load_extension_sse'] = 1;
+ *       return $options;
+ *   });
+ *
+ *   $active = hp_get_options()['active_library']; // 'htmx'
+ *
+ * @since 1.2.0
+ * @return array
+ */
+if (!function_exists('hp_get_options')) {
+    function hp_get_options(): array
+    {
+        return HyperPress\OptionsResolver::resolve();
+    }
+}
+
+/*
+ * Read a single HyperPress option.
+ *
+ * Convenience wrapper around `hp_get_options()` for the common case where
+ * a caller wants one value. Returns `$default` when the key is missing or
+ * its value is `null` (PHP `??` semantics). The key must be a flat option
+ * key — dot-notation and nested lookup are not supported.
+ *
+ * Example:
+ *
+ *   $active = hp_get_option('active_library', 'datastar');
+ *   $sse_on = (bool) hp_get_option('load_extension_sse', 0);
+ *
+ * @since 1.2.0
+ *
+ * @param string $key     Flat option key (e.g. `active_library`, `load_extension_sse`).
+ * @param mixed  $default Value returned when the key is missing or null.
+ * @return mixed
+ */
+if (!function_exists('hp_get_option')) {
+    function hp_get_option(string $key, mixed $default = null): mixed
+    {
+        return hp_get_options()[$key] ?? $default;
+    }
+}
+
+/*
  * Gets the ServerSentEventGenerator instance, creating it if it doesn't exist.
  *
  * @since 2.1.0

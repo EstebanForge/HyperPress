@@ -27,8 +27,31 @@ class Options
     public function __construct(Main $main)
     {
         $this->main = $main;
-        $this->maybeMigrateLegacyOptions();
         add_action('init', $this->initOptionsPage(...));
+    }
+
+    /**
+     * Determine if the admin options page should be registered.
+     *
+     * Returns true in plugin mode (current behavior preserved) and false
+     * in library mode unless the `hyperpress/admin/show_menu` filter returns
+     * a truthy value.
+     *
+     * @since 1.2.0
+     *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        // Must be called after includes/helpers.php loads. The boot
+        // sequence guarantees this (helpers loaded inside
+        // hyperpress_run_initialization_logic() before any Options
+        // instantiation). If this fails it indicates a boot-order bug.
+        if (hp_is_library_mode()) {
+            return (bool) apply_filters('hyperpress/admin/show_menu', false);
+        }
+
+        return true;
     }
 
     /**
@@ -51,6 +74,21 @@ class Options
 
     public function initOptionsPage(): void
     {
+        // Library mode gate, evaluated at `init` time so library consumers
+        // can register the `hyperpress/admin/show_menu` filter up to the
+        // last moment (i.e. on `plugins_loaded`, `after_setup_theme`, or
+        // any `init` priority strictly less than default 10).
+        //
+        // Note: WP-CLI, WP-Cron, REST, XMLRPC, and AJAX requests exit early
+        // in `hyperpress_run_initialization_logic()` (bootstrap.php) before
+        // `init` fires, so this callback is not invoked in those contexts.
+        // Legacy option migration therefore relies on an admin visit to run.
+        if (!self::isEnabled()) {
+            return;
+        }
+
+        $this->maybeMigrateLegacyOptions();
+
         $options = HyperFields::getOptions($this->option_name, []);
 
         $all_sections = array_merge(

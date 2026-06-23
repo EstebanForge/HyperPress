@@ -70,9 +70,12 @@ class Main
     /**
      * Options instance for admin settings management.
      *
-     * @var Options
+     * Nullable because it is only instantiated in admin requests.
+     * Frontend requests must not access this property.
+     *
+     * @var Options|null
      */
-    public Options $options;
+    public ?Options $options = null;
 
     /**
      * Constructor.
@@ -122,19 +125,7 @@ class Main
      */
     public function getOptions(): array
     {
-        $defaults = [
-            'active_library' => 'htmx',
-            'load_in_admin' => false,
-            'htmx_version' => '1.9.10',
-            'htmx_extensions' => [],
-            'alpine_version' => '3.13.3',
-            'datastar_version' => '1.0.1',
-            'datastar_load_in_admin' => false,
-        ];
-
-        $options = get_option('hyperpress_options', $defaults);
-
-        return wp_parse_args($options, $defaults);
+        return OptionsResolver::resolve($this->getCdnUrls()['htmx_extensions'] ?? []);
     }
 
     /**
@@ -365,5 +356,9 @@ class Main
         add_action('wp_head', [$this->config, 'insertConfigMetaTag']);
         $this->compatibility->run();
         $this->theme_support->run();
+
+        // Notify consumers that HyperPress is configured and ready. The
+        // action fires once per request with the merged options array.
+        do_action(OptionsResolver::ACTION, $options);
     }
 }

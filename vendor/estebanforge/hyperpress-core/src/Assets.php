@@ -65,29 +65,8 @@ class Assets
     public function getOptions()
     {
         if ($this->options === null) {
-            $default_options_fallback = [
-                'active_library' => 'datastar',
-                'load_from_cdn' => 0,
-                'load_hyperscript' => 0,
-                'load_alpinejs_with_htmx' => 0,
-                'set_htmx_hxboost' => 0,
-                'load_htmx_backend' => 0,
-                'enable_alpinejs_core' => 0,
-                'enable_alpine_ajax' => 0,
-                'load_alpinejs_backend' => 0,
-                'load_datastar_backend' => 0,
-            ];
-
-            // Add all HTMX extensions to the defaults
             $htmx_extensions = $this->main->getCdnUrls()['htmx_extensions'] ?? [];
-            foreach (array_keys($htmx_extensions) as $extension_key) {
-                $default_options_fallback['load_extension_' . $extension_key] = 0;
-            }
-
-            // Apply filter to allow programmatic configuration
-            $default_options_fallback = apply_filters('hyperpress/assets/default_options', $default_options_fallback);
-
-            $this->options = get_option('hyperpress_options', $default_options_fallback);
+            $this->options = OptionsResolver::resolve($htmx_extensions);
         }
 
         return $this->options;

@@ -53,6 +53,30 @@ Because I share the same sentiment as Carson Gross, the creator of HTMX, that th
 
 I'm using this in production for a few projects, and it's working great, stable, and ready to use. So, I decided to share it with the world.
 
+## Programmatic Configuration
+
+If you'd rather configure HyperPress from code instead of through the admin page, use the canonical `hyperpress/options` filter — it always wins over stored database options:
+
+```php
+add_filter('hyperpress/options', function (array $options): array {
+    $options['active_library'] = 'htmx';
+    $options['load_from_cdn'] = true;
+    return $options;
+});
+
+$active = hp_get_option('active_library', 'datastar');
+```
+
+The `hyperpress/configured` action fires once per request after configuration is resolved, for code that needs to react. Full reference: [docs/developer-configuration.md](./docs/developer-configuration.md#re-enable-the-admin-settings-page-in-library-mode).
+
+## Library Mode
+
+When HyperPress-Core is consumed as a Composer library (no `hyperpress.php` / `api-for-htmx.php` plugin entry point active), the `Settings → HyperPress` page is hidden by default. Opt in with:
+
+```php
+add_filter('hyperpress/admin/show_menu', '__return_true');
+```
+
 ## Documentation
 
 See the Documentation Index: [docs/index.md](./docs/index.md)

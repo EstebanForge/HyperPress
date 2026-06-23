@@ -14,3 +14,5 @@ composer require estebanforge/hyperpress
 ```
 
 This plugin/library will determine which instance of itself is the newer one when WordPress is loading. Then, it will use the newer instance between all competing plugins or themes. This is to avoid conflicts with other plugins or themes that may be using the same library for their Hypermedia implementation.
+
+When installed as a Composer library the `Settings → HyperPress` page is hidden by default. Configure via filters, or re-enable the admin UI with `add_filter('hyperpress/admin/show_menu', '__return_true');` — see [Developer Configuration](./developer-configuration.md#re-enable-the-admin-settings-page-in-library-mode).

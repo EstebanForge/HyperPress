@@ -51,7 +51,7 @@ $sse->patchElements('<div></div>', [
     'useViewTransition' => true,
 ]);
 
-// Patches elements into the DOM.
+// Removes elements from the DOM.
 $sse->removeElements('#my-div', [
     'useViewTransition' => true,
 ]);

@@ -99,7 +99,7 @@ The plugin can be configured either through admin interface or programmatically 
 - **Autoloader**: Uses optimized Composer autoloader (no vendor-prefixing)
 - **Template Extensions**: `.hp.php`, `.hm.php`, `.hb.php` for hypermedia templates (legacy: `.htmx.php`)
 - The plugin provides extensive filters for customization without modifying core files
-- When used as a Composer library, admin interface is automatically hidden (library mode)
+- When used as a Composer library, admin interface is hidden by default (library mode); opt in via the `hyperpress/admin/show_menu` filter returning a truthy value
 
 ## Project Overview
 
@@ -286,7 +286,7 @@ See HyperFields documentation for field types, validation, sanitization.
 ### Library Mode vs Plugin Mode
 
 **Plugin Mode**: Standalone WordPress plugin with admin UI
-**Library Mode**: Composer dependency in another project, admin UI hidden
+**Library Mode**: Composer dependency in another project, admin UI hidden by default (opt in via `hyperpress/admin/show_menu` filter)
 
 Detection is automatic based on whether plugin file exists or loaded via Composer.
 
@@ -323,8 +323,8 @@ add_filter('hyperpress/assets/htmx_url', fn() => 'https://cdn.example.com/htmx.j
 // Customize library versions
 add_filter('hyperpress/assets/htmx_version', fn() => '2.0.0');
 
-// Disable admin interface (library mode)
-add_filter('hyperpress/admin/show_menu', '__return_false');
+// Opt in to the admin interface when consumed as a library
+add_filter('hyperpress/admin/show_menu', '__return_true');
 ```
 
 See `docs/developer-configuration.md` for comprehensive filter reference.

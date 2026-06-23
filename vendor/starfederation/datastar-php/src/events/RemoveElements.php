@@ -15,6 +15,7 @@ class RemoveElements implements EventInterface
 
     public string $selector;
     public bool $useViewTransition = Consts::DEFAULT_ELEMENTS_USE_VIEW_TRANSITIONS;
+    public string $viewTransitionSelector = '';
 
     public function __construct(string $selector, array $options = [])
     {
@@ -47,6 +48,10 @@ class RemoveElements implements EventInterface
 
         if ($this->useViewTransition !== Consts::DEFAULT_ELEMENTS_USE_VIEW_TRANSITIONS) {
             $dataLines[] = $this->getDataLine(Consts::USE_VIEW_TRANSITION_DATALINE_LITERAL, $this->getBooleanAsString($this->useViewTransition));
+
+            if ($this->viewTransitionSelector !== '') {
+                $dataLines[] = $this->getDataLine(Consts::VIEW_TRANSITION_SELECTOR_DATALINE_LITERAL, $this->viewTransitionSelector);
+            }
         }
 
         return $dataLines;

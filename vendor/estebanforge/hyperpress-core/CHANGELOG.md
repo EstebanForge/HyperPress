@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.2.0] - 2026-06-23
+
+### Added
+- `hyperpress/options` filter — canonical entry point for programmatic configuration. Applied LAST in the resolution chain so library consumers always win, even when a stored database option exists.
+- `hyperpress/configured` action — fires once per request from `Main::run()` after the merged options are resolved. Receives the final options array.
+- `hp_get_options(): array` — helper wrapping `OptionsResolver::resolve()` for external code that needs to read the merged options.
+- `hp_get_option(string $key, mixed $default = null): mixed` — singular accessor. Returns `$default` when the key is missing or null.
+- `HyperPress\OptionsResolver` — single source of truth for option resolution. `Main::getOptions()`, `Config::getOptions()`, and `Assets::getOptions()` all delegate to it. Per-request cache keyed by `(blog_id, $htmx_extensions)` so multisite `switch_to_blog()` stays correct.
+
+### Changed
+- Admin options page (`Settings → HyperPress`) is now hidden by default when HyperPress-Core is consumed as a Composer library (no `hyperpress.php` or `api-for-htmx.php` entry point active). The page remains available in plugin mode, unchanged. Gate evaluated on `init` (not construction) so library consumers can register `hyperpress/admin/show_menu` until the last moment.
+- Library consumers can opt in by returning a truthy value from the new `hyperpress/admin/show_menu` filter: `add_filter('hyperpress/admin/show_menu', '__return_true');`.
+- `HyperPress\Admin\Options::isEnabled(): bool` — new public static helper exposing the gate logic for consumers and tests.
+- Option resolution is now consistent across `Main`, `Config`, and `Assets`. Default `active_library` is `datastar` everywhere (previously `Main` defaulted to `htmx` while `Config`/`Assets` defaulted to `datastar`).
+
+### Fixed
+- `OptionsResolver::defaults()` synthesizes HTMX extension option keys with underscores (e.g. `load_extension_head_support`) to match the shape Admin writes and stores. Previously `hp_get_option('load_extension_head-support')` returned 0 even when the admin had enabled it.
+- `Main::$options` is now nullable (`?Options $options = null`) so any code touching the public property on a frontend request no longer triggers a "Typed property must not be accessed before initialization" fatal.
+
+### Deprecated
+- `hyperpress/config/default_options` filter — applied to defaults only, before DB read. A stored option always wins. Use `hyperpress/options` instead.
+- `hyperpress/assets/default_options` filter — same caveat. Use `hyperpress/options` instead.
+
 ## [1.1.8] - 2026-04-29
 
 ### Added

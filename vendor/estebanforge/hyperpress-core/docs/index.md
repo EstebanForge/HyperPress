@@ -26,6 +26,8 @@ Documentation for the HyperPress plugin, with its Hypermedia REST API, and its l
    - [Notes](./hyperblocks.md#notes)
 
  - [Helper Functions](./helper-functions.md)
+   - [Library Mode](./helper-functions.md#library-mode)
+   - [Options](./helper-functions.md#options)
  - [Datastar Helper Functions](./datastar-helpers.md)
    - [Quick Start: Minimal SSE Example](./datastar-helpers.md#quick-start-minimal-sse-example)
  - [HyperBlocks Examples](./hyperblocks-examples.md)
@@ -38,7 +40,7 @@ Documentation for the HyperPress plugin, with its Hypermedia REST API, and its l
    - [Register Custom Template Paths](./developer-configuration.md#register-custom-template-paths)
    - [Customize Sanitization](./developer-configuration.md#customize-sanitization)
    - [Customize Asset Loading](./developer-configuration.md#customize-asset-loading)
-   - [Disable Admin Interface Completely](./developer-configuration.md#disable-admin-interface-completely)
+   - [Re-enable the Admin Settings Page in Library Mode](./developer-configuration.md#re-enable-the-admin-settings-page-in-library-mode)
  - [Library Detection](./library-detection.md)
  - [Security & Validation](./security.md)
  - [FAQ](./faq.md)

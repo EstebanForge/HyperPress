@@ -28,7 +28,7 @@ if ($action !== 'delete-plugin' || !in_array($plugin, $validPlugins, true)) {
   wp_die('Error uninstalling: wrong plugin.');
 }
 
-// Clears HTMX API for WP options
+// Clears HyperPress left-overs
 global $wpdb;
 
 $hp_options = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_hxwp_%' OR option_name LIKE 'hxwp_%' OR option_name LIKE '_hyperpress_%' OR option_name LIKE 'hyperpress_%'");

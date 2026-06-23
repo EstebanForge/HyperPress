@@ -73,56 +73,96 @@ If you require this project as a Composer dependency, it will automatically be l
 
 The plugin exposes a helper function `hp_is_library_mode()` to detect if it is running as a library (not as an active plugin). This is determined automatically based on whether the plugin is in the active plugins list and whether it is running in the admin area.
 
-When in library mode, the plugin will not register its admin options/settings page in wp-admin.
+When in library mode, the plugin will not register its admin options/settings page in wp-admin. To opt in, return a truthy value from the `hyperpress/admin/show_menu` filter:
+
+```php
+// Library consumer: enable the HyperPress admin page
+add_filter('hyperpress/admin/show_menu', '__return_true');
+```
 
 ### Programmatic Configuration via Filters
 
 You can configure the plugin programmatically using WordPress filters instead of using the admin interface. This is particularly useful when the plugin is used as a library or when you want to force specific configurations.
 
-All plugin settings can be controlled using the `hyperpress/config/default_options` filter. This filter allows you to override any default option value:
+All plugin settings can be controlled using the `hyperpress/options` filter. **This is the canonical entry point and always wins** — it runs after the stored database option has been read, so library consumers do not need to call `update_option()` to override values that the admin page (or another plugin) may have saved.
 
 ```php
-add_filter('hyperpress/config/default_options', function($defaults) {
+add_filter('hyperpress/options', function (array $options): array {
     // General Settings
-    $defaults['active_library'] = 'htmx'; // 'htmx', 'alpinejs', or 'datastar'
-    $defaults['load_from_cdn'] = false;  // `true` to use CDN, `false` for local files
+    $options['active_library'] = 'htmx'; // 'htmx', 'alpinejs', or 'datastar'
+    $options['load_from_cdn'] = true;    // `true` to use CDN, `false` for local files
 
     // HTMX Core Settings
-    $defaults['load_hyperscript'] = true;
-    $defaults['load_alpinejs_with_htmx'] = false;
-    $defaults['set_htmx_hxboost'] = false;
-    $defaults['load_htmx_backend'] = false;
+    $options['load_hyperscript'] = true;
+    $options['load_alpinejs_with_htmx'] = false;
+    $options['set_htmx_hxboost'] = false;
+    $options['load_htmx_backend'] = false;
 
     // Alpine Ajax Settings
-    $defaults['load_alpinejs_backend'] = false;
+    $options['load_alpinejs_backend'] = false;
 
     // Datastar Settings
-    $defaults['load_datastar_backend'] = false;
+    $options['load_datastar_backend'] = false;
 
-    // HTMX Extensions - Enable by setting to `true`
-    $defaults['load_extension_ajax-header'] = false;
-    $defaults['load_extension_alpine-morph'] = false;
-    $defaults['load_extension_class-tools'] = false;
-    $defaults['load_extension_client-side-templates'] = false;
-    $defaults['load_extension_debug'] = false;
-    $defaults['load_extension_disable-element'] = false; // Note: key is 'disable-element'
-    $defaults['load_extension_event-header'] = false;
-    $defaults['load_extension_head-support'] = false;
-    $defaults['load_extension_include-vals'] = false;
-    $defaults['load_extension_json-enc'] = false;
-    $defaults['load_extension_loading-states'] = false;
-    $defaults['load_extension_method-override'] = false;
-    $defaults['load_extension_morphdom-swap'] = false;
-    $defaults['load_extension_multi-swap'] = false;
-    $defaults['load_extension_path-deps'] = false;
-    $defaults['load_extension_preload'] = false;
-    $defaults['load_extension_remove-me'] = false;
-    $defaults['load_extension_response-targets'] = false;
-    $defaults['load_extension_restored'] = false;
-    $defaults['load_extension_sse'] = false;
-    $defaults['load_extension_ws'] = false;
+    // HTMX Extensions - Enable by setting to `1` (or `true`)
+    $options['load_extension_ajax-header'] = 0;
+    $options['load_extension_alpine-morph'] = 0;
+    $options['load_extension_class-tools'] = 0;
+    $options['load_extension_client-side-templates'] = 0;
+    $options['load_extension_debug'] = 0;
+    $options['load_extension_disable-element'] = 0;
+    $options['load_extension_event-header'] = 0;
+    $options['load_extension_head-support'] = 0;
+    $options['load_extension_include-vals'] = 0;
+    $options['load_extension_json-enc'] = 0;
+    $options['load_extension_loading-states'] = 0;
+    $options['load_extension_method-override'] = 0;
+    $options['load_extension_morphdom-swap'] = 0;
+    $options['load_extension_multi-swap'] = 0;
+    $options['load_extension_path-deps'] = 0;
+    $options['load_extension_preload'] = 0;
+    $options['load_extension_remove-me'] = 0;
+    $options['load_extension_response-targets'] = 0;
+    $options['load_extension_restored'] = 0;
+    $options['load_extension_sse'] = 0;
+    $options['load_extension_ws'] = 0;
 
-    return $defaults;
+    return $options;
+});
+```
+
+The filter receives the merged options array (defaults + stored DB values) and is the LAST step in the resolution chain. The keys you can set include the full set documented under [Common Configuration Examples](#common-configuration-examples) below.
+
+#### Reading Options in Code
+
+Use the `hp_get_options()` helper to read the resolved options array from anywhere:
+
+```php
+$active = hp_get_options()['active_library']; // 'htmx', 'alpinejs', or 'datastar'
+
+if (hp_get_options()['load_extension_sse'] ?? 0) {
+    // SSE extension enabled; register SSE endpoints...
+}
+```
+
+For single-value reads, use `hp_get_option($key, $default = null)` instead — it wraps `hp_get_options()` with `??` semantics so missing or null keys return the default:
+
+```php
+$active = hp_get_option('active_library', 'datastar');
+$sse_on = (bool) hp_get_option('load_extension_sse', 0);
+```
+
+Both helpers call the same resolver as the internal `Main::getOptions()`, `Config::getOptions()`, and `Assets::getOptions()` — values stay in sync across subsystems.
+
+#### Reacting After Configuration
+
+The `hyperpress/configured` action fires once per request after `Main::run()` has resolved the final options array. Use it when you need to perform setup that depends on the merged configuration:
+
+```php
+add_action('hyperpress/configured', function (array $options): void {
+    if (($options['active_library'] ?? '') === 'datastar') {
+        // Register Datastar-specific SSE endpoints, log, etc.
+    }
 });
 ```
 
@@ -130,61 +170,70 @@ add_filter('hyperpress/config/default_options', function($defaults) {
 
 **Complete HTMX Setup with Extensions:**
 ```php
-add_filter('hyperpress/config/default_options', function($defaults) {
-    $defaults['active_library'] = 'htmx';
-    $defaults['load_from_cdn'] = false; // Use local files
-    $defaults['load_hyperscript'] = true;
-    $defaults['set_htmx_hxboost'] = true; // Progressive enhancement
-    $defaults['load_htmx_backend'] = true; // Use in admin too
+add_filter('hyperpress/options', function (array $options): array {
+    $options['active_library'] = 'htmx';
+    $options['load_from_cdn'] = false; // Use local files
+    $options['load_hyperscript'] = 1;
+    $options['set_htmx_hxboost'] = 1; // Progressive enhancement
+    $options['load_htmx_backend'] = 1; // Use in admin too
 
     // Enable commonly used HTMX extensions
-    $defaults['load_extension_debug'] = true;
-    $defaults['load_extension_loading-states'] = true;
-    $defaults['load_extension_preload'] = true;
-    $defaults['load_extension_sse'] = true;
+    $options['load_extension_debug'] = 1;
+    $options['load_extension_loading-states'] = 1;
+    $options['load_extension_preload'] = 1;
+    $options['load_extension_sse'] = 1;
 
-    return $defaults;
+    return $options;
 });
 ```
 
 **Alpine Ajax Setup:**
 ```php
-add_filter('hyperpress/config/default_options', function($defaults) {
-    $defaults['active_library'] = 'alpinejs';
-    $defaults['load_from_cdn'] = true; // Use CDN for latest version
-    $defaults['load_alpinejs_backend'] = true;
+add_filter('hyperpress/options', function (array $options): array {
+    $options['active_library'] = 'alpinejs';
+    $options['load_from_cdn'] = true; // Use CDN for latest version
+    $options['load_alpinejs_backend'] = 1;
 
-    return $defaults;
+    return $options;
 });
 ```
 
 **Datastar Configuration:**
 ```php
-add_filter('hyperpress/config/default_options', function($defaults) {
-    $defaults['active_library'] = 'datastar';
-    $defaults['load_from_cdn'] = false;
-    $defaults['load_datastar_backend'] = true;
+add_filter('hyperpress/options', function (array $options): array {
+    $options['active_library'] = 'datastar';
+    $options['load_from_cdn'] = false;
+    $options['load_datastar_backend'] = 1;
 
-    return $defaults;
+    return $options;
 });
 ```
 
 **Production-Ready Configuration (CDN with specific extensions):**
 ```php
-add_filter('hyperpress/config/default_options', function($defaults) {
-    $defaults['active_library'] = 'htmx';
-    $defaults['load_from_cdn'] = true; // Better performance
-    $defaults['load_hyperscript'] = true;
-    $defaults['set_htmx_hxboost'] = true;
+add_filter('hyperpress/options', function (array $options): array {
+    $options['active_library'] = 'htmx';
+    $options['load_from_cdn'] = true; // Better performance
+    $options['load_hyperscript'] = 1;
+    $options['set_htmx_hxboost'] = 1;
 
     // Enable production-useful extensions
-    $defaults['load_extension_loading-states'] = true;
-    $defaults['load_extension_preload'] = true;
-    $defaults['load_extension_response-targets'] = true;
+    $options['load_extension_loading-states'] = 1;
+    $options['load_extension_preload'] = 1;
+    $options['load_extension_response-targets'] = 1;
 
-    return $defaults;
+    return $options;
 });
 ```
+
+#### Deprecated Filters
+
+The legacy filters below are still honored for backwards compatibility but should not be used in new code. Both are applied to the defaults BEFORE the database option is read, so a stored option always wins over them — meaning library consumers would otherwise need to call `update_option()` after the filter to take effect. `hyperpress/options` (above) runs LAST and avoids that footgun.
+
+- `hyperpress/config/default_options` — used to filter defaults before DB read (Config subsystem)
+- `hyperpress/assets/default_options` — used to filter defaults before DB read (Assets subsystem)
+
+Migration is mechanical: rename the filter, change the parameter name from `$defaults` to `$options`, and the body remains the same. WP will emit a deprecation notice via `_deprecated_filter()` the first time each legacy filter fires.
 
 ## Register Custom Template Paths
 
@@ -410,17 +459,21 @@ These filters provide maximum flexibility for developers who need to:
 - Implement environment-specific loading strategies
 - Ensure asset availability in complex deployment scenarios
 
-## Disable Admin Interface Completely
+## Re-enable the Admin Settings Page in Library Mode
 
-If you want to configure everything programmatically and hide the admin interface, define the `HYPERPRESS_LIBRARY_MODE` constant in your `wp-config.php` or a custom plugin file. This will prevent the settings page from being added.
+When HyperPress-Core is loaded as a Composer library (no `hyperpress.php` or `api-for-htmx.php` plugin entry point active), the `Settings → HyperPress` page is hidden by default. Configure everything programmatically via filters, or opt back in by returning a truthy value from the `hyperpress/admin/show_menu` filter:
 
 ```php
-// In wp-config.php or a custom plugin file
-define('HYPERPRESS_LIBRARY_MODE', true);
-
-// You can then configure the plugin using filters as needed
-add_filter('hyperpress/config/default_options', function($defaults) {
-    // Your configuration here. See above for examples.
-    return $defaults;
-});
+// In your plugin or theme, before the after_setup_theme hook fires
+add_filter('hyperpress/admin/show_menu', '__return_true');
 ```
+
+The filter is only consulted in library mode; plugin users see no behavior change. The same filter is the gate `HyperPress\Admin\Options::isEnabled()` exposes for programmatic introspection:
+
+```php
+if (class_exists('\\HyperPress\\Admin\\Options') && \HyperPress\Admin\Options::isEnabled()) {
+    // The admin page will render; safe to assume the menu is registered
+}
+```
+
+See [Library Detection](./library-detection.md) for the full `hp_is_library_mode()` reference.
