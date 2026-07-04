@@ -177,6 +177,7 @@ class ComposerStaticInitc7db29f2924cd24a3bcee7e30edc65e6
         'HyperBlocks\\Renderer' => __DIR__ . '/..' . '/estebanforge/hyperblocks/src/Renderer.php',
         'HyperBlocks\\RestApi' => __DIR__ . '/..' . '/estebanforge/hyperblocks/src/RestApi.php',
         'HyperBlocks\\WordPress\\Bootstrap' => __DIR__ . '/..' . '/estebanforge/hyperblocks/src/WordPress/Bootstrap.php',
+        'HyperFields\\AdminPage' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/AdminPage.php',
         'HyperFields\\Admin\\Activation' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/Activation.php',
         'HyperFields\\Admin\\ExportImportPageConfig' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/ExportImportPageConfig.php',
         'HyperFields\\Admin\\ExportImportUI' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/ExportImportUI.php',

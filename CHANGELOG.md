@@ -1,5 +1,10 @@
 # Changelog
 
+# 3.3.2 / 2026-07-04
+- **DEPS:** Updated `estebanforge/hyperfields` to 1.3.0 — new `AdminPage` class (non-form admin page host with sticky white header, URL-based nav tabs, notice relocation), mobile nav-tab dropdown morph (`<= 782px`), plus fixes for the `TabsField` layout regression, sticky-header horizontal scrollbar bleed, mobile sticky-header gaps, and notice relocation on non-form pages.
+- **DEPS:** Updated `estebanforge/hyperblocks` to 1.1.4 (hyperfields dependency bump).
+- **DEPS:** Updated `estebanforge/hyperpress-core` to 1.3.0 (hyperfields + hyperblocks dependency bumps).
+
 # 3.3.1 / 2026-06-23
 - **DEPS:** Refreshed path-repo `composer.lock` references for `estebanforge/hyperfields` and `estebanforge/hyperpress-core` to pull the latest local source (version pins unchanged: hyperfields `1.2.4`, hyperpress-core `1.2.0`). Vendored `estebanforge/hyperblocks` retained at `1.1.3`.
 - **DEPS:** `symfony/console` and friends resolved to `^7.4` (down from `v8.1.0`), restoring the `PHP >= 8.2` floor declared in `composer.json`. `symfony/console v8.1.0` hard-required PHP `>=8.4.1` and was pulling the stack above the plugin's declared minimum.

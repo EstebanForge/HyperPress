@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.3.0] - 2026-07-03
+
+### Added
+- **New `AdminPage` class** — non-form admin page host for tool/wizard pages (sticky white header with H1, URL-based nav tabs, notice relocation) without the settings-form machinery (`OptionsPage` is still the right choice for settings forms). Additive and fully backward-compatible.
+  - `HyperFields::makeAdminPage($title, $slug)` factory.
+  - `addTab($id, $title, callable $render)`, `setParentSlug()`, `setMenuTitle()`, `setCapability()`, `setPosition()`, `setFooterContent()`.
+  - Tabs render always once at least one is added; active tab read from `?tab=` (defaults to the first). No `<form>`, no `register_setting`, no Save button, no sanitize callback.
+  - Emits the same DOM anchors as `OptionsPage` (`.hyperpress-options-wrap`, `[data-hyperpress-sticky-header]`, `#hyperpress-layout__notice-catcher`), so the sticky-header and notice-relocation JS work unchanged.
+- **Mobile nav-tab dropdown morph** — on viewports `<= 782px`, URL-based nav tabs (used by both `OptionsPage` and `AdminPage`) render as a `<select>` dropdown built from the existing `<a>` links (single source of truth). Active tab is preselected; changing the dropdown navigates to the tab URL. Vanilla JS, show/hide driven purely by CSS.
+
+### Fixed
+- **`TabsField` layout regression** — `.hyperpress-tabs-wrapper { display: flex }` laid the tab nav and content side by side. Now `display: block`; the inner `.nav-tab-wrapper` keeps its flex row.
+- **Sticky-header horizontal scrollbar** — the white-bar bleed pseudo-elements pushed past the viewport on the right. Bleed is now asymmetric: left fills `#wpcontent`'s left padding, right syncs to the new `--hf-content-inset-right` variable so content gets breathing room without the white bar falling short.
+- **Mobile sticky-header gaps** — at `max-width: 782px` the bleed now matches the wrap's own mobile padding (`--hf-header-bleed-x: 16px`), so the white header fills edge-to-edge on small screens.
+- **Notice relocation on `AdminPage`** — the notice-hiding inline style (`.wrap.hyperpress-options-wrap > .notice`) kept relocated notices invisible on non-form pages because the catcher had no isolating parent (OptionsPage gets this for free from its `<form>`). The catcher is now wrapped in `.hyperpress-notice-region`.
+
 ## [1.2.4] - 2026-04-28
 
 ### Added
