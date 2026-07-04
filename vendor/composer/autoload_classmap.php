@@ -119,6 +119,7 @@ return array(
     'HyperBlocks\\Renderer' => $vendorDir . '/estebanforge/hyperblocks/src/Renderer.php',
     'HyperBlocks\\RestApi' => $vendorDir . '/estebanforge/hyperblocks/src/RestApi.php',
     'HyperBlocks\\WordPress\\Bootstrap' => $vendorDir . '/estebanforge/hyperblocks/src/WordPress/Bootstrap.php',
+    'HyperFields\\AdminPage' => $vendorDir . '/estebanforge/hyperfields/src/AdminPage.php',
     'HyperFields\\Admin\\Activation' => $vendorDir . '/estebanforge/hyperfields/src/Admin/Activation.php',
     'HyperFields\\Admin\\ExportImportPageConfig' => $vendorDir . '/estebanforge/hyperfields/src/Admin/ExportImportPageConfig.php',
     'HyperFields\\Admin\\ExportImportUI' => $vendorDir . '/estebanforge/hyperfields/src/Admin/ExportImportUI.php',

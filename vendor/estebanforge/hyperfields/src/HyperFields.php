@@ -126,6 +126,19 @@ class HyperFields
     }
 
     /**
+     * Create a non-form AdminPage instance (sticky header + URL nav tabs,
+     * no settings form). See HyperFields\AdminPage.
+     *
+     * @param string $page_title The page title (also the H1).
+     * @param string $menu_slug  The menu slug.
+     * @return AdminPage
+     */
+    public static function makeAdminPage(string $page_title, string $menu_slug): AdminPage
+    {
+        return AdminPage::make($page_title, $menu_slug);
+    }
+
+    /**
      * Create a Field instance.
      *
      * @param string $type The field type

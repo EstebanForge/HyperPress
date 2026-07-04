@@ -627,10 +627,69 @@
         }
     };
 
+    // ---------------------------------------------------------------------
+    // Nav-tab → <select> morph for mobile. URL-based tabs (OptionsPage and
+    // AdminPage) render as <a> links; on small screens a dropdown is easier
+    // to use than a cramped/scrolling tab bar. The select is built from the
+    // existing links so there is a single source of truth, and shown/hidden
+    // purely via CSS (no resize listeners, no reflow churn).
+    // ---------------------------------------------------------------------
+
+    function initNavTabSelect() {
+        var navs = document.querySelectorAll('.hyperpress-options-wrap .hyperpress-nav-tab-wrapper');
+        if (!navs.length) {
+            return;
+        }
+
+        Array.prototype.forEach.call(navs, function (nav) {
+            // Idempotent: skip if a previous init already injected a wrapper.
+            if (nav.nextElementSibling && nav.nextElementSibling.classList.contains('hyperpress-nav-select-region')) {
+                return;
+            }
+
+            var links = nav.querySelectorAll('a.nav-tab');
+            if (!links.length) {
+                return;
+            }
+
+            // Wrap the select in a region that carries the same white bleed
+            // bar as the desktop nav so the sticky header's full-width look
+            // is preserved on mobile.
+            var region = document.createElement('div');
+            region.className = 'hyperpress-nav-select-region';
+
+            var select = document.createElement('select');
+            select.id = 'hyperpress-nav-select-' + Math.random().toString(36).slice(2, 9);
+            select.name = 'hyperpress_nav_select';
+            select.className = 'hyperpress-nav-select';
+            select.setAttribute('aria-label', nav.getAttribute('aria-label') || '' );
+
+            Array.prototype.forEach.call(links, function (link) {
+                var option = document.createElement('option');
+                option.value = link.getAttribute('href') || '';
+                option.textContent = link.textContent || '';
+                if (link.classList.contains('nav-tab-active')) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+
+            select.addEventListener('change', function () {
+                if (select.value) {
+                    window.location.href = select.value;
+                }
+            });
+
+            region.appendChild(select);
+            nav.parentNode.insertBefore(region, nav.nextSibling);
+        });
+    }
+
     // -------------------------------------------------------------------------
 
     document.addEventListener('DOMContentLoaded', function () {
         initStickyHeader();
+        initNavTabSelect();
         initJsonCopyButtons();
         initExportModeControls();
 

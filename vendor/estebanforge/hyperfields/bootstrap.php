@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 
 if (!defined('HYPERFIELDS_DEFAULT_VERSION')) {
-    define('HYPERFIELDS_DEFAULT_VERSION', '1.2.4');
+    define('HYPERFIELDS_DEFAULT_VERSION', '1.3.0');
 }
 
 // Define global functions BEFORE early-return guards so they're always available.

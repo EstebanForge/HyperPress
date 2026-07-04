@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.4] - 2026-07-03
+
+### Changed
+- Updated `estebanforge/hyperfields` dependency to pick up the latest HyperFields release.
+
 ## [1.1.3] - 2026-04-28
 
 ### Added

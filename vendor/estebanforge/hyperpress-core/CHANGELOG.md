@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.0] - 2026-07-03
+
+### Changed
+- Updated hyperfields and hyperblocks dependencies.
+
 ## [1.2.0] - 2026-06-23
 
 ### Added
