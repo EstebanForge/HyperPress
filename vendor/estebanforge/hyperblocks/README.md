@@ -153,7 +153,28 @@ add_filter('hyperblocks/blocks/register_fluent_paths', function (array $paths): 
 });
 ```
 
-A registered path is scanned for block definitions **one level beneath the base** (`base/<dir>/<file>` only). If you only need a directory to resolve render templates via `Block::setRenderTemplateFile()` and want to keep it from being auto-executed as a block definition, register it as a template-only path:
+A registered path is scanned for block definitions **one level beneath the base** (`base/<dir>/<file>` only). **Each definition file must declare a `HyperBlocks Block:` docblock header** so that WP-native `render.php` / `init.php` files co-located in a theme's `/blocks/` tree are never executed out of render context:
+
+```php
+<?php
+/**
+ * HyperBlocks Block: My Block
+ */
+use HyperBlocks\Block\Block;
+use HyperBlocks\Registry;
+
+Registry::getInstance()->registerFluentBlock(
+    Block::make('My Block')->setName('my-theme/my-block') /* ... */
+);
+```
+
+To disable auto-registration of the theme's `/blocks` directory entirely (defense-in-depth alongside the header check):
+
+```php
+add_filter('hyperblocks/blocks/auto_discover_theme_blocks', '__return_false');
+```
+
+If you only need a directory to resolve render templates via `Block::setRenderTemplateFile()` and want to keep it from being auto-executed as a block definition, register it as a template-only path:
 
 ```php
 Config::registerTemplatePath(plugin_dir_path(__FILE__) . 'templates');

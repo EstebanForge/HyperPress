@@ -1,9 +1,14 @@
 <?php
 
 /**
+ * HyperBlocks Block: Hero Banner
+ *
  * Example: Hero Banner Block.
  *
  * This demonstrates how to create a HyperBlocks block using the fluent API.
+ * The header line above is required: auto-discovery only loads files that
+ * declare `HyperBlocks Block:` so co-located render.php/init.php files are
+ * never executed out of render context.
  */
 
 use HyperBlocks\Block\Block;

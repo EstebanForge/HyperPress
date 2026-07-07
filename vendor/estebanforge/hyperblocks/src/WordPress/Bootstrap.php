@@ -63,10 +63,26 @@ class Bootstrap
     /**
      * Register default block paths.
      *
+     * Auto-registers the active theme's /blocks directories as discovery
+     * paths. On by default for back-compat; gated by the
+     * `hyperblocks/blocks/auto_discover_theme_blocks` filter so a consumer
+     * whose theme uses /blocks for WP-native/ACF blocks (and who prefers an
+     * explicit opt-out over the header-based file filter) can disable
+     * auto-registration entirely with __return_false. The library's own
+     * bundled blocks (HYPERBLOCKS_PATH/blocks) are registered separately in
+     * initializeConfig() and are NOT affected by this filter.
+     *
      * @return void
      */
     public static function registerDefaultPaths(): void
     {
+        // Defense-in-depth alongside the HyperBlocks Block header: a consumer
+        // can opt out of theme /blocks auto-registration entirely. Default
+        // true preserves the historical behavior.
+        if (!apply_filters('hyperblocks/blocks/auto_discover_theme_blocks', true)) {
+            return;
+        }
+
         // Register theme blocks directory if it exists
         if (is_child_theme()) {
             $childBlocks = get_stylesheet_directory() . '/blocks';

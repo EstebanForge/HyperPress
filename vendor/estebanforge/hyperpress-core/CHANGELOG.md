@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.3.2] - 2026-07-07
+
+### Security
+- Pinned `estebanforge/hyperblocks` to the 1.2.0 release, which closes a critical auto-discovery bug that broke virtually every standard WordPress/ACF theme the moment HyperPress-Core loaded. HyperBlocks' `Registry::discoverAndLoadFluentBlocks()` globbed every registered block path and `require_once`d every `.hb.php`/`.php` match on `init`, executing WP-standard `render.php` files (co-located under `/blocks/<slug>/` and expecting a render context with `$block`, `$attributes`, `$content` in scope) out of context — echoing markup before `<!DOCTYPE html>`, hitting an undefined `$block`, and producing a cascade of warnings plus a fully broken page. HyperPress-Core is a direct vector for this because its block integration registers the active theme's `/blocks` directories as discovery paths, so any theme following the de-facto `/blocks/<slug>/{block.json,init.php,render.php}` layout was broken on install. The fix is upstream (see [hyperblocks 1.2.0]): candidate files are now parsed via `get_file_data()` (first 8 KB, never executed) and only files declaring a non-empty `HyperBlocks Block:` header are loaded; a new `hyperblocks/blocks/auto_discover_theme_blocks` filter adds defense-in-depth.
+
+### Changed
+- The HyperPress-Core consumer file `hyperblocks/fluent-demos/fluent-demos.hb.php` now carries the required `HyperBlocks Block:` docblock header so it survives the new header-gated auto-discovery intact. The header is namespace-agnostic (this file uses the `HyperPress\Blocks\Registry` proxy namespace, not `HyperBlocks\`), which is why the upstream fix deliberately rejected a `str_contains('HyperBlocks')` content-sniff — it would have missed exactly files like this one.
+- `composer.json` — bumped `estebanforge/hyperblocks` to `^1` (resolving to 1.2.0) and package version to `1.3.2`.
+
+### Upgrade notes
+- This is a drop-in security fix. No HyperPress-Core API changes; consumers using `hp_register_block_path()` / `Config::registerBlockPath()` or the bundled demo blocks require no action.
+- If you ship your own fluent block definition files loaded through HyperPress-Core's block integration (files that call `Block::make(...)` and `Registry::getInstance()->registerFluentBlock(...)` and rely on auto-discovery), add a `HyperBlocks Block: <title>` line to the file's top docblock, matching the upstream convention. Files you load via your own `require_once` are unaffected.
+
+[hyperblocks 1.2.0]: ../HyperBlocks/CHANGELOG.md#120---2026-07-07
+
 ## [1.3.1] - 2026-07-07
 
 ### Changed

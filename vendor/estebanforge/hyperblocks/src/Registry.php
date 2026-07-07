@@ -24,6 +24,15 @@ if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
 final class Registry
 {
     /**
+     * WordPress-style file header marking a PHP file as a HyperBlocks
+     * fluent-block definition. Auto-discovery only require_once's files that
+     * declare this header, so render.php / init.php files co-located in a
+     * theme's /blocks/<slug>/ directory (the de-facto WP/ACF block layout)
+     * are never executed out of render context at init. See isFluentBlockFile().
+     */
+    public const FLUENT_BLOCK_HEADER = 'HyperBlocks Block';
+
+    /**
      * The single instance of the class.
      *
      * @var Registry|null
@@ -350,6 +359,17 @@ final class Registry
                 if (str_contains($file, '/_')) {
                     continue;
                 }
+
+                // Only auto-load files that declare the HyperBlocks Block
+                // header. WP-native render.php / init.php co-located in a
+                // theme's /blocks/ tree never carry it; loading them at init
+                // executes them out of render context (no $block in scope)
+                // and dumps their output before <!DOCTYPE html>. See
+                // isFluentBlockFile().
+                if (!self::isFluentBlockFile($file)) {
+                    continue;
+                }
+
                 require_once $file;
                 $loadedFiles[] = $file;
             }
@@ -368,6 +388,36 @@ final class Registry
         }
 
         return $loadedFiles;
+    }
+
+    /**
+     * Whether a PHP file declares itself a HyperBlocks fluent-block definition.
+     *
+     * Discovery require_once's PHP files found under registered block paths.
+     * Standard WP/ACF themes co-locate render.php / init.php there — files
+     * meant to be included by WP's block renderer with $block, $attributes,
+     * and $content in scope. Auto-loading them at init executes them bare,
+     * echoing markup before <!DOCTYPE html> and tripping "undefined $block"
+     * warnings.
+     *
+     * The guard is a WordPress-style file header — the same convention used
+     * for plugins, themes, and dropins. A file must declare a docblock with
+     * a `HyperBlocks Block:` line to be treated as a fluent-block definition.
+     * get_file_data() reads only the first 8KB, so large render templates are
+     * never parsed past their header. WP-native render.php / init.php never
+     * carry it and are skipped.
+     *
+     * Note: explicitly-filtered files (hyperblocks/blocks/register_fluent_blocks)
+     * bypass this check — naming a file directly is explicit consumer consent.
+     *
+     * @param string $file Absolute path to the PHP file.
+     * @return bool True when the HyperBlocks Block header is present and non-empty.
+     */
+    private static function isFluentBlockFile(string $file): bool
+    {
+        $headers = get_file_data($file, ['hyperblocks_block' => self::FLUENT_BLOCK_HEADER]);
+
+        return ($headers['hyperblocks_block'] ?? '') !== '';
     }
 
     /**

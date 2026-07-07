@@ -56,9 +56,12 @@ class TemplatePathDiscoveryTest extends TestCase
         }
 
         // Discovery canary: one subdir deep so the glob WOULD find it.
+        // Carries the HyperBlocks Block header so isFluentBlockFile() admits
+        // it (discovery now requires the header). This pins that a headered
+        // definition file at depth 1 IS loaded.
         file_put_contents(
             $this->discDir . '/sub/canary.hb.php',
-            "<?php\n\$GLOBALS['__hb_disc_canary'] = (\$GLOBALS['__hb_disc_canary'] ?? 0) + 1;\n"
+            "<?php\n/**\n * HyperBlocks Block: Canary\n */\n\$GLOBALS['__hb_disc_canary'] = (\$GLOBALS['__hb_disc_canary'] ?? 0) + 1;\n"
         );
 
         // Template-only canary: identical layout; loaded only if the template

@@ -443,35 +443,35 @@ return array(
 		'path'    => $vendorDir . '/automattic/jetpack-autoloader/src/class-hook-manager.php'
 	),
 	'HyperBlocks\\Block\\Block' => array(
-		'version' => '1.1.9.0',
+		'version' => '1.2.0.0',
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/src/Block/Block.php'
 	),
 	'HyperBlocks\\Block\\Field' => array(
-		'version' => '1.1.9.0',
+		'version' => '1.2.0.0',
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/src/Block/Field.php'
 	),
 	'HyperBlocks\\Block\\FieldGroup' => array(
-		'version' => '1.1.9.0',
+		'version' => '1.2.0.0',
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/src/Block/FieldGroup.php'
 	),
 	'HyperBlocks\\Config' => array(
-		'version' => '1.1.9.0',
+		'version' => '1.2.0.0',
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/src/Config.php'
 	),
 	'HyperBlocks\\Registry' => array(
-		'version' => '1.1.9.0',
+		'version' => '1.2.0.0',
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/src/Registry.php'
 	),
 	'HyperBlocks\\Renderer' => array(
-		'version' => '1.1.9.0',
+		'version' => '1.2.0.0',
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/src/Renderer.php'
 	),
 	'HyperBlocks\\RestApi' => array(
-		'version' => '1.1.9.0',
+		'version' => '1.2.0.0',
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/src/RestApi.php'
 	),
 	'HyperBlocks\\WordPress\\Bootstrap' => array(
-		'version' => '1.1.9.0',
+		'version' => '1.2.0.0',
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/src/WordPress/Bootstrap.php'
 	),
 	'HyperFields\\AdminPage' => array(
@@ -687,87 +687,87 @@ return array(
 		'path'    => $vendorDir . '/estebanforge/hyperfields/src/Validation/SchemaValidator.php'
 	),
 	'HyperPress\\Admin\\Activation' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Admin/Activation.php'
 	),
 	'HyperPress\\Admin\\Options' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Admin/Options.php'
 	),
 	'HyperPress\\Admin\\OptionsMigration' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Admin/OptionsMigration.php'
 	),
 	'HyperPress\\Assets' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Assets.php'
 	),
 	'HyperPress\\Blocks\\Block' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Blocks/Block.php'
 	),
 	'HyperPress\\Blocks\\Field' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Blocks/Field.php'
 	),
 	'HyperPress\\Blocks\\FieldGroup' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Blocks/FieldGroup.php'
 	),
 	'HyperPress\\Blocks\\Registry' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Blocks/Registry.php'
 	),
 	'HyperPress\\Blocks\\Renderer' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Blocks/Renderer.php'
 	),
 	'HyperPress\\Blocks\\RestApi' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Blocks/RestApi.php'
 	),
 	'HyperPress\\Compatibility' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Compatibility.php'
 	),
 	'HyperPress\\Config' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Config.php'
 	),
 	'HyperPress\\Libraries\\AlpineAjaxLib' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Libraries/AlpineAjaxLib.php'
 	),
 	'HyperPress\\Libraries\\DatastarLib' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Libraries/DatastarLib.php'
 	),
 	'HyperPress\\Libraries\\HTMXLib' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Libraries/HTMXLib.php'
 	),
 	'HyperPress\\Log' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Log.php'
 	),
 	'HyperPress\\Main' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Main.php'
 	),
 	'HyperPress\\OptionsResolver' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/OptionsResolver.php'
 	),
 	'HyperPress\\Render' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Render.php'
 	),
 	'HyperPress\\Router' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Router.php'
 	),
 	'HyperPress\\Theme' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/src/Theme.php'
 	),
 	'Latest_Autoloader_Guard' => array(
