@@ -22,8 +22,9 @@ class Field
     private string $storage_type = 'meta';
     private bool $multiple = false;
     private string $layout = 'grid';
-    private ?int $min = null;
-    private ?int $max = null;
+    private ?float $min = null;
+    private ?float $max = null;
+    private ?float $step = null;
     private string $post_type = 'post';
     private string $taxonomy = 'category';
     private bool $media_library = true;
@@ -199,6 +200,77 @@ class Field
         $this->validation = $validation;
 
         return $this;
+    }
+
+    /**
+     * SetMin.
+     * Numeric lower bound for number fields. Value is clamped on save
+     * and rendered as the HTML min attribute.
+     *
+     * @return self
+     */
+    public function setMin(?float $min): self
+    {
+        $this->min = $min;
+
+        return $this;
+    }
+
+    /**
+     * SetMax.
+     * Numeric upper bound for number fields. Value is clamped on save
+     * and rendered as the HTML max attribute.
+     *
+     * @return self
+     */
+    public function setMax(?float $max): self
+    {
+        $this->max = $max;
+
+        return $this;
+    }
+
+    /**
+     * SetStep.
+     * Numeric step for number fields. Rendered as the HTML step attribute.
+     *
+     * @return self
+     */
+    public function setStep(?float $step): self
+    {
+        $this->step = $step;
+
+        return $this;
+    }
+
+    /**
+     * GetMin.
+     *
+     * @return ?float
+     */
+    public function getMin(): ?float
+    {
+        return $this->min;
+    }
+
+    /**
+     * GetMax.
+     *
+     * @return ?float
+     */
+    public function getMax(): ?float
+    {
+        return $this->max;
+    }
+
+    /**
+     * GetStep.
+     *
+     * @return ?float
+     */
+    public function getStep(): ?float
+    {
+        return $this->step;
     }
 
     /**
@@ -602,7 +674,7 @@ class Field
             'taxonomy' => $this->taxonomy,
             'media_library' => $this->media_library,
             'map_options' => $this->map_options,
-            'args' => $this->args,
+            'args' => $this->type === 'number' ? $this->withNumberAttributes($this->args) : $this->args,
             'input_class' => isset($this->args['input_class']) && is_string($this->args['input_class']) ? $this->args['input_class'] : '',
             'label_class' => isset($this->args['label_class']) && is_string($this->args['label_class']) ? $this->args['label_class'] : '',
             'help_is_html' => isset($this->args['help_is_html']) ? (bool) $this->args['help_is_html'] : false,
@@ -681,7 +753,7 @@ class Field
             case 'wysiwyg':
                 return wp_kses_post((string) $value);
             case 'number':
-                return is_numeric($value) ? (float) $value : 0;
+                return $this->sanitizeNumberValue($value);
             case 'email':
                 return is_email($value) ? sanitize_email($value) : '';
             case 'url':
@@ -889,8 +961,17 @@ class Field
     {
         switch ($rule) {
             case 'min':
+                // Numeric bound for number fields, string length otherwise.
+                if ($this->type === 'number') {
+                    return is_numeric($value) && (float) $value >= (float) $param;
+                }
+
                 return strlen((string) $value) >= $param;
             case 'max':
+                if ($this->type === 'number') {
+                    return is_numeric($value) && (float) $value <= (float) $param;
+                }
+
                 return strlen((string) $value) <= $param;
             case 'pattern':
                 return preg_match($param, (string) $value) === 1;
@@ -907,5 +988,53 @@ class Field
             default:
                 return apply_filters("hyperfields/validation_{$rule}", true, $value, $param, $this);
         }
+    }
+
+    /**
+     * SanitizeNumberValue.
+     * Cast to float, then clamp to [min, max] when bounds are set.
+     * Out-of-range values are coerced, never rejected, so saves cannot fail
+     * on range alone. Mirrors the intent of the HTML min/max attributes while
+     * adding real server-side enforcement (an improvement on Carbon Fields,
+     * which only renders the attribute and trusts the browser).
+     *
+     * @return float
+     */
+    private function sanitizeNumberValue(mixed $value): float
+    {
+        $num = is_numeric($value) ? (float) $value : 0.0;
+
+        if ($this->min !== null && $num < $this->min) {
+            $num = $this->min;
+        }
+
+        if ($this->max !== null && $num > $this->max) {
+            $num = $this->max;
+        }
+
+        return $num;
+    }
+
+    /**
+     * WithNumberAttributes.
+     * Merge min/max/step into the field's HTML attributes for rendering.
+     * Explicit user-supplied attributes win (array_key_exists, not isset,
+     * so a deliberate 0 is preserved).
+     *
+     * @return array
+     */
+    private function withNumberAttributes(array $args): array
+    {
+        $attrs = isset($args['attributes']) && is_array($args['attributes']) ? $args['attributes'] : [];
+
+        foreach (['min' => $this->min, 'max' => $this->max, 'step' => $this->step] as $key => $val) {
+            if ($val !== null && !array_key_exists($key, $attrs)) {
+                $attrs[$key] = $val;
+            }
+        }
+
+        $args['attributes'] = $attrs;
+
+        return $args;
     }
 }

@@ -244,9 +244,9 @@ class ReactField extends Field
     /**
      * Get the min value.
      *
-     * @return int|null
+     * @return float|null
      */
-    public function getMin(): ?int
+    public function getMin(): ?float
     {
         $data = parent::toArray();
 
@@ -256,9 +256,9 @@ class ReactField extends Field
     /**
      * Get the max value.
      *
-     * @return int|null
+     * @return float|null
      */
-    public function getMax(): ?int
+    public function getMax(): ?float
     {
         $data = parent::toArray();
 

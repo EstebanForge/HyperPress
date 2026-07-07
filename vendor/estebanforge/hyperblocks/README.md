@@ -153,6 +153,13 @@ add_filter('hyperblocks/blocks/register_fluent_paths', function (array $paths): 
 });
 ```
 
+A registered path is scanned for block definitions **one level beneath the base** (`base/<dir>/<file>` only). If you only need a directory to resolve render templates via `Block::setRenderTemplateFile()` and want to keep it from being auto-executed as a block definition, register it as a template-only path:
+
+```php
+Config::registerTemplatePath(plugin_dir_path(__FILE__) . 'templates');
+// equivalent: Config::registerBlockPath(..., ['discover' => false]);
+```
+
 ## REST API
 
 | Endpoint | Method | Auth | Description |

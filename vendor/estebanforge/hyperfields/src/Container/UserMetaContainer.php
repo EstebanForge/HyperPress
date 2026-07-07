@@ -176,6 +176,11 @@ class UserMetaContainer extends Container
             // Sanitize the value
             $value = $field->sanitizeValue($value);
 
+            // Skip fields that fail validation; preserve the existing meta.
+            if (!$field->validateValue($value)) {
+                continue;
+            }
+
             // Save as user meta
             update_user_meta($this->user_id, $field_name, $value);
         }

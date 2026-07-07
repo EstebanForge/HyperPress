@@ -64,6 +64,34 @@ class Block
     public string $render_template = '';
 
     /**
+     * The block category slug. Null = leave WP default.
+     *
+     * @var string|null
+     */
+    public ?string $category = null;
+
+    /**
+     * Short block description shown in the editor.
+     *
+     * @var string|null
+     */
+    public ?string $description = null;
+
+    /**
+     * Search keywords for the editor inserter.
+     *
+     * @var array<int, string>
+     */
+    public array $keywords = [];
+
+    /**
+     * Registered style handle to enqueue with the block.
+     *
+     * @var string|null
+     */
+    public ?string $style = null;
+
+    /**
      * Constructor.
      *
      * @param string $title The block title.
@@ -203,9 +231,12 @@ class Block
             }
         }
 
-        // Add registered block paths
-        $blockPaths = Config::get('block_paths', []);
-        foreach ($blockPaths as $path) {
+        // Add registered paths allowed for template resolution. This is
+        // the union of discovery paths (block_paths) and template-only
+        // paths (template_paths), so a path registered with
+        // registerTemplatePath() or registerBlockPath($p, ['discover' => false])
+        // still resolves templates without being scanned for block definitions.
+        foreach (Config::getTemplateValidationPaths() as $path) {
             if (is_dir($path)) {
                 $allowedBases[] = rtrim($path, '/');
             }
@@ -213,9 +244,27 @@ class Block
 
         $valid = false;
         foreach ($allowedBases as $base) {
-            $fullPath = $base . '/' . ltrim($relativePath, '/');
-            $real = @realpath($fullPath);
-            if ($real && str_starts_with($real, $base)) {
+            // Resolve the base through realpath so the containment check
+            // compares canonical paths. Without this, a symlinked base
+            // (e.g. macOS /tmp -> /private/tmp) would never prefix-match
+            // its own realpath-resolved files and reject every legitimate
+            // template. realpath also collapses any remaining traversal in
+            // the base itself.
+            $realBase = realpath($base);
+            if ($realBase === false) {
+                continue;
+            }
+            $fullPath = $realBase . '/' . ltrim($relativePath, '/');
+            $real = realpath($fullPath);
+            if ($real === false) {
+                continue;
+            }
+            // Containment check requires the base plus a trailing separator.
+            // Without it, str_starts_with('/var/www/blocks-evil/x',
+            // '/var/www/blocks') would treat an unregistered sibling directory
+            // whose name shares a prefix as "inside" the allowed base.
+            $baseWithSep = rtrim($realBase, '/') . '/';
+            if ($real === $realBase || str_starts_with($real, $baseWithSep)) {
                 $valid = true;
                 break;
             }
@@ -234,6 +283,69 @@ class Block
     public function setRenderTemplateFile(string $relativePath): self
     {
         return $this->setRenderTemplate('file:' . ltrim($relativePath, '/'));
+    }
+
+    /**
+     * Set the block category slug.
+     *
+     * Pass a registered block category slug (e.g. 'layout', 'widgets') or a
+     * custom one registered via the block_categories_all filter.
+     *
+     * @param string $category The category slug.
+     * @return self
+     */
+    public function setCategory(string $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Set the block description shown in the editor.
+     *
+     * @param string $description The description text.
+     * @return self
+     */
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Set search keywords for the editor inserter.
+     *
+     * @param array<int, string> $keywords One or more keywords.
+     * @return self
+     */
+    public function setKeywords(array $keywords): self
+    {
+        $this->keywords = array_values(array_filter($keywords, 'is_string'));
+
+        return $this;
+    }
+
+    /**
+     * Set the registered style handle to enqueue with the block.
+     *
+     * The handle must be registered separately via wp_register_style.
+     *
+     * Note: this accepts a single handle to match the fluent setters' simple
+     * signatures. WP's block.json `style` field technically accepts an array
+     * of handles; if a block needs multiple stylesheets, register a single
+     * aggregate handle (or extend this API to accept an array in a future
+     * revision).
+     *
+     * @param string $handle The registered style handle.
+     * @return self
+     */
+    public function setStyle(string $handle): self
+    {
+        $this->style = $handle;
+
+        return $this;
     }
 
     /**
@@ -265,6 +377,10 @@ class Block
             'fields' => array_map(fn ($f) => $f->toArray(), $this->fields),
             'field_groups' => $this->field_groups,
             'render_template' => $this->render_template,
+            'category' => $this->category,
+            'description' => $this->description,
+            'keywords' => $this->keywords,
+            'style' => $this->style,
         ];
     }
 }

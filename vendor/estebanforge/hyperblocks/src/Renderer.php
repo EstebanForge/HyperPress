@@ -161,9 +161,11 @@ class Renderer
             $allowedBases[] = HYPERBLOCKS_PATH;
         }
 
-        // Add registered block paths
-        $blockPaths = Config::get('block_paths', []);
-        foreach ($blockPaths as $path) {
+        // Add registered paths allowed for template resolution. This is
+        // the union of discovery paths (block_paths) and template-only
+        // paths (template_paths), so a template-only registration still
+        // resolves templates without being scanned for block definitions.
+        foreach (Config::getTemplateValidationPaths() as $path) {
             if (is_dir($path)) {
                 $allowedBases[] = $path;
             }
@@ -188,11 +190,20 @@ class Renderer
             throw new \Exception('Invalid template path: ' . esc_html($templatePath));
         }
 
-        // Check if path is within allowed directories
+        // Check if path is within allowed directories. The containment check
+        // requires the base plus a trailing separator: without it,
+        // str_starts_with('/var/www/blocks-evil/x.php', '/var/www/blocks')
+        // would treat an unregistered sibling directory whose name shares a
+        // prefix as "inside" the allowed base, letting an absolute file: path
+        // escape into it.
         $isValid = false;
         foreach ($allowedBases as $base) {
             $realBase = realpath($base);
-            if ($realBase && str_starts_with($realPath, $realBase)) {
+            if (!$realBase) {
+                continue;
+            }
+            $baseWithSep = rtrim($realBase, '/') . '/';
+            if ($realPath === $realBase || str_starts_with($realPath, $baseWithSep)) {
                 $isValid = true;
                 break;
             }

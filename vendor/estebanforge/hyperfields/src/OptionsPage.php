@@ -351,6 +351,11 @@ class OptionsPage
             'sanitize_callback' => [$this, 'sanitizeOptions'],
         ]);
 
+        // Re-emit the WP Settings-API save as a semantic HyperFields action so
+        // consumers depend on intent, not WP plumbing. Fires after the option
+        // row is written. Mirrors Carbon Fields' theme_options_container_saved.
+        add_action('update_option_' . $this->option_name, [$this, 'onOptionSaved'], 10, 3);
+
         // Register fields for all sections/tabs, but only register settings fields for the active tab
         $active_tab = $this->getActiveTab();
         $active_sections = $this->getRenderableSectionIds($active_tab);
@@ -538,7 +543,47 @@ class OptionsPage
             }
         }
 
+        // Filter seam: let third parties alter the sanitized values before
+        // WP writes them. $this->option_values holds the pre-save snapshot.
+        //
+        // Note: the OptionsPage instance is passed as the 3rd arg for context,
+        // but filters MUST treat it as read-only. Mutating it mid-sanitize
+        // (e.g. re-calling registerSettings()) has undefined behavior.
+        $output = (array) apply_filters('hyperfields/options_page/pre_save', $output, $this->option_values, $this);
+
         return $output;
+    }
+
+    /**
+     * Re-emit WP's option update as a semantic HyperFields save action.
+     *
+     * Fires after the option row is written, but ONLY when the value actually
+     * changed. WP's update_option_{$name} fires on every update_option() call
+     * (including no-ops where old === new); gating here means consumers hooking
+     * after_save run their cache invalidation / webhooks / dependent
+     * recomputation exactly once per real change, not on every form submit.
+     *
+     * Consumers (safeguards, cache flushes, dependent recomputation) should
+     * hook here instead of the raw update_option_{$name} hook so the intent is
+     * self-documenting.
+     *
+     * Note: argument order is (new, old, page), reversed from WP's own
+     * update_option_{$option} hook which is (old, new, option). The new value
+     * first matches "the current state after save" intent.
+     *
+     * @param mixed  $old_value The old option value.
+     * @param mixed  $new_value The new option value.
+     * @param string $option    The option name.
+     * @return void
+     */
+    public function onOptionSaved(mixed $old_value, mixed $new_value, string $option): void
+    {
+        // Skip no-op writes so after_save means "value actually changed."
+        if ($old_value === $new_value) {
+            return;
+        }
+
+        do_action('hyperfields/options_page/after_save', $new_value, $old_value, $this);
     }
 
     /**
