@@ -17,44 +17,56 @@ if (!defined('ABSPATH') && !defined('HYPERPRESS_TESTING_MODE')) {
     return;
 }
 
-// Use a unique constant to ensure this bootstrap logic runs only once.
+// Use a per-instance marker so each vendored copy registers its own
+// candidate for version election. A global early-return here would defeat
+// the multi-instance election: the first copy to load would set the flag and
+// every other copy's bootstrap would bail before registering, leaving only
+// the first-loaded (not necessarily highest-version) copy discoverable.
+// The candidate array is path-keyed for dedup, and the nested-autoloader
+// block below is guarded by $loadedFromVendorTree, so letting every copy
+// run its registration is safe.
+//
+// Computed unconditionally: needed both inside the autoloader-include block
+// and by the HyperFields/HyperBlocks dependency bootstrap below.
+$loadedFromVendorTree = str_contains(str_replace('\\', '/', __DIR__), '/vendor/');
+
 if (defined('HYPERPRESS_BOOTSTRAP_LOADED')) {
-    return;
-}
+    // Another copy already ran the one-time autoloader include. Skip straight
+    // to candidate registration for THIS copy so the election can see it.
+} else {
+    define('HYPERPRESS_BOOTSTRAP_LOADED', true);
 
-define('HYPERPRESS_BOOTSTRAP_LOADED', true);
-
-// Optional dev override: load local HyperFields/HyperBlocks copies before Composer.
-$use_local_libs = defined('HYPERPRESS_USE_LOCAL_LIBS') ? (bool) HYPERPRESS_USE_LOCAL_LIBS : (getenv('HYPERPRESS_USE_LOCAL_LIBS') === '1');
-if ($use_local_libs) {
-    $local_libs = [
-        dirname(__DIR__) . '/HyperFields',
-        dirname(__DIR__) . '/HyperBlocks',
-    ];
-    foreach ($local_libs as $lib_path) {
-        $lib_path = realpath($lib_path) ?: $lib_path;
-        $bootstrap = $lib_path . '/bootstrap.php';
-        if (file_exists($bootstrap)) {
-            require_once $bootstrap;
+    // Optional dev override: load local HyperFields/HyperBlocks copies before Composer.
+    $use_local_libs = defined('HYPERPRESS_USE_LOCAL_LIBS') ? (bool) HYPERPRESS_USE_LOCAL_LIBS : (getenv('HYPERPRESS_USE_LOCAL_LIBS') === '1');
+    if ($use_local_libs) {
+        $local_libs = [
+            dirname(__DIR__) . '/HyperFields',
+            dirname(__DIR__) . '/HyperBlocks',
+        ];
+        foreach ($local_libs as $lib_path) {
+            $lib_path = realpath($lib_path) ?: $lib_path;
+            $bootstrap = $lib_path . '/bootstrap.php';
+            if (file_exists($bootstrap)) {
+                require_once $bootstrap;
+            }
         }
     }
-}
 
-// Composer autoloader.
-// When loaded as a dependency from another package's /vendor tree, avoid loading
-// this package's nested vendor/autoload.php to prevent duplicate Composer loader classes.
-$normalizedDir = str_replace('\\', '/', __DIR__);
-$loadedFromVendorTree = str_contains($normalizedDir, '/vendor/');
-if (!$loadedFromVendorTree && function_exists('wp_normalize_path') && file_exists(__DIR__ . '/vendor/autoload_packages.php')) {
-    require_once __DIR__ . '/vendor/autoload_packages.php';
-}
-if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
-    require_once __DIR__ . '/vendor/autoload.php';
-} elseif (!$loadedFromVendorTree) {
-    // Display an admin notice if no autoloader is found, but continue so tests can register hooks/candidates.
-    add_action('admin_notices', function () {
-        echo '<div class="error"><p>' . esc_html__('HyperPress: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'api-for-htmx') . '</p></div>';
-    });
+    // Composer autoloader.
+    // When loaded as a dependency from another package's /vendor tree, avoid loading
+    // this package's nested vendor/autoload.php to prevent duplicate Composer loader classes.
+    $normalizedDir = str_replace('\\', '/', __DIR__);
+    if (!$loadedFromVendorTree && function_exists('wp_normalize_path') && file_exists(__DIR__ . '/vendor/autoload_packages.php')) {
+        require_once __DIR__ . '/vendor/autoload_packages.php';
+    }
+    if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
+        require_once __DIR__ . '/vendor/autoload.php';
+    } elseif (!$loadedFromVendorTree) {
+        // Display an admin notice if no autoloader is found, but continue so tests can register hooks/candidates.
+        add_action('admin_notices', function () {
+            echo '<div class="error"><p>' . esc_html__('HyperPress: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'api-for-htmx') . '</p></div>';
+        });
+    }
 }
 
 // Bootstrap HyperFields and HyperBlocks dependencies.
@@ -155,8 +167,26 @@ if (function_exists('has_action') && function_exists('add_action')) {
 if (!function_exists('hyperpress_run_initialization_logic')) {
     function hyperpress_run_initialization_logic(string $plugin_file_path, string $plugin_version): void
     {
-        // Ensure this logic runs only once.
+        // Ensure this logic runs only once, but surface a stale election loudly
+        // when a newer version requests init after an older one already loaded.
+        // We cannot undefine constants or un-register hooks, so the older
+        // instance keeps serving, but this log makes the problem diagnosable
+        // instead of silent.
         if (defined('HYPERPRESS_INSTANCE_LOADED')) {
+            $loaded_version = defined('HYPERPRESS_LOADED_VERSION') ? HYPERPRESS_LOADED_VERSION : '0.0.0';
+            if (version_compare($plugin_version, $loaded_version, '>')) {
+                if (function_exists('error_log')) {
+                    error_log(sprintf(
+                        'HyperPress: newer version %s at %s requested init after version %s was already loaded from %s. ' .
+                        'The older instance is serving. This means the multi-instance version election did not run before initialization; ' .
+                        'ensure the highest-version consumer calls hyperpress_run_initialization_logic() before any other copy initializes.',
+                        $plugin_version,
+                        $plugin_file_path,
+                        $loaded_version,
+                        defined('HYPERPRESS_INSTANCE_LOADED_PATH') ? HYPERPRESS_INSTANCE_LOADED_PATH : '(unknown)'
+                    ));
+                }
+            }
             return;
         }
         define('HYPERPRESS_INSTANCE_LOADED', true);

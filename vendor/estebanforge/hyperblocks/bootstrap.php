@@ -18,7 +18,26 @@ if (!function_exists('hyperblocks_run_initialization_logic')) {
      */
     function hyperblocks_run_initialization_logic(string $bootstrap_file_path, string $version): void
     {
+        // Ensure this logic runs only once, but surface a stale election loudly
+        // when a newer version requests init after an older one already loaded.
+        // We cannot undefine constants or un-register hooks, so the older
+        // instance keeps serving, but this log makes the problem diagnosable
+        // instead of silent.
         if (defined('HYPERBLOCKS_INSTANCE_LOADED')) {
+            $loaded_version = defined('HYPERBLOCKS_LOADED_VERSION') ? HYPERBLOCKS_LOADED_VERSION : '0.0.0';
+            if (version_compare($version, $loaded_version, '>')) {
+                if (function_exists('error_log')) {
+                    error_log(sprintf(
+                        'HyperBlocks: newer version %s at %s requested init after version %s was already loaded from %s. ' .
+                        'The older instance is serving. This means the multi-instance version election did not run before initialization; ' .
+                        'ensure the highest-version consumer calls hyperblocks_run_initialization_logic() before any other copy initializes.',
+                        $version,
+                        $bootstrap_file_path,
+                        $loaded_version,
+                        defined('HYPERBLOCKS_INSTANCE_LOADED_PATH') ? HYPERBLOCKS_INSTANCE_LOADED_PATH : '(unknown)'
+                    ));
+                }
+            }
             return;
         }
 
@@ -81,26 +100,41 @@ if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
     return;
 }
 
+// Use a per-instance marker so each vendored copy registers its own
+// candidate for version election. A global early-return here would defeat
+// the multi-instance election: the first copy to load would set the flag and
+// every other copy's bootstrap would bail before registering, leaving only
+// the first-loaded (not necessarily highest-version) copy discoverable.
+// The candidate array is path-keyed for dedup, and the nested-autoloader
+// block below is guarded by $loadedFromVendorTree, so letting every copy
+// run its registration is safe.
+//
+// Computed unconditionally: it is a property of THIS file's location, needed
+// both inside the autoloader-include block and by the HyperFields dependency
+// bootstrap below. Defining it only inside the else branch left the post-
+// if/else read undefined on the second and subsequent copies to load.
+$loadedFromVendorTree = str_contains(str_replace('\\', '/', __DIR__), '/vendor/');
+
 if (defined('HYPERBLOCKS_BOOTSTRAP_LOADED')) {
-    return;
-}
+    // Another copy already ran the one-time autoloader include. Skip straight
+    // to candidate registration for THIS copy so the election can see it.
+} else {
+    define('HYPERBLOCKS_BOOTSTRAP_LOADED', true);
 
-define('HYPERBLOCKS_BOOTSTRAP_LOADED', true);
-
-// Composer autoloader.
-// When loaded from another package's /vendor tree, avoid loading nested vendor/autoload.php
-// to prevent duplicate Composer autoloader class declarations.
-$normalizedDir = str_replace('\\', '/', __DIR__);
-$loadedFromVendorTree = str_contains($normalizedDir, '/vendor/');
-if (!$loadedFromVendorTree && function_exists('wp_normalize_path') && file_exists(__DIR__ . '/vendor/autoload_packages.php')) {
-    require_once __DIR__ . '/vendor/autoload_packages.php';
-}
-if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
-    require_once __DIR__ . '/vendor/autoload.php';
-} elseif (!$loadedFromVendorTree && function_exists('add_action')) {
-    add_action('admin_notices', static function (): void {
-        echo '<div class="error"><p>' . esc_html__('HyperBlocks: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'hyperblocks') . '</p></div>';
-    });
+    // Composer autoloader.
+    // When loaded from another package's /vendor tree, avoid loading nested vendor/autoload.php
+    // to prevent duplicate Composer autoloader class declarations.
+    $normalizedDir = str_replace('\\', '/', __DIR__);
+    if (!$loadedFromVendorTree && function_exists('wp_normalize_path') && file_exists(__DIR__ . '/vendor/autoload_packages.php')) {
+        require_once __DIR__ . '/vendor/autoload_packages.php';
+    }
+    if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
+        require_once __DIR__ . '/vendor/autoload.php';
+    } elseif (!$loadedFromVendorTree && function_exists('add_action')) {
+        add_action('admin_notices', static function (): void {
+            echo '<div class="error"><p>' . esc_html__('HyperBlocks: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'hyperblocks') . '</p></div>';
+        });
+    }
 }
 
 // Bootstrap HyperFields dependency.

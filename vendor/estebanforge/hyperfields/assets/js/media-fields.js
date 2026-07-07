@@ -92,6 +92,7 @@ class HyperFieldsMedia {
       ? this.imageUrl(attachment)
       : attachment.url;
 
+    preview.classList.remove('is-empty');
     preview.innerHTML = type === 'image'
       ? `<img src="${this.escapeAttr(url)}" alt="" style="max-width: 150px; max-height: 150px;">`
       : `<a href="${this.escapeAttr(url)}" target="_blank" rel="noopener" class="hyperpress-file-url">${this.escapeHtml(attachment.filename || url)}</a>`;
@@ -124,8 +125,14 @@ class HyperFieldsMedia {
     const field = wrapper && wrapper.closest('.hyperpress-image-field, .hyperpress-file-field');
     const preview = field && field.querySelector('.hyperpress-image-preview, .hyperpress-file-preview');
     if (preview) {
-      preview.innerHTML = '';
-      preview.style.display = 'none';
+      if (preview.classList.contains('hyperpress-image-preview')) {
+        preview.innerHTML = `<span class="hyperpress-image-placeholder">${this.escapeHtml(this.t('noImage', 'No image selected'))}</span>`;
+        preview.classList.add('is-empty');
+        preview.style.display = '';
+      } else {
+        preview.innerHTML = '';
+        preview.style.display = 'none';
+      }
     }
     this.toggleRemoveButton(fieldId, false);
   }

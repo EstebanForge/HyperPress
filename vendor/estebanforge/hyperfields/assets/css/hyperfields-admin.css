@@ -680,6 +680,27 @@
     box-sizing: border-box;
 }
 
+/* Empty-state placeholder for image fields without a selection. Keeps the
+ * preview box a legible size instead of collapsing to a tiny white square. */
+.hyperpress-image-preview.is-empty {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+    background: var(--hf-color-bg-secondary);
+    border-style: dashed;
+    border-color: var(--hf-color-admin-border-strong);
+    color: var(--hf-color-admin-text-subtle);
+}
+
+.hyperpress-image-placeholder {
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: center;
+    padding: 8px;
+}
+
 .hyperpress-image-preview img,
 .hyperpress-file-preview img,
 .hyperpress-gallery-item img {
