@@ -191,6 +191,19 @@ class TemplateLoader
                 ],
             ]);
 
+            // Media fields (image, file, media_gallery) use wp.media, which
+            // needs the core media scripts and the media-fields.js handler.
+            if (function_exists('wp_enqueue_media')) {
+                wp_enqueue_media();
+            }
+            wp_enqueue_script(
+                'hyperpress-media-fields',
+                $plugin_url . 'assets/js/media-fields.js',
+                ['hyperpress-conditional-fields'],
+                $version,
+                true
+            );
+
             return; // Done for admin
         }
 

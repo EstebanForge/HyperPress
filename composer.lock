@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cea0d91c88d6aef1f160e66f44f1aed1",
+    "content-hash": "ca2bc7d4a3ecdb03fb7c60e5c471094d",
     "packages": [
         {
             "name": "automattic/jetpack-autoloader",
@@ -216,11 +216,11 @@
         },
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "4e9db57e586e15974220c7396e0d8bb693eec22a"
+                "reference": "6bf737fe46674429993b14811e0fa3f1a86afe2b"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
@@ -314,11 +314,11 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.3.2",
+            "version": "1.3.4",
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "7e4ba1a158bff068eea5fc637c428f4d52751c1b"
+                "reference": "35284f4957c71bf17d8043809a211b78afcec450"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
@@ -418,11 +418,11 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.3.2",
+            "version": "1.3.4",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "750097a0578d04179780f502b046566ae3c395ff"
+                "reference": "63a0f3c3dc73dac1f7f0c639b5909e1cc6a3bdb8"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
