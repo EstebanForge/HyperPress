@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.3.4] - 2026-07-07
+
+### Added
+- **`wp.media` handler for image, file, and `media_gallery` fields** — the PHP field templates emitted `.hyperpress-upload-button` / `.hyperpress-remove-button` markup but no JavaScript existed to open the media frame. Only the React path (`react-fields.js` / `ImageField.jsx`) had a working picker; consumers on the plain PHP-template path got dead buttons. New dedicated `assets/js/media-fields.js` (ES6 `class HyperFieldsMedia`, singleton-scoped, event-delegated):
+  - Single-select frame for `image` (stores attachment ID) and `file` (stores URL), with live preview updates and remove-button visibility toggling.
+  - Multi-select frame for `media_gallery` (stores comma-joined IDs), with per-item thumbnail fetch via `wp.media.attachment().fetch()` and per-item removal.
+  - Reads the existing `hyperpressFields.l10n` strings; no new localization surface.
+  - Degrades gracefully: returns early when `wp.media` is undefined.
+- **`wp_enqueue_media()` call in `TemplateLoader::enqueueAssets()`** for admin pages, so the core media scripts load alongside the new handler. Guarded with `function_exists()` (progressive enhancement; the hidden input still submits its value without it).
+
+### Fixed
+- **Double-enqueue of `conditional-fields.js`** — `Assets::enqueueScripts()` registered the script under handle `hyperfields-conditional-fields` while `TemplateLoader::enqueueAssets()` used `hyperpress-conditional-fields`. Same file, two handles, so the script (and its `hyperpressFields` localization) loaded twice on every admin page. Removed the redundant enqueue from `Assets.php`; `TemplateLoader` is now the single source.
+- **Flat-layout fields rendered unstyled** — field templates use two layouts: grid-row (number/text/checkbox/textarea/select) and flat (radio/image/file/separator/heading/html). The flat layout emitted classes with zero CSS rules, so radio groups, image pickers, separators, and headings rendered as raw, unstyled HTML. A `:has(> .hyperpress-field-label)` rule now aligns flat fields to the same 220px label/input grid as the grid-row fields (scoped to flat fields only). Native WP-style rules added for `.hyperpress-radio-vertical`/`-horizontal`, `.hyperpress-image-field`/`-file-field`/`-media-gallery-field` (CSS grid: buttons side by side on row 1, preview wraps below and hugs the image), `.hyperpress-separator`, `.hyperpress-heading-wrapper`, `.hyperpress-html-content`. Mobile: flat fields collapse to a single column under 782px, matching the existing grid-row collapse.
+
+### Docs
+- **Jetpack Autoloader guidance** in `docs/library-bootstrap.md`. Host plugins using `automattic/jetpack-autoloader` must explicitly `require_once` the bootstrap file and call `hyperfields_run_initialization_logic()`, because the Jetpack Autoloader skips Composer autoload `files` entries. Without it, `HYPERFIELDS_PLUGIN_URL` is never defined, `TemplateLoader::enqueueAssets()` bails at its empty-URL guard, and the options page renders with zero styling.
+
 ## [1.3.2] - 2026-07-06
 
 ### Added

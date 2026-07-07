@@ -21,6 +21,60 @@ HyperBlocks also triggers HyperFields initialization in the same `bootstrap.php`
 
 ---
 
+## Host plugins using the Jetpack Autoloader
+
+If your host plugin uses [`automattic/jetpack-autoloader`](https://packagist.org/packages/automattic/jetpack-autoloader)
+instead of Composer's stock autoloader, **Composer autoload `files` entries are
+not executed.** The Jetpack Autoloader maps classes for lazy loading but
+deliberately skips the `files` auto-includes that Composer would normally run.
+
+HyperBlocks' `bootstrap.php` is registered as an autoload file. It is what
+registers the library as a candidate and hooks `after_setup_theme` to run the
+version election. When it never executes:
+
+- `HYPERBLOCKS_PLUGIN_URL` is never defined.
+- `WordPress\Bootstrap::init()` never runs — no block registration, no REST
+  routes, no editor assets.
+- Fluent blocks never reach the Registry; `block.json` blocks may register via
+  WP but the editor JS (`editor.js`) and preview endpoints are missing.
+
+The classes are still autoloadable, so code that references them does not fatal,
+but blocks are absent from the inserter and the editor experience is broken.
+
+**Fix.** Explicitly require the bootstrap file and call the init function on
+`plugins_loaded` (priority 0, before any host code that registers blocks):
+
+```php
+// my-plugin.php
+
+add_action('plugins_loaded', static function (): void {
+    $bootstrap = MY_PLUGIN_PATH . 'vendor/estebanforge/hyperblocks/bootstrap.php';
+    if (!file_exists($bootstrap)) {
+        return;
+    }
+    require_once $bootstrap;
+
+    if (function_exists('hyperblocks_run_initialization_logic')) {
+        hyperblocks_run_initialization_logic(
+            $bootstrap,
+            defined('MY_PLUGIN_VERSION') ? MY_PLUGIN_VERSION : '1.0.0',
+        );
+    }
+}, 0);
+```
+
+HyperBlocks' init also triggers HyperFields' (HB requires HF transitively), so
+this single call bootstraps both. Calling it directly skips the multi-instance
+candidate election and runs init immediately. For a single-consumer plugin this
+is correct and faster; the `HYPERBLOCKS_INSTANCE_LOADED` guard still prevents
+double-init.
+
+If your host plugin vendors HyperFields separately as well (not just
+transitively through HyperBlocks), call `hyperfields_run_initialization_logic()`
+too. Both calls are harmless thanks to the idempotency guards.
+
+---
+
 ## Constants
 
 After `hyperblocks_run_initialization_logic()` runs, these constants are defined:
