@@ -20,9 +20,19 @@ if (!function_exists('add_action')) {
 if (!function_exists('add_filter')) {
     /**
      * Mock add_filter function.
+     *
+     * Records callbacks into a global registry so tests can exercise code
+     * paths that read filtered values (e.g. the hyperblocks/blocks/
+     * register_fluent_blocks escape hatch). Faithful to WP semantics:
+     * apply_filters() invokes registered callbacks, falling back to the
+     * raw value when none are attached. Priority is ignored (registration
+     * order is preserved).
      */
     function add_filter(string $hook, callable $callback, int $priority = 10, int $accepted_args = 1): bool
     {
+        global $__hb_test_filters;
+        $__hb_test_filters[$hook][] = $callback;
+
         return true;
     }
 }
@@ -30,10 +40,40 @@ if (!function_exists('add_filter')) {
 if (!function_exists('apply_filters')) {
     /**
      * Mock apply_filters function.
+     *
+     * Invokes callbacks registered via add_filter() for $hook, threading
+     * $value through each. With no callbacks attached, returns $value
+     * unchanged (the historical no-op behavior existing tests rely on).
      */
     function apply_filters(string $hook, mixed $value, ...$args): mixed
     {
+        global $__hb_test_filters;
+
+        foreach (($__hb_test_filters[$hook] ?? []) as $callback) {
+            $value = $callback($value, ...$args);
+        }
+
         return $value;
+    }
+}
+
+if (!function_exists('__return_true')) {
+    /**
+     * Mock __return_true — WordPress core shorthand.
+     */
+    function __return_true(): bool
+    {
+        return true;
+    }
+}
+
+if (!function_exists('__return_false')) {
+    /**
+     * Mock __return_false — WordPress core shorthand.
+     */
+    function __return_false(): bool
+    {
+        return false;
     }
 }
 
@@ -144,6 +184,43 @@ if (!function_exists('file_exists')) {
     function file_exists(string $filename): bool
     {
         return \file_exists($filename);
+    }
+}
+
+if (!function_exists('get_file_data')) {
+    /**
+     * Mock get_file_data function — faithful port of WP core semantics.
+     *
+     * Reads the first 8192 bytes of $file and parses WordPress-style file
+     * headers (the same convention used for plugin/theme/dropin headers,
+     * including headers nested in docblock comment lines prefixed with ` * `).
+     * Used by Registry::isFluentBlockFile() to detect the HyperBlocks Block
+     * header without executing the file.
+     */
+    function get_file_data(string $file, array $default_headers, string $context = ''): array
+    {
+        $fp = @fopen($file, 'r');
+        if (!$fp) {
+            return array_fill_keys(array_keys($default_headers), '');
+        }
+
+        $file_data = fread($fp, 8192);
+        fclose($fp);
+
+        $file_data = str_replace("\r", "\n", $file_data);
+
+        foreach ($default_headers as $field => $regex) {
+            $default_headers[$field] = '';
+            if (preg_match('/^(?:[ \t]*<\?php)?[ \t\/*#@]*' . preg_quote((string) $regex, '/') . ':(.*)$/mi', $file_data, $match)
+                && isset($match[1])
+                && $match[1] !== ''
+            ) {
+                // _cleanup_header_comment() equivalent.
+                $default_headers[$field] = trim(preg_replace('/\s*(?:\*\/|\?>).*/', '', $match[1]));
+            }
+        }
+
+        return $default_headers;
     }
 }
 

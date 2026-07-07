@@ -14,7 +14,7 @@ add_action('init', function (): void {
 });
 ```
 
-If you use the auto-discovery system, place your block definition files inside any directory registered with `Config::registerBlockPath()`. HyperBlocks scans those directories on `init` and includes every `.hb.php` file it finds **one directory level beneath the base path** (native PHP `glob()` has no globstar, so the pattern matches `base/<dir>/<file>` only; files placed directly in the base, or nested two or more levels deep, are not discovered). To register a directory solely so `setRenderTemplateFile()` can resolve render templates stored there without it being scanned, use `Config::registerTemplatePath()` instead.
+If you use the auto-discovery system, place your block definition files inside any directory registered with `Config::registerBlockPath()`. HyperBlocks scans those directories on `init` and includes every `.hb.php` file it finds **one directory level beneath the base path** (native PHP `glob()` has no globstar, so the pattern matches `base/<dir>/<file>` only; files placed directly in the base, or nested two or more levels deep, are not discovered). **Each definition file must declare a `HyperBlocks Block:` docblock header** (see [Example 7](#example-7--registering-block-discovery-paths)) — this prevents WP-native `render.php` / `init.php` files co-located in a theme's `/blocks/` tree from being executed out of render context. To register a directory solely so `setRenderTemplateFile()` can resolve render templates stored there without it being scanned, use `Config::registerTemplatePath()` instead.
 
 ---
 
@@ -26,6 +26,9 @@ The minimal case: a block with one text field and a file template.
 
 ```php
 <?php
+/**
+ * HyperBlocks Block: Announcement
+ */
 if (!defined('ABSPATH')) exit;
 
 use HyperBlocks\Block\Block;
@@ -402,7 +405,32 @@ add_action('init', function (): void {
 }, 4); // before HyperBlocks scans at priority 5
 ```
 
-With `auto_discovery` enabled (default), HyperBlocks includes every `.hb.php` file **one directory level beneath the base path** on `init` (e.g. `blocks/<dir>/block.hb.php`; files directly in `blocks/` or nested deeper are not scanned). Each file is responsible for defining and registering its own block.
+With `auto_discovery` enabled (default), HyperBlocks includes every `.hb.php` file **one directory level beneath the base path** on `init` (e.g. `blocks/<dir>/block.hb.php`; files directly in `blocks/` or nested deeper are not scanned). **Each file must declare a `HyperBlocks Block:` docblock header** to be loaded — this is what prevents WP-native `render.php` / `init.php` files (the de-facto `/blocks/<slug>/` layout used by ACF and most themes) from being executed out of render context. A minimal definition file looks like:
+
+```php
+<?php
+/**
+ * HyperBlocks Block: My Block
+ */
+if (!defined('ABSPATH')) exit;
+
+use HyperBlocks\Block\Block;
+use HyperBlocks\Registry;
+
+Registry::getInstance()->registerFluentBlock(
+    Block::make('My Block')->setName('my-theme/my-block') /* ... */
+);
+```
+
+The header is parsed via WordPress's `get_file_data()` (first 8 KB only, never executed) and is namespace-agnostic — it works regardless of whether your file uses the `HyperBlocks\` namespace or a consumer proxy namespace. Files pointed at directly via the `hyperblocks/blocks/register_fluent_blocks` filter bypass the header check (explicit consent).
+
+If your theme's `/blocks` directory holds only WP-native/ACF blocks and you want to disable HyperBlocks' auto-registration of theme `/blocks` entirely (defense-in-depth alongside the header check), return `false` from the `auto_discover_theme_blocks` filter:
+
+```php
+add_filter('hyperblocks/blocks/auto_discover_theme_blocks', '__return_false');
+```
+
+This is scoped to theme `/blocks` auto-registration only — the library's own bundled blocks and any paths you register explicitly via `Config::registerBlockPath()` are unaffected.
 
 If you only need a directory to resolve render templates via `Block::setRenderTemplateFile()` and must keep it from being auto-executed as a block definition, register it as a template-only path instead:
 

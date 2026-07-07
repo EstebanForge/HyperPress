@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 /**
+ * HyperBlocks Block: Fluent API Demos
+ *
  * Fluent API Demo Blocks
  * 
  * This file demonstrates creating blocks using the Fluent API approach.

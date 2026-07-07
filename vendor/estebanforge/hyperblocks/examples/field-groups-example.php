@@ -1,9 +1,12 @@
 <?php
 
 /**
+ * HyperBlocks Block: Field Groups Example
+ *
  * Example: Using Field Groups.
  *
  * This demonstrates how to create reusable field groups and use them in multiple blocks.
+ * The header line above is required for auto-discovery to load this file.
  */
 
 use HyperBlocks\Block\Block;

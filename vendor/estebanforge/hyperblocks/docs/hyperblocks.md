@@ -255,6 +255,26 @@ $registry = Registry::getInstance();
 | `getMergedFields(Block $block): Field[]` | Returns all fields (block + groups), keyed by name. Block fields take precedence. |
 | `findJsonBlockPath(string $blockName): ?string` | Finds the directory of a `block.json` block by name. |
 
+### Auto-discovery and the `HyperBlocks Block:` header
+
+`Registry::discoverAndLoadFluentBlocks()` globs each registered block path for `.hb.php` / `.php` files **one directory level beneath the base** and `require_once`s the matches — but only those that declare a `HyperBlocks Block:` docblock header. This protects against the de-facto WP/ACF `/blocks/<slug>/{block.json,init.php,render.php}` layout, whose `render.php` files expect to be included by WordPress's block renderer with `$block` in scope: auto-loading them at `init` executes them out of context, echoing markup before `<!DOCTYPE html>` and tripping warnings. The header makes HyperBlocks definition files explicit, the same convention WordPress uses for plugins, themes, and dropins.
+
+```php
+<?php
+/**
+ * HyperBlocks Block: Hero Banner
+ */
+
+use HyperBlocks\Block\Block;
+use HyperBlocks\Registry;
+
+Registry::getInstance()->registerFluentBlock(
+    Block::make('Hero Banner')->setName('my-theme/hero-banner') /* ... */
+);
+```
+
+`get_file_data()` reads only the first 8 KB of each candidate file (never executing it) and checks for a non-empty `HyperBlocks Block:` value. Files lacking the header are skipped. Files pointed at directly via the `hyperblocks/blocks/register_fluent_blocks` filter bypass the check — naming a file explicitly is consumer consent.
+
 ### Testing
 
 ```php
@@ -374,7 +394,7 @@ Attributes:
 | Hook | Priority | Action |
 |---|---|---|
 | `plugins_loaded` | 5 | Load config from database, apply filters. |
-| `init` | 5 | Register default block paths (theme `blocks/` directories). |
+| `init` | 5 | Register default block paths (theme `blocks/` directories), gated by the `hyperblocks/blocks/auto_discover_theme_blocks` filter (default `true`). Files within them are auto-discovered only if they carry the `HyperBlocks Block:` header. |
 | `init` | 10 | Discover and register all fluent and `block.json` blocks. |
 | `rest_api_init` | 10 | Register REST routes. |
 | `enqueue_block_editor_assets` | 10 | Enqueue editor CSS if `assets/css/editor.css` exists. |
@@ -384,6 +404,11 @@ Attributes:
 Use these to register additional paths or individual block files without modifying your theme or plugin's `Config` directly:
 
 ```php
+// Disable auto-registration of the active theme's /blocks directories entirely.
+// Default is true (back-compat). Return false if your theme uses /blocks for
+// WP-native/ACF blocks and you prefer an opt-out over the header-based filter.
+add_filter('hyperblocks/blocks/auto_discover_theme_blocks', '__return_false');
+
 // Add an entire directory to scan for block.json blocks
 add_filter('hyperblocks/blocks/register_json_paths', function (array $paths): array {
     $paths[] = get_stylesheet_directory() . '/blocks';
@@ -396,13 +421,13 @@ add_filter('hyperblocks/blocks/register_json_blocks', function (array $blocks): 
     return $blocks;
 });
 
-// Add a directory to scan for fluent-block PHP files
+// Add a directory to scan for fluent-block PHP files (HyperBlocks Block header required)
 add_filter('hyperblocks/blocks/register_fluent_paths', function (array $paths): array {
     $paths[] = get_stylesheet_directory() . '/blocks';
     return $paths;
 });
 
-// Add individual fluent-block PHP files
+// Add individual fluent-block PHP files (header check BYPASSED — explicit consent)
 add_filter('hyperblocks/blocks/register_fluent_blocks', function (array $files): array {
     $files[] = get_stylesheet_directory() . '/blocks/my-block.hb.php';
     return $files;

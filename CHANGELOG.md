@@ -1,5 +1,8 @@
 # Changelog
 
+# 3.4.0 / 2026-07-07
+- **DEPS:** Updated vendored `estebanforge/hyperpress-core` to 1.3.2 — security fix pinning `estebanforge/hyperblocks` to 1.2.0, which closes a critical auto-discovery bug that broke virtually every standard WordPress/ACF theme on install (see the vendored `hyperpress-core` CHANGELOG for full details). The active theme's `/blocks` directories are registered as discovery paths, so any theme following the de-facto `/blocks/<slug>/{block.json,init.php,render.php}` layout was broken the moment HyperPress loaded: candidate files were `require_once`d on `init`, executing WP-standard `render.php` files out of context and echoing markup before `<!DOCTYPE html>`. Upstream fix parses candidate files via `get_file_data()` (first 8 KB, never executed) and only loads files declaring a non-empty `HyperBlocks Block:` header; a new `hyperblocks/blocks/auto_discover_theme_blocks` filter adds defense-in-depth. Drop-in fix; no API changes.
+
 # 3.3.3 / 2026-07-07
 - **DEPS:** Updated `estebanforge/hyperfields` to 1.3.2.
 - **DEPS:** Updated `estebanforge/hyperblocks` to 1.1.9.
