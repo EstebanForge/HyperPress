@@ -39,9 +39,11 @@ $media_library = $field_data['media_library'] ?? true;
                 <?php _e('Remove Image', 'api-for-htmx'); ?>
             </button>
 
-            <div class="hyperpress-image-preview" style="margin-top: 10px;">
+            <div class="hyperpress-image-preview<?php echo esc_attr($value ? '' : ' is-empty'); ?>" style="margin-top: 10px;">
                 <?php if ($value): ?>
                     <img src="<?php echo esc_url(wp_get_attachment_url($value)); ?>" alt="" style="max-width: 150px; max-height: 150px;">
+                <?php else: ?>
+                    <span class="hyperpress-image-placeholder"><?php _e('No image selected', 'api-for-htmx'); ?></span>
                 <?php endif; ?>
             </div>
         </div>

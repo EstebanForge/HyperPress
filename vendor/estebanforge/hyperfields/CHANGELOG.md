@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.5] - 2026-07-07
+
+### Fixed
+- **Empty image-field preview rendered as a tiny white box** — the PHP image-field templates always emitted the `.hyperpress-image-preview` shell (padding + white background + border) but only placed an `<img>` inside when a value existed. With no selection the styled shell collapsed to a small empty square. Both rendering paths now show an empty-state placeholder.
+  - `src/templates/field-image.php` (primary path resolved by `TemplateLoader::getTemplateFile()`) and `src/templates/field-input.php` (legacy `image` switch case, reachable via the `hyperfields/template` filter) now render `<span class="hyperpress-image-placeholder">No image selected</span>` and add an `is-empty` class to the preview div when `$value` is empty.
+  - `assets/js/media-fields.js` keeps the placeholder in sync: `updateSinglePreview()` drops `is-empty` when an image is chosen; `clearSingle()` restores the placeholder span + `is-empty` class instead of leaving an empty hidden div (image branch only; file branch unchanged).
+  - New `.hyperpress-image-preview.is-empty` CSS rule renders a 150×150 dashed-border box with muted placeholder text, matching the populated dimensions so selecting/removing causes no layout shift.
+  - `'noImage' => __('No image selected', 'api-for-htmx')` added to the admin `hyperpressFields.l10n` array in `TemplateLoader::enqueueAssets()` so the JS-restored placeholder is translatable.
+- **VIP/WPCS `EscapeOutput` compliance for the `is-empty` class output** — both template `echo` sites now wrap the class literal in `esc_attr()` as defense-in-depth, even though the output is a hardcoded literal.
+
 ## [1.3.4] - 2026-07-07
 
 ### Added

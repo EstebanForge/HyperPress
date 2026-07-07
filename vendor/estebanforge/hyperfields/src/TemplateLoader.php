@@ -184,6 +184,7 @@ class TemplateLoader
                 'l10n' => [
                     'selectImage' => __('Select Image', 'api-for-htmx'),
                     'selectFile' => __('Select File', 'api-for-htmx'),
+                    'noImage' => __('No image selected', 'api-for-htmx'),
                     'remove' => __('Remove', 'api-for-htmx'),
                     'addImages' => __('Add Images', 'api-for-htmx'),
                     'clearGallery' => __('Clear Gallery', 'api-for-htmx'),
@@ -226,6 +227,7 @@ class TemplateLoader
             'l10n' => [
                 'selectImage' => __('Select Image', 'api-for-htmx'),
                 'selectFile' => __('Select File', 'api-for-htmx'),
+                'noImage' => __('No image selected', 'api-for-htmx'),
                 'remove' => __('Remove', 'api-for-htmx'),
                 'addImages' => __('Add Images', 'api-for-htmx'),
                 'clearGallery' => __('Clear Gallery', 'api-for-htmx'),

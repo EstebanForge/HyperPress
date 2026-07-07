@@ -242,9 +242,11 @@ if ($conditional_logic) {
                         <button type="button" class="button hyperpress-upload-button" data-field="<?php echo esc_attr($name); ?>" data-type="image">
                             <?php _e('Select Image', 'api-for-htmx'); ?>
                         </button>
-                        <div class="hyperpress-image-preview">
+                        <div class="hyperpress-image-preview<?php echo esc_attr($value ? '' : ' is-empty'); ?>">
                             <?php if ($value): ?>
                                 <img src="<?php echo esc_url(wp_get_attachment_url($value)); ?>" alt="" style="max-width: 150px; max-height: 150px;">
+                            <?php else: ?>
+                                <span class="hyperpress-image-placeholder"><?php _e('No image selected', 'api-for-htmx'); ?></span>
                             <?php endif; ?>
                         </div>
                     </div>
