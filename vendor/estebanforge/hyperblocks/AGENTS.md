@@ -203,16 +203,36 @@ Static configuration store. Initialized once; readable anywhere via `Config::get
 ```php
 use HyperBlocks\Config;
 
-Config::registerBlockPath('/path/to/blocks');  // add a directory to scan for blocks
+Config::registerBlockPath('/path/to/blocks');                      // discovery + validation (default)
+Config::registerBlockPath('/path/to/templates', ['discover' => false]); // validation only, never scanned
+Config::registerTemplatePath('/path/to/templates');                  // equivalent one-liner for the above
 Config::get('auto_discovery', true);           // read a value
 Config::set('debug', true);                    // set at runtime
 ```
+
+**Discovery vs. template paths.** A registered path can serve two independent
+purposes: being scanned for block definitions (discovery) and being on the
+allowlist that resolves `Block::setRenderTemplateFile()` / `Renderer` templates
+(validation). They are split because a directory of render templates is not
+safe to `require_once` as block definitions — auto-discovering it fatals when a
+template expects a render context.
+
+- `registerBlockPath($path)` (no options, default) registers for **both**
+  discovery and validation. This is the backwards-compatible behavior.
+- `registerBlockPath($path, ['discover' => false])` registers for **validation
+  only** — templates resolve through it but `Registry::discoverAndLoadFluentBlocks()`
+  never globs it.
+- `registerTemplatePath($path)` is the one-liner equivalent of the above.
+- `Config::getBlockPaths()` returns discovery paths; `Config::getTemplatePaths()`
+  returns validation-only paths; `Config::getTemplateValidationPaths()` returns
+  the deduplicated union used by the validators.
 
 **Default keys**:
 
 | Key | Default | Description |
 |---|---|---|
-| `block_paths` | `[]` | Directories scanned for block definitions and templates. |
+| `block_paths` | `[]` | Directories scanned for block definitions and used for template validation. |
+| `template_paths` | `[]` | Template-validation-only directories; never scanned for block definitions. |
 | `template_extensions` | `.hb.php,.php` | Comma-separated list; first extension is the default. |
 | `auto_discovery` | `true` | Auto-scan block paths on `init`. |
 | `debug` | `false` | Log errors via `error_log`. |
@@ -329,6 +349,7 @@ hyperblocks_register_block(Block $block): void
 hyperblocks_register_field_group(FieldGroup $group): void
 hyperblocks_registry(): Registry
 hyperblocks_register_path(string $path): void
+hyperblocks_register_template_path(string $path): void
 hyperblocks_config(string $key, mixed $default = null): mixed
 hyperblocks_render(string $template, array $attributes = []): string
 hyperblocks_has_block(string $blockName): bool

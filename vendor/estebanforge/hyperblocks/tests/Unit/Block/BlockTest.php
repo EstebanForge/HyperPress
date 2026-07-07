@@ -125,6 +125,39 @@ class BlockTest extends TestCase
         $this->assertEquals('star-filled', $array['icon']);
         $this->assertIsArray($array['fields']);
         $this->assertContains('common', $array['field_groups']);
+        // Optional metadata defaults (unset).
+        $this->assertNull($array['category']);
+        $this->assertNull($array['description']);
+        $this->assertSame([], $array['keywords']);
+        $this->assertNull($array['style']);
+    }
+
+    public function testSetCategory(): void
+    {
+        $block = Block::make('Test')->setCategory('widgets');
+        $this->assertEquals('widgets', $block->category);
+        $this->assertEquals('widgets', $block->toArray()['category']);
+    }
+
+    public function testSetDescription(): void
+    {
+        $block = Block::make('Test')->setDescription('A helpful block.');
+        $this->assertEquals('A helpful block.', $block->description);
+        $this->assertEquals('A helpful block.', $block->toArray()['description']);
+    }
+
+    public function testSetKeywordsFiltersNonStrings(): void
+    {
+        $block = Block::make('Test')->setKeywords(['foo', 'bar', 42, 'baz']);
+        $this->assertSame(['foo', 'bar', 'baz'], $block->keywords);
+        $this->assertSame(['foo', 'bar', 'baz'], $block->toArray()['keywords']);
+    }
+
+    public function testSetStyle(): void
+    {
+        $block = Block::make('Test')->setStyle('my-block-style');
+        $this->assertEquals('my-block-style', $block->style);
+        $this->assertEquals('my-block-style', $block->toArray()['style']);
     }
 
     public function testGetFieldAdapters(): void

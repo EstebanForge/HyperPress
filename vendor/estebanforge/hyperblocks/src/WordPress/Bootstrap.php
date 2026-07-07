@@ -116,8 +116,9 @@ class Bootstrap
             return;
         }
 
-        // Enqueue editor script
-        self::enqueueEditorScript();
+        // Register editor script so core can enqueue it in the editor via
+        // the block type's `editor_script` handle (contextual, editor-only).
+        self::registerEditorScript();
 
         foreach ($blocks as $block) {
             self::registerSingleBlock($block);
@@ -135,17 +136,32 @@ class Bootstrap
         $registry = Registry::getInstance();
         $attributes = $registry->generateBlockAttributes($block);
 
-        register_block_type(
-            $block->name,
-            [
-                'api_version'     => 2,
-                'title'           => $block->title,
-                'icon'            => $block->icon,
-                'attributes'      => $attributes,
-                'render_callback' => [self::class, 'renderBlock'],
-                'editor_script'   => Config::getEditorScriptHandle(),
-            ]
-        );
+        // Build the WP block args. Optional metadata (category/description/
+        // keywords/style) is included only when set, so existing fluent blocks
+        // with defaults behave exactly as before.
+        $args = [
+            'api_version'     => 2,
+            'title'           => $block->title,
+            'icon'            => $block->icon,
+            'attributes'      => $attributes,
+            'render_callback' => [self::class, 'renderBlock'],
+            'editor_script'   => Config::getEditorScriptHandle(),
+        ];
+
+        if ($block->category !== null) {
+            $args['category'] = $block->category;
+        }
+        if ($block->description !== null) {
+            $args['description'] = $block->description;
+        }
+        if ($block->keywords !== []) {
+            $args['keywords'] = $block->keywords;
+        }
+        if ($block->style !== null) {
+            $args['style'] = $block->style;
+        }
+
+        register_block_type($block->name, $args);
     }
 
     /**
@@ -233,52 +249,65 @@ class Bootstrap
     }
 
     /**
-     * Enqueue editor script.
+     * Register the editor script that makes fluent blocks known to the
+     * Gutenberg client so they appear in the inserter and parse in saved post
+     * content.
+     *
+     * Only registers the handle (does not enqueue): this runs on `init`, which
+     * fires on every request including the public front end. Core enqueues the
+     * handle in the editor context only, via the `editor_script` argument passed
+     * to `register_block_type()` in `registerSingleBlock()`.
      *
      * @return void
      */
-    private static function enqueueEditorScript(): void
+    private static function registerEditorScript(): void
     {
-        // This is a placeholder for editor script enqueuing
-        // In a real implementation, this would enqueue the compiled JavaScript
-        // that integrates with the Gutenberg editor
-
         $scriptHandle = Config::getEditorScriptHandle();
 
-        // Only enqueue if the script file exists
         $scriptPath = defined('HYPERBLOCKS_PATH')
             ? HYPERBLOCKS_PATH . '/assets/js/editor.js'
             : null;
 
-        if ($scriptPath && file_exists($scriptPath)) {
-            $scriptUrl = plugins_url('/assets/js/editor.js', $scriptPath);
-            wp_enqueue_script(
-                $scriptHandle,
-                $scriptUrl,
-                ['wp-blocks', 'wp-element', 'wp-components'],
-                filemtime($scriptPath),
-                true
-            );
-
-            // Pass block configurations to the editor
-            $registry = Registry::getInstance();
-            $blocks = $registry->getFluentBlocks();
-
-            $blockConfigs = [];
-            foreach ($blocks as $block) {
-                $blockConfigs[] = [
-                    'name'  => $block->name,
-                    'title' => $block->title,
-                    'icon'  => $block->icon,
-                ];
-            }
-
-            wp_add_inline_script(
-                $scriptHandle,
-                'window.hyperBlocksConfig = ' . wp_json_encode($blockConfigs) . ';',
-                'before'
-            );
+        if (!$scriptPath || !file_exists($scriptPath)) {
+            return;
         }
+
+        // Prefer the canonical library URL constant, which resolves correctly
+        // when HyperBlocks is loaded as a Composer dependency (e.g. inside a
+        // consumer plugin's vendor/ tree). Fall back to plugins_url() otherwise.
+        $scriptUrl = (defined('HYPERBLOCKS_PLUGIN_URL') && HYPERBLOCKS_PLUGIN_URL !== '')
+            ? HYPERBLOCKS_PLUGIN_URL . 'assets/js/editor.js'
+            : plugins_url('/assets/js/editor.js', $scriptPath);
+
+        // Register only. Core enqueues this in the editor via the block type's
+        // `editor_script` handle, so it never reaches the front end.
+        wp_register_script(
+            $scriptHandle,
+            $scriptUrl,
+            ['wp-blocks', 'wp-element', 'wp-components', 'wp-dom-ready'],
+            (string) filemtime($scriptPath),
+            true
+        );
+
+        // Seed the block list the editor script reads on load. Attached to the
+        // registered handle; prints in the editor when core enqueues it.
+        $registry = Registry::getInstance();
+        $blocks = $registry->getFluentBlocks();
+
+        $blockConfigs = [];
+        foreach ($blocks as $block) {
+            $blockConfigs[] = [
+                'name'  => $block->name,
+                'title' => $block->title,
+                'icon'  => $block->icon,
+            ];
+        }
+
+        wp_add_inline_script(
+            $scriptHandle,
+            'window.hyperBlocksConfig = ' . wp_json_encode($blockConfigs) . ';',
+            'before'
+        );
     }
 
     /**

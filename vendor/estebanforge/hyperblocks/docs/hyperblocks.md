@@ -96,7 +96,7 @@ $block->setRenderTemplateFile('blocks/hero-banner.hb.php');
 Template path rules:
 - Must be relative (no leading `/`).
 - Must not contain `..` (path traversal is rejected).
-- File must exist inside `WP_CONTENT_DIR`, the active theme directory, `HYPERBLOCKS_PATH`, or a directory registered with `Config::registerBlockPath()`.
+- File must exist inside `WP_CONTENT_DIR`, the active theme directory, `HYPERBLOCKS_PATH`, or a directory registered with `Config::registerBlockPath()` or `Config::registerTemplatePath()` (the validation allowlist is the union of both).
 - Extension must match `Config::get('template_extensions', '.hb.php,.php')`.
 
 ### `->getFieldAdapters(): array`
@@ -272,8 +272,12 @@ use HyperBlocks\Config;
 
 Config::get('auto_discovery', true);           // read with fallback
 Config::set('debug', true);                    // set at runtime
-Config::registerBlockPath('/abs/path/to/dir'); // add a discovery path
-Config::getBlockPaths();                       // array of registered paths
+Config::registerBlockPath('/abs/path/to/dir');                      // discovery + validation (default)
+Config::registerBlockPath('/abs/path/to/templates', ['discover' => false]); // validation only, never scanned
+Config::registerTemplatePath('/abs/path/to/templates');            // one-liner equivalent of the above
+Config::getBlockPaths();                       // discovery paths (also valid for templates)
+Config::getTemplatePaths();                    // validation-only paths
+Config::getTemplateValidationPaths();          // deduplicated union used by the validators
 Config::getTemplateExtensions();               // ['.hb.php', '.php']
 Config::isDebug(): bool
 Config::isCacheEnabled(): bool
@@ -281,11 +285,21 @@ Config::getRestNamespace(): string             // 'hyperblocks/v1'
 Config::getEditorScriptHandle(): string        // 'hyperblocks-editor'
 ```
 
+**Discovery vs. template paths.** A registered path can serve two independent purposes: being scanned for block definitions (discovery) and being on the allowlist that resolves `Block::setRenderTemplateFile()` / `Renderer` templates (validation). They are split because a directory of render templates is not safe to `require_once` as block definitions; auto-discovering it fatals when a template expects a render context.
+
+- `registerBlockPath($path)` (no options, default) registers for **both** discovery and validation. Backwards-compatible with the original single-purpose behavior.
+- `registerBlockPath($path, ['discover' => false])` registers for **validation only**; `Registry::discoverAndLoadFluentBlocks()` never globs it.
+- `registerTemplatePath($path)` is the one-liner equivalent of the above.
+- `Config::getBlockPaths()` returns discovery paths; `Config::getTemplatePaths()` returns validation-only paths; `Config::getTemplateValidationPaths()` returns the deduplicated union used by both validators.
+
+Paths are normalized on registration (trailing slashes stripped) so `/foo/bar` and `/foo/bar/` collapse to one entry.
+
 ### Default keys
 
 | Key | Default | Description |
 |---|---|---|
-| `block_paths` | `[]` | Directories scanned for block definition files and templates. |
+| `block_paths` | `[]` | Directories scanned for block definition files and used for template validation. |
+| `template_paths` | `[]` | Template-validation-only directories; never scanned for block definitions. |
 | `template_extensions` | `.hb.php,.php` | Comma-separated; first extension is the default for new files. |
 | `auto_discovery` | `true` | Automatically scan block paths on `init`. |
 | `debug` | `false` | Log errors via `error_log`. |
@@ -395,6 +409,24 @@ add_filter('hyperblocks/blocks/register_fluent_blocks', function (array $files):
 });
 ```
 
+### Editor registration
+
+Fluent blocks are **dynamic**: they are server-rendered through the `render_callback` that `Bootstrap::registerSingleBlock()` wires into `register_block_type()`. To make the editor aware of them (so they appear in the inserter and parse when present in saved post content), HyperBlocks ships a small vanilla-JS file, `assets/js/editor.js`, registered under the `editor_script_handle` (`hyperblocks-editor` by default).
+
+Registration is **register-only, not enqueue**: it happens as a side-effect of `init` block registration (once at least one fluent block exists), and `Bootstrap::registerEditorScript()` calls `wp_register_script()` rather than `wp_enqueue_script()`. This is deliberate — `init` fires on every request, including the public front end, so enqueueing there would leak the Gutenberg bundle (`wp-blocks`, `wp-element`, `wp-components`) onto every page. Instead, the handle is registered with WordPress and core's own `wp_enqueue_registered_block_scripts_and_styles()` enqueues it in the editor context only, driven by the `editor_script` argument that `registerSingleBlock()` passes to `register_block_type()`.
+
+As part of registration, HyperBlocks also injects each block's `{ name, title, icon }` as `window.hyperBlocksConfig` via `wp_add_inline_script(..., 'before')`, attached to the same handle.
+
+`editor.js` then:
+
+- Iterates `window.hyperBlocksConfig`.
+- Skips any block already known to the editor via `wp.blocks.getBlockType(name)` (idempotent across multiple includes).
+- Calls `wp.blocks.registerBlockType(name, { title, icon, edit: () => null, save: () => null })`.
+
+`edit()` and `save()` deliberately return `null`: the editor shows the server-rendered markup, and `save()` returning `null` marks the block as dynamic so WordPress does not store static HTML in `post_content`. The script only makes blocks known and parsable client-side; it adds no interactive editor UI.
+
+**URL resolution**: the script URL is resolved from `HYPERBLOCKS_PLUGIN_URL` (defined in `bootstrap.php`, correct when HyperBlocks is vendored inside a consumer plugin's `vendor/` tree), falling back to `plugins_url()` when the constant is empty.
+
 ---
 
 ## REST API
@@ -472,6 +504,7 @@ hyperblocks_field_group(string $name, string $id): FieldGroup
 hyperblocks_register_block(Block $block): void
 hyperblocks_register_field_group(FieldGroup $group): void
 hyperblocks_register_path(string $path): void
+hyperblocks_register_template_path(string $path): void
 ```
 
 ### Query helpers

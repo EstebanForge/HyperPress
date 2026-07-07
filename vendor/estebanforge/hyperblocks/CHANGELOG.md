@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.1.9] - 2026-07-06
+
+### Security
+- Hardened the path-containment check in `Block::validateTemplatePath()` and `Renderer::validateTemplatePath()`. Both used `str_starts_with($real, $base)` without a trailing separator, so a registered base like `/var/www/blocks` incorrectly treated an unregistered sibling directory `/var/www/blocks-evil` as "inside" the allowed base. `Renderer::validateTemplatePath()` was the reachable vector: an absolute `file:` path skips the relative-resolution loop and lands directly in the prefix check, so a crafted absolute path into a prefix-colliding sibling directory would render an arbitrary file. The check now requires the base plus a trailing separator (and accepts an exact match on the base itself). `Block::validateTemplatePath()` was mitigated in practice by its `..` rejection (no way to reach a sibling without `..`), but is fixed too for defense-in-depth. Added `tests/Unit/RendererTemplatePathSecurityTest.php` proving the sibling-prefix escape via `Renderer::render()` is rejected and that legitimate relative templates still render.
+
+### Changed
+- Template-path validation is now decoupled from block auto-discovery. Previously `Config::registerBlockPath()` drove both behaviors from a single `block_paths` key: a directory registered merely so `Block::setRenderTemplateFile()` could resolve render templates stored there was also globbed by `Registry::discoverAndLoadFluentBlocks()` and every `.hb.php`/`.php` in it was `require_once`d as a block definition on `init`, fatalling when a template expected a render context (`TypeError: Cannot access offset of type string on string`). The split is additive and strictly backwards-compatible: `block_paths` keeps its current meaning (discovery + validation), and a new `template_paths` set is validation-only and never scanned.
+  - `Config::registerBlockPath($path)` (no options) is unchanged: discovery + validation.
+  - `Config::registerBlockPath($path, ['discover' => false])` registers for validation only.
+  - `Config::registerTemplatePath($path)` is a one-liner equivalent of the above.
+  - `Config::getTemplatePaths()` returns validation-only paths; `Config::getTemplateValidationPaths()` returns the deduplicated union (of `block_paths` + `template_paths`) used by `Block::validateTemplatePath()` and `Renderer::validateTemplatePath()`, so a template-only registration still resolves templates while staying out of the discovery glob.
+  - `Registry::discoverAndLoadFluentBlocks()` reads `block_paths` only; the intent is now documented at the scan site.
+  - Added the `hyperblocks_register_template_path()` procedural helper.
+  - Registered paths are now normalized (trailing slashes stripped) so `/foo/bar` and `/foo/bar/` collapse to one entry instead of inflating the allowlist.
+  - The discovery glob's one-level-deep bound (native PHP `glob()` has no globstar, so the pattern matches `base/<dir>/<file>` only; files directly in the base or nested two-plus levels deep are not discovered) is now documented as intentional and pinned by a regression test. Making discovery recursive would re-introduce the fatal class this change eliminates and requires a major-version bump.
+  - Removed `Config::validate()` and `Config::save()` (and their `ConfigTest` cases): both were unreachable dead code (`validate()` was only called by `save()`, which had zero callers). Re-add with coverage together if config validation is needed later.
+  - Added `tests/Unit/TemplatePathDiscoveryTest.php` covering the template-only, default-discovery, `discover => false`, union/dedup, one-level-deep, and trailing-slash-normalization cases.
+
+## [1.1.7] - 2026-07-06
+
+### Fixed
+- Fluent-API blocks now appear in the Gutenberg inserter and parse correctly in saved post content. Previously `register_block_type` referenced the `hyperblocks-editor` script handle, but the handle was never registered with WordPress and `enqueueEditorScript()` (now `registerEditorScript()`) was a guarded no-op, so the client never ran `wp.blocks.registerBlockType()` and existing block instances surfaced as "This block contains unexpected or invalid content."
+  - Added the missing `assets/js/editor.js` (vanilla JS, no build step): reads `window.hyperBlocksConfig` (injected server-side as `{ name, title, icon }` per block) and registers each block client-side with no-op `edit`/`save`, since blocks remain dynamic and server-rendered via `render_callback`. Guards against duplicate registration via `wp.blocks.getBlockType()`.
+  - Wired `Bootstrap::registerEditorScript()` to **register** (not enqueue) the script when the file exists (the guard now passes). Registering rather than enqueueing is required because the call runs on `init`, which fires on every request including the public front end; enqueueing there would load the Gutenberg bundle (`wp-blocks`, `wp-element`, `wp-components`) on every page. Core enqueues the handle in the editor only, via the existing `editor_script` argument passed to `register_block_type`.
+  - Prefer the canonical `HYPERBLOCKS_PLUGIN_URL` constant for URL resolution so the script loads correctly when HyperBlocks is vendored inside a consumer plugin; cast the `filemtime` version to string; declare `wp-dom-ready` as a dependency since `editor.js` calls `wp.domReady`.
+  - The `wp_add_inline_script` call that seeds `window.hyperBlocksConfig` remains attached to the registered handle and prints in the editor when core enqueues it.
+  - Extended the `tests/mocks/wp-mocks.php` capture helper (added a `wp_register_script` mock alongside the existing enqueue/inline captures) and added `tests/Unit/EditorScriptTest.php` asserting the handle, URL, full dependency list (including `wp-dom-ready`), in-footer flag, inline-config injection, the editor-context-only guarantee (no enqueue call), and the no-block no-registration path.
+
+## [1.1.6] - 2026-07-06
+
+### Added
+- Fluent `Block` setters for optional Gutenberg metadata that previously required a `block.json` — `setCategory()`, `setDescription()`, `setKeywords()`, and `setStyle()`. Metadata is forwarded to `register_block_type` only when set, so existing fluent blocks with defaults behave exactly as before. Pure addition, fully backwards compatible.
+
 ## [1.1.4] - 2026-07-03
 
 ### Changed

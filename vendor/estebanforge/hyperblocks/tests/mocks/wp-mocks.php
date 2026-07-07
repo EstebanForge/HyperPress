@@ -266,7 +266,30 @@ if (!function_exists('wp_enqueue_script')) {
         array $deps = [],
         string|bool|null $ver = false,
         bool $in_footer = false
-    ): void {}
+    ): void {
+        HyperBlocks_Testing_Registry::recordEnqueueScript($handle, $src, $deps, $ver, $in_footer);
+    }
+}
+
+if (!function_exists('wp_register_script')) {
+    /**
+     * Mock wp_register_script function.
+     *
+     * Records calls into HyperBlocks_Testing_Registry so unit tests can assert
+     * on the handle, URL, and dependency list that Bootstrap::registerEditorScript()
+     * wires up. Mirrors the wp_enqueue_script capture.
+     */
+    function wp_register_script(
+        string $handle,
+        string $src = '',
+        array $deps = [],
+        string|bool|null $ver = false,
+        bool $in_footer = false
+    ): bool {
+        HyperBlocks_Testing_Registry::recordRegisterScript($handle, $src, $deps, $ver, $in_footer);
+
+        return true;
+    }
 }
 
 if (!function_exists('wp_enqueue_style')) {
@@ -288,6 +311,8 @@ if (!function_exists('wp_add_inline_script')) {
      */
     function wp_add_inline_script(string $handle, string $data, string $position = 'after'): bool
     {
+        HyperBlocks_Testing_Registry::recordInlineScript($handle, $data, $position);
+
         return true;
     }
 }
@@ -309,13 +334,146 @@ if (!function_exists('register_rest_route')) {
 if (!function_exists('register_block_type')) {
     /**
      * Mock register_block_type function.
+     *
+     * Captures the last call's (name, args) into HyperBlocks_Testing_Registry
+     * so unit tests can assert on the exact args threaded through by
+     * Bootstrap::registerSingleBlock(). Read via
+     * HyperBlocks_Testing_Registry::getLastBlockRegistration().
      */
     function register_block_type(string $block_name, array $args): WP_Block_Type|false
     {
-        return new class {
-            public string $name = '';
-            public array $args = [];
-        };
+        HyperBlocks_Testing_Registry::recordBlockRegistration($block_name, $args);
+
+        // Return false (a valid per-signature value) rather than a fabricated
+        // WP_Block_Type: the mock has no such class, and unit tests assert on
+        // the recorded args via HyperBlocks_Testing_Registry, not the return.
+        return false;
+    }
+}
+
+/**
+ * Test-only capture helper for the register_block_type mock.
+     *
+ * Lives in the global namespace alongside the mock. Not loaded in production.
+ */
+final class HyperBlocks_Testing_Registry
+{
+    /** @var array{0: string, 1: array} */
+    private static array $last = ['', []];
+
+    /** @var array{handle: string, src: string, deps: array, ver: string|bool|null, in_footer: bool} */
+    private static array $lastEnqueue = [
+        'handle'    => '',
+        'src'       => '',
+        'deps'      => [],
+        'ver'       => false,
+        'in_footer' => false,
+    ];
+
+    /** @var array{handle: string, src: string, deps: array, ver: string|bool|null, in_footer: bool} */
+    private static array $lastRegister = [
+        'handle'    => '',
+        'src'       => '',
+        'deps'      => [],
+        'ver'       => false,
+        'in_footer' => false,
+    ];
+
+    /** @var array{handle: string, data: string, position: string} */
+    private static array $lastInline = ['handle' => '', 'data' => '', 'position' => ''];
+
+    public static function recordBlockRegistration(string $name, array $args): void
+    {
+        self::$last = [$name, $args];
+    }
+
+    /**
+     * @return array{0: string, 1: array}
+     */
+    public static function getLastBlockRegistration(): array
+    {
+        return self::$last;
+    }
+
+    public static function recordEnqueueScript(
+        string $handle,
+        string $src,
+        array $deps,
+        string|bool|null $ver,
+        bool $in_footer
+    ): void {
+        self::$lastEnqueue = [
+            'handle'    => $handle,
+            'src'       => $src,
+            'deps'      => $deps,
+            'ver'       => $ver,
+            'in_footer' => $in_footer,
+        ];
+    }
+
+    /**
+     * @return array{handle: string, src: string, deps: array, ver: string|bool|null, in_footer: bool}
+     */
+    public static function getLastEnqueueScript(): array
+    {
+        return self::$lastEnqueue;
+    }
+
+    public static function recordRegisterScript(
+        string $handle,
+        string $src,
+        array $deps,
+        string|bool|null $ver,
+        bool $in_footer
+    ): void {
+        self::$lastRegister = [
+            'handle'    => $handle,
+            'src'       => $src,
+            'deps'      => $deps,
+            'ver'       => $ver,
+            'in_footer' => $in_footer,
+        ];
+    }
+
+    /**
+     * @return array{handle: string, src: string, deps: array, ver: string|bool|null, in_footer: bool}
+     */
+    public static function getLastRegisterScript(): array
+    {
+        return self::$lastRegister;
+    }
+
+    public static function recordInlineScript(string $handle, string $data, string $position): void
+    {
+        self::$lastInline = ['handle' => $handle, 'data' => $data, 'position' => $position];
+    }
+
+    /**
+     * @return array{handle: string, data: string, position: string}
+     */
+    public static function getLastInlineScript(): array
+    {
+        return self::$lastInline;
+    }
+
+    public static function reset(): void
+    {
+        self::$last = ['', []];
+        self::$lastEnqueue = [
+            'handle'    => '',
+            'src'       => '',
+            'deps'      => [],
+            'ver'       => false,
+            'in_footer' => false,
+        ];
+        self::$lastRegister = [
+            'handle'    => '',
+            'src'       => '',
+            'deps'      => [],
+            'ver'       => false,
+            'in_footer' => false,
+        ];
+        self::$lastInline = ['handle' => '', 'data' => '', 'position' => ''];
     }
 }
 

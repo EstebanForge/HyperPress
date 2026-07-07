@@ -186,64 +186,12 @@ class ConfigTest extends TestCase
         $this->assertArrayHasKey('rest_namespace', $all);
     }
 
-    public function testValidateWithValidConfig(): void
-    {
-        $path = $this->createPath('validate/path');
-        $config = [
-            'block_paths' => [$path],
-            'template_extensions' => '.php,.html',
-            'rest_namespace' => 'test/v1',
-            'auto_discovery' => true,
-            'debug' => false,
-        ];
-
-        $this->assertTrue(Config::validate($config));
-    }
-
-    public function testValidateWithInvalidBlockPaths(): void
-    {
-        $config = [
-            'block_paths' => 'not_an_array',
-        ];
-
-        $this->assertFalse(Config::validate($config));
-    }
-
-    public function testValidateWithInvalidTemplateExtensions(): void
-    {
-        $config = [
-            'template_extensions' => 123,
-        ];
-
-        $this->assertFalse(Config::validate($config));
-    }
-
-    public function testValidateWithInvalidRestNamespace(): void
-    {
-        $config = [
-            'rest_namespace' => 'invalid-format',
-        ];
-
-        $this->assertFalse(Config::validate($config));
-    }
-
-    public function testValidateWithInvalidBoolean(): void
-    {
-        $config = [
-            'debug' => 'not_a_boolean',
-        ];
-
-        $this->assertFalse(Config::validate($config));
-    }
-
-    public function testValidateExtensionWithoutDot(): void
-    {
-        $config = [
-            'template_extensions' => 'php,html',
-        ];
-
-        $this->assertFalse(Config::validate($config));
-    }
+    /*
+     * validate()/save() were unreachable dead code and have been removed.
+     * The validation tests that existed for them were deleted at the same
+     * time. If config validation is needed in the future, re-add both the
+     * methods and their coverage together.
+     */
 
     public function testInitLoadsOnlyOnce(): void
     {

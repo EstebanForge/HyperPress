@@ -1,5 +1,10 @@
 # Changelog
 
+# 3.3.3 / 2026-07-07
+- **DEPS:** Updated `estebanforge/hyperfields` to 1.3.2.
+- **DEPS:** Updated `estebanforge/hyperblocks` to 1.1.9.
+- **DEPS:** Updated `estebanforge/hyperpress-core` to 1.3.1 (hyperfields + hyperblocks dependency bumps).
+
 # 3.3.2 / 2026-07-04
 - **DEPS:** Updated `estebanforge/hyperfields` to 1.3.0 — new `AdminPage` class (non-form admin page host with sticky white header, URL-based nav tabs, notice relocation), mobile nav-tab dropdown morph (`<= 782px`), plus fixes for the `TabsField` layout regression, sticky-header horizontal scrollbar bleed, mobile sticky-header gaps, and notice relocation on non-form pages.
 - **DEPS:** Updated `estebanforge/hyperblocks` to 1.1.4 (hyperfields dependency bump).

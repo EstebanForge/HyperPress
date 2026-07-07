@@ -89,12 +89,32 @@ function hyperblocks_register_field_group(FieldGroup $group): void
 /**
  * Register a block discovery path.
  *
+ * The path is both scanned for block definitions and added to the
+ * template-validation allowlist. To register a path for template
+ * validation only (never scanned), use hyperblocks_register_template_path().
+ *
  * @param string $path The path to register.
  * @return void
  */
 function hyperblocks_register_path(string $path): void
 {
     HyperBlocks\Config::registerBlockPath($path);
+}
+
+/**
+ * Register a template-only path.
+ *
+ * The path is added to the template-validation allowlist but is never
+ * scanned for block definitions. Use when a directory holds render
+ * templates that must resolve via Block::setRenderTemplateFile() but
+ * must not be auto-executed as block definitions on init.
+ *
+ * @param string $path The path to register.
+ * @return void
+ */
+function hyperblocks_register_template_path(string $path): void
+{
+    HyperBlocks\Config::registerTemplatePath($path);
 }
 
 /**

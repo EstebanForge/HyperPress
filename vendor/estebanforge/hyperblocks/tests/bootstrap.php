@@ -32,6 +32,9 @@ HyperBlocks\Config::reset();
 
 // Define test constants
 define('HYPERBLOCKS_PATH', __DIR__ . '/..');
+// Mirror the canonical URL constant defined by bootstrap.php so the
+// editor-script enqueue exercises its production-preferred code path.
+define('HYPERBLOCKS_PLUGIN_URL', 'https://example.com/wp-content/plugins/hyperblocks/');
 define('WP_DEBUG', true);
 define('WP_CONTENT_DIR', sys_get_temp_dir() . '/wp-content');
 

@@ -299,6 +299,11 @@ class PostMetaContainer extends Container
             // Sanitize the value
             $value = $field->sanitizeValue($value);
 
+            // Skip fields that fail validation; preserve the existing meta.
+            if (!$field->validateValue($value)) {
+                continue;
+            }
+
             // Save as post meta
             update_post_meta($this->post_id, $field_name, $value);
         }

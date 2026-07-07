@@ -22,8 +22,15 @@ class Config
      * Default configuration values.
      */
     private const DEFAULTS = [
-        // Block discovery paths
+        // Block discovery paths. Scanned for block definitions AND used for
+        // template validation. Populated by registerBlockPath().
         'block_paths' => [],
+
+        // Template-only paths. Used ONLY for template validation
+        // (setRenderTemplateFile / Renderer). Never scanned for block
+        // definitions. Populated by registerTemplatePath() or
+        // registerBlockPath($path, ['discover' => false]).
+        'template_paths' => [],
 
         // Template extensions
         'template_extensions' => '.hb.php,.php',
@@ -136,10 +143,25 @@ class Config
     /**
      * Register a block discovery path.
      *
-     * @param string $path The path to add.
+     * By default the path is both scanned for block definitions
+     * (discovery) and added to the template-validation allowlist. Pass
+     * ['discover' => false] to register a path for template validation
+     * only, so it is never globbed by Registry::discoverAndLoadFluentBlocks().
+     * This avoids fatals when a directory holds render templates that are
+     * not safe to execute as top-level block definitions.
+     *
+     * A discovery-disabled registration is equivalent to
+     * registerTemplatePath() and is stored in the same set.
+     *
+     * @param string $path    The path to add.
+     * @param array  $options {
+     *     Optional. 'discover' (bool, default true): when false, the path is
+     *     registered for template validation only and excluded from
+     *     auto-discovery.
+     * }
      * @return void
      */
-    public static function registerBlockPath(string $path): void
+    public static function registerBlockPath(string $path, array $options = []): void
     {
         if (!self::$loaded) {
             self::init();
@@ -153,16 +175,45 @@ class Config
             return;
         }
 
-        // Add to block paths array if not already present
-        $blockPaths = self::$config['block_paths'] ?? [];
-        if (!in_array($path, $blockPaths, true)) {
-            $blockPaths[] = $path;
-            self::$config['block_paths'] = $blockPaths;
+        $discover = $options['discover'] ?? true;
+        $key = $discover ? 'block_paths' : 'template_paths';
+
+        // Normalize: strip trailing slashes so /foo/bar and /foo/bar/ dedup
+        // as the same path (array_unique is string-only and would otherwise
+        // keep both, inflating the allowlist).
+        $path = rtrim($path, '/\\');
+
+        // Add to the target path array if not already present
+        $paths = self::$config[$key] ?? [];
+        if (!in_array($path, $paths, true)) {
+            $paths[] = $path;
+            self::$config[$key] = $paths;
         }
     }
 
     /**
+     * Register a template-only path.
+     *
+     * The path is added to the template-validation allowlist but is never
+     * scanned for block definitions. Use this when a directory holds render
+     * templates that must resolve via Block::setRenderTemplateFile() but
+     * must not be auto-executed as block definitions on init.
+     *
+     * Equivalent to registerBlockPath($path, ['discover' => false]).
+     *
+     * @param string $path The path to add.
+     * @return void
+     */
+    public static function registerTemplatePath(string $path): void
+    {
+        self::registerBlockPath($path, ['discover' => false]);
+    }
+
+    /**
      * Get all registered block discovery paths.
+     *
+     * These paths are scanned for block definitions and also used for
+     * template validation.
      *
      * @return array Array of paths.
      */
@@ -173,6 +224,46 @@ class Config
         }
 
         return self::$config['block_paths'] ?? [];
+    }
+
+    /**
+     * Get all registered template-only paths.
+     *
+     * These paths are used for template validation only and are never
+     * scanned for block definitions.
+     *
+     * @return array Array of paths.
+     */
+    public static function getTemplatePaths(): array
+    {
+        if (!self::$loaded) {
+            self::init();
+        }
+
+        return self::$config['template_paths'] ?? [];
+    }
+
+    /**
+     * Get every path allowed for template validation.
+     *
+     * Returns the union of discovery paths (block_paths) and template-only
+     * paths (template_paths). Block::validateTemplatePath() and
+     * Renderer::validateTemplatePath() resolve templates against this set.
+     *
+     * @return array Array of paths (deduplicated).
+     */
+    public static function getTemplateValidationPaths(): array
+    {
+        if (!self::$loaded) {
+            self::init();
+        }
+
+        $paths = array_merge(
+            self::$config['block_paths'] ?? [],
+            self::$config['template_paths'] ?? []
+        );
+
+        return array_values(array_unique($paths));
     }
 
     /**
@@ -252,71 +343,5 @@ class Config
     {
         self::$config = array_merge(self::DEFAULTS, $config);
         self::$loaded = true;
-    }
-
-    /**
-     * Validate configuration values.
-     *
-     * @param array $config The configuration to validate.
-     * @return bool True if valid.
-     */
-    public static function validate(array $config): bool
-    {
-        // Validate block_paths
-        if (isset($config['block_paths'])) {
-            if (!is_array($config['block_paths'])) {
-                return false;
-            }
-            foreach ($config['block_paths'] as $path) {
-                if (!is_string($path) || !is_dir($path)) {
-                    return false;
-                }
-            }
-        }
-
-        // Validate template_extensions
-        if (isset($config['template_extensions'])) {
-            if (!is_string($config['template_extensions'])) {
-                return false;
-            }
-            $extensions = array_map('trim', explode(',', $config['template_extensions']));
-            foreach ($extensions as $ext) {
-                if (!str_starts_with($ext, '.')) {
-                    return false;
-                }
-            }
-        }
-
-        // Validate rest_namespace
-        if (isset($config['rest_namespace'])) {
-            if (!is_string($config['rest_namespace']) || !preg_match('/^[a-z0-9-]+\/v[0-9]+$/', $config['rest_namespace'])) {
-                return false;
-            }
-        }
-
-        // Validate boolean flags
-        $booleanKeys = ['auto_discovery', 'debug', 'cache_blocks'];
-        foreach ($booleanKeys as $key) {
-            if (isset($config[$key]) && !is_bool($config[$key])) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Save configuration to database.
-     *
-     * @param array $config The configuration to save.
-     * @return bool True if saved successfully.
-     */
-    public static function save(array $config): bool
-    {
-        if (!self::validate($config)) {
-            return false;
-        }
-
-        return update_option('hyperblocks_options', $config);
     }
 }

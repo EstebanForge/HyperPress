@@ -14,7 +14,7 @@ add_action('init', function (): void {
 });
 ```
 
-If you use the auto-discovery system, place your block definition files inside any directory registered with `Config::registerBlockPath()`. HyperBlocks scans those directories on `init` and includes every `.hb.php` file it finds.
+If you use the auto-discovery system, place your block definition files inside any directory registered with `Config::registerBlockPath()`. HyperBlocks scans those directories on `init` and includes every `.hb.php` file it finds **one directory level beneath the base path** (native PHP `glob()` has no globstar, so the pattern matches `base/<dir>/<file>` only; files placed directly in the base, or nested two or more levels deep, are not discovered). To register a directory solely so `setRenderTemplateFile()` can resolve render templates stored there without it being scanned, use `Config::registerTemplatePath()` instead.
 
 ---
 
@@ -402,7 +402,15 @@ add_action('init', function (): void {
 }, 4); // before HyperBlocks scans at priority 5
 ```
 
-With `auto_discovery` enabled (default), HyperBlocks includes every `.hb.php` file inside that directory on `init`. Each file is responsible for defining and registering its own block.
+With `auto_discovery` enabled (default), HyperBlocks includes every `.hb.php` file **one directory level beneath the base path** on `init` (e.g. `blocks/<dir>/block.hb.php`; files directly in `blocks/` or nested deeper are not scanned). Each file is responsible for defining and registering its own block.
+
+If you only need a directory to resolve render templates via `Block::setRenderTemplateFile()` and must keep it from being auto-executed as a block definition, register it as a template-only path instead:
+
+```php
+add_action('init', function (): void {
+    \HyperBlocks\Config::registerTemplatePath(plugin_dir_path(__FILE__) . 'templates');
+}, 4);
+```
 
 Via WordPress filter (preferred when inside a plugin):
 

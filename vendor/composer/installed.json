@@ -216,12 +216,12 @@
         },
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.1.4",
-            "version_normalized": "1.1.4.0",
+            "version": "1.1.9",
+            "version_normalized": "1.1.9.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "d65aa3c0499a274edb66bbf7b7197f4efc34e334"
+                "reference": "0c665877256cf522b7703992729768c54f022683"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
@@ -317,12 +317,12 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.3.0",
-            "version_normalized": "1.3.0.0",
+            "version": "1.3.2",
+            "version_normalized": "1.3.2.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "0fcaf7f855e8ec964d309155e1145a93c65fd456"
+                "reference": "7e4ba1a158bff068eea5fc637c428f4d52751c1b"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
@@ -424,12 +424,12 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.3.0",
-            "version_normalized": "1.3.0.0",
+            "version": "1.3.1",
+            "version_normalized": "1.3.1.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "27db70183e94c215d5514a4e30c08658bd9b094b"
+                "reference": "e769aa12283f6e21efac6459a1d45a00223e75e4"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
