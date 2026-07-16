@@ -23,26 +23,58 @@ echo ""
 echo "  Current version: $CURRENT_VERSION"
 echo ""
 
-while true; do
-  read -rp "  Enter new version (X.Y.Z): " NEW_VERSION
+# --- bump math (shared) ---
+bump_version() {
+  local cur="$1" level="$2" major minor patch
+  IFS='.' read -r major minor patch <<< "$cur"
+  case "$level" in
+    major) major=$((major+1)); minor=0; patch=0 ;;
+    minor) minor=$((minor+1)); patch=0 ;;
+    patch) patch=$((patch+1)) ;;
+    *) return 1 ;;
+  esac
+  echo "${major}.${minor}.${patch}"
+}
 
-  if [[ -z "$NEW_VERSION" ]]; then
-    echo "  ✗ Version cannot be empty"
-    continue
-  fi
+usage() {
+  cat >&2 <<EOF
+Usage:
+  scripts/version-bump.sh                 # interactive prompt
+  scripts/version-bump.sh --patch         # bump patch (1.2.3 -> 1.2.4)
+  scripts/version-bump.sh --minor         # bump minor
+  scripts/version-bump.sh --major         # bump major
+  scripts/version-bump.sh --version 1.2.4 # explicit version
+EOF
+}
 
-  if [[ ! "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    echo "  ✗ Invalid format. Use semantic versioning: X.Y.Z (e.g., 1.2.3)"
-    continue
-  fi
-
-  if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then
-    echo "  ✗ New version must be different from current version"
-    continue
-  fi
-
-  break
+# --- resolve target version ---
+BUMP_LEVEL=""
+NEW_VERSION=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --version) NEW_VERSION="${2:-}"; shift 2 ;;
+    --patch|--minor|--major) BUMP_LEVEL="${1#--}"; shift ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "Unknown argument: $1" >&2; usage; exit 2 ;;
+  esac
 done
+
+if [[ -z "$NEW_VERSION" && -z "$BUMP_LEVEL" ]]; then
+  # Interactive mode (default when no flags are passed)
+  while true; do
+    read -rp "  Enter new version (X.Y.Z): " NEW_VERSION
+    if [[ -z "$NEW_VERSION" ]]; then echo "  ✗ Version cannot be empty"; continue; fi
+    if [[ ! "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "  ✗ Invalid format. Use X.Y.Z (e.g., 1.2.3)"; continue; fi
+    if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then echo "  ✗ New version must be different from current version"; continue; fi
+    break
+  done
+elif [[ -n "$BUMP_LEVEL" ]]; then
+  NEW_VERSION="$(bump_version "$CURRENT_VERSION" "$BUMP_LEVEL")" || { echo "  ✗ Invalid bump level" >&2; exit 1; }
+  echo "  Computed ($BUMP_LEVEL): $CURRENT_VERSION -> $NEW_VERSION"
+else
+  if [[ ! "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "  ✗ Invalid format. Use X.Y.Z (e.g., 1.2.3)" >&2; exit 1; fi
+  if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then echo "  ✗ New version must be different from current version" >&2; exit 1; fi
+fi
 
 sedi() {
   if [[ "$OSTYPE" == darwin* ]]; then
@@ -107,3 +139,4 @@ echo "    1. Update CHANGELOG.md with release notes"
 echo "    2. Run: composer run production"
 echo "    3. Commit: git add -A && git commit -m 'Bump version to $NEW_VERSION'"
 echo ""
+echo "RESULT: $CURRENT_VERSION -> $NEW_VERSION"
