@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0] - 2026-07-16
+
+### Changed
+- **Admin CSS realigned with current WordPress checkbox/heading UI** — three scoping fixes in `assets/css/hyperfields-admin.css`, all in service of matching recent WP core rendering rather than fighting it:
+  - Section headings now use the admin text-color token (`var(--hf-color-admin-text)`) instead of the generic frontend text token (`var(--hf-color-text)`), so headings match the surrounding WP admin chrome.
+  - Removed the fixed `width: 18px` / `height: 18px` on `.hyperpress-field-input-wrapper input[type="checkbox"]` and `[type="radio"]`. WordPress 6.9+/7.x renders checkboxes via `appearance: none` with an internally-positioned checkmark; forcing a fixed size distorted that internal positioning and produced an off-center check, especially on mobile. Width/height is now left unset so WP core owns the checkbox appearance; `cursor: pointer` is retained.
+  - Scoped the `.hyperpress-heading-label` rule to `.hyperpress-options-wrap .hyperpress-heading-label`, preventing it from leaking out and overriding unrelated heading markup on pages that share the class name.
+
 ## [1.3.5] - 2026-07-07
 
 ### Fixed
