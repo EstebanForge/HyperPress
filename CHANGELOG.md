@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.5.0] - 2026-07-16
+
+- **TOOLING:** `scripts/version-bump.sh` now supports non-interactive flags. Previously the script prompted interactively only; it now resolves the target version from flags first, falling back to the prompt only when called with no arguments:
+  - `--patch` / `--minor` / `--major` — compute the next version from the current version via a shared `bump_version()` helper (e.g. `3.4.2` + `--minor` → `3.5.0`).
+  - `--version X.Y.Z` — explicit target, validated against `^[0-9]+\.[0-9]+\.[0-9]+$`, rejected if equal to the current version.
+  - `-h` / `--help` prints usage; unknown arguments exit `2`.
+  - Emits a final `RESULT: <cur> -> <new>` line for machine-parseable output.
+  - No flags = unchanged interactive behavior (backwards compatible).
+- No plugin, API, or behavior changes.
+
 # 3.4.2 / 2026-07-07
 - **DEPS:** Updated vendored `estebanforge/hyperfields` to 1.3.6, pulling in two functional releases plus a re-tag (1.3.4 → 1.3.6). The PHP-template field path (options pages and block inspector fields served via `TemplateLoader`) was missing the media picker that only the React path had:
   - **1.3.4 — `wp.media` handler for image/file/`media_gallery` fields.** The PHP templates emitted `.hyperpress-upload-button` / `.hyperpress-remove-button` markup but no JS wired them up, so consumers on the plain-template path got dead buttons. New `assets/js/media-fields.js` (ES6 `class HyperFieldsMedia`, singleton-scoped, event-delegated): single-select frame for `image` (stores attachment ID) and `file` (stores URL) with live preview + remove-button visibility; multi-select frame for `media_gallery` (comma-joined IDs) with per-item thumbnail fetch and per-item removal. `wp_enqueue_media()` is now called in `TemplateLoader::enqueueAssets()` (guarded with `function_exists()`). Reuses existing `hyperpressFields.l10n` strings; degrades gracefully when `wp.media` is undefined.
