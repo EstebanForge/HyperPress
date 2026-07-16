@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.0] - 2026-07-16
+
+### Changed
+- **`scripts/version-bump.sh` gained non-interactive flag support.** Previously the script prompted interactively only; it now resolves the target version from flags first, falling back to the interactive prompt only when called with no arguments:
+  - `--patch` / `--minor` / `--major` — compute the next version from the current `composer.json` version via a shared `bump_version()` helper (e.g. `1.3.5` + `--minor` → `1.4.0`).
+  - `--version X.Y.Z` — explicit target, validated against `^[0-9]+\.[0-9]+\.[0-9]+$` and rejected if identical to the current version.
+  - `-h` / `--help` prints usage; unknown arguments exit `2`.
+  - Emits a final `RESULT: <cur> -> <new>` line for machine-parseable output.
+  - No flags = unchanged interactive behavior (backwards compatible).
+- No library, API, or runtime changes.
+
 ## [1.3.2] - 2026-07-07
 
 ### Security

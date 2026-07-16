@@ -418,7 +418,7 @@
     padding-bottom: 12px;
     font-size: 18px;
     font-weight: 600;
-    color: var(--hf-color-text);
+    color: var(--hf-color-admin-text);
     border-bottom: 1px solid var(--hf-color-border-light);
 }
 
@@ -467,9 +467,11 @@
 .hyperpress-field-input-wrapper input[type="checkbox"],
 .hyperpress-field-input-wrapper input[type="radio"] {
     margin: 0;
-    width: 18px;
-    height: 18px;
     cursor: pointer;
+    /* Width/height intentionally unset: WordPress 6.9+/7.x renders checkboxes
+     * via appearance:none with an internally-positioned checkmark. Forcing a
+     * fixed size distorts that internal positioning (off-center check),
+     * especially on mobile. Let WP core own the checkbox appearance. */
 }
 
 .hyperpress-field-input-wrapper .description {
@@ -738,7 +740,7 @@
     border-bottom: 1px solid var(--hf-color-admin-border);
 }
 
-.hyperpress-heading-label {
+.hyperpress-options-wrap .hyperpress-heading-label {
     margin: 0;
     font-size: 15px;
     font-weight: 600;

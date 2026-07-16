@@ -27,13 +27,13 @@
   setup() {
     // Find all fields with conditional logic
     const conditionalFields = document.querySelectorAll(
-      "[data-hyperpress-conditional-logic]",
+      "[data-hp-conditional-logic]",
     );
 
     conditionalFields.forEach((fieldWrapper) => {
       try {
         const logicData = JSON.parse(
-          fieldWrapper.getAttribute("data-hyperpress-conditional-logic"),
+          fieldWrapper.getAttribute("data-hp-conditional-logic"),
         );
         const fieldName = this.getFieldName(fieldWrapper);
 
@@ -97,12 +97,21 @@
 
     // Support format: { relation: 'AND', rules: [...] }
     // or legacy format: [condition1, condition2, ...]
+    // or PHP numeric-key format: { relation: 'AND', 0: {...}, 1: {...} }
     let relation = "AND";
     let conditions = logic;
 
     if (logic && typeof logic === "object" && logic.relation) {
       relation = logic.relation || "AND";
-      conditions = logic.rules || logic;
+      if (Array.isArray(logic.rules)) {
+        conditions = logic.rules;
+      } else {
+        // PHP's wp_json_encode serializes ['relation' => 'AND', [...]] as
+        // {relation:'AND', 0:{...}}. Extract numeric keys as conditions.
+        conditions = Object.keys(logic)
+          .filter((k) => k !== "relation")
+          .map((k) => logic[k]);
+      }
     }
 
     if (!Array.isArray(conditions)) {
@@ -222,7 +231,10 @@
   }
 
   getFieldValue(fieldName) {
-    // Try different field name patterns
+    // HyperFields pairs every checkbox with a hidden sibling input
+    // (name="..." value="0") so the field always posts. querySelector
+    // returns that hidden input first, making checkbox conditions read
+    // "0" forever. querySelectorAll + prefer the interactive control.
     const selectors = [
       `[name="${fieldName}"]`,
       `[name*="[${fieldName}]"]`,
@@ -232,10 +244,20 @@
     ];
 
     for (const selector of selectors) {
-      const element = document.querySelector(selector);
-      if (element) {
-        return this.extractValue(element);
+      const matches = document.querySelectorAll(selector);
+      if (!matches.length) {
+        continue;
       }
+      // Prefer the first non-hidden element (the real control). Falls back
+      // to the first match when only hidden inputs exist.
+      let chosen = null;
+      for (const el of matches) {
+        if (el.type !== "hidden") {
+          chosen = el;
+          break;
+        }
+      }
+      return this.extractValue(chosen || matches[0]);
     }
 
     return null;
