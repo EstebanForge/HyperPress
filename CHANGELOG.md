@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.5.2] - 2026-07-23
+
+- Dependency refresh. No plugin code changes; bundled `vendor/` updated to pull HyperPress-Core 1.4.2, which in turn carries HyperBlocks 1.3.3's `useBlockProps()` dynamic-block editor-preview fix. Re-tagged so the update reaches WordPress.org users.
+
 ## [3.5.1] - 2026-07-23
 
 - Patch release. No functional changes.
