@@ -82,7 +82,7 @@ class EditorScriptTest extends TestCase
             $registration['src']
         );
         $this->assertSame(
-            ['wp-blocks', 'wp-element', 'wp-components', 'wp-dom-ready'],
+            ['wp-blocks', 'wp-element', 'wp-components', 'wp-dom-ready', 'wp-block-editor', 'wp-server-side-render'],
             $registration['deps']
         );
         $this->assertTrue($registration['in_footer']);

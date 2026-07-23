@@ -322,7 +322,7 @@ class Bootstrap
         wp_register_script(
             $scriptHandle,
             $scriptUrl,
-            ['wp-blocks', 'wp-element', 'wp-components', 'wp-dom-ready'],
+            ['wp-blocks', 'wp-element', 'wp-components', 'wp-dom-ready', 'wp-block-editor', 'wp-server-side-render'],
             (string) filemtime($scriptPath),
             true
         );

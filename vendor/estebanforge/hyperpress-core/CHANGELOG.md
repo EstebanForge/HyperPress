@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.2] - 2026-07-23
+
+### Changed
+- **Dependency refresh: pull in `estebanforge/hyperblocks` 1.3.3.** No HyperPress-Core code changes; the lockfile and vendored HyperBlocks are updated so the dynamic-block `useBlockProps()` editor-preview fix (1.3.3) ships to consumers that resolve HyperPress-Core. Released as a patch per the refresh-downstream policy: the committed dependency set changed, so the tag must move.
+
 ## [1.4.1] - 2026-07-23
 
 ### Fixed

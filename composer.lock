@@ -216,11 +216,11 @@
         },
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.3.1",
+            "version": "1.3.3",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "b7ff90007809b8338841e1ebf8f40d9bd373aefb"
+                "reference": "3e341758704ff5312fbfd6f24b08efb2b75b357f"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
@@ -418,11 +418,11 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.4.1",
+            "version": "1.4.2",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "feca133a0aa47ab433a158c70306d39dfe42c97e"
+                "reference": "17217814ea8ea3bb2d9f58d52d4173e3caeddba0"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
