@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.5.1] - 2026-07-23
+
+- Patch release. No functional changes.
+
 ## [3.5.0] - 2026-07-16
 
 - **TOOLING:** `scripts/version-bump.sh` now supports non-interactive flags. Previously the script prompted interactively only; it now resolves the target version from flags first, falling back to the prompt only when called with no arguments:
