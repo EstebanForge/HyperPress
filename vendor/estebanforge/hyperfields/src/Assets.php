@@ -27,7 +27,7 @@ class Assets
      */
     public function enqueueScripts(): void
     {
-        if (!defined('HYPERFIELDS_PLUGIN_URL')) {
+        if (!defined('HYPERFIELDS_PLUGIN_URL') || HYPERFIELDS_PLUGIN_URL === '') {
             return;
         }
 

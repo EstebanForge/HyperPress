@@ -28,9 +28,9 @@ if (!function_exists('hyperblocks_run_initialization_logic')) {
             if (version_compare($version, $loaded_version, '>')) {
                 if (function_exists('error_log')) {
                     error_log(sprintf(
-                        'HyperBlocks: newer version %s at %s requested init after version %s was already loaded from %s. ' .
-                        'The older instance is serving. This means the multi-instance version election did not run before initialization; ' .
-                        'ensure the highest-version consumer calls hyperblocks_run_initialization_logic() before any other copy initializes.',
+                        'HyperBlocks: newer version %s at %s requested init after version %s was already loaded from %s. '
+                        . 'The older instance is serving. This means the multi-instance version election did not run before initialization; '
+                        . 'ensure the highest-version consumer calls hyperblocks_run_initialization_logic() before any other copy initializes.',
                         $version,
                         $bootstrap_file_path,
                         $loaded_version,
@@ -38,6 +38,7 @@ if (!function_exists('hyperblocks_run_initialization_logic')) {
                     ));
                 }
             }
+
             return;
         }
 
@@ -59,9 +60,20 @@ if (!function_exists('hyperblocks_run_initialization_logic')) {
         }
 
         if (!defined('HYPERBLOCKS_PLUGIN_URL')) {
-            $plugin_url = function_exists('plugins_url')
-                ? rtrim(plugins_url('', $bootstrap_file_path), '/\\') . '/'
-                : '';
+            // Resolve against web-accessible content roots rather than
+            // plugins_url(), which only handles files directly under
+            // WP_PLUGIN_DIR and 404s when HyperBlocks is vendored elsewhere
+            // (e.g. a Bedrock root composer vendor outside the web document
+            // root). Empty when HTTP cannot reach the directory; the editor
+            // asset registration bails in that case instead of enqueuing a
+            // broken URL. Preserve the empty sentinel: rtrim('') . '/' would
+            // turn the unresolvable case into '/', defeating that guard.
+            $resolved = function_exists('hyperblocks_resolve_content_url')
+                ? hyperblocks_resolve_content_url($base_dir)
+                : (function_exists('plugins_url')
+                    ? plugins_url('', $bootstrap_file_path)
+                    : '');
+            $plugin_url = $resolved !== '' ? rtrim($resolved, '/\\') . '/' : '';
             define('HYPERBLOCKS_PLUGIN_URL', $plugin_url);
         }
 

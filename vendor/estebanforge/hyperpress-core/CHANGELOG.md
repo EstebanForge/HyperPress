@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.1] - 2026-07-23
+
+### Fixed
+- **Library-mode `HYPERPRESS_PLUGIN_URL` no longer resolves to a broken URL when HyperPress-Core is vendored outside `WP_PLUGIN_DIR`.** Previously library mode defined `HYPERPRESS_PLUGIN_URL` as `''` ("not applicable"), which silently disabled all frontend asset enqueue (htmx/alpine/datastar and the editor bundle). When HyperPress is loaded as a library — including the common case of being vendored into a consumer plugin's bundled `vendor/` tree — `bootstrap.php` now resolves the URL against web-accessible WordPress content roots via HyperFields' shared resolver (`hyperfields_resolve_content_url()`), so frontend assets enqueue correctly. Returns `''` only when the library genuinely sits outside every web-accessible root (e.g. a Bedrock application's root composer vendor outside `src/web`), in which case asset enqueue bails cleanly instead of emitting a 404ing URL. Note: HyperPress-Core has always resolved this constant from its own base directory; the related fix in HyperFields 1.4.1 (which previously defined HYPERPRESS_PLUGIN_URL by copying a broken HyperFields URL) now lets this library's own definition win unobstructed.
+
+### Added
+- `tests/Unit/AssetUrlResolverTest.php` — locks in that the shared resolver (HyperFields' `LibraryBootstrap::resolveContentUrl()`, which HyperPress delegates to) handles the nested plugin-vendor case and the Bedrock-root-vendor (non-web-accessible) empty case.
+- `WP_PLUGIN_URL`/`WP_CONTENT_URL` constants in the test bootstrap so the resolver's production code path is exercised.
+
 ## [1.4.0] - 2026-07-16
 
 ### Changed

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "45622f3c60caacb0ead43bde91be1811",
+    "content-hash": "faa9e680b95280b5614e73bb8e9cb999",
     "packages": [
         {
             "name": "automattic/jetpack-autoloader",
@@ -70,11 +70,11 @@
         },
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "2a86e59c9a84500c3918b4c7bff4afdc8cb4b63a"
+                "reference": "b7ff90007809b8338841e1ebf8f40d9bd373aefb"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",
@@ -167,11 +167,11 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "3c96e2a6d0c9c4d610e4f3d86e611f4a67a70e82"
+                "reference": "6125f2fb269d1a799a2626c94f26a452a0f50f87"
             },
             "require": {
                 "automattic/jetpack-autoloader": "^2",

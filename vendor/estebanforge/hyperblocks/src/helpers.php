@@ -164,3 +164,115 @@ function hyperblocks_get_block(string $blockName): ?Block
 {
     return Registry::getInstance()->getFluentBlock($blockName);
 }
+
+/**
+ * Resolve a filesystem path to its public URL by matching it against the
+ * web-accessible WordPress content roots.
+ *
+ * HyperBlocks' editor assets (editor.js, editor.css) live inside the library
+ * directory and must be served over HTTP for the Gutenberg inserter to
+ * register fluent blocks client-side. WordPress' plugins_url($path, $file)
+ * only resolves correctly when $file sits directly under WP_PLUGIN_DIR: it
+ * calls plugin_basename() which strips that one prefix and nothing else. When
+ * HyperBlocks is vendored into a non-plugin directory — notably a Bedrock
+ * application's root composer vendor (public_html/src/vendor), which lives
+ * outside both WP_PLUGIN_DIR and the web document root — plugin_basename()
+ * returns the full path and plugins_url() emits a URL like
+ * https://host/app/plugins/home/.../src/vendor/... that 404s. The editor
+ * script then never loads, wp.blocks.registerBlockType() never fires, and
+ * every fluent block is silently invisible in the inserter.
+ *
+ * This resolver walks every web-accessible content root (plugins, mu-plugins,
+ * content, active theme template + stylesheet dirs) and returns the first
+ * containing root's URL plus the relative remainder of $path. It returns an
+ * empty string when $path is under no web-accessible root — the documented
+ * signal that the library is loaded from a location HTTP cannot reach, so
+ * callers can bail and log instead of enqueuing a broken URL.
+ *
+ * @param string $path Absolute filesystem path (file or directory).
+ * @return string Public URL with no trailing slash, or '' if not resolvable.
+ */
+function hyperblocks_resolve_content_url(string $path): string
+{
+    // Delegate to the canonical HyperFields implementation when present, so a
+    // stack that ships all three libraries (HyperFields, HyperBlocks,
+    // HyperPress-Core) runs one resolver. The local implementation below is
+    // the fallback for standalone HyperBlocks installs without HyperFields.
+    if (function_exists('hyperfields_resolve_content_url')) {
+        return hyperfields_resolve_content_url($path);
+    }
+
+    $normalize = static function (string $p): string {
+        $p = str_replace('\\', '/', $p);
+
+        return function_exists('wp_normalize_path') ? wp_normalize_path($p) : $p;
+    };
+
+    // realpath() so symlinked content roots match a realpath'd script path:
+    // bootstrap.php feeds us dirname(realpath(__FILE__)), while WP_PLUGIN_DIR
+    // et al. are usually the raw (possibly symlinked) configured path. Without
+    // this, a plugin dir symlinked onto a dev stack (wp-env, Lando, Bedrock)
+    // would not prefix-match and the resolver would wrongly return ''. realpath
+    // can return false for non-existent paths; fall back to the normalized raw.
+    $canonicalize = static function (string $p) use ($normalize): string {
+        $real = realpath($p);
+        if ($real !== false) {
+            return $normalize($real);
+        }
+
+        return $normalize($p);
+    };
+
+    $normalized = $canonicalize($path);
+
+    // [directory, url] pairs for every web-accessible WP content root. Order
+    // matters only for tie-breaking; prefixes are matched on a directory
+    // boundary so '/wp-content' never matches '/wp-content-other'.
+    $candidates = [];
+
+    $pairs = [
+        ['WP_PLUGIN_DIR', 'WP_PLUGIN_URL'],
+        ['WPMU_PLUGIN_DIR', 'WPMU_PLUGIN_URL'],
+        ['WP_CONTENT_DIR', 'WP_CONTENT_URL'],
+    ];
+    foreach ($pairs as [$dirConst, $urlConst]) {
+        if (defined($dirConst) && defined($urlConst)) {
+            $dir = (string) constant($dirConst);
+            $url = (string) constant($urlConst);
+            if ($dir !== '' && $url !== '') {
+                $candidates[] = [$dir, $url];
+            }
+        }
+    }
+
+    // Active theme template + stylesheet dirs are web-accessible too.
+    foreach (
+        [
+            ['get_template_directory', 'get_template_directory_uri'],
+            ['get_stylesheet_directory', 'get_stylesheet_directory_uri'],
+        ] as [$dirFn, $urlFn]
+    ) {
+        if (function_exists($dirFn) && function_exists($urlFn)) {
+            $dir = (string) $dirFn();
+            $url = (string) $urlFn();
+            if ($dir !== '' && $url !== '') {
+                $candidates[] = [$dir, $url];
+            }
+        }
+    }
+
+    foreach ($candidates as [$dir, $url]) {
+        $ndir = $canonicalize($dir);
+        $nurl = rtrim($url, '/\\');
+
+        if ($normalized === $ndir) {
+            return $nurl;
+        }
+
+        if (str_starts_with($normalized, $ndir . '/')) {
+            return $nurl . '/' . substr($normalized, strlen($ndir) + 1);
+        }
+    }
+
+    return '';
+}
