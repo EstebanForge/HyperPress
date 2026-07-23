@@ -446,9 +446,11 @@ As part of registration, HyperBlocks also injects each block's `{ name, title, i
 
 - Iterates `window.hyperBlocksConfig`.
 - Skips any block already known to the editor via `wp.blocks.getBlockType(name)` (idempotent across multiple includes).
-- Calls `wp.blocks.registerBlockType(name, { title, icon, edit: () => null, save: () => null })`.
+- Calls `wp.blocks.registerBlockType(name, { title, icon, edit, save })`, where:
+  - `edit()` renders the block's server-side markup in the editor canvas via WordPress' `ServerSideRender` component (the canonical dynamic-block pattern, the same one used by WooCommerce, Gravity Forms, and ACF dynamic blocks). The output is wrapped in `useBlockProps()` so block selection, focus, and `supports.*` features (align, anchor, `customClassName`) are wired correctly.
+  - `save()` returns `null`, marking the block as dynamic so WordPress does not store static HTML in `post_content`; the stored block comment is re-rendered server-side via the `render_callback` on the front end.
 
-`edit()` and `save()` deliberately return `null`: the editor shows the server-rendered markup, and `save()` returning `null` marks the block as dynamic so WordPress does not store static HTML in `post_content`. The script only makes blocks known and parsable client-side; it adds no interactive editor UI.
+The editor script depends on `wp-blocks`, `wp-element`, `wp-components`, `wp-dom-ready`, `wp-block-editor`, and `wp-server-side-render` (declared in `Bootstrap::registerEditorScript()`). Each block instance makes one REST call to fetch its preview, which is the standard cost of a dynamic block in Gutenberg.
 
 **URL resolution**: the script URL is resolved from `HYPERBLOCKS_PLUGIN_URL` (defined in `bootstrap.php`, correct when HyperBlocks is vendored inside a consumer plugin's `vendor/` tree), falling back to `plugins_url()` when the constant is empty.
 

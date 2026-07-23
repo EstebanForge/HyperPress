@@ -19,15 +19,15 @@ return array(
 		'path'    => $vendorDir . '/estebanforge/hyperfields/bootstrap.php'
 	),
 	'7a417aa514b484622606bfc8f3893672' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.3.0',
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/bootstrap.php'
 	),
 	'611bc1f60ae2ec6bee160ee5d1b75d78' => array(
-		'version' => '1.3.1.0',
+		'version' => '1.3.3.0',
 		'path'    => $vendorDir . '/estebanforge/hyperblocks/src/helpers.php'
 	),
 	'29999a51792ecace5389ce90bf577c3f' => array(
-		'version' => '1.4.1.0',
+		'version' => '1.4.2.0',
 		'path'    => $vendorDir . '/estebanforge/hyperpress-core/bootstrap.php'
 	),
 );
