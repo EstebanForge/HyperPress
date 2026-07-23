@@ -256,10 +256,34 @@ $_test_options = [];
 if (!function_exists('plugins_url')) {
     /**
      * Mock plugins_url function.
+     *
+     * Mirrors WordPress core: the URL is derived from plugin_basename($plugin)
+     * (the path relative to WP_PLUGIN_DIR) joined to WP_PLUGIN_URL. When $plugin
+     * is not under WP_PLUGIN_DIR, core's plugin_basename() returns the path with
+     * its leading slash stripped, producing the broken URL this mock reproduces
+     * (the exact bug hyperblocks_resolve_content_url exists to avoid).
      */
     function plugins_url(string $path = '', string $plugin = ''): string
     {
-        return 'https://example.com/wp-content/plugins' . ($path ? '/' . ltrim($path, '/') : '');
+        $base = defined('WP_PLUGIN_URL') ? WP_PLUGIN_URL : 'https://example.com/wp-content/plugins';
+        $pluginDir = defined('WP_PLUGIN_DIR') ? WP_PLUGIN_DIR : '';
+
+        $url = $base;
+        if ($plugin !== '' && $pluginDir !== '') {
+            $normalized = str_replace('\\', '/', $plugin);
+            $normalized = function_exists('wp_normalize_path') ? wp_normalize_path($normalized) : $normalized;
+            $nd = function_exists('wp_normalize_path') ? wp_normalize_path($pluginDir) : str_replace('\\', '/', $pluginDir);
+            if (str_starts_with($normalized, $nd . '/')) {
+                $url .= '/' . substr($normalized, strlen($nd) + 1);
+            } else {
+                // plugin_basename could not strip WP_PLUGIN_DIR: core emits the
+                // full path with its leading slash removed, glued to WP_PLUGIN_URL.
+                $url .= '/' . ltrim($normalized, '/');
+            }
+            $url = dirname($url);
+        }
+
+        return $url . ($path ? '/' . ltrim($path, '/') : '');
     }
 }
 
@@ -430,7 +454,7 @@ if (!function_exists('register_block_type')) {
 
 /**
  * Test-only capture helper for the register_block_type mock.
-     *
+ *
  * Lives in the global namespace alongside the mock. Not loaded in production.
  */
 final class HyperBlocks_Testing_Registry

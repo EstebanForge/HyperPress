@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 
 if (!defined('HYPERFIELDS_DEFAULT_VERSION')) {
-    define('HYPERFIELDS_DEFAULT_VERSION', '1.4.0');
+    define('HYPERFIELDS_DEFAULT_VERSION', '1.4.1');
 }
 
 // Define global functions BEFORE early-return guards so they're always available.
@@ -66,8 +66,19 @@ if (!function_exists('hyperfields_run_initialization_logic')) {
         $plugin_dir = dirname($plugin_file_path);
         define('HYPERFIELDS_ABSPATH', trailingslashit($plugin_dir));
         define('HYPERFIELDS_BASENAME', 'hyperfields/bootstrap.php');
-        $plugin_url = plugins_url('', $plugin_file_path);
-        define('HYPERFIELDS_PLUGIN_URL', trailingslashit($plugin_url));
+        // Resolve against web-accessible content roots rather than plugins_url(),
+        // which only handles files directly under WP_PLUGIN_DIR and 404s when
+        // the library is vendored elsewhere (e.g. a Bedrock root composer
+        // vendor outside the web document root). Empty when HTTP cannot reach
+        // the directory so asset enqueue paths can bail instead of emitting
+        // a broken URL. Preserve the empty sentinel (rtrim('') . '/' would
+        // turn the unresolvable case into '/' and defeat downstream guards).
+        $resolved_url = class_exists('HyperFields\LibraryBootstrap')
+            ? HyperFields\LibraryBootstrap::resolveContentUrl($plugin_dir)
+            : (function_exists('plugins_url') ? plugins_url('', $plugin_file_path) : '');
+        if (!defined('HYPERFIELDS_PLUGIN_URL')) {
+            define('HYPERFIELDS_PLUGIN_URL', $resolved_url !== '' ? trailingslashit($resolved_url) : '');
+        }
         define('HYPERFIELDS_PLUGIN_FILE', $plugin_file_path);
 
         // Load helpers after constants are defined.

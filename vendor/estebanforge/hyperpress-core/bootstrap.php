@@ -206,7 +206,18 @@ if (!function_exists('hyperpress_run_initialization_logic')) {
             define('HYPERPRESS_ABSPATH', trailingslashit($plugin_dir));
             define('HYPERPRESS_BASENAME', 'hyperpress/bootstrap.php');
             if (!defined('HYPERPRESS_PLUGIN_URL')) {
-                define('HYPERPRESS_PLUGIN_URL', ''); // Not applicable in library mode
+                // Resolve against web-accessible content roots via HyperFields'
+                // resolver (HyperPress vendors HyperFields, so the helper is
+                // present). Empty when the library sits outside every content
+                // root (e.g. a Bedrock root composer vendor outside the web
+                // document root), in which case frontend asset enqueue bails
+                // instead of emitting a 404ing URL. plugins_url()/plugin_dir_url()
+                // only handle files directly under WP_PLUGIN_DIR and would
+                // produce a broken URL in that topology.
+                $resolved = function_exists('hyperfields_resolve_content_url')
+                    ? hyperfields_resolve_content_url($plugin_dir)
+                    : '';
+                define('HYPERPRESS_PLUGIN_URL', $resolved !== '' ? trailingslashit($resolved) : '');
             }
             define('HYPERPRESS_PLUGIN_FILE', $plugin_file_path);
         } else {

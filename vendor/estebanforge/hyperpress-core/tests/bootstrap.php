@@ -22,8 +22,14 @@ if (!defined('ABSPATH')) {
 if (!defined('WP_PLUGIN_DIR')) {
     define('WP_PLUGIN_DIR', ABSPATH . 'wp-content/plugins');
 }
+if (!defined('WP_PLUGIN_URL')) {
+    define('WP_PLUGIN_URL', 'http://example.com/wp-content/plugins');
+}
 if (!defined('WP_CONTENT_DIR')) {
     define('WP_CONTENT_DIR', ABSPATH . 'wp-content');
+}
+if (!defined('WP_CONTENT_URL')) {
+    define('WP_CONTENT_URL', 'http://example.com/wp-content');
 }
 
 // Mock critical WordPress functions needed before Brain\Monkey loads

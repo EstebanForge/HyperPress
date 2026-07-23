@@ -37,6 +37,9 @@ define('HYPERBLOCKS_PATH', __DIR__ . '/..');
 define('HYPERBLOCKS_PLUGIN_URL', 'https://example.com/wp-content/plugins/hyperblocks/');
 define('WP_DEBUG', true);
 define('WP_CONTENT_DIR', sys_get_temp_dir() . '/wp-content');
+define('WP_CONTENT_URL', 'https://example.com/wp-content');
+define('WP_PLUGIN_DIR', sys_get_temp_dir() . '/wp-content/plugins');
+define('WP_PLUGIN_URL', 'https://example.com/wp-content/plugins');
 
 // Ensure Config is initialized
 HyperBlocks\Config::init();

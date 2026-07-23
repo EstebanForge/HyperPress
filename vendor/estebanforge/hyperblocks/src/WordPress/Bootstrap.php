@@ -288,12 +288,34 @@ class Bootstrap
             return;
         }
 
-        // Prefer the canonical library URL constant, which resolves correctly
-        // when HyperBlocks is loaded as a Composer dependency (e.g. inside a
-        // consumer plugin's vendor/ tree). Fall back to plugins_url() otherwise.
-        $scriptUrl = (defined('HYPERBLOCKS_PLUGIN_URL') && HYPERBLOCKS_PLUGIN_URL !== '')
-            ? HYPERBLOCKS_PLUGIN_URL . 'assets/js/editor.js'
-            : plugins_url('/assets/js/editor.js', $scriptPath);
+        // Resolve the editor asset URL against the active web-accessible
+        // content roots. HYPERBLOCKS_PLUGIN_URL is now computed the same way
+        // in bootstrap.php; the fallback re-resolves the asset path so this
+        // path is correct even if a consumer overrode the constant to ''.
+        // Both bail (return '') when the library sits outside every content
+        // root — e.g. a Bedrock root composer vendor — because no URL can
+        // serve a file outside the web document root. Enqueuing a 404ing URL
+        // here would silently make every fluent block inserter-invisible.
+        $scriptUrl = '';
+        if (defined('HYPERBLOCKS_PLUGIN_URL') && HYPERBLOCKS_PLUGIN_URL !== '') {
+            $scriptUrl = HYPERBLOCKS_PLUGIN_URL . 'assets/js/editor.js';
+        } elseif (function_exists('hyperblocks_resolve_content_url')) {
+            $scriptUrl = hyperblocks_resolve_content_url($scriptPath);
+        }
+
+        if ($scriptUrl === '') {
+            if (function_exists('error_log')) {
+                error_log(sprintf(
+                    'HyperBlocks: editor script %s is not reachable from any web-accessible WordPress content root. '
+                    . 'Fluent blocks will render on the front end but will not appear in the block inserter. '
+                    . 'HyperBlocks is loaded from %s; move it under a plugin/theme/vendor directory inside wp-content (e.g. via the consumer plugin bundled vendor) so the assets can be served.',
+                    $scriptPath,
+                    defined('HYPERBLOCKS_INSTANCE_LOADED_PATH') ? HYPERBLOCKS_INSTANCE_LOADED_PATH : $scriptPath
+                ));
+            }
+
+            return;
+        }
 
         // Register only. Core enqueues this in the editor via the block type's
         // `editor_script` handle, so it never reaches the front end.
@@ -339,13 +361,20 @@ class Bootstrap
             : null;
 
         if ($stylePath && file_exists($stylePath)) {
-            $styleUrl = plugins_url('/assets/css/editor.css', $stylePath);
-            wp_enqueue_style(
-                'hyperblocks-editor',
-                $styleUrl,
-                [],
-                filemtime($stylePath)
-            );
+            $styleUrl = defined('HYPERBLOCKS_PLUGIN_URL') && HYPERBLOCKS_PLUGIN_URL !== ''
+                ? HYPERBLOCKS_PLUGIN_URL . 'assets/css/editor.css'
+                : (function_exists('hyperblocks_resolve_content_url')
+                    ? hyperblocks_resolve_content_url($stylePath)
+                    : '');
+
+            if ($styleUrl !== '') {
+                wp_enqueue_style(
+                    'hyperblocks-editor',
+                    $styleUrl,
+                    [],
+                    filemtime($stylePath)
+                );
+            }
         }
     }
 

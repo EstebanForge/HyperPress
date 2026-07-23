@@ -7,6 +7,7 @@ use HyperFields\Compatibility\WPSettingsCompatibility;
 use HyperFields\ContentExportImport;
 use HyperFields\ExportImport;
 use HyperFields\Field;
+use HyperFields\LibraryBootstrap;
 use HyperFields\OptionsPage;
 use HyperFields\OptionsSection;
 use HyperFields\RepeaterField;
@@ -658,5 +659,26 @@ if (!function_exists('hf_detect_type')) {
     function hf_detect_type(mixed $value): string
     {
         return SchemaValidator::detectType($value);
+    }
+}
+
+if (!function_exists('hyperfields_resolve_content_url')) {
+    /**
+     * Resolve a filesystem path to its public URL via the web-accessible
+     * WordPress content roots.
+     *
+     * Thin procedural wrapper around LibraryBootstrap::resolveContentUrl(),
+     * exposed so sibling libraries (HyperBlocks, HyperPress-Core) can delegate
+     * to the single canonical implementation when HyperFields is present.
+     * Returns '' when the path is not under any web-accessible root (e.g. a
+     * Bedrock root composer vendor outside the document root), which is the
+     * signal for callers to bail and log instead of enqueuing a 404ing URL.
+     *
+     * @param string $path Absolute filesystem path (file or directory).
+     * @return string Public URL with no trailing slash, or '' if not resolvable.
+     */
+    function hyperfields_resolve_content_url(string $path): string
+    {
+        return LibraryBootstrap::resolveContentUrl($path);
     }
 }
