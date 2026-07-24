@@ -31,6 +31,11 @@ if (!defined('HYPERPRESS_PLUGIN_VERSION')) {
     unset($hyperpress_file_data);
 }
 
+// HyperPress is the plugin adapter. HyperPress-Core ships its Settings page
+// hidden by default — it is a library and must never inject admin UI into a
+// consumer's WordPress install. As the plugin, opt in to showing that page.
+add_filter('hyperpress/admin/show_menu', '__return_true');
+
 // Load Jetpack packages autoloader first when present.
 if (function_exists('wp_normalize_path') && file_exists(__DIR__ . '/vendor/autoload_packages.php')) {
     require_once __DIR__ . '/vendor/autoload_packages.php';
