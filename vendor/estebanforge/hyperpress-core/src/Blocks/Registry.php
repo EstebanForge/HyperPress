@@ -68,10 +68,6 @@ final class Registry
      */
     public function init(): void
     {
-        if (defined('HYPERPRESS_TEMPLATE_EXT')) {
-            Config::set('template_extensions', (string) HYPERPRESS_TEMPLATE_EXT);
-        }
-
         if (class_exists(\HyperBlocks\WordPress\Bootstrap::class)) {
             \HyperBlocks\WordPress\Bootstrap::init();
         }
@@ -288,11 +284,7 @@ final class Registry
      */
     private function registerHyperPressBlocksPath(): void
     {
-        if (!defined('HYPERPRESS_ABSPATH')) {
-            return;
-        }
-
-        $path = rtrim(HYPERPRESS_ABSPATH, '/\\') . '/hyperblocks';
+        $path = rtrim(\HyperPress\Config::$abspath, '/\\') . '/hyperblocks';
         if (is_dir($path)) {
             Config::registerBlockPath($path);
         }

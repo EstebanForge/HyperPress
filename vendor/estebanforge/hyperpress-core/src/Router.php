@@ -30,14 +30,10 @@ class Router
     public function registerMainRoute(): void
     {
         // Register the new primary endpoint (e.g., /wp-html/v1/)
-        if (defined('HYPERPRESS_ENDPOINT') && defined('HYPERPRESS_ENDPOINT_VERSION')) {
-            add_rewrite_endpoint(HYPERPRESS_ENDPOINT . '/' . HYPERPRESS_ENDPOINT_VERSION, EP_ROOT, HYPERPRESS_ENDPOINT);
-        }
+        add_rewrite_endpoint(Config::ENDPOINT . '/' . Config::ENDPOINT_VERSION, EP_ROOT, Config::ENDPOINT);
 
         // Register the legacy endpoint for backward compatibility (e.g., /wp-htmx/v1/)
-        if (defined('HYPERPRESS_LEGACY_ENDPOINT') && defined('HYPERPRESS_ENDPOINT_VERSION')) {
-            add_rewrite_endpoint(HYPERPRESS_LEGACY_ENDPOINT . '/' . HYPERPRESS_ENDPOINT_VERSION, EP_ROOT, HYPERPRESS_LEGACY_ENDPOINT);
-        }
+        add_rewrite_endpoint(Config::LEGACY_ENDPOINT . '/' . Config::ENDPOINT_VERSION, EP_ROOT, Config::LEGACY_ENDPOINT);
     }
 
     /**
@@ -50,12 +46,8 @@ class Router
      */
     public function registerQueryVars(array $vars): array
     {
-        if (defined('HYPERPRESS_ENDPOINT')) {
-            $vars[] = HYPERPRESS_ENDPOINT;
-        }
-        if (defined('HYPERPRESS_LEGACY_ENDPOINT')) {
-            $vars[] = HYPERPRESS_LEGACY_ENDPOINT;
-        }
+        $vars[] = Config::ENDPOINT;
+        $vars[] = Config::LEGACY_ENDPOINT;
 
         return $vars;
     }

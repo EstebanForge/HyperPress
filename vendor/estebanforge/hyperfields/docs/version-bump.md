@@ -17,20 +17,13 @@ When you run `composer version-bump`, the following files are updated:
 - Version for React assets (npm package)
 - **Location**: `/package.json`
 
-### 3. ✅ bootstrap.php
-- Updates the single-source default version constant:
-  - `define('HYPERFIELDS_DEFAULT_VERSION', 'X.Y.Z');`
-- Legacy-safe behavior: also replaces any remaining exact old-version literals.
-- **Note**: this default is used when composer.json cannot be read.
+### 3. ✅ src/ PHP files (recursive literal scan)
+- The script scans every `src/**/*.php` for `'$OLD_VERSION'` literals and
+  replaces them. Single mechanism for the PHP side.
+- Canonical target: `src/Config.php` `public const VERSION = 'X.Y.Z';`
+- Idempotent: files already bumped have no match, so re-runs are safe.
 
-### 4. ✅ src/OptionsPage.php
-**Lines**: 860, 905, 927
-- Version fallbacks for asset loading:
-  - `defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7'`
-  - `defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.1.0'`
-- **Note**: These are fallbacks when HYPERPRESS_VERSION constant is not defined
-
-### 5. ✅ WordPress Plugin Headers (if present)
+### 4. ✅ WordPress Plugin Headers (if present)
 - `hyppress.php`
 - `api-for-htmx.php`
 - `hyperfields.php`
@@ -64,8 +57,7 @@ composer version-bump
 
   ✓ composer.json
   ✓ package.json
-  ✓ bootstrap.php (default/fallback versions)
-  ✓ src/OptionsPage.php (fallback versions)
+  ✓ src/Config.php (src/ version literal)
 
 ┌─────────────────────────────────────┐
 │  Version bumped to 1.2.0

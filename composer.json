@@ -38,7 +38,6 @@
   "require": {
     "php": ">=8.2",
     "composer/installers": "^2.0",
-    "automattic/jetpack-autoloader": "^2",
     "estebanforge/hyperpress-core": "^1"
   },
   "scripts": {
@@ -57,9 +56,11 @@
       "https"
     ],
     "preferred-install": "dist",
+    "platform": {
+      "php": "8.3"
+    },
     "allow-plugins": {
       "composer/installers": true,
-      "automattic/jetpack-autoloader": true,
       "pestphp/pest-plugin": true
     }
   },

@@ -1,7 +1,7 @@
 # HyperFields Examples
 
 **Note on Helper Functions:**
-This documentation uses the `hf_` prefix for helper functions (e.g., `hf_get_field()`), which are the canonical names for the HyperFields plugin. For backward compatibility, `hp_` prefixed aliases (e.g., `hp_get_field()`) are also available and function identically.
+This documentation uses the `hf_` prefix for helper functions (e.g., `hf_get_field()`), which are the canonical names for the HyperFields plugin.
 
 This directory contains **example files** demonstrating HyperFields usage. These files are **NOT auto-activated** and are provided for learning and reference purposes.
 
@@ -205,13 +205,13 @@ To avoid hitting PHP's `max_input_vars` on complex options pages, HyperFields ca
 - Enable via constants (e.g. in `wp-config.php` or early plugin code):
 
 ```php
-define('HYPERPRESS_COMPACT_INPUT', true);
-define('HYPERPRESS_COMPACT_INPUT_KEY', 'hyperpress_compact_input'); // optional, default shown
+define('HYPERFIELDS_COMPACT_INPUT', true);
+define('HYPERFIELDS_COMPACT_INPUT_KEY', 'hyperfields_compact_input'); // optional, default shown
 ```
 
 When enabled, HyperFields will:
 - Render a hidden compact input on options pages.
-- Serialize the active tab's fields into JSON under the `HYPERPRESS_COMPACT_INPUT_KEY`.
+- Serialize the active tab's fields into JSON under the `HYPERFIELDS_COMPACT_INPUT_KEY`.
 - Remove original field `name` attributes before submit to drastically reduce POST vars.
 - Expand and sanitize the compacted input server-side in `OptionsPage::sanitize_options()`.
 

@@ -33,11 +33,10 @@ class OptionsTest extends TestCase
     {
         parent::setUp();
 
-        // The production bootstrap loads includes/helpers.php during
-        // hyperpress_run_initialization_logic(), which fires on
-        // after_setup_theme. Unit tests bypass that path, so stub the
-        // helper locally. HYPERPRESS_BASENAME is not defined in the test
-        // environment, which matches library mode behavior.
+        // The production bootstrap loads src/helpers.php during
+        // Bootstrap::init(), which fires on after_setup_theme. Unit tests
+        // bypass that path, so stub the helper locally. Config::$basename
+        // is empty in the test environment, which matches library mode.
         if (!function_exists('hp_is_library_mode')) {
             $this->defineLibraryModeStub();
         }
@@ -45,9 +44,9 @@ class OptionsTest extends TestCase
 
     /**
      * Defines hp_is_library_mode() in the global namespace as a one-line
-     * passthrough that always reports library mode. Required because the
-     * production version lives in includes/helpers.php, which depends on
-     * HYPERPRESS_ABSPATH and other constants the unit test env does not set.
+     * passthrough that always reports library mode. Fallback only: the test
+     * bootstrap loads src/helpers.php (which depends on Config, populated by
+     * the harness), so the real function is normally already defined.
      *
      * runkit/native function redefine is unavailable; PHP can't redefine a
      * function once defined in the global namespace, so we write the stub

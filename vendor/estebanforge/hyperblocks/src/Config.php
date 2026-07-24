@@ -15,9 +15,77 @@ if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
 
 /**
  * Manages configuration settings for HyperBlocks.
+ *
+ * Dual responsibility: (1) feature configuration via DEFAULTS / get / set /
+ * registerBlockPath, and (2) runtime identity (VERSION, $abspath, $pluginUrl,
+ * $pluginFile, $initialized) set once at bootstrap. The runtime-identity
+ * block replaces the former global define() constants so namespace prefixing
+ * isolates these values per consumer: a prefixed copy becomes e.g.
+ * ConsumerX\Dependencies\HyperBlocks\Config, fully distinct from any other
+ * consumer's copy. Mirrors HyperFields\Config.
  */
 class Config
 {
+    /**
+     * Semantic version string. Mirrors composer.json (single source of truth
+     * for the PHP side; run `composer version-bump` to keep both in sync).
+     */
+    public const VERSION = '1.3.4';
+
+    /**
+     * Absolute path to the library root, with a trailing slash.
+     * Empty until initialization runs.
+     *
+     * @var string
+     */
+    public static string $abspath = '';
+
+    /**
+     * Public content URL for the library root, with a trailing slash.
+     * Empty when the directory is not reachable over HTTP so asset enqueues
+     * can bail instead of emitting a broken URL.
+     *
+     * @var string
+     */
+    public static string $pluginUrl = '';
+
+    /**
+     * Absolute path to the bootstrap file.
+     * Empty until initialization runs.
+     *
+     * @var string
+     */
+    public static string $pluginFile = '';
+
+    /**
+     * Whether bootstrap initialization has run for this copy. Guards the
+     * init-once contract per prefixed instance (distinct from $loaded, which
+     * tracks feature-config hydration).
+     *
+     * @var bool
+     */
+    private static bool $initialized = false;
+
+    /**
+     * Whether bootstrap initialization has run for this copy.
+     *
+     * @return bool
+     */
+    public static function isInitialized(): bool
+    {
+        return self::$initialized;
+    }
+
+    /**
+     * Mark bootstrap initialization as complete for this copy.
+     *
+     * @return void
+     */
+    public static function markInitialized(): void
+    {
+        self::$initialized = true;
+    }
+
     /**
      * Default configuration values.
      */

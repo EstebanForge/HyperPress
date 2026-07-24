@@ -17,22 +17,33 @@ final class LibraryBootstrap
      */
     public static function init(array $args = []): void
     {
-        if (defined('HYPERFIELDS_INSTANCE_LOADED')) {
+        // Cross-copy election guard (Carbon Fields pattern). The first copy of
+        // HyperFields to reach init() claims a namespaced constant and wins;
+        // every later copy bails before bootstrapping, so two plugins shipping
+        // HyperFields do not double-init (re-register hooks, conflict on Config
+        // state) and do not fatal. The constant is built with __NAMESPACE__ so
+        // it is prefix-safe: unprefixed copies share HyperFields\LOADED and
+        // elect one winner, while a namespace-prefixed copy lives under a
+        // different namespace (different constant) and boots independently with
+        // real isolation. First-to-boot wins, not newest; prefix if you need
+        // version determinism across divergent copies.
+        if (defined(__NAMESPACE__ . '\LOADED')) {
+            return;
+        }
+        define(__NAMESPACE__ . '\LOADED', __DIR__);
+
+        if (Config::isInitialized()) {
             return;
         }
 
         $base_dir = isset($args['base_dir']) ? (string) $args['base_dir'] : trailingslashit(dirname(__DIR__));
         $plugin_file = isset($args['plugin_file']) ? (string) $args['plugin_file'] : $base_dir . 'bootstrap.php';
-        $version = isset($args['version']) ? (string) $args['version'] : self::read_version($base_dir);
         $plugin_url = isset($args['plugin_url']) ? (string) $args['plugin_url'] : self::resolve_plugin_url($base_dir, $plugin_file);
 
-        define('HYPERFIELDS_INSTANCE_LOADED', true);
-        define('HYPERFIELDS_VERSION', $version);
-        define('HYPERFIELDS_ABSPATH', trailingslashit($base_dir));
-        define('HYPERFIELDS_PLUGIN_FILE', $plugin_file);
-        if (!defined('HYPERFIELDS_PLUGIN_URL')) {
-            define('HYPERFIELDS_PLUGIN_URL', $plugin_url);
-        }
+        Config::markInitialized();
+        Config::$abspath = trailingslashit($base_dir);
+        Config::$pluginFile = $plugin_file;
+        Config::$pluginUrl = $plugin_url;
 
         // Note: HYPERPRESS_PLUGIN_URL is intentionally NOT defined here as a
         // fallback. HyperPress-Core owns that constant and resolves it from
@@ -44,18 +55,9 @@ final class LibraryBootstrap
         // wrong, because $base_dir is HyperFields' dir, not HyperPress-Core's.
         // Let HyperPress-Core's own bootstrap define it.
 
-        if (!defined('HYPERPRESS_VERSION')) {
-            define('HYPERPRESS_VERSION', $version);
-        }
-
-        $helpers = HYPERFIELDS_ABSPATH . 'includes/helpers.php';
-        if (file_exists($helpers)) {
+        $helpers = __DIR__ . '/helpers.php';
+        if (is_file($helpers)) {
             require_once $helpers;
-        }
-
-        $compat = HYPERFIELDS_ABSPATH . 'includes/backward-compatibility.php';
-        if (file_exists($compat)) {
-            require_once $compat;
         }
 
         if (class_exists(Registry::class)) {
@@ -191,26 +193,5 @@ final class LibraryBootstrap
         $resolved = self::resolveContentUrl(rtrim($base_dir, '/\\'));
 
         return $resolved !== '' ? trailingslashit($resolved) : '';
-    }
-
-    /**
-     * Read version from the library composer.json.
-     *
-     * @param string $base_dir HyperFields base directory.
-     * @return string
-     */
-    private static function read_version(string $base_dir): string
-    {
-        $composer_json = $base_dir . 'composer.json';
-        if (!file_exists($composer_json)) {
-            return '0.0.0';
-        }
-
-        $data = json_decode((string) file_get_contents($composer_json), true);
-        if (!is_array($data) || empty($data['version'])) {
-            return '0.0.0';
-        }
-
-        return (string) $data['version'];
     }
 }

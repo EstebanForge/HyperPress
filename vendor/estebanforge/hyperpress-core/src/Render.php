@@ -54,10 +54,10 @@ class Render
 
         // Determine which endpoint is being accessed (primary or legacy)
         $actual_endpoint_key = null;
-        if (defined('HYPERPRESS_ENDPOINT') && isset($wp_query->query_vars[HYPERPRESS_ENDPOINT])) {
-            $actual_endpoint_key = HYPERPRESS_ENDPOINT;
-        } elseif (defined('HYPERPRESS_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HYPERPRESS_LEGACY_ENDPOINT])) {
-            $actual_endpoint_key = HYPERPRESS_LEGACY_ENDPOINT;
+        if (isset($wp_query->query_vars[Config::ENDPOINT])) {
+            $actual_endpoint_key = Config::ENDPOINT;
+        } elseif (isset($wp_query->query_vars[Config::LEGACY_ENDPOINT])) {
+            $actual_endpoint_key = Config::LEGACY_ENDPOINT;
         }
 
         // Don't go further if this is not a request for one of our endpoints
@@ -124,7 +124,7 @@ class Render
         }
 
         // To help developers know when template files were loaded via our plugin
-        define('HYPERPRESS_REQUEST', true);
+        Config::$isEndpointRequest = true;
 
         // Run actions before loading the template
         do_action('hyperpress/before_template_load', $template_name, $hp_vals);
@@ -156,12 +156,12 @@ class Render
         $current_endpoint = '';
         $endpoint_version = '';
 
-        if (defined('HYPERPRESS_ENDPOINT') && isset($wp_query->query_vars[HYPERPRESS_ENDPOINT])) {
-            $current_endpoint = HYPERPRESS_ENDPOINT;
-            $endpoint_version = defined('HYPERPRESS_ENDPOINT_VERSION') ? HYPERPRESS_ENDPOINT_VERSION : 'v1';
-        } elseif (defined('HYPERPRESS_LEGACY_ENDPOINT') && isset($wp_query->query_vars[HYPERPRESS_LEGACY_ENDPOINT])) {
-            $current_endpoint = HYPERPRESS_LEGACY_ENDPOINT;
-            $endpoint_version = defined('HYPERPRESS_ENDPOINT_VERSION') ? HYPERPRESS_ENDPOINT_VERSION : 'v1';
+        if (isset($wp_query->query_vars[Config::ENDPOINT])) {
+            $current_endpoint = Config::ENDPOINT;
+            $endpoint_version = Config::ENDPOINT_VERSION;
+        } elseif (isset($wp_query->query_vars[Config::LEGACY_ENDPOINT])) {
+            $current_endpoint = Config::LEGACY_ENDPOINT;
+            $endpoint_version = Config::ENDPOINT_VERSION;
         }
 
         $base_url = home_url($current_endpoint . '/' . $endpoint_version);
@@ -355,7 +355,7 @@ class Render
                     <ul>
                         <li><strong>Theme:</strong> <code><?php echo esc_html(get_template_directory()); ?>/hypermedia/</code></li>
                         <li><strong>Child Theme:</strong> <code><?php echo esc_html(get_stylesheet_directory()); ?>/hypermedia/</code></li>
-                        <li><strong>Plugin:</strong> <code><?php echo esc_html(dirname(HYPERPRESS_INSTANCE_LOADED_PATH)); ?>/hypermedia/</code></li>
+                        <li><strong>Plugin:</strong> <code><?php echo esc_html(Config::$pluginFile !== '' ? dirname(Config::$pluginFile) : ''); ?>/hypermedia/</code></li>
                     </ul>
                 </div>
 
@@ -383,7 +383,7 @@ class Render
                                 <code>Requested Template:</code> <?php echo esc_html($template_name); ?><br>
                             <?php endif; ?>
                             <code>WordPress Version:</code> <?php echo esc_html(get_bloginfo('version')); ?><br>
-                            <code>Plugin Version:</code> <?php echo esc_html(defined('HYPERPRESS_LOADED_VERSION') ? HYPERPRESS_LOADED_VERSION : 'Unknown'); ?>
+                            <code>Plugin Version:</code> <?php echo esc_html(Config::VERSION); ?>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -411,7 +411,7 @@ class Render
         $allowed_roots = array_filter([
             get_template_directory(),
             get_stylesheet_directory(),
-            defined('HYPERPRESS_INSTANCE_LOADED_PATH') ? dirname(HYPERPRESS_INSTANCE_LOADED_PATH) : null,
+            Config::$pluginFile !== '' ? dirname(Config::$pluginFile) : null,
         ], 'is_string');
 
         $candidates = [$custom_output];
@@ -480,15 +480,12 @@ class Render
         $request_uri = $_SERVER['REQUEST_URI'] ?? '';
 
         // Check if the request URI matches our base endpoints
-        $base_endpoints = [];
-        if (defined('HYPERPRESS_ENDPOINT')) {
-            $base_endpoints[] = '/' . HYPERPRESS_ENDPOINT . '/';
-            $base_endpoints[] = '/' . HYPERPRESS_ENDPOINT;
-        }
-        if (defined('HYPERPRESS_LEGACY_ENDPOINT')) {
-            $base_endpoints[] = '/' . HYPERPRESS_LEGACY_ENDPOINT . '/';
-            $base_endpoints[] = '/' . HYPERPRESS_LEGACY_ENDPOINT;
-        }
+        $base_endpoints = [
+            '/' . Config::ENDPOINT . '/',
+            '/' . Config::ENDPOINT,
+            '/' . Config::LEGACY_ENDPOINT . '/',
+            '/' . Config::LEGACY_ENDPOINT,
+        ];
 
         foreach ($base_endpoints as $endpoint) {
             if (strpos($request_uri, $endpoint) !== false) {
@@ -758,27 +755,20 @@ class Render
     {
         // Build the list of extensions to check, with primary first, then any legacy ones.
         $extensions = [];
-        if (defined('HYPERPRESS_TEMPLATE_EXT')) {
 
-            $primary = (string) HYPERPRESS_TEMPLATE_EXT;
-            $primaryParts = array_map('trim', explode(',', $primary));
-            foreach ($primaryParts as $ext) {
-                if ($ext !== '' && !in_array($ext, $extensions, true)) {
-                    $extensions[] = $ext;
-                }
+        $primary = Config::TEMPLATE_EXT;
+        $primaryParts = array_map('trim', explode(',', $primary));
+        foreach ($primaryParts as $ext) {
+            if ($ext !== '' && !in_array($ext, $extensions, true)) {
+                $extensions[] = $ext;
             }
-
         }
 
-        if (defined('HYPERPRESS_LEGACY_TEMPLATE_EXT')) {
-
-            $legacy = (string) HYPERPRESS_LEGACY_TEMPLATE_EXT;
-
-            $parts = array_map('trim', explode(',', $legacy));
-            foreach ($parts as $ext) {
-                if ($ext !== '' && !in_array($ext, $extensions, true)) {
-                    $extensions[] = $ext;
-                }
+        $legacy = Config::LEGACY_TEMPLATE_EXT;
+        $parts = array_map('trim', explode(',', $legacy));
+        foreach ($parts as $ext) {
+            if ($ext !== '' && !in_array($ext, $extensions, true)) {
+                $extensions[] = $ext;
             }
         }
 
@@ -847,8 +837,8 @@ class Render
         } else {
             // No colon found (or invalid colon format). Treat as a theme-relative path.
             $default_paths = [
-                $this->getThemePath() . HYPERPRESS_TEMPLATE_DIR . '/',
-                $this->getThemePath() . HYPERPRESS_LEGACY_TEMPLATE_DIR . '/',
+                $this->getThemePath() . Config::TEMPLATE_DIR . '/',
+                $this->getThemePath() . Config::LEGACY_TEMPLATE_DIR . '/',
             ];
 
             $default_templates_paths_array = apply_filters('hyperpress/render/get_template_file/templates_path', $default_paths);

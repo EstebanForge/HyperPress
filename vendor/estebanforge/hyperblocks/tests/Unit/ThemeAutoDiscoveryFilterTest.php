@@ -92,12 +92,12 @@ class ThemeAutoDiscoveryFilterTest extends TestCase
 
     /**
      * Opting out of theme auto-registration must NOT disable the library's
-     * own bundled blocks (HYPERBLOCKS_PATH/blocks), which are registered
+     * own bundled blocks (Config::$abspath/blocks), which are registered
      * separately in initializeConfig(). This scoping guard prevents a future
      * refactor from accidentally widening the filter.
      *
-     * Note: initializeConfig() is gated on HYPERBLOCKS_PATH being defined,
-     * which the test bootstrap sets. We assert only the filter's scope: it
+     * Note: initializeConfig() is gated on Config::$abspath being set,
+     * which the test bootstrap does. We assert only the filter's scope: it
      * affects theme paths, nothing else reachable from registerDefaultPaths().
      */
     public function testFilterDoesNotAffectExplicitlyRegisteredPaths(): void

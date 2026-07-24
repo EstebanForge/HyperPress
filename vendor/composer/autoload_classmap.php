@@ -6,11 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Automattic\\Jetpack\\Autoloader\\AutoloadFileWriter' => $vendorDir . '/automattic/jetpack-autoloader/src/AutoloadFileWriter.php',
-    'Automattic\\Jetpack\\Autoloader\\AutoloadGenerator' => $vendorDir . '/automattic/jetpack-autoloader/src/AutoloadGenerator.php',
-    'Automattic\\Jetpack\\Autoloader\\AutoloadProcessor' => $vendorDir . '/automattic/jetpack-autoloader/src/AutoloadProcessor.php',
-    'Automattic\\Jetpack\\Autoloader\\CustomAutoloaderPlugin' => $vendorDir . '/automattic/jetpack-autoloader/src/CustomAutoloaderPlugin.php',
-    'Automattic\\Jetpack\\Autoloader\\ManifestGenerator' => $vendorDir . '/automattic/jetpack-autoloader/src/ManifestGenerator.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Composer\\Installers\\AglInstaller' => $vendorDir . '/composer/installers/src/Composer/Installers/AglInstaller.php',
     'Composer\\Installers\\AkauntingInstaller' => $vendorDir . '/composer/installers/src/Composer/Installers/AkauntingInstaller.php',
@@ -123,8 +118,6 @@ return array(
     'HyperFields\\Admin\\Activation' => $vendorDir . '/estebanforge/hyperfields/src/Admin/Activation.php',
     'HyperFields\\Admin\\ExportImportPageConfig' => $vendorDir . '/estebanforge/hyperfields/src/Admin/ExportImportPageConfig.php',
     'HyperFields\\Admin\\ExportImportUI' => $vendorDir . '/estebanforge/hyperfields/src/Admin/ExportImportUI.php',
-    'HyperFields\\Admin\\Options' => $vendorDir . '/estebanforge/hyperfields/src/Admin/Options.php',
-    'HyperFields\\Admin\\OptionsMigration' => $vendorDir . '/estebanforge/hyperfields/src/Admin/OptionsMigration.php',
     'HyperFields\\Admin\\TransferLogsUI' => $vendorDir . '/estebanforge/hyperfields/src/Admin/TransferLogsUI.php',
     'HyperFields\\Assets' => $vendorDir . '/estebanforge/hyperfields/src/Assets.php',
     'HyperFields\\BlockFieldAdapter' => $vendorDir . '/estebanforge/hyperfields/src/BlockFieldAdapter.php',
@@ -140,6 +133,7 @@ return array(
     'HyperFields\\Compatibility\\TabProxy' => $vendorDir . '/estebanforge/hyperfields/src/Compatibility/TabProxy.php',
     'HyperFields\\Compatibility\\WPSettingsCompatibility' => $vendorDir . '/estebanforge/hyperfields/src/Compatibility/WPSettingsCompatibility.php',
     'HyperFields\\ConditionalLogic' => $vendorDir . '/estebanforge/hyperfields/src/ConditionalLogic.php',
+    'HyperFields\\Config' => $vendorDir . '/estebanforge/hyperfields/src/Config.php',
     'HyperFields\\Container\\Container' => $vendorDir . '/estebanforge/hyperfields/src/Container/Container.php',
     'HyperFields\\Container\\ContainerFactory' => $vendorDir . '/estebanforge/hyperfields/src/Container/ContainerFactory.php',
     'HyperFields\\Container\\PostMetaContainer' => $vendorDir . '/estebanforge/hyperfields/src/Container/PostMetaContainer.php',
@@ -182,6 +176,7 @@ return array(
     'HyperPress\\Blocks\\Registry' => $vendorDir . '/estebanforge/hyperpress-core/src/Blocks/Registry.php',
     'HyperPress\\Blocks\\Renderer' => $vendorDir . '/estebanforge/hyperpress-core/src/Blocks/Renderer.php',
     'HyperPress\\Blocks\\RestApi' => $vendorDir . '/estebanforge/hyperpress-core/src/Blocks/RestApi.php',
+    'HyperPress\\Bootstrap' => $vendorDir . '/estebanforge/hyperpress-core/src/Bootstrap.php',
     'HyperPress\\Compatibility' => $vendorDir . '/estebanforge/hyperpress-core/src/Compatibility.php',
     'HyperPress\\Config' => $vendorDir . '/estebanforge/hyperpress-core/src/Config.php',
     'HyperPress\\Libraries\\AlpineAjaxLib' => $vendorDir . '/estebanforge/hyperpress-core/src/Libraries/AlpineAjaxLib.php',

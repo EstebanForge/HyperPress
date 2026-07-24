@@ -27,6 +27,17 @@ if (class_exists('\HyperFields\LibraryBootstrap')) {
 }
 ```
 
+## Duplicate-load protection
+
+The first copy to reach `init()` claims the namespace-scoped
+`HyperFields\LOADED` constant and wins; any later copy bails before
+bootstrapping. So two plugins that both ship HyperFields do not double-init or
+fatal. This is first-to-boot, not newest-wins. If you need guaranteed
+isolation across divergent versions, prefix the namespace with
+[Mozart](https://github.com/coenjacobs/mozart). A prefixed copy lives under a
+different namespace and boots independently; see the HyperFields repository for
+a ready-to-use config.
+
 ## Arguments
 
 | Key | Type | Description |
@@ -34,7 +45,6 @@ if (class_exists('\HyperFields\LibraryBootstrap')) {
 | `plugin_file` | `string` | Absolute path to the **host** plugin's main file. Used as the base for URL resolution. |
 | `plugin_url` | `string` | Public URL to the HyperFields library root (trailing slash). |
 | `base_dir` | `string` | Absolute path to the HyperFields library root. Defaults to the directory containing `LibraryBootstrap.php`. |
-| `version` | `string` | Version string used for asset cache-busting. Defaults to the value in the library's `composer.json`. |
 
 ## Why explicit args are required for vendored usage
 
@@ -51,7 +61,7 @@ recognises as a plugin directory. It **silently fails** in environments where:
 - The library is nested more than one level inside a non-standard directory
   structure.
 
-When auto-detection fails, `HYPERFIELDS_PLUGIN_URL` is set to an empty string.
+When auto-detection fails, `Config::$pluginUrl` is set to an empty string.
 `TemplateLoader::enqueueAssets()` checks for this and returns early, so the
 `hyperpress-admin` stylesheet handle is never registered. Any subsequent call to
 `wp_add_inline_style('hyperpress-admin', ...)` (e.g. inside
@@ -63,59 +73,6 @@ reliably breaks on remote environments.
 **Always pass explicit `plugin_file` and `plugin_url` args.** Auto-detection
 exists only as a convenience for simple, standalone-plugin setups and should not
 be relied upon in vendored contexts.
-
-## Host plugins using the Jetpack Autoloader
-
-If your host plugin uses [`automattic/jetpack-autoloader`](https://packagist.org/packages/automattic/jetpack-autoloader)
-instead of Composer's stock autoloader, **Composer autoload `files` entries are
-not executed.** The Jetpack Autoloader maps classes for lazy loading but
-deliberately skips the `files` auto-includes that Composer would normally run.
-
-HyperFields' `bootstrap.php` is registered as an autoload file. It is what
-registers the library as a candidate and hooks `after_setup_theme` to run the
-version election. When it never executes:
-
-- `HYPERFIELDS_PLUGIN_URL` is never defined.
-- `TemplateLoader::enqueueAssets()` bails at its empty-URL guard.
-- `hyperfields-admin.css` (the `hyperpress-admin` handle) is never enqueued.
-
-The classes are still autoloadable, so an OptionsPage still renders and saves,
-but it renders with **zero styling**: raw, unstyled HTML inputs, no card
-containers, no spacing. Easy to mistake for a broken CSS file when the real
-problem is that the bootstrap chain never ran.
-
-**Fix.** Explicitly require the bootstrap file and call the init function on
-`plugins_loaded` (priority 0, before any host code that builds an OptionsPage):
-
-```php
-// my-plugin.php
-
-add_action('plugins_loaded', static function (): void {
-    $bootstrap = MY_PLUGIN_PATH . 'vendor/estebanforge/hyperfields/bootstrap.php';
-    if (!file_exists($bootstrap)) {
-        return;
-    }
-    require_once $bootstrap;
-
-    if (function_exists('hyperfields_run_initialization_logic')) {
-        hyperfields_run_initialization_logic(
-            $bootstrap,
-            defined('MY_PLUGIN_VERSION') ? MY_PLUGIN_VERSION : '1.0.0',
-        );
-    }
-}, 0);
-```
-
-Calling `hyperfields_run_initialization_logic()` directly skips the
-multi-instance candidate election and runs init immediately. For a
-single-consumer plugin this is correct and faster; the library's own
-`HYPERFIELDS_INSTANCE_LOADED` guard still prevents double-init if another copy
-(e.g. HyperBlocks' vendored one) also tries.
-
-If your host plugin also vendors HyperBlocks, call
-`hyperblocks_run_initialization_logic()` the same way. HyperBlocks' init
-already triggers HyperFields', so in that case you only need the HyperBlocks
-call. But calling both is harmless.
 
 ## Examples
 
@@ -193,7 +150,6 @@ packages/my-plugin/
 \HyperFields\LibraryBootstrap::init([
     'plugin_file' => __FILE__,
     'plugin_url'  => plugin_dir_url(__FILE__) . 'vendor/estebanforge/hyperfields/',
-    'version'     => '1.2.3', // optional: pin to your vendored version
 ]);
 ```
 

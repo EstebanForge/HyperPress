@@ -272,22 +272,23 @@ if (!function_exists('hyperpress_test_get_plugin_version')) {
     }
 }
 
-// HyperPress specific constants
-if (!defined('HYPERPRESS_VERSION')) {
-    define('HYPERPRESS_VERSION', hyperpress_test_get_plugin_version());
-}
-
+// HyperPress test-env identity. Production runtime identity now lives on
+// HyperPress\Config (prefix-safe). Unit tests do not run the full
+// after_setup_theme Bootstrap::init(), so populate Config directly here.
 if (!defined('HYPERPRESS_DIR')) {
     define('HYPERPRESS_DIR', dirname(__DIR__));
 }
 
-if (!defined('HYPERPRESS_URL')) {
-    define('HYPERPRESS_URL', 'http://localhost/wp-content/plugins/HyperPress-Core');
-}
+\HyperPress\Config::markInitialized();
+\HyperPress\Config::$abspath = HYPERPRESS_DIR . '/';
+\HyperPress\Config::$pluginFile = HYPERPRESS_DIR . '/bootstrap.php';
+\HyperPress\Config::$pluginUrl = 'http://localhost/wp-content/plugins/HyperPress-Core/';
+\HyperPress\Config::$basename = 'hyperpress/bootstrap.php';
 
-if (!defined('HYPERPRESS_ASSETS_URL')) {
-    define('HYPERPRESS_ASSETS_URL', HYPERPRESS_URL . '/assets/');
-}
+// Load the procedural helper API (mirrors Bootstrap::init(), which unit
+// tests bypass). Loaded here after ABSPATH is set, never via autoload.files.
+require_once HYPERPRESS_DIR . '/src/helpers.php';
+require_once HYPERPRESS_DIR . '/src/deprecated.php';
 
 // Setup for teardown
 register_shutdown_function(function () {

@@ -104,9 +104,9 @@ class Assets
      */
     public function enqueueEditorAssets(): void
     {
-        $plugin_url = defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : '';
+        $plugin_url = Config::$pluginUrl;
         if (empty($plugin_url)) {
-            $plugin_path = defined('HYPERPRESS_ABSPATH') ? HYPERPRESS_ABSPATH : '';
+            $plugin_path = Config::$abspath;
             $plugin_url = !empty($plugin_path) ? $this->getLibraryModeUrl($plugin_path) : '';
         }
         if (empty($plugin_url)) {
@@ -124,7 +124,7 @@ class Assets
                 'wp-block-editor',
                 'wp-editor',
             ],
-            defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : false,
+            Config::VERSION,
             true
         );
     }
@@ -178,10 +178,10 @@ class Assets
         $alpine_ajax_loaded = false;
         $datastar_loaded = false;
 
-        // Define base URLs and paths - ensure HYPERPRESS_PLUGIN_URL and HYPERPRESS_ABSPATH are defined
-        $plugin_url = defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : '';
-        $plugin_path = defined('HYPERPRESS_ABSPATH') ? HYPERPRESS_ABSPATH : '';
-        $plugin_version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : null;
+        // Define base URLs and paths from Config (prefix-safe runtime identity).
+        $plugin_url = Config::$pluginUrl;
+        $plugin_path = Config::$abspath;
+        $plugin_version = Config::VERSION;
 
         // Detect library mode (when plugin URL is empty)
         $is_library_mode = empty($plugin_url);

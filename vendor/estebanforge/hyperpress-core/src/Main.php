@@ -344,7 +344,7 @@ class Main
         $options = $this->getOptions();
         if ($options['active_library'] === 'datastar') {
             if (!class_exists('starfederation\datastar\ServerSentEventGenerator')) {
-                $autoloader = HYPERPRESS_ABSPATH . 'vendor/starfederation/datastar-php/autoload.php';
+                $autoloader = Config::$abspath . 'vendor/starfederation/datastar-php/autoload.php';
                 if (file_exists($autoloader)) {
                     require_once $autoloader;
                 }

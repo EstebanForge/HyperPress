@@ -24,17 +24,22 @@ if (!file_exists($autoloader)) {
 
 require_once $autoloader;
 
+// Load procedural helpers (no longer in autoload.files; mirrors HyperFields).
+require_once __DIR__ . '/../src/helpers.php';
+
 // Load mock functions
 require_once __DIR__ . '/mocks/wp-mocks.php';
 
 // Initialize Config for testing
 HyperBlocks\Config::reset();
 
-// Define test constants
-define('HYPERBLOCKS_PATH', __DIR__ . '/..');
-// Mirror the canonical URL constant defined by bootstrap.php so the
-// editor-script enqueue exercises its production-preferred code path.
-define('HYPERBLOCKS_PLUGIN_URL', 'https://example.com/wp-content/plugins/hyperblocks/');
+// Runtime identity (prefix-safe). The library no longer defines global
+// HYPERBLOCKS_* constants; paths/URL live on Config. Set them here so the
+// editor-asset enqueue exercises its production-preferred code path.
+HyperBlocks\Config::$abspath = rtrim(__DIR__ . '/..', '/\\') . '/';
+HyperBlocks\Config::$pluginUrl = 'https://example.com/wp-content/plugins/hyperblocks/';
+HyperBlocks\Config::markInitialized();
+
 define('WP_DEBUG', true);
 define('WP_CONTENT_DIR', sys_get_temp_dir() . '/wp-content');
 define('WP_CONTENT_URL', 'https://example.com/wp-content');

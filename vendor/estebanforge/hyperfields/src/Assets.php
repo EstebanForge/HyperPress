@@ -27,7 +27,7 @@ class Assets
      */
     public function enqueueScripts(): void
     {
-        if (!defined('HYPERFIELDS_PLUGIN_URL') || HYPERFIELDS_PLUGIN_URL === '') {
+        if (Config::$pluginUrl === '') {
             return;
         }
 
@@ -41,9 +41,9 @@ class Assets
         if ($pagenow === 'options-general.php' || did_action('hyperfields_enhanced_multiselect')) {
             wp_enqueue_script(
                 'hyperfields-multiselect-enhanced',
-                HYPERFIELDS_PLUGIN_URL . 'assets/js/multiselect-enhanced.js',
+                Config::$pluginUrl . 'assets/js/multiselect-enhanced.js',
                 ['jquery'],
-                HYPERFIELDS_VERSION,
+                Config::VERSION,
                 true
             );
         }

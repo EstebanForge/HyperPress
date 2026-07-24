@@ -232,7 +232,7 @@ class EndpointTest extends TestCase
         $config = [
             'namespace' => 'wp-html/v1',
             'base_url' => rest_url('wp-html/v1/'),
-            'version' => HYPERPRESS_VERSION,
+            'version' => \HyperPress\Config::VERSION,
             'timeout' => 30,
             'max_response_size' => 1024 * 1024 // 1MB
         ];

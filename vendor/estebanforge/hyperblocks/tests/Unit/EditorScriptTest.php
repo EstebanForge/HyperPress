@@ -78,7 +78,7 @@ class EditorScriptTest extends TestCase
 
         $this->assertSame(Config::getEditorScriptHandle(), $registration['handle']);
         $this->assertSame(
-            HYPERBLOCKS_PLUGIN_URL . 'assets/js/editor.js',
+            Config::$pluginUrl . 'assets/js/editor.js',
             $registration['src']
         );
         $this->assertSame(

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HyperFields\Admin;
 
+use HyperFields\Config;
 use HyperFields\ExportImport;
 use HyperFields\TemplateLoader;
 
@@ -157,8 +158,8 @@ class ExportImportUI
     public static function enqueuePageAssets(): void
     {
         TemplateLoader::enqueueAssets();
-        $pluginUrl = defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : (defined('HYPERFIELDS_PLUGIN_URL') ? HYPERFIELDS_PLUGIN_URL : '');
-        $version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : (defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : '0.0.0');
+        $pluginUrl = Config::$pluginUrl !== '' ? Config::$pluginUrl : (defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : '');
+        $version = Config::VERSION;
 
         if ($pluginUrl !== '') {
             wp_enqueue_script(

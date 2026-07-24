@@ -7,7 +7,7 @@ namespace HyperBlocks\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit tests for hyperblocks_resolve_content_url().
+ * Unit tests for hb_resolve_content_url().
  *
  * Pins the fix for fluent blocks being silently invisible in the Gutenberg
  * inserter when HyperBlocks is vendored into a non-plugin directory. WordPress'
@@ -34,7 +34,7 @@ class AssetUrlResolverTest extends TestCase
 
         $this->assertSame(
             WP_PLUGIN_URL . '/host-plugin/vendor/estebanforge/hyperblocks/bootstrap.php',
-            hyperblocks_resolve_content_url($file)
+            hb_resolve_content_url($file)
         );
     }
 
@@ -44,7 +44,7 @@ class AssetUrlResolverTest extends TestCase
      */
     public function testResolvesExactRootMatchWithoutTrailingSlash(): void
     {
-        $this->assertSame(WP_PLUGIN_URL, hyperblocks_resolve_content_url(WP_PLUGIN_DIR));
+        $this->assertSame(WP_PLUGIN_URL, hb_resolve_content_url(WP_PLUGIN_DIR));
     }
 
     /**
@@ -58,7 +58,7 @@ class AssetUrlResolverTest extends TestCase
 
         // Not under any candidate root (the temp dir itself is not a content
         // root), so it resolves to the empty string rather than a mis-prefix.
-        $this->assertSame('', hyperblocks_resolve_content_url($sibling));
+        $this->assertSame('', hb_resolve_content_url($sibling));
     }
 
     /**
@@ -73,7 +73,7 @@ class AssetUrlResolverTest extends TestCase
         $appRoot = dirname(dirname(dirname(WP_CONTENT_DIR))) . '/src/vendor/estebanforge/hyperblocks/bootstrap.php';
 
         $this->assertStringNotContainsStringIgnoringCase(WP_PLUGIN_DIR, $appRoot);
-        $this->assertSame('', hyperblocks_resolve_content_url($appRoot));
+        $this->assertSame('', hb_resolve_content_url($appRoot));
     }
 
     /**
@@ -86,12 +86,12 @@ class AssetUrlResolverTest extends TestCase
 
         $this->assertSame(
             WP_PLUGIN_URL . '/acme/vendor/hyperblocks/bootstrap.php',
-            hyperblocks_resolve_content_url($file)
+            hb_resolve_content_url($file)
         );
     }
 
     /**
-     * The shared-resolver architecture intends hyperblocks_resolve_content_url()
+     * The shared-resolver architecture intends hb_resolve_content_url()
      * to delegate to hyperfields_resolve_content_url() when HyperFields is
      * present (single canonical implementation across the three libraries).
      * The delegation branch cannot be unit-tested in HyperBlocks' own suite
@@ -116,7 +116,7 @@ class AssetUrlResolverTest extends TestCase
 
         $this->assertSame(
             \hyperfields_resolve_content_url($file),
-            hyperblocks_resolve_content_url($file)
+            hb_resolve_content_url($file)
         );
     }
 }

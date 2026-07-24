@@ -24,17 +24,9 @@ class OptionsResolverTest extends TestCase
     {
         parent::setUp();
 
-        // includes/helpers.php references HYPERPRESS_ABSPATH at the
-        // bottom (for deprecated.php include). The production bootstrap
-        // defines it inside hyperpress_run_initialization_logic(); unit
-        // tests bypass that path.
-        if (!defined('HYPERPRESS_ABSPATH')) {
-            define('HYPERPRESS_ABSPATH', HYPERPRESS_DIR . '/');
-        }
-
-        if (!function_exists('hp_get_options')) {
-            require_once HYPERPRESS_DIR . '/includes/helpers.php';
-        }
+        // The procedural helpers (hp_*) are loaded globally by the test
+        // bootstrap (tests/bootstrap.php requires src/helpers.php after
+        // populating Config). No per-test constant or include is needed.
     }
 
     public function test_filter_and_action_constants_are_exposed(): void
@@ -112,7 +104,7 @@ class OptionsResolverTest extends TestCase
     {
         $this->assertTrue(
             function_exists('hp_get_options'),
-            'hp_get_options() must be defined in includes/helpers.php'
+            'hp_get_options() must be defined in src/helpers.php'
         );
         $this->assertSame(OptionsResolver::resolve(), hp_get_options());
     }

@@ -691,7 +691,7 @@ Resulting bundle shape:
 - `HyperFields::diffPosts(...)`
 - `HyperFields::makeTransferManager()`
 
-### Helpers (`includes/helpers.php`)
+### Helpers (`src/helpers.php`)
 
 **Export/Import:**
 - `hf_export_options(array $optionNames, string $prefix = '', array $schemaMap = []): string`

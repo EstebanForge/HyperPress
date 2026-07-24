@@ -1,7 +1,7 @@
 # HyperFields — API Reference
 
 **Note on Helper Functions:**
-This documentation uses the `hf_` prefix for helper functions (e.g. `hf_get_field()`), which are the canonical names for the HyperFields plugin. For backward compatibility, `hp_` prefixed aliases (e.g. `hp_get_field()`) are also available and function identically.
+This documentation uses the `hf_` prefix for helper functions (e.g. `hf_get_field()`), which are the canonical names for the HyperFields plugin.
 
 ## API Reference
 
@@ -14,7 +14,7 @@ Developer-focused API for saving and retrieving field values across posts, users
 - Helper factories available: `hf_option_page()`, `hf_field()`, `hf_tabs()`, `hf_repeater()`, `hf_section()`.
 - Retrieval/update helpers: `hf_get_field()`, `hf_update_field()`, `hf_delete_field()`.
 
-Source: `includes/helpers.php`
+Source: `src/helpers.php`
 
 ## Getting and Saving Values
 
@@ -45,7 +45,7 @@ Supported `$source` forms (auto-resolved):
 - Options: `'option'|'options'` or `['type' => 'option', 'option_group' => '...']`
 - `null`: falls back to current post if inside The Loop; otherwise options
 
-See: `hf_resolve_field_context()` in `includes/helpers.php`.
+See: `hf_resolve_field_context()` in `src/helpers.php`.
 
 ## Sanitization
 

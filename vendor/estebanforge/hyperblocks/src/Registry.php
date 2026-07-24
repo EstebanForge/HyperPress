@@ -65,9 +65,10 @@ final class Registry
      */
     private function __construct()
     {
-        // Set the plugin path
-        if (defined('HYPERBLOCKS_PATH')) {
-            $this->pluginPath = HYPERBLOCKS_PATH;
+        // Set the plugin path from runtime identity (prefix-safe), falling
+        // back to this file's parent when bootstrap has not initialized it.
+        if (Config::$abspath !== '') {
+            $this->pluginPath = Config::$abspath;
         } else {
             // Fallback: assume this file is in /src/Registry.php
             $this->pluginPath = dirname(__DIR__);
@@ -241,9 +242,9 @@ final class Registry
         // Get scan paths from configuration
         $scanPaths = Config::get('block_paths', []);
 
-        // Add default plugin path if set
-        if (defined('HYPERBLOCKS_PATH')) {
-            $pluginBlocksPath = HYPERBLOCKS_PATH . '/blocks';
+        // Add default library path if set (runtime identity, prefix-safe).
+        if (Config::$abspath !== '') {
+            $pluginBlocksPath = Config::$abspath . 'blocks';
             if (is_dir($pluginBlocksPath)) {
                 $scanPaths[] = $pluginBlocksPath;
             }
@@ -314,9 +315,9 @@ final class Registry
         // definitions.
         $scanPaths = Config::get('block_paths', []);
 
-        // Add default plugin path if set
-        if (defined('HYPERBLOCKS_PATH')) {
-            $pluginBlocksPath = HYPERBLOCKS_PATH . '/blocks';
+        // Add default library path if set (runtime identity, prefix-safe).
+        if (Config::$abspath !== '') {
+            $pluginBlocksPath = Config::$abspath . 'blocks';
             if (is_dir($pluginBlocksPath)) {
                 $scanPaths[] = $pluginBlocksPath;
             }
@@ -432,9 +433,9 @@ final class Registry
         // Get scan paths from configuration
         $scanPaths = Config::get('block_paths', []);
 
-        // Add default plugin path if set
-        if (defined('HYPERBLOCKS_PATH')) {
-            $pluginBlocksPath = HYPERBLOCKS_PATH . '/blocks';
+        // Add default library path if set (runtime identity, prefix-safe).
+        if (Config::$abspath !== '') {
+            $pluginBlocksPath = Config::$abspath . 'blocks';
             if (is_dir($pluginBlocksPath)) {
                 $scanPaths[] = $pluginBlocksPath;
             }
@@ -517,9 +518,9 @@ final class Registry
         // Get scan paths from configuration
         $scanPaths = Config::get('block_paths', []);
 
-        // Add default plugin path if set
-        if (defined('HYPERBLOCKS_PATH')) {
-            $pluginBlocksPath = HYPERBLOCKS_PATH . '/blocks';
+        // Add default library path if set (runtime identity, prefix-safe).
+        if (Config::$abspath !== '') {
+            $pluginBlocksPath = Config::$abspath . 'blocks';
             if (is_dir($pluginBlocksPath)) {
                 $scanPaths[] = $pluginBlocksPath;
             }

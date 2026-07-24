@@ -20,7 +20,7 @@ The WordPress plugin adapter lives in `src/app/plugins/api-for-htmx/` and loads 
 composer require estebanforge/hyperpress-core
 ```
 
-If your project loads Composer autoload (`vendor/autoload.php`), HyperPress-Core bootstrap is loaded automatically via Composer `autoload.files`.
+If your project loads Composer autoload (`vendor/autoload.php`), HyperPress-Core bootstrap is loaded automatically via Composer `autoload.files`. If your host plugin uses a classmap-only autoloader that skips `autoload.files`, require the bootstrap chain explicitly on `plugins_loaded` — see [Installation — Vendoring inside a host plugin](docs/installation.md#vendoring-inside-a-host-plugin).
 
 ## Dependencies
 

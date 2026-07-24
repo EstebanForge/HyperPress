@@ -2,7 +2,7 @@
 
 Core helpers for endpoints, responses, validation, library mode, Datastar SSE integration, and field CRUD.
 
-Source: `src/plugins/HyperPress/includes/helpers.php`
+Source: `src/app/plugins/HyperPress-Core/src/helpers.php`
 
 ## Endpoints
 

@@ -405,11 +405,11 @@ class OptionsPage
                 <input type="hidden" name="hyperpress_active_section" value="<?php echo esc_attr($this->getActiveSection($active_tab)); ?>" />
                 <?php
                         settings_fields($this->option_name);
-        if (defined('HYPERPRESS_COMPACT_INPUT') && HYPERPRESS_COMPACT_INPUT === true) {
+        if (defined('HYPERFIELDS_COMPACT_INPUT') && HYPERFIELDS_COMPACT_INPUT === true) {
             // Placeholder for the compacted JSON payload the JS will populate
-            $key = defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input';
+            $key = defined('HYPERFIELDS_COMPACT_INPUT_KEY') ? HYPERFIELDS_COMPACT_INPUT_KEY : 'hyperfields_compact_input';
             if (!is_string($key)) {
-                $key = 'hyperpress_compact_input';
+                $key = 'hyperfields_compact_input';
             }
             echo '<input type="hidden" name="' . esc_attr((string) $key) . '" value="" />';
             // Dummy field under the option array to ensure the Settings API processes this option
@@ -469,8 +469,8 @@ class OptionsPage
     public function sanitizeOptions(?array $input): array
     {
         // When compact input is enabled, reconstruct $input from the single compacted POST variable
-        if (defined('HYPERPRESS_COMPACT_INPUT') && HYPERPRESS_COMPACT_INPUT === true) {
-            $compact_key = defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input';
+        if (defined('HYPERFIELDS_COMPACT_INPUT') && HYPERFIELDS_COMPACT_INPUT === true) {
+            $compact_key = defined('HYPERFIELDS_COMPACT_INPUT_KEY') ? HYPERFIELDS_COMPACT_INPUT_KEY : 'hyperfields_compact_input';
             if (isset($_POST[$compact_key])) {
                 $raw = wp_unslash($_POST[$compact_key]);
                 $decoded = json_decode((string) $raw, true);
@@ -906,8 +906,8 @@ class OptionsPage
         TemplateLoader::enqueueAssets();
 
         $plugin_url = '';
-        if (defined('HYPERFIELDS_PLUGIN_URL') && is_string(HYPERFIELDS_PLUGIN_URL) && HYPERFIELDS_PLUGIN_URL !== '') {
-            $plugin_url = HYPERFIELDS_PLUGIN_URL;
+        if (Config::$pluginUrl !== '') {
+            $plugin_url = Config::$pluginUrl;
         } elseif (function_exists('plugins_url')) {
             $resolved = plugins_url('', dirname(__DIR__) . '/bootstrap.php');
             if (is_string($resolved) && $resolved !== '') {
@@ -920,7 +920,7 @@ class OptionsPage
         }
 
         // Enqueue admin options JS for HyperFields options pages
-        $admin_options_script_version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7';
+        $admin_options_script_version = Config::VERSION;
         $admin_options_script_path = dirname(__DIR__) . '/assets/js/hyperfields-admin.js';
         if (is_file($admin_options_script_path)) {
             $mtime = filemtime($admin_options_script_path);
@@ -940,8 +940,8 @@ class OptionsPage
         wp_localize_script('hyperpress-admin-options', 'hyperpressOptions', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('hyperpress_options'),
-            'compactInput' => defined('HYPERPRESS_COMPACT_INPUT') ? (bool) HYPERPRESS_COMPACT_INPUT : false,
-            'compactInputKey' => defined('HYPERPRESS_COMPACT_INPUT_KEY') ? HYPERPRESS_COMPACT_INPUT_KEY : 'hyperpress_compact_input',
+            'compactInput' => defined('HYPERFIELDS_COMPACT_INPUT') ? (bool) HYPERFIELDS_COMPACT_INPUT : false,
+            'compactInputKey' => defined('HYPERFIELDS_COMPACT_INPUT_KEY') ? HYPERFIELDS_COMPACT_INPUT_KEY : 'hyperfields_compact_input',
             'optionName' => $this->option_name,
             'activeTab' => $this->getActiveTab(),
         ]);
@@ -993,8 +993,8 @@ class OptionsPage
 
         // Enqueue React app for HyperFields
         $plugin_url = '';
-        if (defined('HYPERFIELDS_PLUGIN_URL') && is_string(HYPERFIELDS_PLUGIN_URL) && HYPERFIELDS_PLUGIN_URL !== '') {
-            $plugin_url = HYPERFIELDS_PLUGIN_URL;
+        if (Config::$pluginUrl !== '') {
+            $plugin_url = Config::$pluginUrl;
         } elseif (function_exists('plugins_url')) {
             $resolved = plugins_url('', dirname(__DIR__) . '/bootstrap.php');
             if (is_string($resolved) && $resolved !== '') {
@@ -1012,7 +1012,7 @@ class OptionsPage
             'hyperfields-react-app',
             $react_app_path,
             ['wp-element', 'wp-components', 'wp-block-editor', 'wp-i18n'],
-            defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.1.0',
+            Config::VERSION,
             true
         );
 
@@ -1034,7 +1034,7 @@ class OptionsPage
             'hyperfields-react-styles',
             $plugin_url !== '' ? $plugin_url . 'assets/css/react-fields.css' : '',
             ['wp-components'],
-            defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.1.0'
+            Config::VERSION
         );
     }
 }

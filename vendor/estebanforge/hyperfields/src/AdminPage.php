@@ -311,8 +311,8 @@ class AdminPage
         TemplateLoader::enqueueAssets();
 
         $plugin_url = '';
-        if (defined('HYPERFIELDS_PLUGIN_URL') && is_string(HYPERFIELDS_PLUGIN_URL) && HYPERFIELDS_PLUGIN_URL !== '') {
-            $plugin_url = HYPERFIELDS_PLUGIN_URL;
+        if (Config::$pluginUrl !== '') {
+            $plugin_url = Config::$pluginUrl;
         } elseif (function_exists('plugins_url')) {
             $resolved = plugins_url('', dirname(__DIR__) . '/bootstrap.php');
             if (is_string($resolved) && $resolved !== '') {
@@ -324,7 +324,7 @@ class AdminPage
             return;
         }
 
-        $admin_options_script_version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7';
+        $admin_options_script_version = Config::VERSION;
         $admin_options_script_path = dirname(__DIR__) . '/assets/js/hyperfields-admin.js';
         if (is_file($admin_options_script_path)) {
             $mtime = filemtime($admin_options_script_path);

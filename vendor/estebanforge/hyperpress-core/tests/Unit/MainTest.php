@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HyperPress\Tests\Unit;
 
+use HyperPress\Config;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -76,12 +77,12 @@ class MainTest extends TestCase
 
     public function testPluginConfiguration()
     {
-        // Test that plugin can be configured
+        // Runtime identity now lives on Config (prefix-safe).
         $config = [
-            'version' => HYPERPRESS_VERSION,
-            'dir' => HYPERPRESS_DIR,
-            'url' => HYPERPRESS_URL,
-            'assets_url' => HYPERPRESS_ASSETS_URL
+            'version' => Config::VERSION,
+            'dir' => Config::$abspath,
+            'url' => Config::$pluginUrl,
+            'assets_url' => Config::$pluginUrl . 'assets/',
         ];
 
         $this->assertArrayHasKey('version', $config);
@@ -91,7 +92,7 @@ class MainTest extends TestCase
 
         $this->assertSame(\hyperpress_test_get_plugin_version(), $config['version']);
         $this->assertStringContainsString('HyperPress-Core', $config['dir']);
-        $this->assertEquals('http://localhost/wp-content/plugins/HyperPress-Core', $config['url']);
+        $this->assertEquals('http://localhost/wp-content/plugins/HyperPress-Core/', $config['url']);
         $this->assertEquals('http://localhost/wp-content/plugins/HyperPress-Core/assets/', $config['assets_url']);
     }
 

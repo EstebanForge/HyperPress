@@ -31,6 +31,48 @@ class Bootstrap
      */
     public static function init(): void
     {
+        // Cross-copy election guard (Carbon Fields pattern). The first copy
+        // of HyperBlocks to reach init() claims a namespace-scoped constant
+        // and wins; every later copy bails before bootstrapping, so two
+        // plugins shipping HyperBlocks do not double-init (re-register hooks,
+        // conflict on Config state) and do not fatal. Built with
+        // __NAMESPACE__ so it is prefix-safe: unprefixed copies share
+        // HyperBlocks\WordPress\LOADED and elect one winner, while a
+        // namespace-prefixed copy lives under a different namespace
+        // (different constant) and boots independently. First-to-boot wins,
+        // not newest; prefix if you need version determinism across divergent
+        // copies.
+        if (defined(__NAMESPACE__ . '\\LOADED')) {
+            return;
+        }
+        define(__NAMESPACE__ . '\\LOADED', __DIR__);
+
+        if (Config::isInitialized()) {
+            return;
+        }
+
+        // Runtime identity (prefix-safe). Mirrors HyperFields\Config: these
+        // hold per-copy paths/URL so a prefixed copy
+        // (ConsumerX\...\HyperBlocks\Config) is fully isolated from any other
+        // consumer's copy. Replaces the former global HYPERBLOCKS_* constants.
+        $base_dir = trailingslashit(dirname(__DIR__, 2));
+        $plugin_file = $base_dir . 'bootstrap.php';
+        $plugin_url = self::resolvePluginUrl($base_dir);
+
+        Config::markInitialized();
+        Config::$abspath = $base_dir;
+        Config::$pluginFile = $plugin_file;
+        Config::$pluginUrl = $plugin_url;
+
+        // Load the procedural helper API. Loaded here (after ABSPATH is
+        // available) rather than via Composer autoload.files, so the direct-
+        // access guard in helpers.php does not bail when a consumer's
+        // autoloader runs before WordPress loads. Mirrors HyperFields.
+        $helpers = dirname(__DIR__) . '/helpers.php';
+        if (is_file($helpers)) {
+            require_once $helpers;
+        }
+
         // Initialize configuration
         add_action('plugins_loaded', [self::class, 'initializeConfig'], 5);
 
@@ -48,15 +90,37 @@ class Bootstrap
     }
 
     /**
+     * Resolve the library root URL against the web-accessible WordPress
+     * content roots. Delegates to the canonical HyperFields resolver
+     * (HyperBlocks requires HyperFields) so a stack shipping both libraries
+     * runs one resolver. Returns '' when the directory is not under any
+     * web-accessible root (e.g. a Bedrock root composer vendor outside the
+     * document root); callers that need the assets must then bail.
+     *
+     * @param string $base_dir Library root (with trailing slash).
+     * @return string Trailing-slashed URL, or '' when not resolvable.
+     */
+    private static function resolvePluginUrl(string $base_dir): string
+    {
+        if (!class_exists(\HyperFields\LibraryBootstrap::class)) {
+            return '';
+        }
+
+        $resolved = \HyperFields\LibraryBootstrap::resolveContentUrl(rtrim($base_dir, '/\\'));
+
+        return $resolved !== '' ? trailingslashit($resolved) : '';
+    }
+
+    /**
      * Initialize configuration.
      *
      * @return void
      */
     public static function initializeConfig(): void
     {
-        // Set default block path if HYPERBLOCKS_PATH is defined
-        if (defined('HYPERBLOCKS_PATH') && is_dir(HYPERBLOCKS_PATH . '/blocks')) {
-            Config::registerBlockPath(HYPERBLOCKS_PATH . '/blocks');
+        // Set default block path from the library root (Config::$abspath).
+        if (Config::$abspath !== '' && is_dir(Config::$abspath . 'blocks')) {
+            Config::registerBlockPath(Config::$abspath . 'blocks');
         }
     }
 
@@ -69,7 +133,7 @@ class Bootstrap
      * whose theme uses /blocks for WP-native/ACF blocks (and who prefers an
      * explicit opt-out over the header-based file filter) can disable
      * auto-registration entirely with __return_false. The library's own
-     * bundled blocks (HYPERBLOCKS_PATH/blocks) are registered separately in
+     * bundled blocks (Config::$abspath/blocks) are registered separately in
      * initializeConfig() and are NOT affected by this filter.
      *
      * @return void
@@ -280,27 +344,27 @@ class Bootstrap
     {
         $scriptHandle = Config::getEditorScriptHandle();
 
-        $scriptPath = defined('HYPERBLOCKS_PATH')
-            ? HYPERBLOCKS_PATH . '/assets/js/editor.js'
+        $scriptPath = Config::$abspath !== ''
+            ? Config::$abspath . 'assets/js/editor.js'
             : null;
 
         if (!$scriptPath || !file_exists($scriptPath)) {
             return;
         }
 
-        // Resolve the editor asset URL against the active web-accessible
-        // content roots. HYPERBLOCKS_PLUGIN_URL is now computed the same way
-        // in bootstrap.php; the fallback re-resolves the asset path so this
-        // path is correct even if a consumer overrode the constant to ''.
-        // Both bail (return '') when the library sits outside every content
-        // root — e.g. a Bedrock root composer vendor — because no URL can
-        // serve a file outside the web document root. Enqueuing a 404ing URL
-        // here would silently make every fluent block inserter-invisible.
+        // Resolve the editor asset URL from Config::$pluginUrl (computed at
+        // init from the web-accessible content roots). The fallback
+        // re-resolves the asset path so this is correct even if a consumer
+        // overrode the URL to ''. Both bail (return '') when the library
+        // sits outside every content root, e.g. a Bedrock root composer
+        // vendor, because no URL can serve a file outside the web document
+        // root. Enqueuing a 404ing URL here would silently make every fluent
+        // block inserter-invisible.
         $scriptUrl = '';
-        if (defined('HYPERBLOCKS_PLUGIN_URL') && HYPERBLOCKS_PLUGIN_URL !== '') {
-            $scriptUrl = HYPERBLOCKS_PLUGIN_URL . 'assets/js/editor.js';
-        } elseif (function_exists('hyperblocks_resolve_content_url')) {
-            $scriptUrl = hyperblocks_resolve_content_url($scriptPath);
+        if (Config::$pluginUrl !== '') {
+            $scriptUrl = Config::$pluginUrl . 'assets/js/editor.js';
+        } elseif (class_exists(\HyperFields\LibraryBootstrap::class)) {
+            $scriptUrl = \HyperFields\LibraryBootstrap::resolveContentUrl($scriptPath);
         }
 
         if ($scriptUrl === '') {
@@ -310,7 +374,7 @@ class Bootstrap
                     . 'Fluent blocks will render on the front end but will not appear in the block inserter. '
                     . 'HyperBlocks is loaded from %s; move it under a plugin/theme/vendor directory inside wp-content (e.g. via the consumer plugin bundled vendor) so the assets can be served.',
                     $scriptPath,
-                    defined('HYPERBLOCKS_INSTANCE_LOADED_PATH') ? HYPERBLOCKS_INSTANCE_LOADED_PATH : $scriptPath
+                    Config::$pluginFile !== '' ? Config::$pluginFile : $scriptPath
                 ));
             }
 
@@ -356,15 +420,15 @@ class Bootstrap
     public static function enqueueEditorAssets(): void
     {
         // Enqueue editor styles if they exist
-        $stylePath = defined('HYPERBLOCKS_PATH')
-            ? HYPERBLOCKS_PATH . '/assets/css/editor.css'
+        $stylePath = Config::$abspath !== ''
+            ? Config::$abspath . 'assets/css/editor.css'
             : null;
 
         if ($stylePath && file_exists($stylePath)) {
-            $styleUrl = defined('HYPERBLOCKS_PLUGIN_URL') && HYPERBLOCKS_PLUGIN_URL !== ''
-                ? HYPERBLOCKS_PLUGIN_URL . 'assets/css/editor.css'
-                : (function_exists('hyperblocks_resolve_content_url')
-                    ? hyperblocks_resolve_content_url($stylePath)
+            $styleUrl = Config::$pluginUrl !== ''
+                ? Config::$pluginUrl . 'assets/css/editor.css'
+                : (class_exists(\HyperFields\LibraryBootstrap::class)
+                    ? \HyperFields\LibraryBootstrap::resolveContentUrl($stylePath)
                     : '');
 
             if ($styleUrl !== '') {

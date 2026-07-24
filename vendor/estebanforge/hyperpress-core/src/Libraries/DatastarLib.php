@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HyperPress\Libraries;
 
+use HyperPress\Config;
 use HyperPress\Main;
 
 // Exit if accessed directly.
@@ -66,7 +67,7 @@ class DatastarLib
         }
 
         // Check Composer's installed.json for the package version.
-        $composer_installed_path = HYPERPRESS_ABSPATH . '/vendor/composer/installed.json';
+        $composer_installed_path = Config::$abspath . 'vendor/composer/installed.json';
         if (file_exists($composer_installed_path)) {
             $installed_data = json_decode(file_get_contents($composer_installed_path), true);
             if (isset($installed_data['packages'])) {

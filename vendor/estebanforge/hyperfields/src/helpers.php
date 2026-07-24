@@ -369,68 +369,6 @@ if (!function_exists('hf_save_field')) {
     }
 }
 
-// Backward compatibility aliases for hp_ prefixed functions (HyperPress era)
-if (!function_exists('hp_get_field')) {
-    function hp_get_field(string $name, $source = null, array $args = [])
-    {
-        return hf_get_field($name, $source, $args);
-    }
-}
-if (!function_exists('hp_update_field')) {
-    function hp_update_field(string $name, $value, $source = null, array $args = []): bool
-    {
-        return hf_update_field($name, $value, $source, $args);
-    }
-}
-if (!function_exists('hp_save_field')) {
-    function hp_save_field(string $name, $value, $source = null, array $args = []): bool
-    {
-        return hf_save_field($name, $value, $source, $args);
-    }
-}
-if (!function_exists('hp_delete_field')) {
-    function hp_delete_field(string $name, $source = null, array $args = []): bool
-    {
-        return hf_delete_field($name, $source, $args);
-    }
-}
-if (!function_exists('hp_resolve_field_context')) {
-    function hp_resolve_field_context($source = null, array $args = []): array
-    {
-        return hf_resolve_field_context($source, $args);
-    }
-}
-if (!function_exists('hp_create_option_page')) {
-    function hp_create_option_page(string $page_title, string $menu_slug, string $prefix = ''): OptionsPage
-    {
-        return hf_option_page($page_title, $menu_slug, $prefix);
-    }
-}
-if (!function_exists('hp_create_field')) {
-    function hp_create_field(string $type, string $name, string $label): Field
-    {
-        return hf_field($type, $name, $label);
-    }
-}
-if (!function_exists('hp_create_tabs')) {
-    function hp_create_tabs(string $name, string $label): TabsField
-    {
-        return hf_tabs($name, $label);
-    }
-}
-if (!function_exists('hp_create_repeater')) {
-    function hp_create_repeater(string $name, string $label): RepeaterField
-    {
-        return hf_repeater($name, $label);
-    }
-}
-if (!function_exists('hp_create_section')) {
-    function hp_create_section(string $id, string $title): OptionsSection
-    {
-        return hf_section($id, $title);
-    }
-}
-
 if (!function_exists('hf_register_data_tools_page')) {
     /**
      * Register an Export / Import admin page as a submenu of an existing menu.
@@ -479,24 +417,10 @@ if (!function_exists('hf_register_wpsettings_compatibility_page')) {
     }
 }
 
-if (!function_exists('hp_register_wpsettings_compatibility_page')) {
-    function hp_register_wpsettings_compatibility_page(array $config): OptionsPage
-    {
-        return hf_register_wpsettings_compatibility_page($config);
-    }
-}
-
 if (!function_exists('hf_register_settings_compatibility_page')) {
     function hf_register_settings_compatibility_page(array $config): OptionsPage
     {
         return hf_register_wpsettings_compatibility_page($config);
-    }
-}
-
-if (!function_exists('hp_register_settings_compatibility_page')) {
-    function hp_register_settings_compatibility_page(array $config): OptionsPage
-    {
-        return hp_register_wpsettings_compatibility_page($config);
     }
 }
 

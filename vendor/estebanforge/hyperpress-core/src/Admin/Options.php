@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HyperPress\Admin;
 
 use HyperFields\HyperFields;
+use HyperPress\Config;
 use HyperPress\Libraries\HTMXLib;
 use HyperPress\Main;
 
@@ -43,10 +44,10 @@ class Options
      */
     public static function isEnabled(): bool
     {
-        // Must be called after includes/helpers.php loads. The boot
+        // Must be called after the procedural helpers load. The boot
         // sequence guarantees this (helpers loaded inside
-        // hyperpress_run_initialization_logic() before any Options
-        // instantiation). If this fails it indicates a boot-order bug.
+        // Bootstrap::init() before any Options instantiation). If this
+        // fails it indicates a boot-order bug.
         if (hp_is_library_mode()) {
             return (bool) apply_filters('hyperpress/admin/show_menu', false);
         }
@@ -80,8 +81,8 @@ class Options
         // any `init` priority strictly less than default 10).
         //
         // Note: WP-CLI, WP-Cron, REST, XMLRPC, and AJAX requests exit early
-        // in `hyperpress_run_initialization_logic()` (bootstrap.php) before
-        // `init` fires, so this callback is not invoked in those contexts.
+        // in `Bootstrap::init()` (src/Bootstrap.php) before `init` fires,
+        // so this callback is not invoked in those contexts.
         // Legacy option migration therefore relies on an admin visit to run.
         if (!self::isEnabled()) {
             return;
@@ -338,14 +339,14 @@ class Options
         global $wp_version;
 
         $options = HyperFields::getOptions($this->option_name, []);
-        $plugin_version = defined('HYPERPRESS_PLUGIN_VERSION') ? HYPERPRESS_PLUGIN_VERSION : (defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7');
+        $plugin_version = Config::VERSION;
         $php_version = PHP_VERSION;
         $wp_ver = $wp_version ?? get_bloginfo('version');
 
         // Datastar SDK: try to read installed.json produced by composer in vendor/composer
         $datastar_version = 'v1.0.0-RC.3'; // fallback (keep existing default)
-        if (defined('HYPERPRESS_ABSPATH')) {
-            $installed_json = rtrim(HYPERPRESS_ABSPATH, '/') . '/vendor/composer/installed.json';
+        if (Config::$abspath !== '') {
+            $installed_json = rtrim(Config::$abspath, '/') . '/vendor/composer/installed.json';
             if (file_exists($installed_json)) {
                 $installed = json_decode(file_get_contents($installed_json), true);
                 // installed.json can be an object with 'packages' or an array of packages depending on composer version
@@ -374,7 +375,7 @@ class Options
 
     private function getFooterContent(): string
     {
-        $plugin_version = defined('HYPERPRESS_PLUGIN_VERSION') ? HYPERPRESS_PLUGIN_VERSION : (defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '2.0.7');
+        $plugin_version = Config::VERSION;
 
         return '<span>' . __('Active Instance: Plugin v', 'api-for-htmx') . esc_html($plugin_version) . '</span><br />'
             . __('Proudly brought to you by', 'api-for-htmx')

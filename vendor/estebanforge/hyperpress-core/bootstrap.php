@@ -3,11 +3,17 @@
 declare(strict_types=1);
 
 /**
- * Core plugin bootstrap file.
+ * Core bootstrap for HyperPress-Core.
  *
- * This file is responsible for registering the plugin's hooks and initializing the autoloader.
- * It is designed to be loaded only once, regardless of whether the project is used as a standalone
- * plugin or as a library embedded in another project.
+ * Dev-environment auto-init bridge: when HyperPress-Core is loaded directly
+ * via Composer (unprefixed), this file schedules initialization at
+ * after_setup_theme by delegating to Bootstrap::init(), which lives under the
+ * PSR-4 root and holds the prefix-safe first-to-boot LOADED guard. There is
+ * no candidate election, no version compare, and no jetpack dependency.
+ *
+ * Under namespace prefixing (Mozart) this file is not copied (it sits outside
+ * src/); prefixed consumers call HyperPress\Bootstrap::init() explicitly,
+ * which is already prefixed.
  *
  * @since 2.0.0
  */
@@ -17,33 +23,18 @@ if (!defined('ABSPATH') && !defined('HYPERPRESS_TESTING_MODE')) {
     return;
 }
 
-// Use a per-instance marker so each vendored copy registers its own
-// candidate for version election. A global early-return here would defeat
-// the multi-instance election: the first copy to load would set the flag and
-// every other copy's bootstrap would bail before registering, leaving only
-// the first-loaded (not necessarily highest-version) copy discoverable.
-// The candidate array is path-keyed for dedup, and the nested-autoloader
-// block below is guarded by $loadedFromVendorTree, so letting every copy
-// run its registration is safe.
-//
-// Computed unconditionally: needed both inside the autoloader-include block
-// and by the HyperFields/HyperBlocks dependency bootstrap below.
-$loadedFromVendorTree = str_contains(str_replace('\\', '/', __DIR__), '/vendor/');
-
-if (defined('HYPERPRESS_BOOTSTRAP_LOADED')) {
-    // Another copy already ran the one-time autoloader include. Skip straight
-    // to candidate registration for THIS copy so the election can see it.
-} else {
-    define('HYPERPRESS_BOOTSTRAP_LOADED', true);
-
-    // Optional dev override: load local HyperFields/HyperBlocks copies before Composer.
-    $use_local_libs = defined('HYPERPRESS_USE_LOCAL_LIBS') ? (bool) HYPERPRESS_USE_LOCAL_LIBS : (getenv('HYPERPRESS_USE_LOCAL_LIBS') === '1');
+// Composer autoloader. Skip the nested vendor/autoload.php when this file is
+// itself inside another package's /vendor/ tree (would double-declare Composer
+// autoloader classes). bootstrap.php runs once per process (Composer files
+// autoload dedup + require_once), so no global reload guard is needed.
+$normalizedDir = str_replace('\\', '/', __DIR__);
+$loadedFromVendorTree = str_contains($normalizedDir, '/vendor/');
+if (!$loadedFromVendorTree) {
+    // Optional dev override: load local HyperFields/HyperBlocks copies before
+    // Composer, so a monorepo checkout can develop against sibling sources.
+    $use_local_libs = getenv('HYPERPRESS_USE_LOCAL_LIBS') === '1';
     if ($use_local_libs) {
-        $local_libs = [
-            dirname(__DIR__) . '/HyperFields',
-            dirname(__DIR__) . '/HyperBlocks',
-        ];
-        foreach ($local_libs as $lib_path) {
+        foreach ([dirname(__DIR__) . '/HyperFields', dirname(__DIR__) . '/HyperBlocks'] as $lib_path) {
             $lib_path = realpath($lib_path) ?: $lib_path;
             $bootstrap = $lib_path . '/bootstrap.php';
             if (file_exists($bootstrap)) {
@@ -52,27 +43,24 @@ if (defined('HYPERPRESS_BOOTSTRAP_LOADED')) {
         }
     }
 
-    // Composer autoloader.
-    // When loaded as a dependency from another package's /vendor tree, avoid loading
-    // this package's nested vendor/autoload.php to prevent duplicate Composer loader classes.
-    $normalizedDir = str_replace('\\', '/', __DIR__);
-    if (!$loadedFromVendorTree && function_exists('wp_normalize_path') && file_exists(__DIR__ . '/vendor/autoload_packages.php')) {
+    if (file_exists(__DIR__ . '/vendor/autoload_packages.php')) {
         require_once __DIR__ . '/vendor/autoload_packages.php';
     }
-    if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
+    if (file_exists(__DIR__ . '/vendor/autoload.php')) {
         require_once __DIR__ . '/vendor/autoload.php';
-    } elseif (!$loadedFromVendorTree) {
-        // Display an admin notice if no autoloader is found, but continue so tests can register hooks/candidates.
-        add_action('admin_notices', function () {
+    } else {
+        // No autoloader found: surface an admin notice but continue so tests
+        // can register hooks.
+        add_action('admin_notices', static function (): void {
             echo '<div class="error"><p>' . esc_html__('HyperPress: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'api-for-htmx') . '</p></div>';
         });
     }
 }
 
-// Bootstrap HyperFields and HyperBlocks dependencies.
-// When HyperPress-Core is loaded standalone (no upstream plugin bootstrapping them first),
-// trigger each library's candidate registration so their after_setup_theme initialisation
-// runs. Guards inside each library's bootstrap.php prevent double-initialisation.
+// Bootstrap the HyperFields and HyperBlocks dependencies. When HyperPress-Core
+// runs standalone (no upstream plugin bootstrapping them first), trigger each
+// library's bootstrap so their after_setup_theme initialization runs. The
+// first-to-boot LOADED guard inside each library prevents double-init.
 if (!$loadedFromVendorTree) {
     foreach ([
         __DIR__ . '/vendor/estebanforge/hyperfields/bootstrap.php',
@@ -84,280 +72,21 @@ if (!$loadedFromVendorTree) {
     }
 }
 
-// Note: Do not initialize Blocks Registry or REST API here to avoid duplicate hooks.
-// They are initialized later inside hyperpress_run_initialization_logic() once per instance.
-
-// The logic from the original api-for-htmx.php is now here.
-// This ensures that no matter how the plugin is loaded, this code runs only once.
-
-// Get this instance's version and real path (resolving symlinks)
-// Support both legacy 'api-for-htmx.php' and current 'hyperpress.php' entry points
-$plugin_file_candidates = [
-    __DIR__ . '/hyperpress.php',
-    __DIR__ . '/api-for-htmx.php',
-];
-$plugin_file_path = null;
-foreach ($plugin_file_candidates as $candidate) {
-    if (file_exists($candidate)) {
-        $plugin_file_path = $candidate;
-        break;
-    }
-}
-$current_hyperpress_instance_version = '0.0.0';
-$current_hyperpress_instance_path = null;
-
-// Check if we're running as a plugin (one of the entry files exists) or as a library
-if ($plugin_file_path && file_exists($plugin_file_path)) {
-    // Plugin mode: read version from the main plugin file
-    if (function_exists('get_file_data')) {
-        $hyperpress_plugin_data = get_file_data($plugin_file_path, ['Version' => 'Version'], false);
-        $current_hyperpress_instance_version = $hyperpress_plugin_data['Version'] ?? '0.0.0';
-    } else {
-        // Fallback: Try composer.json first
-        $composer_json_path = __DIR__ . '/composer.json';
-        if (file_exists($composer_json_path)) {
-            $composer_data = json_decode(file_get_contents($composer_json_path), true);
-            $current_hyperpress_instance_version = $composer_data['version'] ?? '0.0.0';
-        } else {
-             // Fallback: Regex parse the plugin file
-            $plugin_content = file_get_contents($plugin_file_path, false, null, 0, 8192);
-            if ($plugin_content && preg_match('/^[ \t\/*#@]*Version:\s*(.*)$/mi', $plugin_content, $matches)) {
-                $current_hyperpress_instance_version = trim($matches[1]);
-            } else {
-                $current_hyperpress_instance_version = '0.0.0';
-            }
-        }
-    }
-    $current_hyperpress_instance_path = realpath($plugin_file_path);
-} else {
-    // Library mode: try to get version from composer.json or use a fallback
-    $composer_json_path = __DIR__ . '/composer.json';
-    if (file_exists($composer_json_path)) {
-        $composer_data = json_decode(file_get_contents($composer_json_path), true);
-        $current_hyperpress_instance_version = $composer_data['version'] ?? '0.0.0';
-    }
-    // Use bootstrap.php path as fallback for library mode
-    $current_hyperpress_instance_path = realpath(__FILE__);
-}
-
-// Ensure we have a valid path
-if ($current_hyperpress_instance_path === false) {
-    $current_hyperpress_instance_path = __FILE__;
-}
-
-// Register this instance as a candidate
-if (!isset($GLOBALS['hyperpress_api_candidates']) || !is_array($GLOBALS['hyperpress_api_candidates'])) {
-    $GLOBALS['hyperpress_api_candidates'] = [];
-}
-
-// Use path as key to prevent duplicates
-$GLOBALS['hyperpress_api_candidates'][$current_hyperpress_instance_path] = [
-    'version' => $current_hyperpress_instance_version,
-    'path'    => $current_hyperpress_instance_path,
-    'init_function' => 'hyperpress_run_initialization_logic',
-];
-
-// Use 'after_setup_theme' to ensure this runs after the theme is loaded.
-if (function_exists('has_action') && function_exists('add_action')) {
-    if (!has_action('after_setup_theme', 'hyperpress_select_and_load_latest')) {
-        add_action('after_setup_theme', 'hyperpress_select_and_load_latest', 0);
-    }
-}
-
-if (!function_exists('hyperpress_run_initialization_logic')) {
-    function hyperpress_run_initialization_logic(string $plugin_file_path, string $plugin_version): void
+// Schedule initialization at after_setup_theme (priority 0, original timing).
+// Delegates to Bootstrap::init(), which carries the prefix-safe first-to-boot
+// guard and sets Config runtime identity.
+if (!function_exists('hyperpress_bootstrap_init')) {
+    /**
+     * Initialize HyperPress-Core for this copy at after_setup_theme.
+     *
+     * @return void
+     */
+    function hyperpress_bootstrap_init(): void
     {
-        // Ensure this logic runs only once, but surface a stale election loudly
-        // when a newer version requests init after an older one already loaded.
-        // We cannot undefine constants or un-register hooks, so the older
-        // instance keeps serving, but this log makes the problem diagnosable
-        // instead of silent.
-        if (defined('HYPERPRESS_INSTANCE_LOADED')) {
-            $loaded_version = defined('HYPERPRESS_LOADED_VERSION') ? HYPERPRESS_LOADED_VERSION : '0.0.0';
-            if (version_compare($plugin_version, $loaded_version, '>')) {
-                if (function_exists('error_log')) {
-                    error_log(sprintf(
-                        'HyperPress: newer version %s at %s requested init after version %s was already loaded from %s. ' .
-                        'The older instance is serving. This means the multi-instance version election did not run before initialization; ' .
-                        'ensure the highest-version consumer calls hyperpress_run_initialization_logic() before any other copy initializes.',
-                        $plugin_version,
-                        $plugin_file_path,
-                        $loaded_version,
-                        defined('HYPERPRESS_INSTANCE_LOADED_PATH') ? HYPERPRESS_INSTANCE_LOADED_PATH : '(unknown)'
-                    ));
-                }
-            }
-            return;
-        }
-        define('HYPERPRESS_INSTANCE_LOADED', true);
-        define('HYPERPRESS_LOADED_VERSION', $plugin_version);
-        define('HYPERPRESS_INSTANCE_LOADED_PATH', $plugin_file_path);
-        if (!defined('HYPERPRESS_VERSION')) {
-            define('HYPERPRESS_VERSION', $plugin_version);
-        }
-
-        // Determine if we're in library mode vs plugin mode (support legacy entry file)
-        $basename = $plugin_file_path ? basename($plugin_file_path) : '';
-        $is_library_mode = !in_array($basename, ['hyperpress.php', 'api-for-htmx.php'], true);
-
-        if ($is_library_mode) {
-            // Library mode: use the directory containing the bootstrap/plugin file
-            $plugin_dir = dirname($plugin_file_path);
-            define('HYPERPRESS_ABSPATH', trailingslashit($plugin_dir));
-            define('HYPERPRESS_BASENAME', 'hyperpress/bootstrap.php');
-            if (!defined('HYPERPRESS_PLUGIN_URL')) {
-                // Resolve against web-accessible content roots via HyperFields'
-                // resolver (HyperPress vendors HyperFields, so the helper is
-                // present). Empty when the library sits outside every content
-                // root (e.g. a Bedrock root composer vendor outside the web
-                // document root), in which case frontend asset enqueue bails
-                // instead of emitting a 404ing URL. plugins_url()/plugin_dir_url()
-                // only handle files directly under WP_PLUGIN_DIR and would
-                // produce a broken URL in that topology.
-                $resolved = function_exists('hyperfields_resolve_content_url')
-                    ? hyperfields_resolve_content_url($plugin_dir)
-                    : '';
-                define('HYPERPRESS_PLUGIN_URL', $resolved !== '' ? trailingslashit($resolved) : '');
-            }
-            define('HYPERPRESS_PLUGIN_FILE', $plugin_file_path);
-        } else {
-            // Plugin mode: use standard WordPress plugin functions
-            define('HYPERPRESS_ABSPATH', plugin_dir_path($plugin_file_path));
-            define('HYPERPRESS_BASENAME', plugin_basename($plugin_file_path));
-            if (!defined('HYPERPRESS_PLUGIN_URL')) {
-                define('HYPERPRESS_PLUGIN_URL', plugin_dir_url($plugin_file_path));
-            }
-            define('HYPERPRESS_PLUGIN_FILE', $plugin_file_path);
-        }
-
-        define('HYPERPRESS_ENDPOINT', 'wp-html');
-        define('HYPERPRESS_LEGACY_ENDPOINT', 'wp-htmx');
-        define('HYPERPRESS_TEMPLATE_DIR', 'hypermedia');
-        define('HYPERPRESS_LEGACY_TEMPLATE_DIR', 'htmx-templates');
-        define('HYPERPRESS_TEMPLATE_EXT', '.hp.php,.hm.php,.hb.php');
-        define('HYPERPRESS_LEGACY_TEMPLATE_EXT', '.htmx.php,.hmedia.php');
-        define('HYPERPRESS_ENDPOINT_VERSION', 'v1');
-
-        // Load helpers and compatibility layers after constants are defined.
-        require_once HYPERPRESS_ABSPATH . 'includes/helpers.php';
-        require_once HYPERPRESS_ABSPATH . 'includes/backward-compatibility.php';
-
-        // Optional: Compact input to mitigate max_input_vars on complex option pages
-        if (!defined('HYPERPRESS_COMPACT_INPUT')) {
-            define('HYPERPRESS_COMPACT_INPUT', false);
-        }
-        if (!defined('HYPERPRESS_COMPACT_INPUT_KEY')) {
-            define('HYPERPRESS_COMPACT_INPUT_KEY', 'hyperpress_compact_input');
-        }
-
-        if ((defined('DOING_CRON') && DOING_CRON === true)
-            || (defined('DOING_AJAX') && DOING_AJAX === true)
-            || (defined('REST_REQUEST') && REST_REQUEST === true)
-            || (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST === true)
-            || (defined('WP_CLI') && WP_CLI === true)
-        ) {
-            return;
-        }
-
-        // Only register activation/deactivation hooks in plugin mode
-        if (!$is_library_mode) {
-            register_activation_hook($plugin_file_path, ['HyperPress\Admin\Activation', 'activate']);
-            register_deactivation_hook($plugin_file_path, ['HyperPress\Admin\Activation', 'deactivate']);
-        }
-
-        if (class_exists('HyperPress\Main')) {
-            $router = new HyperPress\Router();
-            $render = new HyperPress\Render();
-            $config = new HyperPress\Config();
-            $compatibility = new HyperPress\Compatibility();
-            $theme_support = new HyperPress\Theme();
-            $hyperpress_main = new HyperPress\Main(
-                $router,
-                $render,
-                $config,
-                $compatibility,
-                $theme_support
-            );
-            $hyperpress_main->run();
-
-            // Initialize the blocks system
-            if (class_exists('HyperPress\Blocks\Registry')) {
-                $blocksRegistry = HyperPress\Blocks\Registry::getInstance();
-                $blocksRegistry->init();
-
-                // Initialize the blocks REST API
-                if (class_exists('HyperPress\Blocks\RestApi')) {
-                    $blocksRestApi = HyperPress\Blocks\RestApi::getInstance();
-                    $blocksRestApi->init();
-                }
-            }
-
-            // Demo blocks are automatically discovered by the Registry auto-discovery system
-        }
+        \HyperPress\Bootstrap::init();
     }
 }
 
-if (!function_exists('hyperpress_select_and_load_latest')) {
-    function hyperpress_select_and_load_latest(): void
-    {
-        if (empty($GLOBALS['hyperpress_api_candidates']) || !is_array($GLOBALS['hyperpress_api_candidates'])) {
-            return;
-        }
-
-        $candidates = $GLOBALS['hyperpress_api_candidates'];
-        uasort($candidates, fn ($a, $b) => version_compare($b['version'], $a['version']));
-        $winner = reset($candidates);
-
-        if ($winner && isset($winner['path'], $winner['version'], $winner['init_function']) && function_exists($winner['init_function'])) {
-            call_user_func($winner['init_function'], $winner['path'], $winner['version']);
-        }
-
-        unset($GLOBALS['hyperpress_api_candidates']);
-    }
-}
-
-// Test helper: re-register candidate and ensure selection hook exists, without relying on include semantics.
-if (!function_exists('hyperpress_register_candidate_for_tests')) {
-    function hyperpress_register_candidate_for_tests(): void
-    {
-        // Determine current instance path/version similarly to main bootstrap logic.
-        $plugin_file_candidates = [
-            __DIR__ . '/hyperpress.php',
-            __DIR__ . '/api-for-htmx.php',
-        ];
-        $plugin_file_path = null;
-        foreach ($plugin_file_candidates as $candidate) {
-            if (file_exists($candidate)) { $plugin_file_path = $candidate; break; }
-        }
-
-        $current_version = '0.0.0';
-        $current_path = null;
-        if ($plugin_file_path && file_exists($plugin_file_path)) {
-            $data = get_file_data($plugin_file_path, ['Version' => 'Version'], false);
-            $current_version = $data['Version'] ?? '0.0.0';
-            $current_path = realpath($plugin_file_path) ?: $plugin_file_path;
-        } else {
-            $composer_json_path = __DIR__ . '/composer.json';
-            if (file_exists($composer_json_path)) {
-                $composer_data = json_decode(file_get_contents($composer_json_path), true);
-                if (is_array($composer_data) && isset($composer_data['version'])) {
-                    $current_version = (string) $composer_data['version'];
-                }
-            }
-            $current_path = realpath(__FILE__) ?: __FILE__;
-        }
-
-        if (!isset($GLOBALS['hyperpress_api_candidates']) || !is_array($GLOBALS['hyperpress_api_candidates'])) {
-            $GLOBALS['hyperpress_api_candidates'] = [];
-        }
-        $GLOBALS['hyperpress_api_candidates'][$current_path] = [
-            'version' => $current_version,
-            'path'    => $current_path,
-            'init_function' => 'hyperpress_run_initialization_logic',
-        ];
-
-        if (!has_action('after_setup_theme', 'hyperpress_select_and_load_latest')) {
-            add_action('after_setup_theme', 'hyperpress_select_and_load_latest', 0);
-        }
-    }
+if (function_exists('add_action') && !has_action('after_setup_theme', 'hyperpress_bootstrap_init')) {
+    add_action('after_setup_theme', 'hyperpress_bootstrap_init', 0);
 }

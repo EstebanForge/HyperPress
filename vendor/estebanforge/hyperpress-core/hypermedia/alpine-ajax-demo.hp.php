@@ -19,7 +19,7 @@ if (!isset($hp_vals['action']) || $hp_vals['action'] != 'alpine_ajax_do_somethin
 <div class="hyperpress-demo-container">
   <h3>Hello Alpine Ajax!</h3>
 
-  <p>Demo template loaded from <code>plugins/HyperPress/<?php echo esc_html(HYPERPRESS_TEMPLATE_DIR); ?>/alpine-ajax-demo.hm.php</code></p>
+  <p>Demo template loaded from <code>plugins/HyperPress/<?php echo esc_html(\HyperPress\Config::TEMPLATE_DIR); ?>/alpine-ajax-demo.hm.php</code></p>
 
   <p>Received params ($hp_vals):</p>
 

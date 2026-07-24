@@ -27,7 +27,7 @@ Load your project Composer autoloader:
 require_once __DIR__ . '/vendor/autoload.php';
 ```
 
-HyperBlocks bootstrap is registered via Composer `autoload.files`. HyperFields is bootstrapped automatically — no extra configuration needed.
+HyperBlocks bootstrap is registered via Composer `autoload.files`. HyperFields is bootstrapped automatically, no extra configuration needed.
 
 ## Quick start
 
@@ -52,11 +52,11 @@ Registry::getInstance()->registerFluentBlock($block);
 Or with the procedural helpers:
 
 ```php
-hyperblocks_register_block(
-    hyperblocks_block('Hero Banner')
+hb_register_block(
+    hb_block('Hero Banner')
         ->setName('my-theme/hero-banner')
         ->addFields([
-            hyperblocks_field('text', 'heading', 'Heading')->setDefault('Welcome'),
+            hb_field('text', 'heading', 'Heading')->setDefault('Welcome'),
         ])
         ->setRenderTemplateFile('blocks/hero-banner.hb.php')
 );

@@ -5,8 +5,21 @@ declare(strict_types=1);
 /**
  * HyperPress plugin adapter bootstrap.
  *
- * This wrapper keeps WordPress plugin concerns thin while loading HyperPress Core
- * from Composer-distributed libraries.
+ * Thin WordPress plugin concerns only. Loads the Composer autoloader (which
+ * pulls HyperPress-Core and its HyperFields/HyperBlocks dependencies and runs
+ * each library's bootstrap.php as a Composer autoload.files entry), then wires
+ * the adapter-level hooks the plugin owns: the HyperFields Data Tools page,
+ * activation/deactivation, and the About system-info rows.
+ *
+ * The libraries self-initialize: each one's bootstrap schedules its init at
+ * after_setup_theme behind a first-to-boot namespace-scoped LOADED guard. The
+ * adapter therefore no longer registers the old multi-instance election
+ * machinery (removed from the libraries) and no longer loads the bundled
+ * packages autoloader the stack previously depended on.
+ *
+ * Class references use ::class so a Mozart-prefixed build rewrites them to the
+ * prefixed namespace; the previous string literals ('HyperFields\\HyperFields')
+ * would have been missed by the prefixer and silently failed.
  */
 
 if (!defined('ABSPATH') && !defined('HYPERPRESS_TESTING_MODE')) {
@@ -44,20 +57,9 @@ $adapter_main_file = file_exists(__DIR__ . '/hyperpress.php')
     ? __DIR__ . '/hyperpress.php'
     : __DIR__ . '/api-for-htmx.php';
 
-// Load Jetpack packages autoloader first when present (required by jetpack-autoloader).
-if (function_exists('wp_normalize_path')) {
-    $autoload_packages_candidates = [
-        __DIR__ . '/vendor/autoload_packages.php',
-        dirname(__DIR__) . '/HyperPress-Core/vendor/autoload_packages.php',
-    ];
-    foreach ($autoload_packages_candidates as $autoload_packages) {
-        if (hyperpress_adapter_require_once_path($autoload_packages)) {
-            break;
-        }
-    }
-}
-
-// Load Composer autoloader from plugin package first, local monorepo fallback second.
+// Load the Composer autoloader. Plugin vendor first, local monorepo fallback
+// second. This also runs every bundled library's bootstrap.php (Composer
+// autoload.files), scheduling each library's init at after_setup_theme.
 $autoload_candidates = [
     __DIR__ . '/vendor/autoload.php',
     dirname(__DIR__) . '/HyperPress-Core/vendor/autoload.php',
@@ -68,20 +70,8 @@ foreach ($autoload_candidates as $autoload) {
     }
 }
 
-// Load HyperPress Core bootstrap from packaged vendor or local development folder.
-$core_bootstrap_candidates = [
-    __DIR__ . '/vendor/estebanforge/hyperpress-core/bootstrap.php',
-    dirname(__DIR__) . '/HyperPress-Core/bootstrap.php',
-];
-$core_loaded = false;
-foreach ($core_bootstrap_candidates as $core_bootstrap) {
-    if (hyperpress_adapter_require_once_path($core_bootstrap)) {
-        $core_loaded = true;
-        break;
-    }
-}
-
-if (!$core_loaded) {
+// Bail with an admin notice if HyperPress-Core is not autoloadable.
+if (!class_exists(\HyperPress\Bootstrap::class)) {
     if (function_exists('add_action')) {
         add_action('admin_notices', static function (): void {
             echo '<div class="error"><p>' . esc_html__('HyperPress: HyperPress Core not found. Please run "composer install" inside the plugin folder.', 'api-for-htmx') . '</p></div>';
@@ -91,34 +81,8 @@ if (!$core_loaded) {
     return;
 }
 
-// Ensure latest-instance selectors are registered in plugin context.
-if (
-    function_exists('hyperpress_select_and_load_latest')
-    && function_exists('has_action')
-    && function_exists('add_action')
-    && !has_action('after_setup_theme', 'hyperpress_select_and_load_latest')
-) {
-    add_action('after_setup_theme', 'hyperpress_select_and_load_latest', 0);
-}
-if (
-    function_exists('hyperfields_select_and_load_latest')
-    && function_exists('has_action')
-    && function_exists('add_action')
-    && !has_action('after_setup_theme', 'hyperfields_select_and_load_latest')
-) {
-    add_action('after_setup_theme', 'hyperfields_select_and_load_latest', 0);
-}
-if (
-    function_exists('hyperblocks_select_and_load_latest')
-    && function_exists('has_action')
-    && function_exists('add_action')
-    && !has_action('after_setup_theme', 'hyperblocks_select_and_load_latest')
-) {
-    add_action('after_setup_theme', 'hyperblocks_select_and_load_latest', 0);
-}
-
 // Register HyperFields Export/Import UI under Tools.
-if (class_exists('HyperFields\\HyperFields') && function_exists('add_action')) {
+if (class_exists(\HyperFields\HyperFields::class) && function_exists('add_action')) {
     add_action('admin_menu', static function (): void {
         \HyperFields\HyperFields::registerDataToolsPage(
             parentSlug: 'tools.php',
@@ -136,27 +100,28 @@ if (class_exists('HyperFields\\HyperFields') && function_exists('add_action')) {
 
 // Plugin lifecycle hooks remain in the adapter layer.
 if (
-    class_exists('HyperPress\\Admin\\Activation')
+    class_exists(\HyperPress\Admin\Activation::class)
     && function_exists('register_activation_hook')
     && function_exists('register_deactivation_hook')
 ) {
-    register_activation_hook($adapter_main_file, ['HyperPress\\Admin\\Activation', 'activate']);
-    register_deactivation_hook($adapter_main_file, ['HyperPress\\Admin\\Activation', 'deactivate']);
+    register_activation_hook($adapter_main_file, [\HyperPress\Admin\Activation::class, 'activate']);
+    register_deactivation_hook($adapter_main_file, [\HyperPress\Admin\Activation::class, 'deactivate']);
 }
 
-// Enrich the About page system-info table with vendored library versions.
+// Enrich the About page system-info table with vendored library versions,
+// sourced from each library's prefix-safe Config class (no global constants).
 if (function_exists('add_filter')) {
     add_filter('hyperpress/about/system_info', static function (array $info): array {
         $library_versions = [];
 
-        if (defined('HYPERFIELDS_VERSION')) {
-            $library_versions[__('HyperFields Library', 'api-for-htmx')] = HYPERFIELDS_VERSION;
+        if (class_exists(\HyperFields\Config::class)) {
+            $library_versions[__('HyperFields Library', 'api-for-htmx')] = \HyperFields\Config::VERSION;
         }
-        if (defined('HYPERBLOCKS_VERSION')) {
-            $library_versions[__('HyperBlocks Library', 'api-for-htmx')] = HYPERBLOCKS_VERSION;
+        if (class_exists(\HyperBlocks\Config::class)) {
+            $library_versions[__('HyperBlocks Library', 'api-for-htmx')] = \HyperBlocks\Config::VERSION;
         }
-        if (defined('HYPERPRESS_VERSION')) {
-            $library_versions[__('HyperPress Core', 'api-for-htmx')] = HYPERPRESS_VERSION;
+        if (class_exists(\HyperPress\Config::class)) {
+            $library_versions[__('HyperPress Core', 'api-for-htmx')] = \HyperPress\Config::VERSION;
         }
 
         if (empty($library_versions)) {

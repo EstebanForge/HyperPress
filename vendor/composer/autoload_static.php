@@ -4,14 +4,11 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc7db29f2924cd24a3bcee7e30edc65e6
+class ComposerStaticInit6b38d864c474b78a1bd0d9c47a630b2d
 {
     public static $files = array (
-        '13f65e44352b0407f05cb5a5e174612b' => __DIR__ . '/..' . '/estebanforge/hyperfields/includes/helpers.php',
-        '0522701f5d113a2ff6373ccc834dd7d6' => __DIR__ . '/..' . '/estebanforge/hyperfields/includes/backward-compatibility.php',
         'c1c635284e1ca7836efff979fb09390f' => __DIR__ . '/..' . '/estebanforge/hyperfields/bootstrap.php',
         '7a417aa514b484622606bfc8f3893672' => __DIR__ . '/..' . '/estebanforge/hyperblocks/bootstrap.php',
-        '611bc1f60ae2ec6bee160ee5d1b75d78' => __DIR__ . '/..' . '/estebanforge/hyperblocks/src/helpers.php',
         '29999a51792ecace5389ce90bf577c3f' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/bootstrap.php',
     );
 
@@ -29,10 +26,6 @@ class ComposerStaticInitc7db29f2924cd24a3bcee7e30edc65e6
         'C' =>
         array (
             'Composer\\Installers\\' => 20,
-        ),
-        'A' =>
-        array (
-            'Automattic\\Jetpack\\Autoloader\\' => 30,
         ),
     );
 
@@ -57,18 +50,9 @@ class ComposerStaticInitc7db29f2924cd24a3bcee7e30edc65e6
         array (
             0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
         ),
-        'Automattic\\Jetpack\\Autoloader\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src',
-        ),
     );
 
     public static $classMap = array (
-        'Automattic\\Jetpack\\Autoloader\\AutoloadFileWriter' => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src/AutoloadFileWriter.php',
-        'Automattic\\Jetpack\\Autoloader\\AutoloadGenerator' => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src/AutoloadGenerator.php',
-        'Automattic\\Jetpack\\Autoloader\\AutoloadProcessor' => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src/AutoloadProcessor.php',
-        'Automattic\\Jetpack\\Autoloader\\CustomAutoloaderPlugin' => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src/CustomAutoloaderPlugin.php',
-        'Automattic\\Jetpack\\Autoloader\\ManifestGenerator' => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src/ManifestGenerator.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Composer\\Installers\\AglInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AglInstaller.php',
         'Composer\\Installers\\AkauntingInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AkauntingInstaller.php',
@@ -181,8 +165,6 @@ class ComposerStaticInitc7db29f2924cd24a3bcee7e30edc65e6
         'HyperFields\\Admin\\Activation' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/Activation.php',
         'HyperFields\\Admin\\ExportImportPageConfig' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/ExportImportPageConfig.php',
         'HyperFields\\Admin\\ExportImportUI' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/ExportImportUI.php',
-        'HyperFields\\Admin\\Options' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/Options.php',
-        'HyperFields\\Admin\\OptionsMigration' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/OptionsMigration.php',
         'HyperFields\\Admin\\TransferLogsUI' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/TransferLogsUI.php',
         'HyperFields\\Assets' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Assets.php',
         'HyperFields\\BlockFieldAdapter' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/BlockFieldAdapter.php',
@@ -198,6 +180,7 @@ class ComposerStaticInitc7db29f2924cd24a3bcee7e30edc65e6
         'HyperFields\\Compatibility\\TabProxy' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Compatibility/TabProxy.php',
         'HyperFields\\Compatibility\\WPSettingsCompatibility' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Compatibility/WPSettingsCompatibility.php',
         'HyperFields\\ConditionalLogic' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/ConditionalLogic.php',
+        'HyperFields\\Config' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Config.php',
         'HyperFields\\Container\\Container' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Container/Container.php',
         'HyperFields\\Container\\ContainerFactory' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Container/ContainerFactory.php',
         'HyperFields\\Container\\PostMetaContainer' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Container/PostMetaContainer.php',
@@ -240,6 +223,7 @@ class ComposerStaticInitc7db29f2924cd24a3bcee7e30edc65e6
         'HyperPress\\Blocks\\Registry' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Blocks/Registry.php',
         'HyperPress\\Blocks\\Renderer' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Blocks/Renderer.php',
         'HyperPress\\Blocks\\RestApi' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Blocks/RestApi.php',
+        'HyperPress\\Bootstrap' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Bootstrap.php',
         'HyperPress\\Compatibility' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Compatibility.php',
         'HyperPress\\Config' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Config.php',
         'HyperPress\\Libraries\\AlpineAjaxLib' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Libraries/AlpineAjaxLib.php',
@@ -269,9 +253,9 @@ class ComposerStaticInitc7db29f2924cd24a3bcee7e30edc65e6
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc7db29f2924cd24a3bcee7e30edc65e6::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc7db29f2924cd24a3bcee7e30edc65e6::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc7db29f2924cd24a3bcee7e30edc65e6::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit6b38d864c474b78a1bd0d9c47a630b2d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit6b38d864c474b78a1bd0d9c47a630b2d::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit6b38d864c474b78a1bd0d9c47a630b2d::$classMap;
 
         }, null, ClassLoader::class);
     }

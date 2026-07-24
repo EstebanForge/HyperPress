@@ -533,28 +533,28 @@ add_filter('hyperblocks/blocks/register_json_paths', function (array $paths): ar
 
 ## Example 10 — Procedural helpers
 
-The `hyperblocks_*` helpers are aliases for the class API — use whichever style you prefer. They are useful in theme `functions.php` where you want to avoid `use` declarations.
+The `hb_*` helpers are aliases for the class API — use whichever style you prefer. They are useful in theme `functions.php` where you want to avoid `use` declarations.
 
 ```php
 add_action('init', function (): void {
-    hyperblocks_register_field_group(
-        hyperblocks_field_group('CTA Controls', 'cta-controls')
+    hb_register_field_group(
+        hb_field_group('CTA Controls', 'cta-controls')
             ->addFields([
-                hyperblocks_field('text', 'cta_label', 'Button Label')->setDefault('Read more'),
-                hyperblocks_field('url',  'cta_url',   'Button URL'),
-                hyperblocks_field('checkbox', 'cta_new_tab', 'Open in new tab')->setDefault(false),
+                hb_field('text', 'cta_label', 'Button Label')->setDefault('Read more'),
+                hb_field('url',  'cta_url',   'Button URL'),
+                hb_field('checkbox', 'cta_new_tab', 'Open in new tab')->setDefault(false),
             ])
     );
 
-    hyperblocks_register_block(
-        hyperblocks_block('Blog Post Teaser')
+    hb_register_block(
+        hb_block('Blog Post Teaser')
             ->setName('my-theme/post-teaser')
             ->setIcon('format-aside')
             ->addFields([
-                hyperblocks_field('text', 'eyebrow', 'Eyebrow text'),
-                hyperblocks_field('text', 'title', 'Title')->setRequired(true),
-                hyperblocks_field('textarea', 'excerpt', 'Excerpt'),
-                hyperblocks_field('image', 'featured_image', 'Featured Image'),
+                hb_field('text', 'eyebrow', 'Eyebrow text'),
+                hb_field('text', 'title', 'Title')->setRequired(true),
+                hb_field('textarea', 'excerpt', 'Excerpt'),
+                hb_field('image', 'featured_image', 'Featured Image'),
             ])
             ->addFieldGroup('cta-controls')
             ->setRenderTemplateFile('blocks/post-teaser.hb.php')
@@ -608,10 +608,10 @@ $target     = $cta_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
 
 ## Example 11 — Rendering a block manually (outside Gutenberg)
 
-Use `hyperblocks_render()` to output a block template anywhere in PHP — useful for widget areas, shortcodes, or custom page builders.
+Use `hb_render()` to output a block template anywhere in PHP — useful for widget areas, shortcodes, or custom page builders.
 
 ```php
-$html = hyperblocks_render('file:blocks/hero-banner.hb.php', [
+$html = hb_render('file:blocks/hero-banner.hb.php', [
     'heading'          => 'Welcome',
     'subheading'       => 'Built with HyperBlocks',
     'background_image' => 0,

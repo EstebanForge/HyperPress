@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HyperPress\Tests\Unit;
 
+use HyperPress\Config;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -11,35 +12,38 @@ use PHPUnit\Framework\TestCase;
  */
 class ThemeTest extends TestCase
 {
-    public function testThemeConstantsExist()
+    public function testRuntimeIdentityIsInitialized()
     {
-        $this->assertTrue(defined('HYPERPRESS_VERSION'));
-        $this->assertTrue(defined('HYPERPRESS_DIR'));
-        $this->assertTrue(defined('HYPERPRESS_URL'));
-        $this->assertTrue(defined('HYPERPRESS_ASSETS_URL'));
+        // Runtime identity now lives on Config (prefix-safe), not global
+        // HYPERPRESS_* constants. Bootstrap::init() (or the test harness)
+        // populates these once.
+        $this->assertTrue(Config::isInitialized());
+        $this->assertNotSame('', Config::VERSION);
+        $this->assertNotSame('', Config::$abspath);
+        $this->assertNotSame('', Config::$pluginUrl);
     }
 
     public function testHyperPressVersion()
     {
-        $this->assertSame(\hyperpress_test_get_plugin_version(), HYPERPRESS_VERSION);
+        $this->assertSame(\hyperpress_test_get_plugin_version(), Config::VERSION);
     }
 
     public function testHyperPressDirectory()
     {
-        $this->assertStringContainsString('HyperPress-Core', HYPERPRESS_DIR);
-        $this->assertTrue(is_dir(HYPERPRESS_DIR));
+        $this->assertStringContainsString('HyperPress-Core', Config::$abspath);
+        $this->assertTrue(is_dir(Config::$abspath));
     }
 
     public function testHyperPressUrl()
     {
-        $this->assertEquals('http://localhost/wp-content/plugins/HyperPress-Core', HYPERPRESS_URL);
-        $this->assertStringEndsWith('HyperPress-Core', HYPERPRESS_URL);
+        $this->assertEquals('http://localhost/wp-content/plugins/HyperPress-Core/', Config::$pluginUrl);
+        $this->assertStringContainsString('HyperPress-Core', Config::$pluginUrl);
     }
 
     public function testHyperPressAssetsUrl()
     {
-        $this->assertEquals('http://localhost/wp-content/plugins/HyperPress-Core/assets/', HYPERPRESS_ASSETS_URL);
-        $this->assertStringEndsWith('assets/', HYPERPRESS_ASSETS_URL);
+        $this->assertEquals('http://localhost/wp-content/plugins/HyperPress-Core/assets/', Config::$pluginUrl . 'assets/');
+        $this->assertStringEndsWith('assets/', Config::$pluginUrl . 'assets/');
     }
 
     public function testWordPressConstantsDefined()

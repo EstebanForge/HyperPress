@@ -1,101 +1,38 @@
 # HyperBlocks — Library Bootstrap
 
-This document covers how HyperBlocks initializes itself, how the version-resolution system works, and how to configure it correctly when vendored inside another plugin or theme.
+How HyperBlocks initializes itself, and how to configure it when vendored inside another plugin or theme.
 
 ---
 
 ## How bootstrap works
 
-HyperBlocks uses the same candidate-election bootstrap pattern as HyperFields. The goal is to allow multiple copies of HyperBlocks to coexist (e.g. a theme and a plugin both require it) while ensuring only one instance — the highest-version one — actually initializes.
+HyperBlocks self-initializes via `HyperBlocks\WordPress\Bootstrap::init()`, which carries a first-to-boot guard (the Carbon Fields pattern). The goal is to let multiple copies of HyperBlocks coexist (a theme and a plugin both ship it) while only one actually bootstraps.
 
 **Sequence**:
 
-1. Each copy of `bootstrap.php` is included by Composer via `autoload.files`.
-2. Each inclusion registers the copy as a candidate in `$GLOBALS['hyperblocks_api_candidates']` with its version and path.
-3. After all plugins/theme are loaded, `after_setup_theme` (priority 0) fires `hyperblocks_select_and_load_latest()`.
-4. The candidate with the highest version wins and calls `hyperblocks_run_initialization_logic()`.
-5. `hyperblocks_run_initialization_logic()` defines all `HYPERBLOCKS_*` constants and calls `WordPress\Bootstrap::init()`.
-6. Subsequent candidates are silently skipped (guarded by `HYPERBLOCKS_INSTANCE_LOADED`).
+1. Composer includes `bootstrap.php` via `autoload.files`.
+2. `bootstrap.php` schedules `WordPress\Bootstrap::init()` at `after_setup_theme` (priority 0).
+3. The first copy to reach `init()` claims the namespace-scoped constant `HyperBlocks\WordPress\LOADED` and wins; it sets `Config` runtime identity and hooks block registration.
+4. Every later copy sees `LOADED` defined and returns before doing any work.
 
-HyperBlocks also triggers HyperFields initialization in the same `bootstrap.php` if the HyperFields standalone plugin is not already active. This means requiring `estebanforge/hyperblocks` in your Composer dependencies is the only step needed — you do not need to require or bootstrap HyperFields separately.
+The guard is built with `__NAMESPACE__`, so it is prefix-safe: unprefixed copies share `HyperBlocks\WordPress\LOADED` and elect one winner; a namespace-prefixed copy (Mozart) lives under a different namespace, defines a different constant, and boots independently with real isolation. First-to-boot wins, not newest. Prefix if you need version determinism across divergent copies.
 
----
+`bootstrap.php` also triggers HyperFields' bootstrap from the vendored copy when running standalone, so requiring `estebanforge/hyperblocks` is the only step needed; you do not bootstrap HyperFields separately.
 
-## Host plugins using the Jetpack Autoloader
+Runtime identity lives on `HyperBlocks\Config` (prefix-safe), not global constants:
 
-If your host plugin uses [`automattic/jetpack-autoloader`](https://packagist.org/packages/automattic/jetpack-autoloader)
-instead of Composer's stock autoloader, **Composer autoload `files` entries are
-not executed.** The Jetpack Autoloader maps classes for lazy loading but
-deliberately skips the `files` auto-includes that Composer would normally run.
+- `Config::VERSION` - semantic version (mirrors `composer.json`)
+- `Config::$abspath` - library root path with trailing slash, set at init
+- `Config::$pluginUrl` - public URL with trailing slash, or `''` when not web-reachable
+- `Config::$pluginFile` - absolute path to the bootstrap file
 
-HyperBlocks' `bootstrap.php` is registered as an autoload file. It is what
-registers the library as a candidate and hooks `after_setup_theme` to run the
-version election. When it never executes:
-
-- `HYPERBLOCKS_PLUGIN_URL` is never defined.
-- `WordPress\Bootstrap::init()` never runs — no block registration, no REST
-  routes, no editor assets.
-- Fluent blocks never reach the Registry; `block.json` blocks may register via
-  WP but the editor JS (`editor.js`) and preview endpoints are missing.
-
-The classes are still autoloadable, so code that references them does not fatal,
-but blocks are absent from the inserter and the editor experience is broken.
-
-**Fix.** Explicitly require the bootstrap file and call the init function on
-`plugins_loaded` (priority 0, before any host code that registers blocks):
-
-```php
-// my-plugin.php
-
-add_action('plugins_loaded', static function (): void {
-    $bootstrap = MY_PLUGIN_PATH . 'vendor/estebanforge/hyperblocks/bootstrap.php';
-    if (!file_exists($bootstrap)) {
-        return;
-    }
-    require_once $bootstrap;
-
-    if (function_exists('hyperblocks_run_initialization_logic')) {
-        hyperblocks_run_initialization_logic(
-            $bootstrap,
-            defined('MY_PLUGIN_VERSION') ? MY_PLUGIN_VERSION : '1.0.0',
-        );
-    }
-}, 0);
-```
-
-HyperBlocks' init also triggers HyperFields' (HB requires HF transitively), so
-this single call bootstraps both. Calling it directly skips the multi-instance
-candidate election and runs init immediately. For a single-consumer plugin this
-is correct and faster; the `HYPERBLOCKS_INSTANCE_LOADED` guard still prevents
-double-init.
-
-If your host plugin vendors HyperFields separately as well (not just
-transitively through HyperBlocks), call `hyperfields_run_initialization_logic()`
-too. Both calls are harmless thanks to the idempotency guards.
-
----
-
-## Constants
-
-After `hyperblocks_run_initialization_logic()` runs, these constants are defined:
-
-| Constant | Description |
-|---|---|
-| `HYPERBLOCKS_VERSION` | Version string read from `composer.json`. |
-| `HYPERBLOCKS_PATH` | Absolute path to the HyperBlocks root directory (trailing slash). |
-| `HYPERBLOCKS_ABSPATH` | Alias of `HYPERBLOCKS_PATH`. |
-| `HYPERBLOCKS_PLUGIN_FILE` | Absolute path to `bootstrap.php`. |
-| `HYPERBLOCKS_PLUGIN_URL` | Public URL to the HyperBlocks root (trailing slash). |
-| `HYPERBLOCKS_BOOTSTRAP_LOADED` | Set when `bootstrap.php` is first included. Prevents double-include. |
-| `HYPERBLOCKS_INSTANCE_LOADED` | Set when initialization logic runs. Ensures single initialization. |
-| `HYPERBLOCKS_LOADED_VERSION` | The version string of the instance that won election. |
-| `HYPERBLOCKS_INSTANCE_LOADED_PATH` | Absolute path of the winning `bootstrap.php`. |
+HyperBlocks defines no `HYPERBLOCKS_*` constants.
 
 ---
 
 ## Standard usage — flat vendor directory
 
-The most common case: a plugin requires `estebanforge/hyperblocks` and loads its own Composer autoloader.
+The common case: a plugin requires `estebanforge/hyperblocks` and loads its own Composer autoloader.
 
 ```
 wp-content/plugins/my-plugin/
@@ -115,19 +52,14 @@ if (file_exists($autoload)) {
 }
 
 // HyperBlocks bootstrap is included automatically via Composer autoload.files.
-// No further initialization is required — blocks may be registered from init onwards.
+// No further initialization is required; blocks may be registered from init onwards.
 
 add_action('init', function (): void {
-    use HyperBlocks\Block\Block;
-    use HyperBlocks\Block\Field;
-    use HyperBlocks\Registry;
-
-    Registry::getInstance()->registerFluentBlock(
-        Block::make('My Block')
-            ->setName('my-plugin/my-block')
-            ->addFields([Field::make('text', 'heading', 'Heading')])
-            ->setRenderTemplateFile('blocks/my-block.hb.php')
-    );
+    $block = \HyperBlocks\Block\Block::make('My Block')
+        ->setName('my-plugin/my-block')
+        ->addFields([\HyperBlocks\Block\Field::make('text', 'heading', 'Heading')])
+        ->setRenderTemplateFile('blocks/my-block.hb.php');
+    \HyperBlocks\Registry::getInstance()->registerFluentBlock($block);
 });
 ```
 
@@ -135,7 +67,7 @@ add_action('init', function (): void {
 
 ## Usage inside a class (plugins_loaded pattern)
 
-When your plugin defers setup to a bootstrap class, define constants at the top of the main plugin file so URL resolution works correctly even after `plugins_loaded` runs.
+When your plugin defers setup to a bootstrap class, define constants at the top of the main plugin file so URL resolution works after `plugins_loaded`.
 
 ```php
 // my-plugin.php
@@ -173,41 +105,41 @@ class Bootstrap
 
 ## Monorepo / Bedrock / symlinked plugins
 
-In setups where the plugins directory is outside the standard `wp-content/plugins` path, or where plugin directories are symlinks, `HYPERBLOCKS_PLUGIN_URL` is resolved via `plugins_url()` which uses WordPress' own plugin registration — not the filesystem path. This is reliable.
+In setups where the plugins directory is outside the standard `wp-content/plugins` path, or where plugin directories are symlinks, asset URLs resolve against the web-accessible WordPress content roots (plugins, mu-plugins, content, active theme dirs). When the library sits outside every content root (e.g. a Bedrock root composer vendor outside the document root), `Config::$pluginUrl` is `''` and the editor-asset enqueue bails instead of emitting a 404ing URL; fluent blocks still render on the front end but will not appear in the inserter.
 
 ```
-web/app/plugins/my-plugin/     ← WP registration (may be a symlink)
+web/app/plugins/my-plugin/     <- WP registration (may be a symlink)
 packages/my-plugin/
 ├── my-plugin.php
 └── vendor/estebanforge/hyperblocks/
 ```
 
 ```php
-// my-plugin.php — plugin_dir_url() resolves against WP's plugin registration, not the symlink target.
+// my-plugin.php
 
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
-// bootstrap.php is included by autoload.files — nothing else needed.
+// bootstrap.php is included by autoload.files; nothing else needed.
 ```
-
----
-
-## When HyperBlocks is used as a library nested inside a larger plugin
-
-If your plugin itself ships as a Composer library required by another plugin (a chain like `my-core-plugin` → `estebanforge/hyperblocks`), the bootstrap chain still works. Each level's `bootstrap.php` registers its copy as a candidate. The version with the highest number wins.
-
-The only thing to verify is that your autoloader is loaded before `after_setup_theme` (priority 0) fires. Because `plugins_loaded` fires before `after_setup_theme`, loading the autoloader on `plugins_loaded` is safe.
 
 ---
 
 ## Manually triggering initialization (edge cases)
 
-In non-WordPress environments (WP-CLI scripts, testing without Brain Monkey) `add_action` may not exist. Guard your initialization:
+A single-consumer plugin may skip the `after_setup_theme` scheduling and call init directly, which runs immediately and is still guarded against double-init by `LOADED` and `Config::isInitialized()`:
+
+```php
+add_action('plugins_loaded', static function (): void {
+    require_once MY_PLUGIN_DIR . 'vendor/autoload.php';
+    \HyperBlocks\WordPress\Bootstrap::init();
+}, 0);
+```
+
+In non-WordPress environments (WP-CLI scripts, testing without Brain Monkey) `add_action` may not exist. Guard the autoloader load:
 
 ```php
 if (function_exists('add_action')) {
     require_once __DIR__ . '/vendor/autoload.php';
-    // bootstrap.php is included by autoload.files
 }
 ```
 
@@ -234,25 +166,23 @@ vendor/estebanforge/hyperblocks/bootstrap.php
   └── requires vendor/estebanforge/hyperfields/bootstrap.php
 ```
 
-HyperFields' own guards (`HYPERFIELDS_BOOTSTRAP_LOADED`, `HYPERFIELDS_INSTANCE_LOADED`) prevent double-initialization. If the HyperFields standalone plugin is active, it registers its copy as a candidate first; HyperBlocks' vendored copy also registers — whichever version is higher wins and initializes. Both copies coexist safely.
+HyperFields' own first-to-boot `LOADED` guard prevents double-initialization. If the HyperFields standalone plugin is active alongside a vendored copy, each is prefix-isolated and boots independently.
 
-If you are building a plugin that requires both HyperBlocks and HyperFields as direct Composer dependencies, requiring only `estebanforge/hyperblocks` is sufficient — HyperFields is pulled in transitively and bootstrapped automatically.
+Requiring only `estebanforge/hyperblocks` is sufficient; HyperFields is pulled in transitively and bootstrapped automatically.
 
 ---
 
 ## Checking initialization state
 
 ```php
-// Has the winning instance been selected and initialized?
-if (defined('HYPERBLOCKS_INSTANCE_LOADED')) {
-    // Safe to use HyperBlocks classes
+use HyperBlocks\Config;
+
+// Has this copy been bootstrapped?
+if (Config::isInitialized()) {
+    // Safe to use HyperBlocks classes; Config::$abspath is set.
 }
 
-// Which version won?
-echo HYPERBLOCKS_LOADED_VERSION;
-
-// Has bootstrap.php been included at least once?
-if (defined('HYPERBLOCKS_BOOTSTRAP_LOADED')) {
-    // autoloader is available
-}
+// Library root path and URL (prefix-safe, empty until init runs).
+$root = Config::$abspath;
+$url  = Config::$pluginUrl;
 ```

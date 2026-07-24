@@ -8,7 +8,6 @@ rules-wordpress.md
 .php-cs-fixer.cache
 
 # Test artifacts
-scripts/
 coverage/
 coverage-html/
 .phpunit.result.cache

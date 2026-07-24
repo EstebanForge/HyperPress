@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.3] - 2026-07-24
+
+### Changed
+- `docs/installation.md`: documented the Jetpack Autoloader direct-require gate (consumers vendoring HyperPress-Core must directly require `automattic/jetpack-autoloader`; transitive presence leaves Jetpack inert).
+- README: added a Jetpack Autoloader note for consumers.
+
 ## [1.4.2] - 2026-07-23
 
 ### Changed

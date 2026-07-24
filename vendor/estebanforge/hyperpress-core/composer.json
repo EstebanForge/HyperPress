@@ -2,7 +2,7 @@
   "name": "estebanforge/hyperpress-core",
   "description": "Core HyperPress runtime library: routing, rendering, assets, admin options, and hypermedia integrations.",
   "type": "library",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "license": "GPL-2.0-or-later",
   "authors": [
     {
@@ -24,7 +24,6 @@
   ],
   "require": {
     "php": ">=8.2",
-    "automattic/jetpack-autoloader": "^2",
     "starfederation/datastar-php": "^1",
     "estebanforge/hyperfields": "^1",
     "estebanforge/hyperblocks": "^1"
@@ -74,7 +73,6 @@
     "preferred-install": "dist",
     "allow-plugins": {
       "composer/installers": true,
-      "automattic/jetpack-autoloader": true,
       "pestphp/pest-plugin": true
     }
   }

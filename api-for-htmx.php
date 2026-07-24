@@ -36,27 +36,7 @@ if (!defined('HYPERPRESS_PLUGIN_VERSION')) {
 // consumer's WordPress install. As the plugin, opt in to showing that page.
 add_filter('hyperpress/admin/show_menu', '__return_true');
 
-// Load Jetpack packages autoloader first when present.
-if (function_exists('wp_normalize_path') && file_exists(__DIR__ . '/vendor/autoload_packages.php')) {
-    require_once __DIR__ . '/vendor/autoload_packages.php';
-}
-
-// Load the shared bootstrap file.
+// Load the shared bootstrap file. It loads the Composer autoloader, which runs
+// each bundled library's bootstrap (Composer autoload.files); the libraries
+// self-initialize at after_setup_theme behind their own first-to-boot guard.
 require_once __DIR__ . '/bootstrap.php';
-
-// Ensure the initialization hook is registered.
-// This handles the case where bootstrap.php was loaded early (e.g., via Composer)
-// and couldn't register the hook because WordPress wasn't ready.
-if (function_exists('hyperpress_select_and_load_latest') && !has_action('after_setup_theme', 'hyperpress_select_and_load_latest')) {
-    add_action('after_setup_theme', 'hyperpress_select_and_load_latest', 0);
-}
-
-// Ensure HyperFields is also initialized if it's being used as a library
-if (function_exists('hyperfields_select_and_load_latest') && !has_action('after_setup_theme', 'hyperfields_select_and_load_latest')) {
-    add_action('after_setup_theme', 'hyperfields_select_and_load_latest', 0);
-}
-
-// Ensure HyperBlocks is also initialized if it's being used as a library
-if (function_exists('hyperblocks_select_and_load_latest') && !has_action('after_setup_theme', 'hyperblocks_select_and_load_latest')) {
-    add_action('after_setup_theme', 'hyperblocks_select_and_load_latest', 0);
-}

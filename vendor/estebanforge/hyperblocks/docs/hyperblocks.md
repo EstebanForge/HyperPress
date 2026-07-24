@@ -520,54 +520,58 @@ All helpers are defined in `src/helpers.php` and available globally after bootst
 ### Factory helpers
 
 ```php
-hyperblocks_block(string $title): Block
-hyperblocks_field(string $type, string $name, string $label): Field
-hyperblocks_field_group(string $name, string $id): FieldGroup
+hb_block(string $title): Block
+hb_field(string $type, string $name, string $label): Field
+hb_field_group(string $name, string $id): FieldGroup
 ```
 
 ### Registration helpers
 
 ```php
-hyperblocks_register_block(Block $block): void
-hyperblocks_register_field_group(FieldGroup $group): void
-hyperblocks_register_path(string $path): void
-hyperblocks_register_template_path(string $path): void
+hb_register_block(Block $block): void
+hb_register_field_group(FieldGroup $group): void
+hb_register_path(string $path): void
+hb_register_template_path(string $path): void
 ```
 
 ### Query helpers
 
 ```php
-hyperblocks_registry(): Registry
-hyperblocks_has_block(string $blockName): bool
-hyperblocks_get_block(string $blockName): ?Block
+hb_registry(): Registry
+hb_has_block(string $blockName): bool
+hb_get_block(string $blockName): ?Block
 ```
 
 ### Config helper
 
 ```php
-hyperblocks_config(string $key, mixed $default = null): mixed
+hb_config(string $key, mixed $default = null): mixed
 ```
 
 ### Render helper
 
 ```php
-hyperblocks_render(string $template, array $attributes = []): string
+hb_render(string $template, array $attributes = []): string
 ```
 
 ---
 
-## Bootstrap constants
+## Bootstrap
 
-Set by `bootstrap.php` after `after_setup_theme` (priority 0) runs the version-resolution logic.
+HyperBlocks self-initializes via `HyperBlocks\WordPress\Bootstrap::init()`, which is idempotent (guarded by `Config::isInitialized()`). When loaded directly through Composer, `bootstrap.php` schedules `init()` at `after_setup_theme`; vendored or namespace-prefixed consumers call `WordPress\Bootstrap::init()` explicitly.
 
-| Constant | Description |
+Duplicate-load protection: the first copy to reach `init()` claims the namespace-scoped `HyperBlocks\WordPress\LOADED` constant and wins; later copies bail before bootstrapping, so two plugins shipping HyperBlocks do not double-init or fatal. First-to-boot guard, not newest-wins, no version resolution, no jetpack dependency.
+
+Runtime identity lives on `HyperBlocks\Config` (prefix-safe), not global constants:
+
+| Member | Description |
 |---|---|
-| `HYPERBLOCKS_VERSION` | Version string read from `composer.json`. |
-| `HYPERBLOCKS_PATH` | Absolute path to the HyperBlocks root (trailing slash). Same as `HYPERBLOCKS_ABSPATH`. |
-| `HYPERBLOCKS_PLUGIN_FILE` | Absolute path to `bootstrap.php`. |
-| `HYPERBLOCKS_PLUGIN_URL` | Public URL to the HyperBlocks root (trailing slash). |
-| `HYPERBLOCKS_BOOTSTRAP_LOADED` | Defined when `bootstrap.php` is first included. Prevents double-include. |
-| `HYPERBLOCKS_INSTANCE_LOADED` | Defined when initialization logic runs. Ensures single initialization even across multiple vendored copies. |
+| `Config::VERSION` | Semantic version (mirrors `composer.json`). |
+| `Config::$abspath` | Library root path with trailing slash, set at init. |
+| `Config::$pluginUrl` | Public URL with trailing slash, or `''` when not web-reachable. |
+| `Config::$pluginFile` | Absolute path to the bootstrap file. |
+
+HyperBlocks defines no `HYPERBLOCKS_*` constants.
 
 ---
 

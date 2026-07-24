@@ -156,9 +156,9 @@ class Renderer
             }
         }
 
-        // Add plugin path if set
-        if (defined('HYPERBLOCKS_PATH')) {
-            $allowedBases[] = HYPERBLOCKS_PATH;
+        // Add library root path if set (runtime identity, prefix-safe).
+        if (Config::$abspath !== '') {
+            $allowedBases[] = Config::$abspath;
         }
 
         // Add registered paths allowed for template resolution. This is
