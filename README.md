@@ -77,6 +77,23 @@ When HyperPress-Core is consumed as a Composer library (no `hyperpress.php` / `a
 add_filter('hyperpress/admin/show_menu', '__return_true');
 ```
 
+## Jetpack Autoloader
+
+HyperPress directly requires `automattic/jetpack-autoloader`, so its bundled
+vendor generates the Jetpack manifest and classes are version-elected rather
+than shadowed. The `bootstrap.php` loads the Jetpack packages autoloader
+(`vendor/autoload_packages.php`) first, then Composer's native autoloader, then
+the HyperPress-Core bootstrap (which chains HyperFields/HyperBlocks), and
+registers the version-election hooks — so as a WordPress plugin it
+self-bootstraps correctly under Jetpack.
+
+**Bundling HyperPress inside another plugin?** Your plugin must *also* directly
+require `automattic/jetpack-autoloader` — transitive presence (via HyperPress)
+does not trigger Jetpack adoption and leaves it inert. And because Jetpack
+skips Composer `autoload.files`, require HyperPress's `bootstrap.php` explicitly
+on `plugins_loaded` (priority 0). Full detail on the direct-require gate:
+[HyperFields — Library Bootstrap (Jetpack)](https://github.com/EstebanForge/HyperFields/blob/main/docs/library-bootstrap.md#host-plugins-using-the-jetpack-autoloader).
+
 ## Documentation
 
 See the Documentation Index: [docs/index.md](./docs/index.md)

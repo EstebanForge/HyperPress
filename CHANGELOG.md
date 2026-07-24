@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.5.3] - 2026-07-24
+
+### Changed
+- README: added a Jetpack Autoloader section documenting how HyperPress loads under Jetpack and what consumers bundling it must do (direct require + explicit bootstrap require).
+
 ## [3.5.2] - 2026-07-23
 
 - Dependency refresh. No plugin code changes; bundled `vendor/` updated to pull HyperPress-Core 1.4.2, which in turn carries HyperBlocks 1.3.3's `useBlockProps()` dynamic-block editor-preview fix. Re-tagged so the update reaches WordPress.org users.
