@@ -10,6 +10,14 @@ namespace HyperFields;
 final class LibraryBootstrap
 {
     /**
+     * Version stamp of this class file. Used by hyperfields_is_class_shadowed()
+     * to detect behavioral drift: a loaded class whose VERSION is older than
+     * the version that introduced a capability is treated as shadowed even if
+     * the method exists, closing the method_exists blind spot (present-but-
+     * changed methods). Must track the library release version.
+     */
+    public const VERSION = '1.4.5';
+    /**
      * Initialize HyperFields when used as a library.
      *
      * @param array $args Optional overrides: plugin_file, base_dir, plugin_url, version.

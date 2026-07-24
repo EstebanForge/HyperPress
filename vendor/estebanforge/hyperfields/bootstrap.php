@@ -12,11 +12,125 @@ declare(strict_types=1);
  */
 
 if (!defined('HYPERFIELDS_DEFAULT_VERSION')) {
-    define('HYPERFIELDS_DEFAULT_VERSION', '1.4.1');
+    define('HYPERFIELDS_DEFAULT_VERSION', '1.4.5');
 }
 
 // Define global functions BEFORE early-return guards so they're always available.
 // Tests that run in separate processes need these functions even when HYPERFIELDS_BOOTSTRAP_LOADED is set.
+if (!function_exists('hyperfields_resolve_plugin_url')) {
+    /**
+     * Resolve the library's public content URL, defending against class
+     * shadowing.
+     *
+     * The multi-instance version election guarantees the newest *init* runs,
+     * but it cannot guarantee the newest *class* is loaded: PHP's autoloader
+     * stack may resolve HyperFields\LibraryBootstrap from a stale bundled
+     * copy (e.g. a consumer vendoring hyperfields < 1.4.1 alongside a root
+     * that resolves >= 1.4.1). resolveContentUrl() was added in 1.4.1, so a
+     * stale class lacks it and the call would fatal. Guard the call, surface
+     * the divergence loudly when it happens, and fall back to plugins_url().
+     * The class-missing case is a normal fallback (no shadow); the alarm
+     * fires only when the class IS loaded but lacks the method — the exact
+     * divergence signature.
+     *
+     * The class FQCN is injectable so the guard branches are unit-testable
+     * without process isolation (see ResolvePluginUrlTest).
+     *
+     * @since 1.4.2
+     *
+     * @param string $plugin_dir       Library base directory.
+     * @param string $plugin_file_path Bootstrap file path (for plugins_url fallback).
+     * @param string $plugin_version   Elected init version (for the alarm).
+     * @param string $class            LibraryBootstrap FQCN (injectable for tests).
+     *
+     * @return string Resolved URL, or '' when unreachable.
+     */
+    function hyperfields_resolve_plugin_url(string $plugin_dir, string $plugin_file_path, string $plugin_version, string $class = 'HyperFields\\LibraryBootstrap', ?callable $alarm = null): string
+    {
+        if (class_exists($class) && method_exists($class, 'resolveContentUrl')) {
+            return $class::resolveContentUrl($plugin_dir);
+        }
+
+        // Shadow signature: class loaded but method absent. Emit the alarm
+        // via the injectable $alarm callable (defaults to error_log) and fall
+        // back. Injectability makes the emission unit-testable without
+        // capturing error_log under the test harness; the trigger logic is
+        // also covered by hyperfields_is_class_shadowed().
+        if (hyperfields_is_class_shadowed($class)) {
+            $alarm ??= static function (string $message): void {
+                if (function_exists('error_log')) {
+                    error_log($message);
+                }
+            };
+            $loaded_class_file = '(unknown)';
+            try {
+                $loaded_class_file = (new \ReflectionClass($class))->getFileName() ?: '(unknown)';
+            } catch (\Throwable $e) {
+                $loaded_class_file = '(unresolvable: ' . $e->getMessage() . ')';
+            }
+            $alarm(sprintf(
+                'HyperFields: class shadowing detected. Elected init v%s at %s, but the loaded '
+                . '%s (from %s) lacks resolveContentUrl() (added in 1.4.1). '
+                . 'A stale bundled copy is shadowing the elected init. Falling back to plugins_url(). '
+                . 'Fix: every consumer must directly require automattic/jetpack-autoloader in its '
+                . 'composer.json so Jetpack owns class identity, and ship the same HyperFields version '
+                . 'across all bundles.',
+                $plugin_version,
+                $plugin_file_path,
+                $class,
+                $loaded_class_file
+            ));
+        }
+
+        return function_exists('plugins_url') ? plugins_url('', $plugin_file_path) : '';
+    }
+}
+
+if (!function_exists('hyperfields_is_class_shadowed')) {
+    /**
+     * Detect the class-shadowing signature: the LibraryBootstrap class is
+     * loaded but lacks resolveContentUrl() (added in 1.4.1). True iff a stale
+     * bundled copy is shadowing the elected-newest init — the exact condition
+     * that fatals without the guard in hyperfields_resolve_plugin_url().
+     *
+     * Pure predicate (no side effects) so the trigger logic is unit-testable
+     * without error_log capture or process isolation.
+     *
+     * @since 1.4.2
+     *
+     * @param string $class LibraryBootstrap FQCN (injectable for tests).
+     */
+    function hyperfields_is_class_shadowed(string $class): bool
+    {
+        if (!class_exists($class)) {
+            return false;
+        }
+
+        // Absent method → definitely shadowed (the original incident vector: a
+        // < 1.4.1 class lacks resolveContentUrl entirely).
+        if (!method_exists($class, 'resolveContentUrl')) {
+            return true;
+        }
+
+        // Behavioral drift: the method exists but the loaded class is older
+        // than the version that introduced the stable resolveContentUrl()
+        // contract (1.4.1). Catches a present-but-changed method that
+        // method_exists alone misses. Classes without a VERSION stamp
+        // (pre-1.4.4, or test stubs) skip this check and fall through as
+        // not-shadowed (the method_exists check above already governed them).
+        // hasConstant() first: getConstant() on a missing constant is
+        // deprecated since PHP 8.5.
+        $reflection = new \ReflectionClass($class);
+        if ($reflection->hasConstant('VERSION')) {
+            if (version_compare((string) $reflection->getConstant('VERSION'), '1.4.1', '<')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
 if (!function_exists('hyperfields_run_initialization_logic')) {
     /**
      * Initialize HyperFields with the given base file path and version.
@@ -73,9 +187,11 @@ if (!function_exists('hyperfields_run_initialization_logic')) {
         // the directory so asset enqueue paths can bail instead of emitting
         // a broken URL. Preserve the empty sentinel (rtrim('') . '/' would
         // turn the unresolvable case into '/' and defeat downstream guards).
-        $resolved_url = class_exists('HyperFields\LibraryBootstrap')
-            ? HyperFields\LibraryBootstrap::resolveContentUrl($plugin_dir)
-            : (function_exists('plugins_url') ? plugins_url('', $plugin_file_path) : '');
+        // Resolve the library's public content URL, defending against class
+        // shadowing (a stale bundled LibraryBootstrap lacking resolveContentUrl,
+        // added in 1.4.1). Extracted to hyperfields_resolve_plugin_url() so the
+        // guard is unit-testable; see ResolvePluginUrlTest.
+        $resolved_url = hyperfields_resolve_plugin_url($plugin_dir, $plugin_file_path, $plugin_version);
         if (!defined('HYPERFIELDS_PLUGIN_URL')) {
             define('HYPERFIELDS_PLUGIN_URL', $resolved_url !== '' ? trailingslashit($resolved_url) : '');
         }

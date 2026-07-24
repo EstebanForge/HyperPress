@@ -157,8 +157,8 @@ class ExportImportUI
     public static function enqueuePageAssets(): void
     {
         TemplateLoader::enqueueAssets();
-        $pluginUrl = defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : (defined('HYPERFIELDS_PLUGIN_URL') ? HYPERFIELDS_PLUGIN_URL : '');
-        $version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : (defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : '0.0.0');
+        $pluginUrl = defined('HYPERFIELDS_PLUGIN_URL') ? HYPERFIELDS_PLUGIN_URL : (defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : '');
+        $version = defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : (defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '0.0.0');
 
         if ($pluginUrl !== '') {
             wp_enqueue_script(

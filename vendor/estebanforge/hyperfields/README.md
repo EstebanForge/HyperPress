@@ -26,6 +26,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 HyperFields bootstrap is registered via Composer `autoload.files`.
 
+> **Using Jetpack Autoloader?** Composer `autoload.files` entries do **not** execute under `automattic/jetpack-autoloader` — you must explicitly require the bootstrap and call init. Consumers must also **directly** require `automattic/jetpack-autoloader` (transitive presence via this library leaves Jetpack inert). See [Library Bootstrap — Jetpack](docs/library-bootstrap.md#host-plugins-using-the-jetpack-autoloader).
+
 ## Basic usage
 
 ```php

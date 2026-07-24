@@ -155,11 +155,11 @@ class TemplateLoader
      */
     public static function enqueueAssets(): void
     {
-        $plugin_url = defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : (defined('HYPERFIELDS_PLUGIN_URL') ? HYPERFIELDS_PLUGIN_URL : '');
+        $plugin_url = defined('HYPERFIELDS_PLUGIN_URL') ? HYPERFIELDS_PLUGIN_URL : (defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : '');
         if ($plugin_url === '') {
             return;
         }
-        $version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : (defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : '0.0.0');
+        $version = defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : (defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '0.0.0');
 
         // Always enqueue hyperfields-admin.css for HyperFields admin pages
         if (is_admin()) {
@@ -245,11 +245,11 @@ class TemplateLoader
     {
         // Enqueue heavy/type-specific assets after fields have rendered (works for admin and frontend)
         if (isset(self::$rendered_field_types['map'])) {
-            $plugin_url = defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : (defined('HYPERFIELDS_PLUGIN_URL') ? HYPERFIELDS_PLUGIN_URL : '');
+            $plugin_url = defined('HYPERFIELDS_PLUGIN_URL') ? HYPERFIELDS_PLUGIN_URL : (defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : '');
             if ($plugin_url === '') {
                 return;
             }
-            $version = defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : (defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : '0.0.0');
+            $version = defined('HYPERFIELDS_VERSION') ? HYPERFIELDS_VERSION : (defined('HYPERPRESS_VERSION') ? HYPERPRESS_VERSION : '0.0.0');
 
             wp_enqueue_style('hyperpress-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4');
             wp_enqueue_script('hyperpress-leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true);

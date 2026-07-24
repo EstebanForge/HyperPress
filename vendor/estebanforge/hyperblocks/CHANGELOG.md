@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.4] - 2026-07-24
+
+### Changed
+- `docs/library-bootstrap.md`: documented the Jetpack Autoloader direct-require gate (consumers vendoring HyperBlocks must directly require `automattic/jetpack-autoloader`; transitive presence leaves Jetpack inert).
+- README: added a Jetpack Autoloader note for consumers.
+
 ## [1.3.3] - 2026-07-23
 
 ### Fixed

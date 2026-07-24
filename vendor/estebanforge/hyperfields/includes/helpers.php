@@ -677,8 +677,30 @@ if (!function_exists('hyperfields_resolve_content_url')) {
      * @param string $path Absolute filesystem path (file or directory).
      * @return string Public URL with no trailing slash, or '' if not resolvable.
      */
-    function hyperfields_resolve_content_url(string $path): string
+    function hyperfields_resolve_content_url(string $path, string $class = LibraryBootstrap::class, ?callable $alarm = null): string
     {
-        return LibraryBootstrap::resolveContentUrl($path);
+        // Shadow guard: a stale bundled LibraryBootstrap (< 1.4.1) lacks
+        // resolveContentUrl(). Bail with '' so sibling callers (HyperPress-Core,
+        // HyperBlocks) skip asset enqueue instead of fataling on the absent
+        // method — the staging outage class. Sibling callers already treat '' as
+        // the "not HTTP-reachable, bail" signal. The class FQCN and alarm
+        // callable are injectable so the guard is unit-testable via stubs.
+        if (hyperfields_is_class_shadowed($class)) {
+            $alarm ??= static function (string $message): void {
+                if (function_exists('error_log')) {
+                    error_log($message);
+                }
+            };
+            $alarm(sprintf(
+                'HyperFields: class shadowing detected via hyperfields_resolve_content_url(). '
+                . 'The loaded %s lacks resolveContentUrl() (added in 1.4.1); returning empty URL. '
+                . 'Fix: every consumer must directly require automattic/jetpack-autoloader so '
+                . 'Jetpack owns class identity, and ship the same HyperFields version across bundles.',
+                $class
+            ));
+            return '';
+        }
+
+        return $class::resolveContentUrl($path);
     }
 }

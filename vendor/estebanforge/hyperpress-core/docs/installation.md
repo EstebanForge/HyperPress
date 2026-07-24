@@ -19,6 +19,32 @@ When installed as a Composer library the `Settings → HyperPress` page is hidde
 
 ### Host plugins using the Jetpack Autoloader
 
+#### Consumers MUST directly require `automattic/jetpack-autoloader`
+
+**Non-obvious gate (caused a staging outage).** Jetpack's manifest is
+only generated when `automattic/jetpack-autoloader` is a **direct** require of
+*your* plugin's `composer.json`. Transitive presence (pulled in via the Hyper
+libraries — HyperPress-Core vendors HyperFields and HyperBlocks) does **not**
+trigger adoption: Jetpack installs but stays inert, Composer's native classmap
+runs instead, and a stale bundled class can shadow the elected-newest init
+(fatal). Verified empirically.
+
+So every distributable plugin vendoring HyperPress-Core (or any Hyper library)
+must add it directly:
+
+```json
+{
+  "require": { "automattic/jetpack-autoloader": "^2", "estebanforge/hyperpress-core": "^1" },
+  "config": { "allow-plugins": { "automattic/jetpack-autoloader": true } }
+}
+```
+
+Then rebuild with `--optimize-autoloader` and confirm the manifest exists:
+`test -f vendor/composer/jetpack_autoload_classmap.php`. Full detail and the
+exact failure trace in `estebanforge/hyperfields` → `docs/library-bootstrap.md`.
+
+#### `files` autoload entries do not execute under Jetpack
+
 HyperPress-Core bundles HyperFields and HyperBlocks as Composer dependencies,
 and its own `bootstrap.php` explicitly requires their `bootstrap.php` files so
 their version-election and asset hooks fire. This works when HyperPress-Core's

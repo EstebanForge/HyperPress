@@ -66,6 +66,47 @@ be relied upon in vendored contexts.
 
 ## Host plugins using the Jetpack Autoloader
 
+### Consumers MUST directly require `automattic/jetpack-autoloader`
+
+**This is the non-obvious gate that caused a staging outage.** Jetpack's
+Composer plugin only generates its manifest (`vendor/composer/jetpack_autoload_classmap.php`)
+and takes over class loading when `automattic/jetpack-autoloader` is a **direct**
+require of *your* plugin's `composer.json`. Transitive presence — pulled in
+because `estebanforge/hyperfields` itself requires Jetpack — does **not** trigger
+adoption, regardless of `allow-plugins` consent or `--optimize-autoloader`. The
+package installs but stays inert, Composer's native classmap runs instead, and a
+stale bundled class can shadow the elected-newest init (fatal).
+
+Verified empirically (Composer 2.10, jetpack-autoloader v2.12.0): transitive+
+optimize → no manifest; direct require + optimize → manifest generated.
+
+So every distributable plugin that vendors a Hyper library must add Jetpack as a
+**direct** require:
+
+```json
+{
+  "require": {
+    "estebanforge/hyperblocks": "^1",
+    "automattic/jetpack-autoloader": "^2"
+  },
+  "config": {
+    "allow-plugins": { "automattic/jetpack-autoloader": true }
+  }
+}
+```
+
+Then rebuild vendor with `--optimize-autoloader` (the `production` script already
+does) and confirm the manifest exists:
+
+```bash
+test -f vendor/composer/jetpack_autoload_classmap.php && echo OK
+```
+
+Once Jetpack owns class identity across every consumer, the multi-instance
+version election converges with it (both pick "newest") instead of diverging.
+
+### `files` autoload entries do not execute under Jetpack
+
 If your host plugin uses [`automattic/jetpack-autoloader`](https://packagist.org/packages/automattic/jetpack-autoloader)
 instead of Composer's stock autoloader, **Composer autoload `files` entries are
 not executed.** The Jetpack Autoloader maps classes for lazy loading but

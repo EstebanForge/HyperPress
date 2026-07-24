@@ -23,6 +23,30 @@ HyperBlocks also triggers HyperFields initialization in the same `bootstrap.php`
 
 ## Host plugins using the Jetpack Autoloader
 
+### Consumers MUST directly require `automattic/jetpack-autoloader`
+
+**Non-obvious gate (caused a staging outage).** Jetpack's manifest is
+only generated when `automattic/jetpack-autoloader` is a **direct** require of
+*your* plugin's `composer.json`. Transitive presence (pulled in via the Hyper
+libraries) does **not** trigger adoption — Jetpack installs but stays inert,
+Composer's native classmap runs instead, and a stale bundled class can shadow
+the elected-newest init (fatal). Verified empirically.
+
+So every distributable plugin vendoring a Hyper library must add it directly:
+
+```json
+{
+  "require": { "automattic/jetpack-autoloader": "^2", "estebanforge/hyperblocks": "^1" },
+  "config": { "allow-plugins": { "automattic/jetpack-autoloader": true } }
+}
+```
+
+Then rebuild with `--optimize-autoloader` and confirm the manifest exists:
+`test -f vendor/composer/jetpack_autoload_classmap.php`. Full detail and the
+exact failure trace in `estebanforge/hyperfields` → `docs/library-bootstrap.md`.
+
+### `files` autoload entries do not execute under Jetpack
+
 If your host plugin uses [`automattic/jetpack-autoloader`](https://packagist.org/packages/automattic/jetpack-autoloader)
 instead of Composer's stock autoloader, **Composer autoload `files` entries are
 not executed.** The Jetpack Autoloader maps classes for lazy loading but
