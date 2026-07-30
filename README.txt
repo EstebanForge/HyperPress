@@ -1,10 +1,10 @@
 === HyperPress: Modern Hypermedia for WordPress ===
 Contributors: tcattd
 Tags: hypermedia, ajax, htmx, alpinejs, datastar
-Stable tag: 3.5.3
-Requires at least: 6.4
-Tested up to: 6.6
-Requires PHP: 8.1
+Stable tag: 3.5.5
+Requires at least: 6.5
+Tested up to: 7.0
+Requires PHP: 8.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 

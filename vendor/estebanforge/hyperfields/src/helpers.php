@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use HyperFields\Admin\ExportImportUI;
+use HyperFields\CacheInvalidator;
 use HyperFields\Compatibility\WPSettingsCompatibility;
 use HyperFields\ContentExportImport;
 use HyperFields\ExportImport;
@@ -604,5 +605,25 @@ if (!function_exists('hyperfields_resolve_content_url')) {
     function hyperfields_resolve_content_url(string $path): string
     {
         return LibraryBootstrap::resolveContentUrl($path);
+    }
+}
+
+if (!function_exists('hf_flush_hyperfields_cache')) {
+    /**
+     * Manually flush the caches HyperFields clears automatically on save:
+     * transients (backend-aware: DB purge or object-cache group flush), an
+     * opt-in full object-cache flush, and the OPcache. Each layer still
+     * honors its own filter, so this call respects selective opt-outs the
+     * same way the automatic flush does.
+     *
+     * Useful after programmatic writes (wp-cron, migrations, importers) that
+     * bypass HyperFields' semantic save actions and so would not otherwise
+     * trigger invalidation.
+     *
+     * @return void
+     */
+    function hf_flush_hyperfields_cache(): void
+    {
+        CacheInvalidator::flush();
     }
 }

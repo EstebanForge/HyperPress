@@ -121,6 +121,7 @@ return array(
     'HyperFields\\Admin\\TransferLogsUI' => $vendorDir . '/estebanforge/hyperfields/src/Admin/TransferLogsUI.php',
     'HyperFields\\Assets' => $vendorDir . '/estebanforge/hyperfields/src/Assets.php',
     'HyperFields\\BlockFieldAdapter' => $vendorDir . '/estebanforge/hyperfields/src/BlockFieldAdapter.php',
+    'HyperFields\\CacheInvalidator' => $vendorDir . '/estebanforge/hyperfields/src/CacheInvalidator.php',
     'HyperFields\\Compatibility\\CompatibilityMigrator' => $vendorDir . '/estebanforge/hyperfields/src/Compatibility/CompatibilityMigrator.php',
     'HyperFields\\Compatibility\\OptionTypeRegistry' => $vendorDir . '/estebanforge/hyperfields/src/Compatibility/OptionTypeRegistry.php',
     'HyperFields\\Compatibility\\SectionProxy' => $vendorDir . '/estebanforge/hyperfields/src/Compatibility/SectionProxy.php',

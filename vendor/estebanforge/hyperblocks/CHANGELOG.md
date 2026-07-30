@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0] - 2026-07-30
+
+### Changed
+- **PHP 8.2+ is now the declared minimum** (`composer.json` `require.php` `>=8.1` → `>=8.2`), aligning HyperBlocks with the Hyper stack's WordPress 6.5+ / PHP 8.2+ modernization (HyperFields 1.5.0, HyperPress-Core, HyperPress). HyperFields already enforced PHP 8.2+ transitively and the `AGENTS.md` requirement already documented it; `composer.json` now states it explicitly. Backwards-incompatible for consumers on PHP 8.1.
+- `src/Config.php` `VERSION` resynced to `1.4.0` to match `composer.json` (had been left at `1.3.4` during the manual bump).
+
 ## [1.3.4] - 2026-07-24
 
 ### Changed

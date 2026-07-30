@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.0] - 2026-07-30
+
+### Added
+- **Automatic cache invalidation on HyperFields saves.** `HyperFields\CacheInvalidator` clears stale transients and resets OPcache whenever HyperFields persists data through its semantic save actions (`hyperfields/options_page/after_save`, `hyperfields/settings/after_save`, the post/term/user `*_meta_container_saved` actions, and `hyperfields/import/after`). Each fires only on a real value change (no-op writes are filtered upstream), so invalidation runs once per actual write, not on every form submit. Wired in by `LibraryBootstrap::init()`.
+  - **Transient clearing is backend-aware:** with no external object cache, transients live in `wp_options` and are purged by a direct SQL DELETE of `_transient_*` / `_site_transient_*` (plus the matching sitemeta rows on a multisite main network). With a persistent object cache (Redis/Memcached), transients live ONLY in the cache under the `transient` / `site-transient` groups, so no DB rows exist; they are cleared surgically via `wp_cache_flush_group()` instead. Backends that do not advertise group-flush support (`wp_cache_supports('flush_group')`) are left alone by default.
+  - **OPcache reset:** `opcache_reset()` when the extension is available. OPcache caches compiled PHP bytecode, not option values; the reset serves sites that derive PHP/config from options or cache compiled templates keyed off option state.
+  - **Filters:** master switch `hyperfields/cache/auto_invalidate` (default `true`) disables everything; `hyperfields/cache/flush_transients` (default `true`) and `hyperfields/cache/reset_opcache` (default `true`) toggle those layers. `hyperfields/cache/flush_object_cache` (default `false`) is an explicit opt-in for a full `wp_cache_flush()`, the documented performance anti-pattern (Trac #63070 wontfix; the redis-cache FAQ warns frequent flushes cause timeouts). Use it only on a persistent backend that lacks group-flush support. `add_filter('hyperfields/cache/auto_invalidate', '__return_false');` turns the feature off entirely.
+  - **Manual flush:** `HyperFields\CacheInvalidator::flush()` or the `hf_flush_hyperfields_cache()` helper trigger a flush outside the save lifecycle (wp-cron, migrations, importers), still honoring the per-layer filters.
+- `tests/Unit/CacheInvalidatorTest.php`: 12 tests covering action registration, the master filter, the transient backend split (Redis group-flush vs DB purge vs unsupported backend), the full-flush opt-in (default off, opt-in, no-ext-cache skip), and the no-`wpdb` guard.
+
+### Changed
+- **WordPress 6.5+ is now the minimum** across the Hyper stack (HyperFields, HyperPress-Core, HyperBlocks, HyperPress plugin). Drops back-compat for older WP. WP 6.5 guarantees modern APIs like `wp_cache_flush_group()` / `wp_cache_supports()` (6.1+), so `CacheInvalidator` needs no `function_exists` guards for cache functions. PHP floor unified at 8.2+.
+  - HyperPress plugin (`api-for-htmx`) `readme.txt`: `Requires at least` 6.4 → 6.5, `Requires PHP` 8.1 → 8.2, `Tested up to` 6.6 → 7.0 (plugin header was already 6.5/8.2).
+  - HyperFields + HyperBlocks `composer.json`: PHP `>=8.1` → `>=8.2`. HyperFields `AGENTS.md` floor: "WordPress 5.0+" → "6.5+", "PHP 8.1+" → "8.2+".
+  - HyperPress-Core was already PHP `>=8.2`; the WP floor is enforced by the consuming plugin header.
+
 ## [1.4.5] - 2026-07-24
 
 ### Fixed

@@ -1,9 +1,17 @@
 # Changelog
 
-## [3.5.3] - 2026-07-24
+## [3.5.5] - 2026-07-30
 
 ### Fixed
-- **Re-enabled the Settings → HyperPress options page.** HyperPress-Core is strictly a library and hides its settings page by default (so it never injects admin UI into a consumer's install). The plugin adapter now opts in via `add_filter('hyperpress/admin/show_menu', '__return_true')`, so the page appears when HyperPress (this plugin) is active — while remaining hidden when HyperPress-Core is consumed as a standalone Composer library.
+- **Re-enabled the Settings → HyperPress options page.** HyperPress-Core is strictly a library and hides its settings page by default (so it never injects admin UI into a consumer's install). The plugin adapter now opts in via `add_filter('hyperpress/admin/show_menu', '__return_true')`, so the page appears when HyperPress (this plugin) is active, while remaining hidden when HyperPress-Core is consumed as a standalone Composer library.
+
+### Changed
+- **Hardened the plugin bootstrap and dropped the Jetpack Autoloader.** `bootstrap.php` and `api-for-htmx.php` now rely solely on the Composer autoloader, which runs each bundled library's `bootstrap.php` via Composer `autoload.files`; the libraries self-initialize at `after_setup_theme` behind their own first-to-boot guard. Removed the bundled `automattic/jetpack-autoloader` and the manual multi-instance election wiring (`hyperpress_select_and_load_latest` / `hyperfields_*` / `hyperblocks_*`) the libraries no longer carry. Class references switched to `::class` so a Mozart-prefixed build rewrites them correctly.
+- **Upgraded the bundled Hyper libraries** to the WP 6.5+ / PHP 8.2+ modernization wave: HyperFields 1.5.0 (adds backend-aware transient + OPcache invalidation on save), HyperBlocks 1.4.0 (PHP 8.2 floor), HyperPress-Core 1.5.0.
+- **Modernized the readme and plugin header floor:** `Requires at least` 6.4 → 6.5, `Requires PHP` 8.1 → 8.2, `Tested up to` 6.6 → 7.0 (the plugin header was already 6.5 / 8.2).
+- Slimmed `AGENTS.md` and removed the redundant top-level `README.md`.
+
+## [3.5.3] - 2026-07-24
 
 ### Changed
 - README: added a Jetpack Autoloader section documenting how HyperPress loads under Jetpack and what consumers bundling it must do (direct require + explicit bootstrap require).

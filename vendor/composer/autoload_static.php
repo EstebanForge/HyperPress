@@ -168,6 +168,7 @@ class ComposerStaticInit6b38d864c474b78a1bd0d9c47a630b2d
         'HyperFields\\Admin\\TransferLogsUI' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Admin/TransferLogsUI.php',
         'HyperFields\\Assets' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Assets.php',
         'HyperFields\\BlockFieldAdapter' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/BlockFieldAdapter.php',
+        'HyperFields\\CacheInvalidator' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/CacheInvalidator.php',
         'HyperFields\\Compatibility\\CompatibilityMigrator' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Compatibility/CompatibilityMigrator.php',
         'HyperFields\\Compatibility\\OptionTypeRegistry' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Compatibility/OptionTypeRegistry.php',
         'HyperFields\\Compatibility\\SectionProxy' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Compatibility/SectionProxy.php',

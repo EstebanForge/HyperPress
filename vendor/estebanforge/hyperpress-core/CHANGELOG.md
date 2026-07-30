@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0] - 2026-07-30
+
+### Changed
+- **WordPress 6.5+ / PHP 8.2+ stack modernization.** HyperPress-Core joins the Hyper stack's move to a WordPress 6.5+ minimum (see HyperFields 1.5.0). HyperPress-Core was already PHP `>=8.2`; no own code changes for the floor, but the minor bump marks the alignment and the refreshed dependency set.
+- **Dependency refresh: pull in `estebanforge/hyperfields` 1.5.0 and `estebanforge/hyperblocks` 1.4.0.** HyperFields 1.5.0 adds backend-aware transient + OPcache invalidation on save and the WP 6.5+ floor; HyperBlocks 1.4.0 raises its PHP floor to 8.2. The lockfile is updated so consumers resolving HyperPress-Core 1.5.0 get the modernized set.
+- `src/Config.php` `VERSION` resynced to `1.5.0` to match `composer.json` (had been left at `1.4.3` during the manual bump; caught by the `EndpointTest`, `MainTest`, and `ThemeTest` version assertions).
+
 ## [1.4.3] - 2026-07-24
 
 ### Changed

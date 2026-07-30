@@ -75,6 +75,13 @@ final class LibraryBootstrap
         if (class_exists(Transfer\AuditLogger::class)) {
             Transfer\AuditLogger::init();
         }
+
+        // Automatic cache (transients + OPcache) invalidation on HyperFields
+        // saves. Default on; disable with the `hyperfields/cache/auto_invalidate`
+        // filter. Registered last so a save mid-init still flushes.
+        if (class_exists(CacheInvalidator::class)) {
+            CacheInvalidator::init();
+        }
     }
 
     /**
