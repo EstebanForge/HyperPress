@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.5.5] - 2026-07-30
+## [3.5.6] - 2026-07-30
 
 ### Fixed
 - **Re-enabled the Settings → HyperPress options page.** HyperPress-Core is strictly a library and hides its settings page by default (so it never injects admin UI into a consumer's install). The plugin adapter now opts in via `add_filter('hyperpress/admin/show_menu', '__return_true')`, so the page appears when HyperPress (this plugin) is active, while remaining hidden when HyperPress-Core is consumed as a standalone Composer library.
