@@ -1,0 +1,88 @@
+# Copyright (C) 2026 Esteban Cuevas
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: HyperPress: Modern Hypermedia for WordPress 3.5.6\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/api-for-htmx\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-31T17:39:22+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: api-for-htmx\n"
+
+#. Plugin Name of the plugin
+#: api-for-htmx.php
+msgid "HyperPress: Modern Hypermedia for WordPress"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: api-for-htmx.php
+msgid "https://github.com/EstebanForge/HyperPress"
+msgstr ""
+
+#. Description of the plugin
+#: api-for-htmx.php
+msgid "Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP."
+msgstr ""
+
+#. Author of the plugin
+#: api-for-htmx.php
+msgid "Esteban Cuevas"
+msgstr ""
+
+#. Author URI of the plugin
+#: api-for-htmx.php
+msgid "https://actitud.xyz"
+msgstr ""
+
+#: bootstrap.php:77
+msgid "HyperPress: HyperPress Core not found. Please run \"composer install\" inside the plugin folder."
+msgstr ""
+
+#: bootstrap.php:91
+msgid "HyperPress Settings"
+msgstr ""
+
+#: bootstrap.php:95
+msgid "HyperPress Data Tools"
+msgstr ""
+
+#: bootstrap.php:118
+msgid "HyperFields Library"
+msgstr ""
+
+#: bootstrap.php:121
+msgid "HyperBlocks Library"
+msgstr ""
+
+#: bootstrap.php:124
+msgid "HyperPress Core"
+msgstr ""
+
+#: bootstrap.php:132
+msgid "Plugin Version"
+msgstr ""
+
+#: bootstrap.php:226
+msgid "HyperPress"
+msgstr ""
+
+#: bootstrap.php:227
+msgid "Nice, HyperPress served its first hypermedia request on your site."
+msgstr ""
+
+#: bootstrap.php:228
+msgid "If it is helping, a quick review on WordPress.org helps others find it."
+msgstr ""
+
+#: bootstrap.php:229
+msgid "Leave a review"
+msgstr ""
+
+#: bootstrap.php:230
+msgid "Maybe later"
+msgstr ""

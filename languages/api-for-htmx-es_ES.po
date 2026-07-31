@@ -1,0 +1,98 @@
+# Copyright (C) 2026 Esteban Cuevas
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: HyperPress 3.5.6\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/api-for-htmx\n"
+"POT-Creation-Date: 2026-07-31T17:32:24+00:00\n"
+"PO-Revision-Date: 2026-07-31 17:35+0000\n"
+"Last-Translator: Esteban Cuevas <esteban@attitude.cl>\n"
+"Language-Team: Español <LL@li.org>\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: api-for-htmx\n"
+
+#. Plugin Name of the plugin
+#: api-for-htmx.php
+msgid "HyperPress: Modern Hypermedia for WordPress"
+msgstr "HyperPress: hipermedia moderna para WordPress"
+
+#. Plugin URI of the plugin
+#: api-for-htmx.php
+msgid "https://github.com/EstebanForge/HyperPress"
+msgstr ""
+
+#. Description of the plugin
+#: api-for-htmx.php
+msgid "Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP."
+msgstr ""
+"Potencia WordPress con la fuerza del hipermedia. Usa HTMX, Alpine Ajax y "
+"Datastar para crear bloques y páginas ricos e interactivos, todo con la "
+"simplicidad de PHP."
+
+#. Author of the plugin
+#: api-for-htmx.php
+msgid "Esteban Cuevas"
+msgstr ""
+
+#. Author URI of the plugin
+#: api-for-htmx.php
+msgid "https://actitud.xyz"
+msgstr ""
+
+#: bootstrap.php:77
+msgid "HyperPress: HyperPress Core not found. Please run \"composer install\" inside the plugin folder."
+msgstr ""
+"HyperPress: no se encontró HyperPress Core. Ejecute «composer install» dentro "
+"de la carpeta del plugin."
+
+#: bootstrap.php:118
+msgid "HyperFields Library"
+msgstr "Biblioteca HyperFields"
+
+#: bootstrap.php:121
+msgid "HyperBlocks Library"
+msgstr "Biblioteca HyperBlocks"
+
+#: bootstrap.php:124
+msgid "HyperPress Core"
+msgstr "HyperPress Core"
+
+#: bootstrap.php:132
+msgid "Plugin Version"
+msgstr "Versión del plugin"
+
+#: bootstrap.php:226
+msgid "HyperPress"
+msgstr "HyperPress"
+
+#: bootstrap.php:227
+msgid "Nice, HyperPress served its first hypermedia request on your site."
+msgstr ""
+"¡Bien! HyperPress ha servido su primera petición hipermedia en tu sitio."
+
+#: bootstrap.php:228
+msgid "If it is helping, a quick review on WordPress.org helps others find it."
+msgstr ""
+"Si te resulta útil, una breve reseña en WordPress.org ayuda a otros a "
+"encontrarlo."
+
+#: bootstrap.php:229
+msgid "Leave a review"
+msgstr "Deja una reseña"
+
+#: bootstrap.php:230
+msgid "Maybe later"
+msgstr "Quizás más tarde"
+
+#: bootstrap.php:91
+msgid "HyperPress Settings"
+msgstr "Ajustes de HyperPress"
+
+#: bootstrap.php:95
+msgid "HyperPress Data Tools"
+msgstr "Herramientas de datos de HyperPress"

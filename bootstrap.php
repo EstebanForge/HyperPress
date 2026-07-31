@@ -88,11 +88,11 @@ if (class_exists(\HyperFields\HyperFields::class) && function_exists('add_action
             parentSlug: 'tools.php',
             pageSlug: 'hyperpress-data-tools',
             options: [
-                'hyperpress_options' => __('HyperPress Settings', 'hyperpress'),
+                'hyperpress_options' => __('HyperPress Settings', 'api-for-htmx'),
             ],
             allowedImportOptions: ['hyperpress_options'],
             prefix: '',
-            title: __('HyperPress Data Tools', 'hyperpress'),
+            title: __('HyperPress Data Tools', 'api-for-htmx'),
             capability: 'manage_options'
         );
     });
@@ -148,5 +148,111 @@ if (function_exists('add_filter')) {
         }
 
         return $result;
+    });
+}
+
+/**
+ * Milestone review-ask.
+ *
+ * Celebrates the first served /wp-html/v1/ hypermedia request with a
+ * dismissible review-ask notice shown to administrators. One-shot per site.
+ * The milestone is recorded on the REST request; the notice surfaces on the
+ * next admin page load. Domain 'api-for-htmx' matches the adapter layer.
+ */
+if (function_exists('add_filter') && function_exists('add_action')) {
+    // Record the milestone once, on the first wp-html REST dispatch.
+    add_filter('rest_pre_dispatch', static function ($result, $server, $request) {
+        if (!empty(get_option('hyperpress_review_milestone', false))) {
+            return $result;
+        }
+
+        $route = $request->get_route();
+        if (is_string($route) && strpos($route, '/wp-html/') === 0) {
+            update_option(
+                'hyperpress_review_milestone',
+                ['at' => time()],
+                false
+            );
+        }
+
+        return $result;
+    }, 10, 3);
+
+    // Render the notice, gated to administrators on HyperPress or plugins pages.
+    add_action('admin_notices', static function (): void {
+        $record = get_option('hyperpress_review_milestone', false);
+        if (empty($record) || !is_array($record)) {
+            return;
+        }
+
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        $user_id = get_current_user_id();
+        if (!$user_id) {
+            return;
+        }
+
+        // Snooze: at most once every ~6 months per administrator.
+        $snoozed_until = (int) get_user_meta($user_id, 'hyperpress_review_snooze', true);
+        if ($snoozed_until > 0 && time() < $snoozed_until) {
+            return;
+        }
+
+        // Only on HyperPress settings pages or the plugins list. Never site-wide.
+        $screen = get_current_screen();
+        if (!$screen) {
+            return;
+        }
+        $on_settings = strpos($screen->id, 'hyperpress') !== false;
+        $on_plugins = $screen->id === 'plugins';
+        if (!$on_settings && !$on_plugins) {
+            return;
+        }
+
+        // Showing it now re-snoozes for the full interval so it never nags.
+        update_user_meta($user_id, 'hyperpress_review_snooze', time() + (180 * DAY_IN_SECONDS));
+
+        $review_url = 'https://wordpress.org/support/plugin/api-for-htmx/reviews/#new-post';
+        $dismiss_url = wp_nonce_url(
+            add_query_arg('hyperpress_review_dismiss', '1'),
+            'hyperpress_review_dismiss',
+            'hyperpress_review_nonce'
+        );
+
+        echo '<div class="notice notice-info">';
+        echo '<p>';
+        echo '<strong>' . esc_html__('HyperPress', 'api-for-htmx') . '</strong>. ';
+        echo esc_html__('Nice, HyperPress served its first hypermedia request on your site.', 'api-for-htmx') . ' ';
+        echo esc_html__('If it is helping, a quick review on WordPress.org helps others find it.', 'api-for-htmx');
+        echo ' <a href="' . esc_url($review_url) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Leave a review', 'api-for-htmx') . '</a>';
+        echo ' &middot; <a href="' . esc_url($dismiss_url) . '">' . esc_html__('Maybe later', 'api-for-htmx') . '</a>';
+        echo '</p>';
+        echo '</div>';
+    });
+
+    // Handle the per-user dismissal.
+    add_action('admin_init', static function (): void {
+        if (!isset($_GET['hyperpress_review_dismiss']) || '1' !== $_GET['hyperpress_review_dismiss']) {
+            return;
+        }
+
+        if (
+            !isset($_GET['hyperpress_review_nonce'])
+            || !wp_verify_nonce(sanitize_key($_GET['hyperpress_review_nonce']), 'hyperpress_review_dismiss')
+        ) {
+            return;
+        }
+
+        $user_id = get_current_user_id();
+        if (!$user_id) {
+            return;
+        }
+
+        update_user_meta($user_id, 'hyperpress_review_snooze', time() + (180 * DAY_IN_SECONDS));
+
+        wp_safe_redirect(remove_query_arg(['hyperpress_review_dismiss', 'hyperpress_review_nonce']));
+        exit;
     });
 }
