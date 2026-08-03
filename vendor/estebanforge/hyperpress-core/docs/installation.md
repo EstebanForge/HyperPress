@@ -40,3 +40,11 @@ add_action('plugins_loaded', static function (): void {
 ```
 
 Each `bootstrap.php` schedules its own `Bootstrap::init()` at `after_setup_theme` (priority 0) with a namespace-scoped first-to-boot guard, so requiring all three is safe and idempotent.
+
+## Bedrock-style sites
+
+HyperPress-Core is `type: library`, so when a Bedrock project requires it transitively Composer installs it in the project **root `vendor/`**, outside `wp-content/`. That copy is not under any web-accessible WordPress content root, so its frontend assets (HTMX/Alpine/Datastar) cannot be served.
+
+`Bootstrap::init()` still runs from such a copy — it does not gate boot on web-reachability. `Config::$pluginUrl` is simply empty and asset enqueues bail gracefully (no 404ing URLs); the rest of the runtime (REST routing, rendering, options) is unaffected. The `bootstrap.php` ABSPATH guard also keeps the root-vendor copy from bootstrapping early in Bedrock's `wp-config` load order.
+
+The recommended fix is the normal plugin-bundling pattern above: ship HyperPress-Core inside a host plugin's committed `vendor/` under `wp-content/` and require that plugin's `vendor/autoload.php`. That copy is web-reachable, so assets enqueue. Do not rely on the Bedrock root-vendor copy to serve assets.

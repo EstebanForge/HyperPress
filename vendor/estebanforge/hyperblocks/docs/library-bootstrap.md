@@ -105,7 +105,7 @@ class Bootstrap
 
 ## Monorepo / Bedrock / symlinked plugins
 
-In setups where the plugins directory is outside the standard `wp-content/plugins` path, or where plugin directories are symlinks, asset URLs resolve against the web-accessible WordPress content roots (plugins, mu-plugins, content, active theme dirs). When the library sits outside every content root (e.g. a Bedrock root composer vendor outside the document root), `Config::$pluginUrl` is `''` and the editor-asset enqueue bails instead of emitting a 404ing URL; fluent blocks still render on the front end but will not appear in the inserter.
+In setups where the plugins directory is outside the standard `wp-content/plugins` path, or where plugin directories are symlinks, asset URLs resolve against the web-accessible WordPress content roots (plugins, mu-plugins, content, active theme dirs). `Bootstrap::init()` always runs regardless of reachability — it does not gate boot on the URL. When a copy sits outside every content root (e.g. a Bedrock root composer vendor outside the document root), `Config::$pluginUrl` is empty and the editor-asset enqueue bails gracefully: it logs the "not reachable from any web-accessible WordPress content root" notice and returns, so fluent blocks still render on the front end but will not appear in the inserter. The `bootstrap.php` ABSPATH guard also prevents a root-vendor copy from scheduling `init()` ahead of a plugin-bundled copy in Bedrock's load order. For the inserter to work, load HyperBlocks from a web-reachable copy bundled inside a plugin under `wp-content/`.
 
 ```
 web/app/plugins/my-plugin/     <- WP registration (may be a symlink)

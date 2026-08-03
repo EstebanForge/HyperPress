@@ -45,6 +45,7 @@ class Bootstrap
         if (defined(__NAMESPACE__ . '\\LOADED')) {
             return;
         }
+
         define(__NAMESPACE__ . '\\LOADED', __DIR__);
 
         if (Config::isInitialized()) {

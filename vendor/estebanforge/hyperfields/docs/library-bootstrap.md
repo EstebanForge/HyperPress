@@ -46,33 +46,33 @@ a ready-to-use config.
 | `plugin_url` | `string` | Public URL to the HyperFields library root (trailing slash). |
 | `base_dir` | `string` | Absolute path to the HyperFields library root. Defaults to the directory containing `LibraryBootstrap.php`. |
 
-## Why explicit args are required for vendored usage
+## URL resolution and graceful degradation
 
-`LibraryBootstrap::init()` has a URL auto-detection fallback: when `plugin_url`
-is omitted it calls `resolve_plugin_url()`, which uses `plugin_dir_path()` to
-walk up from the library's `base_dir` and find the enclosing WP plugin root.
+When `plugin_url` is omitted, `init()` calls `resolve_plugin_url()`, which
+delegates to `HyperFields\LibraryBootstrap::resolveContentUrl()`. That resolver
+walks the web-accessible WordPress content roots (`WP_PLUGIN_DIR`,
+`WPMU_PLUGIN_DIR`, `WP_CONTENT_DIR`, and the active theme template/stylesheet
+directories), canonicalising both the query path and each root with
+`realpath()` / `wp_normalize_path()`, and returns the first root that prefixes
+the library's `base_dir` plus the relative remainder as the URL. It returns
+`''` when the library sits under none of them.
 
-This works when the library's files sit directly under a path that WordPress
-recognises as a plugin directory. It **silently fails** in environments where:
+`init()` always runs (it does not gate boot on web-reachability): it claims the
+namespace identity, loads the procedural API, and registers hooks regardless of
+whether the URL resolves. When the copy is not web-reachable,
+`Config::$pluginUrl` is simply empty and the asset layer degrades gracefully —
+`Assets.php` early-returns on an empty URL, so no admin/field CSS/JS is
+enqueued instead of emitting a 404ing URL. Server-side functionality (fields,
+options pages, export/import) is unaffected.
 
-- The vendor directory is symlinked (common in monorepos and some Docker setups).
-- The WordPress plugins path differs between local and staging/production
-  (e.g. different mount points, Bedrock-style layouts).
-- The library is nested more than one level inside a non-standard directory
-  structure.
+The `bootstrap.php` ABSPATH guard adds defense in depth: a root-vendor copy's
+`bootstrap.php` returns early when included before `ABSPATH` is defined
+(Bedrock loads the root autoloader in `wp-config`, before `ABSPATH` exists),
+so it does not schedule a competing `init()` ahead of a plugin-bundled copy.
 
-When auto-detection fails, `Config::$pluginUrl` is set to an empty string.
-`TemplateLoader::enqueueAssets()` checks for this and returns early, so the
-`hyperpress-admin` stylesheet handle is never registered. Any subsequent call to
-`wp_add_inline_style('hyperpress-admin', ...)` (e.g. inside
-`ExportImportUI::enqueueDiffAssets()`) silently no-ops because WordPress
-requires the handle to be registered before inline styles can be attached to it.
-The result is a page with no layout CSS — a bug that is easy to miss locally but
-reliably breaks on remote environments.
-
-**Always pass explicit `plugin_file` and `plugin_url` args.** Auto-detection
-exists only as a convenience for simple, standalone-plugin setups and should not
-be relied upon in vendored contexts.
+Pass explicit `plugin_file` and `plugin_url` args when you want to pin a
+specific copy as the winner regardless of load order, or when the library
+lives in a non-standard location whose URL the resolver cannot infer.
 
 ## Examples
 

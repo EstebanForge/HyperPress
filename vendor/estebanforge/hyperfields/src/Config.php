@@ -23,7 +23,7 @@ final class Config
      * Semantic version string. Kept in sync with composer.json via the
      * version-bump script (single source of truth for the PHP side).
      */
-    public const VERSION = '1.5.0';
+    public const VERSION = '1.5.1';
 
     /**
      * Bootstrap file identifier relative to the library root.

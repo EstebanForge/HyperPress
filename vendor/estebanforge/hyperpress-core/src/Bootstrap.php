@@ -196,18 +196,25 @@ final class Bootstrap
      */
     private static function resolvePluginUrl(string $base_dir): string
     {
+        // Prefer the canonical HyperFields resolver as a class method: it is
+        // available the moment the class is autoloaded, independent of whether
+        // HyperFields' own init() has run yet (init order between the two
+        // libraries is not guaranteed). Returns '' for directories under no
+        // web-accessible WP content root (e.g. a Bedrock root composer vendor).
+        if (class_exists(\HyperFields\LibraryBootstrap::class)) {
+            return \HyperFields\LibraryBootstrap::resolveContentUrl($base_dir);
+        }
+
+        // Procedural helper equivalent, when only that is loaded.
         if (function_exists('hyperfields_resolve_content_url')) {
             return hyperfields_resolve_content_url($base_dir);
         }
 
-        // Fallback when HyperFields' resolver is not loaded: best-effort via
-        // plugins_url(), correct for plugin-mode-style layout only.
-        if (function_exists('plugins_url')) {
-            $resolved = plugins_url('', $base_dir . '/bootstrap.php');
-
-            return $resolved !== '' ? $resolved : '';
-        }
-
+        // No reliable resolver available (e.g. a Mozart-prefixed HyperFields
+        // whose class/helper are namespaced away). Do NOT fall back to
+        // plugins_url(): it returns a non-empty URL for any path and would
+        // mask the not-web-reachable case, enqueuing a 404ing URL. Return ''
+        // so the caller degrades gracefully (empty Config::$pluginUrl).
         return '';
     }
 }

@@ -90,6 +90,17 @@ echo ""
 sedi "s/\"version\": \"$CURRENT_VERSION\"/\"version\": \"$NEW_VERSION\"/" "$PROJECT_DIR/composer.json"
 echo "  ✓ composer.json"
 
+# Scan ALL PHP files under src/ for old-version literals. This is the single
+# mechanism for the PHP side: it catches `Config::VERSION = '...'` (the
+# canonical source) and any other literal stamp. Idempotent: files already
+# bumped have no match. Mirrors HyperFields.
+while IFS= read -r -d '' src_file; do
+    if grep -q "'$CURRENT_VERSION'" "$src_file" 2>/dev/null; then
+        sedi "s/'$CURRENT_VERSION'/'$NEW_VERSION'/g" "$src_file"
+        echo "  ✓ ${src_file#$PROJECT_DIR/} (src/ version literal)"
+    fi
+done < <(find "$PROJECT_DIR/src" -type f -name '*.php' -print0 2>/dev/null)
+
 # Update WordPress plugin header version if present
 for candidate in hyperpress.php api-for-htmx.php hyperfields.php hyperblocks.php; do
   file="$PROJECT_DIR/$candidate"

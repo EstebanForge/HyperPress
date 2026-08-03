@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90fcf50e85544d8b7f47f49931b072df",
+    "content-hash": "fcbd6416156c6b81d189ada58852f975",
     "packages": [
         {
             "name": "composer/installers",
@@ -154,11 +154,11 @@
         },
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.4.0",
+            "version": "1.4.2",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "7f096989c549f6f2fd6fba4a5bb5f9e401f62d5c"
+                "reference": "ecd3a6e13a12c6cbb1b5eb06763dc402e2a6de66"
             },
             "require": {
                 "estebanforge/hyperfields": "^1",
@@ -250,11 +250,11 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "f3fa1ef71c83b0df22b3d4b1e5a7e8926c69859f"
+                "reference": "90053b80821c7d27a8b0d6d99049f5dd3e0762eb"
             },
             "require": {
                 "php": ">=8.2"
@@ -351,11 +351,11 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "3d82e4e06651f9b93a12338986230bf2ef38f7e3"
+                "reference": "18aadd50b18d4164ac0a48ee614cd674bc775cd8"
             },
             "require": {
                 "estebanforge/hyperblocks": "^1",
@@ -1631,16 +1631,16 @@
         },
         {
             "name": "pestphp/pest",
-            "version": "4.x-dev",
+            "version": "v4.7.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest.git",
-                "reference": "1b83b8fcda7865d28fd701eff2fc9aeb67950ed0"
+                "reference": "5b2293f67adcf1b2320b33f521b94a692d18f360"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest/zipball/1b83b8fcda7865d28fd701eff2fc9aeb67950ed0",
-                "reference": "1b83b8fcda7865d28fd701eff2fc9aeb67950ed0",
+                "url": "https://api.github.com/repos/pestphp/pest/zipball/5b2293f67adcf1b2320b33f521b94a692d18f360",
+                "reference": "5b2293f67adcf1b2320b33f521b94a692d18f360",
                 "shasum": ""
             },
             "require": {
@@ -1653,17 +1653,17 @@
                 "pestphp/pest-plugin-mutate": "^4.0.1",
                 "pestphp/pest-plugin-profanity": "^4.2.1",
                 "php": "^8.3.0",
-                "phpunit/phpunit": "^12.5.31",
+                "phpunit/phpunit": "^12.5.33",
                 "symfony/process": "^7.4.13|^8.1.0"
             },
             "conflict": {
                 "filp/whoops": "<2.18.3",
-                "phpunit/phpunit": ">12.5.31",
+                "phpunit/phpunit": ">12.5.33",
                 "sebastian/exporter": "<7.0.0",
                 "webmozart/assert": "<1.11.0"
             },
             "require-dev": {
-                "mrpunyapal/peststan": "^0.2.11",
+                "mrpunyapal/peststan": "^0.2.12",
                 "pestphp/pest-dev-tools": "^4.1.0",
                 "pestphp/pest-plugin-browser": "^4.3.1",
                 "pestphp/pest-plugin-type-coverage": "^4.0.4",
@@ -1694,7 +1694,6 @@
                         "Pest\\Plugins\\Verbose",
                         "Pest\\Plugins\\Version",
                         "Pest\\Plugins\\Shard",
-                        "Pest\\Plugins\\Tia",
                         "Pest\\Plugins\\Parallel"
                     ]
                 },
@@ -1734,7 +1733,7 @@
             ],
             "support": {
                 "issues": "https://github.com/pestphp/pest/issues",
-                "source": "https://github.com/pestphp/pest/tree/4.x"
+                "source": "https://github.com/pestphp/pest/tree/v4.7.8"
             },
             "funding": [
                 {
@@ -1746,7 +1745,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-17T15:33:29+00:00"
+            "time": "2026-08-03T20:49:44+00:00"
         },
         {
             "name": "pestphp/pest-plugin",
@@ -2708,16 +2707,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.5.31",
+            "version": "12.5.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "0608d157a284f15cc73b99a3327eff06b66a176d"
+                "reference": "b98e028a26c5c5ba7e4a54be96ccf35f2914d184"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0608d157a284f15cc73b99a3327eff06b66a176d",
-                "reference": "0608d157a284f15cc73b99a3327eff06b66a176d",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b98e028a26c5c5ba7e4a54be96ccf35f2914d184",
+                "reference": "b98e028a26c5c5ba7e4a54be96ccf35f2914d184",
                 "shasum": ""
             },
             "require": {
@@ -2786,7 +2785,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.31"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.33"
             },
             "funding": [
                 {
@@ -2794,7 +2793,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-07-06T14:54:16+00:00"
+            "time": "2026-07-28T13:58:09+00:00"
         },
         {
             "name": "psr/container",
