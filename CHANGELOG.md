@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.5.7] - 2026-08-03
+
+### Changed
+- Dependencies updated.
+
 ## [3.5.6] - 2026-07-30
 
 ### Fixed
