@@ -35,6 +35,7 @@ class BootstrapTest extends TestCase
         Config::reset();
         Registry::reset();
         HyperBlocks_Testing_Registry::reset();
+        $GLOBALS['__hb_test_filters'] = [];
         parent::setUp();
     }
 
@@ -43,6 +44,7 @@ class BootstrapTest extends TestCase
         Config::reset();
         Registry::reset();
         HyperBlocks_Testing_Registry::reset();
+        $GLOBALS['__hb_test_filters'] = [];
         parent::tearDown();
     }
 
@@ -69,7 +71,7 @@ class BootstrapTest extends TestCase
         $this->assertArrayNotHasKey('style', $args);
         // Core args still present.
         $this->assertSame('Test Block', $args['title']);
-        $this->assertSame(2, $args['api_version']);
+        $this->assertSame(3, $args['api_version']);
         $this->assertArrayHasKey('attributes', $args);
         $this->assertArrayHasKey('render_callback', $args);
     }
@@ -116,5 +118,24 @@ class BootstrapTest extends TestCase
         $this->assertArrayNotHasKey('description', $args);
         $this->assertArrayNotHasKey('keywords', $args);
         $this->assertArrayNotHasKey('style', $args);
+    }
+
+    /**
+     * The hyperblocks/blocks/api_version filter overrides the default 3 and
+     * the filtered value reaches register_block_type(). The editor config is
+     * built from the same helper, so server and client stay in sync.
+     */
+    public function testApiVersionFilterOverridesDefault(): void
+    {
+        add_filter('hyperblocks/blocks/api_version', static fn (): int => 2);
+
+        $block = Block::make('Test Block')
+            ->setName('test/api-version')
+            ->addFields([Field::make('text', 'heading', 'Heading')]);
+
+        Bootstrap::registerSingleBlock($block);
+
+        [, $args] = HyperBlocks_Testing_Registry::getLastBlockRegistration();
+        $this->assertSame(2, $args['api_version']);
     }
 }

@@ -10,7 +10,7 @@ HyperBlocks is a PHP-first Gutenberg block library. Blocks and their fields are 
 Two block definition approaches are supported:
 
 1. **Fluent API** — define blocks in PHP, register them with the Registry.
-2. **block.json** — standard WordPress approach; HyperBlocks discovers and registers these automatically.
+2. **block.json** — standard WordPress approach; HyperBlocks discovers and registers these automatically, but **only when `block.json` declares the `"hyperblocks": true` ownership marker** (see "JSON block marker" below). The marker stops HyperBlocks from registering foreign (WP-native/ACF) blocks co-located in a registered path such as a theme `/blocks` tree.
 
 ---
 
@@ -139,6 +139,23 @@ use HyperBlocks\Registry;
 `get_file_data()` reads only the first 8KB and checks for a non-empty `HyperBlocks Block:` header. Files lacking it are **skipped without execution**. This protects against the de-facto WP/ACF `/blocks/<slug>/{block.json,init.php,render.php}` layout: `render.php` / `init.php` there expect to be included by WP's block renderer with `$block` in scope, and auto-loading them at init executes them out of context — echoing markup before `<!DOCTYPE html>` and tripping "undefined `$block`" warnings. The header makes HyperBlocks definition files explicit and opt-in, the same convention WordPress uses for plugins, themes, and dropins.
 
 **Bypassed by explicit registration**: files pointed at directly via the `hyperblocks/blocks/register_fluent_blocks` filter (or a consumer's own `require_once`) are NOT subject to the header check — naming a file directly is explicit consent. Explicit `Config::registerBlockPath()` directories ARE scanned with the header check, so they are safe to point at a theme's `/blocks` tree.
+
+#### JSON block marker (required for auto-discovery)
+
+A `block.json` file is only owned by HyperBlocks (registered, surfaced in the inserter, and resolved by the REST `/block-fields` and `/render-preview` endpoints) when it declares a truthy top-level `hyperblocks` key:
+
+```json
+{
+  "name": "my-plugin/my-block",
+  "title": "My Block",
+  "apiVersion": 3,
+  "hyperblocks": true
+}
+```
+
+This is the JSON analog of the `HyperBlocks Block:` PHP header, and it exists for the same reason: a registered discovery path (including a theme's `/blocks` tree, auto-registered by default) often co-locates foreign `block.json` files from WordPress-native or ACF blocks. Without an explicit opt-in, auto-discovery would register those foreign blocks too. The marker is the single ownership gate (`Registry::isOwnedJsonBlock()`) applied to registration and REST lookup. Owned JSON blocks surface in the editor through WordPress core once `register_block_type_from_metadata()` runs (their `block.json` carries its own `editorScript`/`render`); `assets/js/editor.js` is fluent-only and never handles JSON blocks.
+
+WordPress core's `register_block_type_from_metadata()` ignores unknown top-level keys, so the marker is non-invasive and does not collide with any standard `block.json` field. Underscore-prefixed directories (`_disabled/`) are still skipped before the marker is checked.
 
 ---
 
@@ -317,7 +334,8 @@ Called from `bootstrap.php` after WordPress loads. Hooks:
 | `rest_api_init` (priority 10) | Register REST routes. |
 | `enqueue_block_editor_assets` | Enqueue editor CSS if present. |
 
-**WordPress filters** for block discovery:
+**WordPress filters**:
+- `hyperblocks/blocks/api_version` — override the apiVersion applied to every fluent block on both server (`register_block_type`) and client (`wp.blocks.registerBlockType`). Default `3` (WordPress 7.1 iframed-editor ready). Change only if a block relies on pre-v3 editor behavior.
 - `hyperblocks/blocks/auto_discover_theme_blocks` — whether to auto-register the active theme's `/blocks` directories as discovery paths. Default `true` (back-compat). Return `false` (e.g. `__return_false`) to opt out entirely; the library's own bundled blocks are unaffected. Combined with the `HyperBlocks Block:` header, this is the second of two independent gates against the WP/ACF `/blocks/<slug>/{render.php,init.php}` footgun.
 - `hyperblocks/blocks/register_json_paths` — add additional directories to scan for `block.json` blocks.
 - `hyperblocks/blocks/register_json_blocks` — add individual block directory paths.

@@ -452,6 +452,24 @@ if (!function_exists('register_block_type')) {
     }
 }
 
+if (!function_exists('register_block_type_from_metadata')) {
+    /**
+     * Mock register_block_type_from_metadata function.
+     *
+     * Captures the block.json path HyperBlocks registers from, so unit tests
+     * can assert which JSON blocks were registered and that foreign (no
+     * marker) ones are skipped. Mirrors the register_block_type capture.
+     * Returns false (signature-valid) rather than a fabricated WP_Block_Type;
+     * tests assert via HyperBlocks_Testing_Registry, not the return.
+     */
+    function register_block_type_from_metadata(string $file_or_folder, array $args = []): WP_Block_Type|false
+    {
+        HyperBlocks_Testing_Registry::recordMetadataRegistration($file_or_folder, $args);
+
+        return false;
+    }
+}
+
 /**
  * Test-only capture helper for the register_block_type mock.
  *
@@ -461,6 +479,9 @@ final class HyperBlocks_Testing_Registry
 {
     /** @var array{0: string, 1: array} */
     private static array $last = ['', []];
+
+    /** @var list<array{path: string, args: array}> */
+    private static array $metadataRegistrations = [];
 
     /** @var array{handle: string, src: string, deps: array, ver: string|bool|null, in_footer: bool} */
     private static array $lastEnqueue = [
@@ -557,9 +578,23 @@ final class HyperBlocks_Testing_Registry
         return self::$lastInline;
     }
 
+    public static function recordMetadataRegistration(string $path, array $args): void
+    {
+        self::$metadataRegistrations[] = ['path' => $path, 'args' => $args];
+    }
+
+    /**
+     * @return list<array{path: string, args: array}>
+     */
+    public static function getMetadataRegistrations(): array
+    {
+        return self::$metadataRegistrations;
+    }
+
     public static function reset(): void
     {
         self::$last = ['', []];
+        self::$metadataRegistrations = [];
         self::$lastEnqueue = [
             'handle'    => '',
             'src'       => '',

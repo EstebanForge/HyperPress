@@ -65,7 +65,7 @@ composer run cs:fix             # php-cs-fixer
 composer dump-autoload --optimize
 ```
 
-Tests are Pest v4. There is **no Brain\Monkey** in this repository currently; the suite is structural contract tests plus autoload and Config-identity integration smoke tests. The next layer to add is runtime coverage with WordPress function mocking: init firing, `/wp-html/v1/` REST route registration, asset enqueue, helper availability, and template rendering.
+Tests are Pest v4 with Brain Monkey (dev) for WordPress hook/function mocking. Coverage is layered: structural contracts, autoload/Config-identity smoke tests, and adapter hook-wiring assertions (Brain Monkey confirms the right filters/actions are registered). Brain Monkey's `apply_filters` does not execute registered closures, so closure-internal behavior is tested by extracting the pure logic (system_info insertion, the review-milestone predicates) into functions under direct unit test. The nonce-gated `admin_init` dismissal handler is covered by a wiring assertion only.
 
 ## Library mode
 

@@ -38,6 +38,9 @@
             }
 
             window.wp.blocks.registerBlockType(entry.name, {
+                // Mirrors the server-side api_version (injected per block via
+                // window.hyperBlocksConfig). Default 3 guards a stale config.
+                apiVersion: entry.apiVersion || 3,
                 title: entry.title || entry.name,
                 icon: entry.icon || 'block-default',
                 // Dynamic block: fetch the server-rendered markup for the

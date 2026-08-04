@@ -8,11 +8,11 @@
     "packages": [
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.4.2",
+            "version": "1.5.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "ecd3a6e13a12c6cbb1b5eb06763dc402e2a6de66"
+                "reference": "77bf4151e6a33a2c8d63ad7ca4bc38f9688ef7a3"
             },
             "require": {
                 "estebanforge/hyperfields": "^1",

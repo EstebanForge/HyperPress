@@ -207,6 +207,22 @@ class Bootstrap
     }
 
     /**
+     * Resolve the apiVersion applied to every fluent block, on both the
+     * server (register_block_type) and the client (wp.blocks.registerBlockType
+     * via window.hyperBlocksConfig). Defaults to 3 so fluent blocks opt out
+     * of the apiVersion 2 compatibility shim and stay clean in WordPress
+     * 7.1's always-iframed post editor. Filterable globally so a consumer
+     * with a specific reason to pin a lower version can override it; the
+     * same value is injected into the editor config so the two sides agree.
+     *
+     * @return int
+     */
+    private static function getApiVersion(): int
+    {
+        return (int) apply_filters('hyperblocks/blocks/api_version', 3);
+    }
+
+    /**
      * Register a single block with WordPress.
      *
      * @param \HyperBlocks\Block\Block $block The block to register.
@@ -221,7 +237,7 @@ class Bootstrap
         // keywords/style) is included only when set, so existing fluent blocks
         // with defaults behave exactly as before.
         $args = [
-            'api_version'     => 2,
+            'api_version'     => self::getApiVersion(),
             'title'           => $block->title,
             'icon'            => $block->icon,
             'attributes'      => $attributes,
@@ -397,12 +413,20 @@ class Bootstrap
         $registry = Registry::getInstance();
         $blocks = $registry->getFluentBlocks();
 
+        // apiVersion is resolved once and shared across all fluent blocks so
+        // the server (register_block_type) and the client
+        // (wp.blocks.registerBlockType via window.hyperBlocksConfig) never
+        // disagree. Filterable via hyperblocks/blocks/api_version; defaults
+        // to 3 (WordPress 7.1 iframed-editor ready).
+        $apiVersion = self::getApiVersion();
+
         $blockConfigs = [];
         foreach ($blocks as $block) {
             $blockConfigs[] = [
-                'name'  => $block->name,
-                'title' => $block->title,
-                'icon'  => $block->icon,
+                'name'       => $block->name,
+                'title'      => $block->title,
+                'icon'       => $block->icon,
+                'apiVersion' => $apiVersion,
             ];
         }
 
@@ -441,27 +465,5 @@ class Bootstrap
                 );
             }
         }
-    }
-
-    /**
-     * Get the block configuration for the editor.
-     *
-     * @return array Array of block configurations.
-     */
-    public static function getEditorBlockConfigs(): array
-    {
-        $registry = Registry::getInstance();
-        $blocks = $registry->getFluentBlocks();
-
-        $configs = [];
-        foreach ($blocks as $block) {
-            $configs[] = [
-                'name'  => $block->name,
-                'title' => $block->title,
-                'icon'  => $block->icon,
-            ];
-        }
-
-        return $configs;
     }
 }

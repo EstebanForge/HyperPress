@@ -1,4 +1,6 @@
 {
+    "apiVersion": 3,
+    "hyperblocks": true,
     "name": "hyperblocks/content-card-json",
     "title": "HB Content Card (JSON)",
     "description": "A content card block with title, image, and nested content area - block.json implementation.",

@@ -1,4 +1,6 @@
 {
+    "apiVersion": 3,
+    "hyperblocks": true,
     "name": "hyperblocks/hero-banner-json",
     "title": "HB Hero Banner (JSON)",
     "description": "A hero banner block with headline, subtitle, and call-to-action button - block.json implementation.",

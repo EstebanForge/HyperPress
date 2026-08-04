@@ -434,13 +434,17 @@ add_filter('hyperblocks/blocks/register_fluent_blocks', function (array $files):
 });
 ```
 
+### JSON block ownership
+
+A discovered `block.json` is only owned by HyperBlocks when it declares a truthy top-level `hyperblocks` key (the JSON analog of the `HyperBlocks Block:` PHP header). Without it, the block is not registered, not surfaced in the inserter, and not resolved by the REST `/block-fields` or `/render-preview` endpoints. This stops HyperBlocks from registering foreign (WP-native/ACF) `block.json` files co-located in a registered path such as a theme `/blocks` tree. WordPress core ignores the unknown key, so it is non-invasive. Owned JSON blocks surface in the editor through core once `register_block_type_from_metadata()` runs (their `block.json` carries its own `editorScript`/`render`); `assets/js/editor.js` is fluent-only and never handles JSON blocks.
+
 ### Editor registration
 
 Fluent blocks are **dynamic**: they are server-rendered through the `render_callback` that `Bootstrap::registerSingleBlock()` wires into `register_block_type()`. To make the editor aware of them (so they appear in the inserter and parse when present in saved post content), HyperBlocks ships a small vanilla-JS file, `assets/js/editor.js`, registered under the `editor_script_handle` (`hyperblocks-editor` by default).
 
 Registration is **register-only, not enqueue**: it happens as a side-effect of `init` block registration (once at least one fluent block exists), and `Bootstrap::registerEditorScript()` calls `wp_register_script()` rather than `wp_enqueue_script()`. This is deliberate — `init` fires on every request, including the public front end, so enqueueing there would leak the Gutenberg bundle (`wp-blocks`, `wp-element`, `wp-components`) onto every page. Instead, the handle is registered with WordPress and core's own `wp_enqueue_registered_block_scripts_and_styles()` enqueues it in the editor context only, driven by the `editor_script` argument that `registerSingleBlock()` passes to `register_block_type()`.
 
-As part of registration, HyperBlocks also injects each block's `{ name, title, icon }` as `window.hyperBlocksConfig` via `wp_add_inline_script(..., 'before')`, attached to the same handle.
+As part of registration, HyperBlocks also injects each block's `{ name, title, icon, apiVersion }` as `window.hyperBlocksConfig` via `wp_add_inline_script(..., 'before')`, attached to the same handle. The `apiVersion` is shared with the server-side `register_block_type()` call so the two never disagree; override it globally with the `hyperblocks/blocks/api_version` filter (default `3`, WordPress 7.1 iframed-editor ready).
 
 `editor.js` then:
 

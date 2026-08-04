@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.2] - 2026-08-04
+
+### Changed
+- **Dependency refresh: pull in `estebanforge/hyperblocks` 1.5.0.** HyperBlocks 1.5.0 makes fluent blocks WordPress 7.1 iframed-editor ready (apiVersion 3), adds the `hyperblocks/blocks/api_version` filter, introduces the `block.json` ownership marker (`"hyperblocks": true`), and makes JSON-block registration actually work (it had been a silent no-op). The lockfile is updated so consumers resolving HyperPress-Core 1.5.2 get the set.
+- **Demo JSON blocks updated to the new ownership convention.** The bundled `hyperblocks/content-card`, `hyperblocks/hero-banner`, and `hyperblocks/quote-block` `block.json` files now declare `apiVersion: 3` and `"hyperblocks": true`. With HyperBlocks 1.5.0's marker-gated discovery these demo blocks now register and render for the first time (their `render.php` was already in place); previously they were discovered but never registered.
+
+### Removed
+- `HyperPress\Blocks\Registry::discoverJsonBlocksForEditor()` facade proxy. The underlying `HyperBlocks\Registry::discoverJsonBlocksForEditor()` was removed in HyperBlocks 1.5.0 (zero callers, wrong abstraction; JSON blocks surface through WordPress core). The facade proxy had zero callers of its own and is dropped to keep the facade in sync with the library's public API.
+
 ## [1.5.1] - 2026-08-03
 
 ### Changed

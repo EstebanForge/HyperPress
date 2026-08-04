@@ -237,16 +237,6 @@ final class Registry
     }
 
     /**
-     * Proxy: discover JSON blocks for editor.
-     *
-     * @return array
-     */
-    public function discoverJsonBlocksForEditor(): array
-    {
-        return $this->proxy->discoverJsonBlocksForEditor();
-    }
-
-    /**
      * Proxy: find JSON block path by name.
      *
      * @param string $blockName

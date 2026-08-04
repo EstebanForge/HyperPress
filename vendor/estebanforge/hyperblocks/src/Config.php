@@ -30,7 +30,7 @@ class Config
      * Semantic version string. Mirrors composer.json (single source of truth
      * for the PHP side; run `composer version-bump` to keep both in sync).
      */
-    public const VERSION = '1.4.2';
+    public const VERSION = '1.5.0';
 
     /**
      * Absolute path to the library root, with a trailing slash.

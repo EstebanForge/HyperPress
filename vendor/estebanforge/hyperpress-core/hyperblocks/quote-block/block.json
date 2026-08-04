@@ -1,4 +1,6 @@
 {
+    "apiVersion": 3,
+    "hyperblocks": true,
     "name": "hyperblocks/quote-block-json",
     "title": "HB Quote Block (JSON)",
     "description": "A quote block with author attribution and styling - block.json implementation.",

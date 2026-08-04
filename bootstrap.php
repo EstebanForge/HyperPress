@@ -53,6 +53,8 @@ if (!function_exists('hyperpress_adapter_require_once_path')) {
     }
 }
 
+require_once __DIR__ . '/includes/adapter-functions.php';
+
 $adapter_main_file = file_exists(__DIR__ . '/hyperpress.php')
     ? __DIR__ . '/hyperpress.php'
     : __DIR__ . '/api-for-htmx.php';
@@ -124,30 +126,11 @@ if (function_exists('add_filter')) {
             $library_versions[__('HyperPress Core', 'api-for-htmx')] = \HyperPress\Config::VERSION;
         }
 
-        if (empty($library_versions)) {
-            return $info;
-        }
-
-        // Insert library versions after the Plugin Version row.
-        $insert_after = __('Plugin Version', 'api-for-htmx');
-        $result = [];
-        $inserted = false;
-        foreach ($info as $key => $value) {
-            $result[$key] = $value;
-            if (!$inserted && $key === $insert_after) {
-                foreach ($library_versions as $lib_key => $lib_value) {
-                    $result[$lib_key] = $lib_value;
-                }
-                $inserted = true;
-            }
-        }
-
-        // Fallback: append at the end if Plugin Version key was not found.
-        if (!$inserted) {
-            $result = array_merge($result, $library_versions);
-        }
-
-        return $result;
+        return hyperpress_adapter_insert_library_versions(
+            $info,
+            $library_versions,
+            __('Plugin Version', 'api-for-htmx')
+        );
     });
 }
 
@@ -162,12 +145,12 @@ if (function_exists('add_filter')) {
 if (function_exists('add_filter') && function_exists('add_action')) {
     // Record the milestone once, on the first wp-html REST dispatch.
     add_filter('rest_pre_dispatch', static function ($result, $server, $request) {
-        if (!empty(get_option('hyperpress_review_milestone', false))) {
-            return $result;
-        }
-
         $route = $request->get_route();
-        if (is_string($route) && strpos($route, '/wp-html/') === 0) {
+
+        if (hyperpress_adapter_should_record_review_milestone(
+            !empty(get_option('hyperpress_review_milestone', false)),
+            is_string($route) ? $route : null
+        )) {
             update_option(
                 'hyperpress_review_milestone',
                 ['at' => time()],
@@ -180,39 +163,23 @@ if (function_exists('add_filter') && function_exists('add_action')) {
 
     // Render the notice, gated to administrators on HyperPress or plugins pages.
     add_action('admin_notices', static function (): void {
-        $record = get_option('hyperpress_review_milestone', false);
-        if (empty($record) || !is_array($record)) {
-            return;
-        }
-
-        if (!current_user_can('manage_options')) {
-            return;
-        }
-
+        $now = time();
         $user_id = get_current_user_id();
-        if (!$user_id) {
-            return;
-        }
-
-        // Snooze: at most once every ~6 months per administrator.
-        $snoozed_until = (int) get_user_meta($user_id, 'hyperpress_review_snooze', true);
-        if ($snoozed_until > 0 && time() < $snoozed_until) {
-            return;
-        }
-
-        // Only on HyperPress settings pages or the plugins list. Never site-wide.
         $screen = get_current_screen();
-        if (!$screen) {
-            return;
-        }
-        $on_settings = strpos($screen->id, 'hyperpress') !== false;
-        $on_plugins = $screen->id === 'plugins';
-        if (!$on_settings && !$on_plugins) {
+
+        if (!hyperpress_adapter_should_show_review_notice(
+            get_option('hyperpress_review_milestone', false),
+            current_user_can('manage_options'),
+            $user_id,
+            (int) get_user_meta($user_id, 'hyperpress_review_snooze', true),
+            $now,
+            $screen ? $screen->id : null
+        )) {
             return;
         }
 
         // Showing it now re-snoozes for the full interval so it never nags.
-        update_user_meta($user_id, 'hyperpress_review_snooze', time() + (180 * DAY_IN_SECONDS));
+        update_user_meta($user_id, 'hyperpress_review_snooze', $now + (180 * DAY_IN_SECONDS));
 
         $review_url = 'https://wordpress.org/support/plugin/api-for-htmx/reviews/#new-post';
         $dismiss_url = wp_nonce_url(

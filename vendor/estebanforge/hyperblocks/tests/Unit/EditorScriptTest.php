@@ -37,6 +37,7 @@ class EditorScriptTest extends TestCase
         Config::reset();
         Registry::reset();
         HyperBlocks_Testing_Registry::reset();
+        $GLOBALS['__hb_test_filters'] = [];
         parent::setUp();
     }
 
@@ -45,6 +46,7 @@ class EditorScriptTest extends TestCase
         Config::reset();
         Registry::reset();
         HyperBlocks_Testing_Registry::reset();
+        $GLOBALS['__hb_test_filters'] = [];
         parent::tearDown();
     }
 
@@ -117,6 +119,22 @@ class EditorScriptTest extends TestCase
         $this->assertSame('before', $inline['position']);
         $this->assertStringContainsString('window.hyperBlocksConfig', $inline['data']);
         $this->assertStringContainsString('inline-block', $inline['data']);
+    }
+
+    /**
+     * The filtered apiVersion must reach window.hyperBlocksConfig (the client),
+     * not only register_block_type (the server). Pins server/client agreement
+     * so a future refactor cannot silently desync them.
+     */
+    public function testFilteredApiVersionReachesEditorConfig(): void
+    {
+        add_filter('hyperblocks/blocks/api_version', static fn (): int => 2);
+
+        $this->registerWithBlock('test/api-version-inline');
+
+        $inline = HyperBlocks_Testing_Registry::getLastInlineScript();
+
+        $this->assertStringContainsString('"apiVersion":2', $inline['data']);
     }
 
     /**

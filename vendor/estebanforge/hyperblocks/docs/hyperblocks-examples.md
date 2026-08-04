@@ -473,7 +473,7 @@ Registry::getInstance()->registerFluentBlock(
 
 ## Example 9 — block.json approach
 
-HyperBlocks auto-discovers and registers standard `block.json` blocks from configured directories. No PHP definition needed for JSON blocks.
+HyperBlocks auto-discovers and registers standard `block.json` blocks from configured directories — but **only** when the `block.json` declares the `"hyperblocks": true` ownership marker. Without the marker, HyperBlocks leaves the block alone, so foreign WP/ACF blocks co-located in the same path are never registered by mistake. No PHP definition needed for JSON blocks.
 
 **Directory layout**:
 
@@ -497,7 +497,8 @@ my-plugin/blocks/
     "heading": { "type": "string", "default": "Hello" },
     "show_cta": { "type": "boolean", "default": false }
   },
-  "apiVersion": 2
+  "apiVersion": 3,
+  "hyperblocks": true
 }
 ```
 

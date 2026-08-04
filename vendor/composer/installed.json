@@ -151,12 +151,12 @@
         },
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.4.2",
-            "version_normalized": "1.4.2.0",
+            "version": "1.5.0",
+            "version_normalized": "1.5.0.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "ecd3a6e13a12c6cbb1b5eb06763dc402e2a6de66"
+                "reference": "77bf4151e6a33a2c8d63ad7ca4bc38f9688ef7a3"
             },
             "require": {
                 "estebanforge/hyperfields": "^1",
@@ -354,12 +354,12 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.5.1",
-            "version_normalized": "1.5.1.0",
+            "version": "1.5.2",
+            "version_normalized": "1.5.2.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "18aadd50b18d4164ac0a48ee614cd674bc775cd8"
+                "reference": "8bd0a0a82464a4386f3abc28c0fcd0711c4e05a9"
             },
             "require": {
                 "estebanforge/hyperblocks": "^1",
