@@ -54,6 +54,35 @@ if (!function_exists('hyperpress_adapter_should_record_review_milestone')) {
     }
 }
 
+if (!function_exists('hyperpress_adapter_maybe_record_review_milestone')) {
+    /**
+     * Record the review milestone for a /wp-html/ request, once per site.
+     *
+     * Gates on the route BEFORE reading the (non-autoloaded) option, so
+     * non-hypermedia REST traffic never issues the extra get_option() SELECT
+     * on every request.
+     *
+     * @param string|null $route The REST route, or null.
+     */
+    function hyperpress_adapter_maybe_record_review_milestone(?string $route): void
+    {
+        if ($route === null || !str_starts_with($route, '/wp-html/')) {
+            return;
+        }
+
+        if (hyperpress_adapter_should_record_review_milestone(
+            !empty(get_option('hyperpress_review_milestone', false)),
+            $route
+        )) {
+            update_option(
+                'hyperpress_review_milestone',
+                ['at' => time()],
+                false
+            );
+        }
+    }
+}
+
 if (!function_exists('hyperpress_adapter_should_show_review_notice')) {
     /**
      * Whether the one-shot review notice should render. Pure: the caller

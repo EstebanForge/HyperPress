@@ -147,16 +147,7 @@ if (function_exists('add_filter') && function_exists('add_action')) {
     add_filter('rest_pre_dispatch', static function ($result, $server, $request) {
         $route = $request->get_route();
 
-        if (hyperpress_adapter_should_record_review_milestone(
-            !empty(get_option('hyperpress_review_milestone', false)),
-            is_string($route) ? $route : null
-        )) {
-            update_option(
-                'hyperpress_review_milestone',
-                ['at' => time()],
-                false
-            );
-        }
+        hyperpress_adapter_maybe_record_review_milestone(is_string($route) ? $route : null);
 
         return $result;
     }, 10, 3);
