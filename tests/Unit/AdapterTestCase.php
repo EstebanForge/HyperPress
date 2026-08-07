@@ -45,7 +45,7 @@ abstract class AdapterTestCase extends TestCase
             \Brain\Monkey\setUp();
 
             // Loads api-for-htmx.php (show-menu opt-in + version constant) and,
-            // via it, bootstrap.php (system_info, review milestone, data tools,
+            // via it, bootstrap.php (system_info, data tools,
             // lifecycle). register_*_hook are preloaded recorders.
             require_once dirname(__DIR__, 2) . '/api-for-htmx.php';
 

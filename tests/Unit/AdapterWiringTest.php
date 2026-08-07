@@ -24,18 +24,6 @@ it('registers the system_info filter', function (): void {
     expect(has_filter('hyperpress/about/system_info'))->toBeTrue();
 });
 
-it('records the review milestone on rest_pre_dispatch', function (): void {
-    expect(has_filter('rest_pre_dispatch'))->toBeTrue();
-});
-
-it('registers the review notice on admin_notices', function (): void {
-    expect(has_action('admin_notices'))->toBeTrue();
-});
-
-it('registers the review dismissal on admin_init', function (): void {
-    expect(has_action('admin_init'))->toBeTrue();
-});
-
 it('registers the data tools page on admin_menu', function (): void {
     expect(has_action('admin_menu'))->toBeTrue();
 });
