@@ -29,6 +29,7 @@ class Options
     {
         $this->main = $main;
         add_action('init', $this->initOptionsPage(...));
+        add_filter('plugin_action_links', $this->pluginActionLinks(...), 10, 2);
     }
 
     /**
@@ -382,9 +383,33 @@ class Options
             . ' <a href="https://actitud.xyz" target="_blank" rel="noopener noreferrer">Actitud Studio</a>.';
     }
 
-    public function pluginActionLinks(array $links): array
+    /**
+     * Add a Settings link to the plugin's row on plugins.php.
+     *
+     * Gated by the same `isEnabled()` flag as the options page so the link
+     * only appears when the destination page exists. In plugin mode the
+     * link targets this plugin's own row automatically. In library mode the
+     * library has no row of its own, so a host plugin must declare its
+     * basename via the `hyperpress/admin/action_links_basename` filter.
+     *
+     * @since 1.5.3
+     *
+     * @param array  $links       Existing action links.
+     * @param string $plugin_file Plugin basename for the current row.
+     * @return array
+     */
+    public function pluginActionLinks(array $links, string $plugin_file): array
     {
-        $links[] = '<a href="' . esc_url(admin_url('options-general.php?page=hyperpress-options')) . '">' . esc_html__('Settings', 'api-for-htmx') . '</a>';
+        if (!self::isEnabled()) {
+            return $links;
+        }
+
+        $target = apply_filters('hyperpress/admin/action_links_basename', Config::$basename);
+        if ($target === '' || $plugin_file !== $target) {
+            return $links;
+        }
+
+        $links['settings'] = '<a href="' . esc_url(admin_url('options-general.php?page=hyperpress-options')) . '">' . esc_html__('Settings', 'api-for-htmx') . '</a>';
 
         return $links;
     }

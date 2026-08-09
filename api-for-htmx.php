@@ -36,6 +36,12 @@ if (!defined('HYPERPRESS_PLUGIN_VERSION')) {
 // consumer's WordPress install. As the plugin, opt in to showing that page.
 add_filter('hyperpress/admin/show_menu', '__return_true');
 
+// Tell the library which plugins.php row owns the Settings link. Required
+// because the vendored library copy resolves to library mode (its entry file
+// is not co-located), so Config::$basename is the sentinel and the library
+// cannot infer this plugin's row on its own.
+add_filter('hyperpress/admin/action_links_basename', static fn (): string => plugin_basename(__FILE__));
+
 // Load the shared bootstrap file. It loads the Composer autoloader, which runs
 // each bundled library's bootstrap (Composer autoload.files); the libraries
 // self-initialize at after_setup_theme behind their own first-to-boot guard.
