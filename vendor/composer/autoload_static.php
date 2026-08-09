@@ -187,8 +187,6 @@ class ComposerStaticInit6b38d864c474b78a1bd0d9c47a630b2d
         'HyperFields\\Container\\PostMetaContainer' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Container/PostMetaContainer.php',
         'HyperFields\\Container\\TermMetaContainer' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Container/TermMetaContainer.php',
         'HyperFields\\Container\\UserMetaContainer' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Container/UserMetaContainer.php',
-        'HyperFields\\ContentExportImport' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/ContentExportImport.php',
-        'HyperFields\\ContentTransferAdapter' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/ContentTransferAdapter.php',
         'HyperFields\\CustomField' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/CustomField.php',
         'HyperFields\\ExportImport' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/ExportImport.php',
         'HyperFields\\Field' => __DIR__ . '/..' . '/estebanforge/hyperfields/src/Field.php',

@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.5.9] - 2026-08-09
+
+### Added
+- **Settings link on the plugins screen.** A Settings link now appears on the HyperPress row of `wp-admin/plugins.php`, pointing at Settings → HyperPress. Implements the `hyperpress/admin/action_links_basename` filter added in HyperPress-Core 1.5.3.
+
+### Changed
+- **Milestone option reads are gated to hypermedia routes.** The review-milestone helper no longer touches the options table on unrelated requests, removing an unnecessary read from every admin page load.
+- **Adapter bootstrap simplified to the hooks it owns.** Dead adapter helper code and its tests were removed; the adapter now registers only its active hooks (data-tools page, activation/deactivation, system-info).
+
+### Bundled libraries
+- HyperPress-Core 1.5.3 (endpoint request validation hardened, renderer input handling tightened, Settings action link).
+
 ## [3.5.8] - 2026-08-04
 
 ### Added

@@ -294,7 +294,7 @@ class PostMetaContainer extends Container
 
         foreach ($this->fields as $field) {
             $field_name = $field->getName();
-            $value = $_POST[$field_name] ?? $field->getDefault();
+            $value = wp_unslash($_POST[$field_name] ?? $field->getDefault());
 
             // Sanitize the value
             $value = $field->sanitizeValue($value);

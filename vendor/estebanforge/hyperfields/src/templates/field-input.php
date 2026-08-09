@@ -171,6 +171,8 @@ if ($conditional_logic) {
                     </select>
                 <?php break;
                 case 'multiselect': ?>
+                    <!-- Hidden input to ensure the field is always sent in POST data even when none selected -->
+                    <input type="hidden" name="<?php echo esc_attr($name_attr); ?>[]" value="__hm_empty__">
                     <select id="<?php echo esc_attr($name); ?>"
                         name="<?php echo esc_attr($name_attr); ?>[]"
                         multiple

@@ -853,7 +853,29 @@ class Field
             return [];
         }
 
-        return array_map('sanitize_text_field', $value);
+        $sanitized = array_map('sanitize_text_field', $value);
+        $sanitized = array_values(
+            array_filter(
+                $sanitized,
+                static function ($v) {
+                    return $v !== '__hm_empty__' && $v !== '' && $v !== null;
+                }
+            )
+        );
+
+        if (!empty($this->options)) {
+            $allowed = array_map('strval', array_keys($this->options));
+            $sanitized = array_values(
+                array_filter(
+                    $sanitized,
+                    static function ($v) use ($allowed) {
+                        return in_array((string) $v, $allowed, true);
+                    }
+                )
+            );
+        }
+
+        return $sanitized;
     }
 
     /**

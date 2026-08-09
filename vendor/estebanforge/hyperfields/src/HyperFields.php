@@ -401,38 +401,6 @@ class HyperFields
     }
 
     /**
-     * Export posts/pages/CPT content to JSON.
-     */
-    public static function exportPosts(array $postTypes, array $options = []): string
-    {
-        return ContentExportImport::exportPosts($postTypes, $options);
-    }
-
-    /**
-     * Snapshot posts/pages/CPT content as arrays for compare workflows.
-     */
-    public static function snapshotPosts(array $postTypes, array $options = []): array
-    {
-        return ContentExportImport::snapshotPosts($postTypes, $options);
-    }
-
-    /**
-     * Import posts/pages/CPT content from JSON.
-     */
-    public static function importPosts(string $jsonString, array $options = []): array
-    {
-        return ContentExportImport::importPosts($jsonString, $options);
-    }
-
-    /**
-     * Dry-run compare for content imports.
-     */
-    public static function diffPosts(string $jsonString, array $options = []): array
-    {
-        return ContentExportImport::diffPosts($jsonString, $options);
-    }
-
-    /**
      * Create a transfer manager for pluggable module orchestration.
      */
     public static function makeTransferManager(): TransferManager

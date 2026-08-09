@@ -180,8 +180,17 @@ if (!function_exists('dbDelta')) {
 }
 
 if (!function_exists('wp_verify_nonce')) {
+    /**
+     * Mock wp_verify_nonce. Default: valid (preserves existing tests). Tests
+     * that exercise the invalid-nonce path set $GLOBALS['__hp_test_nonce_valid']
+     * to false. Hand-rolled rather than Brain Monkey because this is a
+     * pre-bootstrap passthrough Patchwork cannot override (see the caveat in
+     * tests/Unit/Admin/OptionsTest.php).
+     */
     function wp_verify_nonce($nonce, $action = -1) {
-        return true;
+        $override = $GLOBALS['__hp_test_nonce_valid'] ?? null;
+
+        return is_bool($override) ? $override : true;
     }
 }
 

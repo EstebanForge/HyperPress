@@ -76,8 +76,10 @@ class Render
         // Sanitize template name using the determined endpoint key
         $template_name = $this->sanitizePath($wp_query->query_vars[$actual_endpoint_key]);
 
-        // Get hp_vals from $_REQUEST and sanitize them
-        $hp_vals = $_REQUEST; // Nonce is validated in valid_nonce()
+        // Source GET then POST explicitly. $_REQUEST also folds in $_COOKIE
+        // (depending on request_order), which enables parameter pollution and
+        // feeds cookie values through sanitization needlessly.
+        $hp_vals = $this->sourceRequestParams(); // Nonce is validated in validNonce()
         if (!isset($hp_vals) || empty($hp_vals)) {
             $hp_vals = false;
         } else {
@@ -526,6 +528,12 @@ class Render
         $is_valid = wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hyperpress_nonce');
 
         if (!$is_valid) {
+            // An invalid nonce must de-authenticate exactly like a missing
+            // one. Previously this branch returned false without clearing
+            // the user, so a GET with ?_wpnonce=garbage rendered fully
+            // authenticated (a bad nonce was more trusted than none).
+            wp_set_current_user(0);
+
             return false;
         }
 
@@ -644,6 +652,45 @@ class Render
     }
 
     /**
+     * Build the request-parameter bag passed to templates.
+     *
+     * Sourced explicitly from GET then POST so $_COOKIE cannot pollute or
+     * override request values (parameter pollution) and so cookie values are
+     * not fed through sanitization. $_REQUEST folds in cookies under some
+     * request_order configurations; it is deliberately avoided.
+     *
+     * Extracted as a seam so the sourcing decision is unit-testable:
+     * loadTemplate() dispatches rendering and terminates the request, so it
+     * cannot be exercised in isolation.
+     *
+     * @return array
+     */
+    protected function sourceRequestParams(): array
+    {
+        return array_merge($_GET, $_POST);
+    }
+
+    /**
+     * Recursively sanitize an array of values. Scalar leaves go through
+     * sanitize_text_field; nested arrays recurse so deeply structured
+     * inputs do not silently lose data.
+     */
+    private function sanitizeArrayRecursive(array $arr): array
+    {
+        $result = [];
+
+        foreach ($arr as $k => $v) {
+            $clean_key = sanitize_key((string) $k);
+            if ($clean_key === '') {
+                continue;
+            }
+            $result[$clean_key] = is_array($v) ? $this->sanitizeArrayRecursive($v) : sanitize_text_field((string) $v);
+        }
+
+        return $result;
+    }
+
+    /**
      * Sanitize request parameters (hp_vals).
      * Applies WordPress sanitization functions to all request parameters and removes nonces.
      * Supports both single values and arrays (for multi-value form elements).
@@ -660,65 +707,65 @@ class Render
             return false;
         }
 
-        // Sanitize each param
+        // Build a fresh array. Mutating $hp_vals in place left the original
+        // (raw) key/value reachable whenever sanitize_key() changed the key
+        // (mixed case or special chars), because the sanitized entry was
+        // added but the original was never unset. A new array guarantees only
+        // sanitized keys survive.
+        $sanitized = [];
+
         foreach ($hp_vals as $key => $value) {
             // Sanitize key
-            $original_key = $key;
-            $sanitized_key = apply_filters('hyperpress/render/sanitize_param_key', sanitize_key($original_key), $original_key);
+            $sanitized_key = apply_filters('hyperpress/render/sanitize_param_key', sanitize_key($key), $key);
             // Deprecated compatibility: hmapi/sanitize_param_key
             $sanitized_key = apply_filters_deprecated(
                 'hmapi/sanitize_param_key',
-                [$sanitized_key, $original_key],
+                [$sanitized_key, $key],
                 '2.1.0',
                 'hyperpress/render/sanitize_param_key',
                 'Use hyperpress/render/sanitize_param_key instead.'
             );
-            $key = $sanitized_key;
+
+            // Drop entries whose key sanitizes to an empty string (e.g. a key
+            // made only of symbols). Keeping them would collapse many raw keys
+            // onto one empty-string key and overwrite each other.
+            if ($sanitized_key === '') {
+                continue;
+            }
 
             // For form elements with multiple values
             // https://github.com/EstebanForge/HTMX-API-WP/discussions/8
             if (is_array($value)) {
                 // Sanitize each value
-                $original_array = $value;
-                $sanitized_array = apply_filters('hyperpress/render/sanitize_param_array_value', array_map('sanitize_text_field', $original_array), $key);
+                $sanitized_value = apply_filters('hyperpress/render/sanitize_param_array_value', $this->sanitizeArrayRecursive($value), $sanitized_key);
                 // Deprecated compatibility: hmapi/sanitize_param_array_value
-                $sanitized_array = apply_filters_deprecated(
+                $sanitized_value = apply_filters_deprecated(
                     'hmapi/sanitize_param_array_value',
-                    [$sanitized_array, $original_array],
+                    [$sanitized_value, $value],
                     '2.1.0',
                     'hyperpress/render/sanitize_param_array_value',
                     'Use hyperpress/render/sanitize_param_array_value instead.'
                 );
-                $value = $sanitized_array;
             } else {
                 // Sanitize single value
-                $original_value = $value;
-                $sanitized_value = apply_filters('hyperpress/render/sanitize_param_value', sanitize_text_field($original_value), $key);
+                $sanitized_value = apply_filters('hyperpress/render/sanitize_param_value', sanitize_text_field($value), $sanitized_key);
                 // Deprecated compatibility: hmapi/sanitize_param_value
                 $sanitized_value = apply_filters_deprecated(
                     'hmapi/sanitize_param_value',
-                    [$sanitized_value, $original_value],
+                    [$sanitized_value, $value],
                     '2.1.0',
                     'hyperpress/render/sanitize_param_value',
                     'Use hyperpress/render/sanitize_param_value instead.'
                 );
-                $value = $sanitized_value;
             }
 
-            // Update param
-            $hp_vals[$key] = $value;
+            $sanitized[$sanitized_key] = $sanitized_value;
         }
 
         // Remove nonce if exists
-        if (isset($hp_vals['_wpnonce'])) { // Standard WordPress nonce key in $_REQUEST
-            unset($hp_vals['_wpnonce']);
-        }
-        // Also unset our specific nonce if it was passed as a regular param, though primary check is _wpnonce
-        if (isset($hp_vals['hyperpress_nonce'])) {
-            unset($hp_vals['hyperpress_nonce']);
-        }
+        unset($sanitized['_wpnonce'], $sanitized['hyperpress_nonce']);
 
-        return $hp_vals;
+        return $sanitized;
     }
 
     /**
@@ -772,16 +819,14 @@ class Render
             }
         }
 
+        $real_base_dir = realpath($base_dir);
+
         foreach ($extensions as $extension) {
             $potential_path = $base_dir . $template_name . $extension;
             $resolved_path = $this->sanitizeFullPath($potential_path);
 
-            if ($resolved_path) {
-                // Ensure the resolved path is within the allowed base directory.
-                $real_base_dir = realpath($base_dir);
-                if ($real_base_dir && (str_starts_with($resolved_path, $real_base_dir . DIRECTORY_SEPARATOR) || $resolved_path === $real_base_dir)) {
-                    return $resolved_path;
-                }
+            if ($resolved_path && $real_base_dir && (str_starts_with($resolved_path, $real_base_dir . DIRECTORY_SEPARATOR) || $resolved_path === $real_base_dir)) {
+                return $resolved_path;
             }
         }
 

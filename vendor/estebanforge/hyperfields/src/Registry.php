@@ -450,7 +450,7 @@ class Registry
             return;
         }
 
-        if (!wp_verify_nonce($_POST['hyperpress_post_fields_nonce'], 'hyperpress_post_fields')) {
+        if (!wp_verify_nonce(sanitize_key(wp_unslash($_POST['hyperpress_post_fields_nonce'])), 'hyperpress_post_fields')) {
             return;
         }
 
@@ -467,7 +467,7 @@ class Registry
             $field_name = $field->getName();
             if (isset($_POST[$field_name])) {
                 $post_field = PostField::forPost($post_id, $field->getType(), $field_name, $field->getLabel());
-                $post_field->setValue($_POST[$field_name]);
+                $post_field->setValue(wp_unslash($_POST[$field_name]));
             }
         }
     }
@@ -483,12 +483,16 @@ class Registry
             return;
         }
 
+        if (!isset($_POST['_wpnonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['_wpnonce'])), 'update-user_' . $user_id)) {
+            return;
+        }
+
         $user_fields = $this->getFieldsByContext('user');
         foreach ($user_fields as $field) {
             $field_name = $field->getName();
             if (isset($_POST[$field_name])) {
                 $user_field = UserField::forUser($user_id, $field->getType(), $field_name, $field->getLabel());
-                $user_field->setValue($_POST[$field_name]);
+                $user_field->setValue(wp_unslash($_POST[$field_name]));
             }
         }
     }
@@ -504,12 +508,16 @@ class Registry
             return;
         }
 
+        if (!isset($_POST['_wpnonce'])) {
+            return;
+        }
+
         $term_fields = $this->getFieldsByContext('term');
         foreach ($term_fields as $field) {
             $field_name = $field->getName();
             if (isset($_POST[$field_name])) {
                 $term_field = TermField::forTerm($term_id, $field->getType(), $field_name, $field->getLabel());
-                $term_field->setValue($_POST[$field_name]);
+                $term_field->setValue(wp_unslash($_POST[$field_name]));
             }
         }
     }

@@ -476,4 +476,16 @@ if (class_exists('\\HyperPress\\Admin\\Options') && \HyperPress\Admin\Options::i
 }
 ```
 
+### Settings Link on the Plugins Screen
+
+When the admin page is enabled, HyperPress also adds a **Settings** link to the plugin's row on `wp-admin/plugins.php`. In plugin mode this is automatic — the link points at this plugin's own row.
+
+In library mode the library has no plugin row of its own, so a host plugin must declare its basename via the `hyperpress/admin/action_links_basename` filter for the link to appear:
+
+```php
+// In your host plugin, before the after_setup_theme hook fires
+add_filter('hyperpress/admin/show_menu', '__return_true');
+add_filter('hyperpress/admin/action_links_basename', fn () => plugin_basename(__FILE__));
+```
+
 See [Library Detection](./library-detection.md) for the full `hp_is_library_mode()` reference.

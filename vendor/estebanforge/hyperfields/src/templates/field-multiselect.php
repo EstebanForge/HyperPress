@@ -37,6 +37,8 @@ $value = is_array($value) ? $value : [$value];
     </label>
 
     <div class="hyperpress-field-input">
+        <!-- Hidden input to ensure the field is always sent in POST data even when none selected -->
+        <input type="hidden" name="<?php echo esc_attr($name_attr); ?>[]" value="__hm_empty__">
         <?php if ($enhanced_enabled): ?>
         <!-- Hidden select for form submission -->
         <select id="<?php echo esc_attr($name); ?>"

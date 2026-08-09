@@ -551,7 +551,7 @@ Facade aliases: `HyperFields::exportOptions()`, `HyperFields::importOptions()`, 
 
 For generic pages/CPT transfer and pluggable transfer modules, see:
 
-- `docs/transfer-and-content-export-import.md`
+- `docs/transfer-export-import.md`
 
 ## Field Types Reference
 

@@ -332,9 +332,13 @@ if (!function_exists('hp_ds_read_signals')) {
         // Datastar signals sent via GET requests. We need to remove these slashes
         // so that the Datastar SDK can properly decode the JSON data.
         // @see https://stackoverflow.com/a/8949871
+        $original_get = $_GET;
         $_GET = array_map('stripslashes_deep', $_GET);
-
-        return ServerSentEventGenerator::readSignals();
+        try {
+            return ServerSentEventGenerator::readSignals();
+        } finally {
+            $_GET = $original_get;
+        }
     }
 }
 

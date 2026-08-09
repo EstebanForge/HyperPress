@@ -350,9 +350,24 @@ if (!function_exists('is_child_theme')) {
 if (!function_exists('current_user_can')) {
     /**
      * Mock current_user_can function.
+     *
+     * Default: all capabilities granted (preserves the historical behavior
+     * existing tests rely on). Tests can force a decision by setting
+     * $GLOBALS['__hb_test_current_user_can'] to a bool (applies to every
+     * capability) or a [capability => bool] map.
      */
     function current_user_can(string $capability, ...$args): bool
     {
+        $override = $GLOBALS['__hb_test_current_user_can'] ?? null;
+
+        if (is_array($override)) {
+            return $override[$capability] ?? true;
+        }
+
+        if (is_bool($override)) {
+            return $override;
+        }
+
         return true;
     }
 }
@@ -421,6 +436,10 @@ if (!function_exists('wp_add_inline_script')) {
 if (!function_exists('register_rest_route')) {
     /**
      * Mock register_rest_route function.
+     *
+     * Captures each registered route (namespace, route, args) into
+     * HyperBlocks_Testing_Registry so unit tests can assert on method,
+     * callback, and permission_callback wiring without a live REST server.
      */
     function register_rest_route(
         string $namespace,
@@ -428,6 +447,8 @@ if (!function_exists('register_rest_route')) {
         array $args = [],
         bool $override = false
     ): bool {
+        HyperBlocks_Testing_Registry::recordRestRoute($namespace, $route, $args);
+
         return true;
     }
 }
@@ -482,6 +503,9 @@ final class HyperBlocks_Testing_Registry
 
     /** @var list<array{path: string, args: array}> */
     private static array $metadataRegistrations = [];
+
+    /** @var list<array{namespace: string, route: string, args: array}> */
+    private static array $restRoutes = [];
 
     /** @var array{handle: string, src: string, deps: array, ver: string|bool|null, in_footer: bool} */
     private static array $lastEnqueue = [
@@ -591,10 +615,25 @@ final class HyperBlocks_Testing_Registry
         return self::$metadataRegistrations;
     }
 
+    public static function recordRestRoute(string $namespace, string $route, array $args): void
+    {
+        self::$restRoutes[] = ['namespace' => $namespace, 'route' => $route, 'args' => $args];
+    }
+
+    /**
+     * @return list<array{namespace: string, route: string, args: array}>
+     */
+    public static function getRestRoutes(): array
+    {
+        return self::$restRoutes;
+    }
+
     public static function reset(): void
     {
         self::$last = ['', []];
         self::$metadataRegistrations = [];
+        self::$restRoutes = [];
+        unset($GLOBALS['__hb_test_current_user_can']);
         self::$lastEnqueue = [
             'handle'    => '',
             'src'       => '',

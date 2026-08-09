@@ -6,11 +6,11 @@ namespace HyperFields;
 
 class ConditionalLogic
 {
-    private string $field_name;
-    private string $operator;
-    private mixed $value;
-    private string $relation = 'AND';
-    private array $conditions = [];
+    private string $field_name = '';
+    private string $operator = '';
+    private mixed $value = null;
+    private array $groups = [];
+    private int $current_group_index = 0;
 
     public const OPERATORS = [
         '=',
@@ -53,6 +53,7 @@ class ConditionalLogic
     private function __construct(string $fieldName)
     {
         $this->field_name = $fieldName;
+        $this->groups = [[]];
     }
 
     /**
@@ -218,11 +219,13 @@ class ConditionalLogic
      */
     public function and(string $fieldName): self
     {
-        $this->conditions[] = [
-            'field' => $this->field_name,
-            'operator' => $this->operator,
-            'value' => $this->value,
-        ];
+        if ($this->field_name !== '' && $this->operator !== '') {
+            $this->groups[$this->current_group_index][] = [
+                'field' => $this->field_name,
+                'operator' => $this->operator,
+                'value' => $this->value,
+            ];
+        }
 
         $this->field_name = $fieldName;
         $this->operator = '';
@@ -238,9 +241,39 @@ class ConditionalLogic
      */
     public function or(string $fieldName): self
     {
-        $this->relation = 'OR';
+        if ($this->field_name !== '' && $this->operator !== '') {
+            $this->groups[$this->current_group_index][] = [
+                'field' => $this->field_name,
+                'operator' => $this->operator,
+                'value' => $this->value,
+            ];
+        }
 
-        return $this->and($fieldName);
+        $this->current_group_index++;
+        $this->groups[$this->current_group_index] = [];
+
+        $this->field_name = $fieldName;
+        $this->operator = '';
+        $this->value = null;
+
+        return $this;
+    }
+
+    /**
+     * Finalizes current pending condition into active group.
+     */
+    private function compileGroups(): array
+    {
+        $groups = $this->groups;
+        if ($this->field_name !== '' && $this->operator !== '') {
+            $groups[$this->current_group_index][] = [
+                'field' => $this->field_name,
+                'operator' => $this->operator,
+                'value' => $this->value,
+            ];
+        }
+
+        return array_values(array_filter($groups));
     }
 
     /**
@@ -250,27 +283,27 @@ class ConditionalLogic
      */
     public function evaluate(array $values): bool
     {
-        $conditions = $this->conditions;
+        $groups = $this->compileGroups();
 
-        if (!empty($this->operator)) {
-            $conditions[] = [
-                'field' => $this->field_name,
-                'operator' => $this->operator,
-                'value' => $this->value,
-            ];
+        if (empty($groups)) {
+            return true;
         }
 
-        $results = [];
-        foreach ($conditions as $condition) {
-            $field_value = $values[$condition['field']] ?? null;
-            $results[] = $this->evaluateCondition($field_value, $condition['operator'], $condition['value']);
+        foreach ($groups as $group) {
+            $group_passed = true;
+            foreach ($group as $condition) {
+                $field_value = $values[$condition['field']] ?? null;
+                if (!$this->evaluateCondition($field_value, $condition['operator'], $condition['value'])) {
+                    $group_passed = false;
+                    break;
+                }
+            }
+            if ($group_passed) {
+                return true;
+            }
         }
 
-        if ($this->relation === 'OR') {
-            return in_array(true, $results, true);
-        }
-
-        return !in_array(false, $results, true);
+        return false;
     }
 
     /**
@@ -294,8 +327,14 @@ class ConditionalLogic
             case '<=':
                 return $fieldValue <= $compareValue;
             case 'IN':
+                if (is_array($fieldValue)) {
+                    return array_intersect($fieldValue, (array) $compareValue) !== [];
+                }
                 return in_array($fieldValue, (array) $compareValue, true);
             case 'NOT IN':
+                if (is_array($fieldValue)) {
+                    return array_intersect($fieldValue, (array) $compareValue) === [];
+                }
                 return !in_array($fieldValue, (array) $compareValue, true);
             case 'CONTAINS':
                 return strpos((string) $fieldValue, (string) $compareValue) !== false;
@@ -317,19 +356,20 @@ class ConditionalLogic
      */
     public function toArray(): array
     {
-        $conditions = $this->conditions;
-
-        if (!empty($this->operator)) {
-            $conditions[] = [
-                'field' => $this->field_name,
-                'operator' => $this->operator,
-                'value' => $this->value,
-            ];
+        $groups = $this->compileGroups();
+        $flat_conditions = [];
+        foreach ($groups as $group) {
+            foreach ($group as $cond) {
+                $flat_conditions[] = $cond;
+            }
         }
 
+        $relation = count($groups) > 1 ? 'OR' : 'AND';
+
         return [
-            'relation' => $this->relation,
-            'conditions' => $conditions,
+            'relation' => $relation,
+            'conditions' => $flat_conditions,
+            'groups' => $groups,
         ];
     }
 
@@ -341,7 +381,17 @@ class ConditionalLogic
     public static function factory(array $conditions): self
     {
         $logic = new self('');
-        $logic->conditions = $conditions;
+        $logic->groups = [];
+
+        if (isset($conditions[0]) && is_array($conditions[0]) && isset($conditions[0][0]) && is_array($conditions[0][0])) {
+            $logic->groups = $conditions;
+        } elseif (isset($conditions['groups']) && is_array($conditions['groups'])) {
+            $logic->groups = $conditions['groups'];
+        } elseif (isset($conditions['conditions']) && is_array($conditions['conditions'])) {
+            $logic->groups = [$conditions['conditions']];
+        } else {
+            $logic->groups = [$conditions];
+        }
 
         return $logic;
     }

@@ -35,7 +35,7 @@ class Config
      * Semantic version string. Mirrors composer.json (single source of truth
      * for the PHP side; run `composer version-bump` to keep both in sync).
      */
-    public const VERSION = '1.5.2';
+    public const VERSION = '1.5.3';
 
     /**
      * Primary rewrite endpoint slug (e.g. /wp-html/v1/).

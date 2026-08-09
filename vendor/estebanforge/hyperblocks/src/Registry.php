@@ -72,6 +72,20 @@ final class Registry
     private string $pluginPath;
 
     /**
+     * Resolved JSON block name -> directory map.
+     *
+     * Populated as owned blocks are registered during init discovery, so the
+     * REST /block-fields and /render-preview lookups (findJsonBlockPath) are
+     * an O(1) array hit instead of a fresh glob plus block.json read on every
+     * request. Only positive results are cached (bounded by the block count);
+     * misses fall through to the scan so varied bogus names cannot grow the
+     * map.
+     *
+     * @var array<string, string>
+     */
+    private array $jsonBlockPathCache = [];
+
+    /**
      * Private constructor to prevent direct instantiation.
      */
     private function __construct()
@@ -365,6 +379,7 @@ final class Registry
                     $fluentBlockFiles = array_merge($fluentBlockFiles, $files);
                 }
             }
+            $fluentBlockFiles = array_unique($fluentBlockFiles);
 
             foreach ($fluentBlockFiles as $file) {
                 // Skip files in directories starting with underscore
@@ -483,6 +498,12 @@ final class Registry
             return false;
         }
 
+        // Cache the name -> path mapping so REST lookups avoid rescanning the
+        // block tree on every request. Recorded for every owned block, even
+        // if core registration below fails, so the path stays resolvable.
+        // See findJsonBlockPath().
+        $this->jsonBlockPathCache[$metadata['name']] = $blockPath;
+
         // Fail soft: a malformed block.json must not take down the whole init
         // pass (every block registration on the request). Skip the offending
         // block and log when debug is on. Mirrors Bootstrap::sanitizeAttributes().
@@ -505,6 +526,13 @@ final class Registry
      */
     public function findJsonBlockPath(string $blockName): ?string
     {
+        // O(1) lookup once init discovery has populated the name -> path map.
+        // See registerJsonBlockFromPath(). Misses are cached up to a 100-entry bound
+        // to prevent redundant disk rescans while capping memory growth.
+        if (array_key_exists($blockName, $this->jsonBlockPathCache)) {
+            return $this->jsonBlockPathCache[$blockName];
+        }
+
         $scanPaths = [];
 
         // Get scan paths from configuration
@@ -539,10 +567,15 @@ final class Registry
                     // Only resolve owned blocks: the REST field/preview lookups
                     // must not match foreign block.json files in the same path.
                     if (isset($metadata['name']) && $metadata['name'] === $blockName && self::isOwnedJsonBlock($metadata)) {
+                        $this->jsonBlockPathCache[$metadata['name']] = $directory;
                         return $directory;
                     }
                 }
             }
+        }
+
+        if (count($this->jsonBlockPathCache) < 100) {
+            $this->jsonBlockPathCache[$blockName] = null;
         }
 
         return null;
@@ -558,5 +591,6 @@ final class Registry
         $instance = self::getInstance();
         $instance->fluentBlocks = [];
         $instance->fieldGroups = [];
+        $instance->jsonBlockPathCache = [];
     }
 }

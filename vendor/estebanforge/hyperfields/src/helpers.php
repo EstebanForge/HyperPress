@@ -5,7 +5,6 @@ declare(strict_types=1);
 use HyperFields\Admin\ExportImportUI;
 use HyperFields\CacheInvalidator;
 use HyperFields\Compatibility\WPSettingsCompatibility;
-use HyperFields\ContentExportImport;
 use HyperFields\ExportImport;
 use HyperFields\Field;
 use HyperFields\LibraryBootstrap;
@@ -468,61 +467,6 @@ if (!function_exists('hf_diff_options')) {
     function hf_diff_options(string $jsonString, array $allowedOptionNames = [], string $prefix = '', array $options = []): array
     {
         return ExportImport::diffOptions($jsonString, $allowedOptionNames, $prefix, $options);
-    }
-}
-
-if (!function_exists('hf_export_posts')) {
-    /**
-     * Export posts/pages/CPT records to JSON.
-     *
-     * @param array $postTypes Post types to export.
-     * @param array $options Optional export behavior.
-     */
-    function hf_export_posts(array $postTypes, array $options = []): string
-    {
-        return ContentExportImport::exportPosts($postTypes, $options);
-    }
-}
-
-if (!function_exists('hf_snapshot_posts')) {
-    /**
-     * Snapshot posts/pages/CPT records for compare workflows.
-     *
-     * @param array $postTypes Post types to snapshot.
-     * @param array $options Optional snapshot behavior.
-     * @return array
-     */
-    function hf_snapshot_posts(array $postTypes, array $options = []): array
-    {
-        return ContentExportImport::snapshotPosts($postTypes, $options);
-    }
-}
-
-if (!function_exists('hf_import_posts')) {
-    /**
-     * Import posts/pages/CPT records from JSON.
-     *
-     * @param string $jsonString Export payload created by hf_export_posts().
-     * @param array  $options Optional import behavior.
-     * @return array
-     */
-    function hf_import_posts(string $jsonString, array $options = []): array
-    {
-        return ContentExportImport::importPosts($jsonString, $options);
-    }
-}
-
-if (!function_exists('hf_diff_posts')) {
-    /**
-     * Build a dry-run compare report for posts/pages/CPT imports.
-     *
-     * @param string $jsonString Export payload created by hf_export_posts().
-     * @param array  $options Optional compare behavior.
-     * @return array
-     */
-    function hf_diff_posts(string $jsonString, array $options = []): array
-    {
-        return ContentExportImport::diffPosts($jsonString, $options);
     }
 }
 

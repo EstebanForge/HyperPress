@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.5.3] - 2026-08-09
+
+### Added
+- **Settings link on the plugins screen.** When the admin options page is enabled, a Settings link is added to the plugin's action row on `wp-admin/plugins.php`. In plugin mode the link targets this plugin's own row; in library mode a host plugin declares its row through the new `hyperpress/admin/action_links_basename` filter (documented in `docs/developer-configuration.md`).
+
+### Security
+- **Endpoint request validation hardened.** Requests that fail nonce verification are now treated as unauthenticated for the remainder of the request and cannot inherit a privileged session, and endpoint parameters are sanitized more strictly before rendering runs.
+- **Renderer input handling tightened.** Recursive array processing now sanitizes keys at every nesting depth and drops empty keys, and the request superglobal is restored after signal decoding so request state cannot leak across reads.
+
+### Changed
+- Template path resolution hoisted for clearer, faster realpath handling in `Render`.
+- Test coverage expanded for nonce handling and recursive sanitization (`RenderNonceTest`, `RenderSanitizationTest`).
+
 ## [1.5.2] - 2026-08-04
 
 ### Changed

@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0680553a8300af30f43fa36a05a89570",
+    "content-hash": "7a7ff6683e3d58f9caab1802207e0729",
     "packages": [
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.5.0",
+            "version": "1.5.3",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "77bf4151e6a33a2c8d63ad7ca4bc38f9688ef7a3"
+                "reference": "6a5827df3264d9d4b45687c631ce52e10d4b43d1"
             },
             "require": {
                 "estebanforge/hyperfields": "^1",
@@ -103,11 +103,11 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.5.1",
+            "version": "1.5.2",
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "90053b80821c7d27a8b0d6d99049f5dd3e0762eb"
+                "reference": "de47dc439da08525aea0537352eab498d1a4182e"
             },
             "require": {
                 "php": ">=8.2"
@@ -6359,16 +6359,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v7.4.15",
+            "version": "v7.4.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "088ec6fe0ef6819cbc301174093b6bfa4ad26930"
+                "reference": "f4c69c9aed03abf933b294257d618bdd9b30a06d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/088ec6fe0ef6819cbc301174093b6bfa4ad26930",
-                "reference": "088ec6fe0ef6819cbc301174093b6bfa4ad26930",
+                "url": "https://api.github.com/repos/symfony/console/zipball/f4c69c9aed03abf933b294257d618bdd9b30a06d",
+                "reference": "f4c69c9aed03abf933b294257d618bdd9b30a06d",
                 "shasum": ""
             },
             "require": {
@@ -6433,7 +6433,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v7.4.15"
+                "source": "https://github.com/symfony/console/tree/v7.4.16"
             },
             "funding": [
                 {
@@ -6453,7 +6453,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-27T13:51:00+00:00"
+            "time": "2026-07-31T12:37:14+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",

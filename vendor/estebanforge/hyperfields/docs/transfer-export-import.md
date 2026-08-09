@@ -4,7 +4,7 @@ This document describes the generic, extensible transfer features added to Hyper
 
 Goal:
 - Keep HyperFields framework-agnostic.
-- Support option-backed and content-backed portability.
+- Support option-backed portability.
 - Allow downstream libraries/apps to plug in custom modules without forking HyperFields.
 
 ## 1) Extended Options Export/Import
@@ -387,185 +387,8 @@ if (!empty($errors)) {
 
 ---
 
-## 4) Generic Pages/CPT Export/Import
 
-Class: `HyperFields\ContentExportImport`
-
-This is a generic content portability utility for post-like records (pages + CPT).
-
-### Export
-
-```php
-use HyperFields\ContentExportImport;
-
-$json = ContentExportImport::exportPosts(
-    ['page', 'my_cpt'],
-    [
-        'post_status' => ['publish', 'draft', 'private'],
-        'include_meta' => true,
-        'include_private_meta' => false,
-        'include_meta_keys' => [],      // optional allowlist
-        'exclude_meta_keys' => ['_edit_lock'],
-        'include_content' => true,
-        'include_excerpt' => true,
-        'include_parent' => true,
-    ]
-);
-```
-
-### Snapshot (for external compare workflows)
-
-```php
-$snapshot = ContentExportImport::snapshotPosts(['page', 'my_cpt']);
-```
-
-### Import
-
-```php
-$result = ContentExportImport::importPosts(
-    $json,
-    [
-        'allowed_post_types' => ['page', 'my_cpt'],
-        'dry_run' => false,
-        'create_missing' => true,
-        'update_existing' => true,
-        'include_meta' => true,
-        'meta_mode' => 'merge', // 'merge' | 'replace'
-        'include_private_meta' => false,
-        'include_meta_keys' => [],
-        'exclude_meta_keys' => ['_edit_lock'],
-        'normalization_profile' => '', // optional profile key for row normalization hooks
-    ]
-);
-```
-
-### Dry-run diff
-
-```php
-$preview = ContentExportImport::diffPosts($json, [
-    'allowed_post_types' => ['page', 'my_cpt'],
-]);
-```
-
-Import matching rules:
-- Canonical identity = `post_type + slug`.
-- If incoming `id` is present, HyperFields first checks destination post by ID
-  and only treats it as the same record when both `post_type` and `slug` also match.
-- Otherwise (or when ID check fails), existing records are resolved by
-  `get_page_by_path($slug, OBJECT, $post_type)`.
-- If canonical slug lookup misses, HyperFields also checks trashed records by
-  `_wp_desired_post_slug` to preserve slug ownership during restore flows.
-
-Custom rule hooks:
-- `hyperfields/content_import/resolve_existing_post` lets you override how an existing destination post is resolved.
-- `hyperfields/content_import/row_decision` lets you decide per row whether to `create`, `merge`, `delete`, `recreate`, or `skip` (with optional `target_id`).
-- `hyperfields/content_import/normalize_row` lets you normalize incoming rows before matching/writes.
-- `hyperfields/content_import/normalize_row/profile_{profile}` lets you attach reusable profile-specific normalizers via `normalization_profile`.
-
-### Content row strategies (`__strategy`)
-
-Each exported content row includes `__strategy` with default value **`replace`**.
-You can edit this in JSON before import.
-
-Supported values:
-- `merge`, `migrate`, `override`, `replace`: merge into existing if found, otherwise create.
-- `create`, `new`: force create.
-- `delete`: delete matched destination row.
-- `recreate`: delete matched destination row (if present) then create new row.
-- `skip`: do nothing for this row.
-
-### Override import behavior (examples)
-
-#### Example A: Force specific rows to recreate instead of merge
-
-```php
-add_filter(
-    'hyperfields/content_import/row_decision',
-    static function (array $decision, array $row, string $postType, string $slug, array $options): array {
-        // If a row has recreate=true in payload meta, force recreate.
-        if (!empty($row['meta']['recreate'][0])) {
-            return [
-                'action' => 'recreate',
-                'reason' => 'forced_recreate',
-            ];
-        }
-
-        return $decision;
-    },
-    10,
-    5
-);
-```
-
-#### Example B: Resolve existing record by a custom meta key first
-
-```php
-add_filter(
-    'hyperfields/content_import/resolve_existing_post',
-    static function ($resolved, array $row, string $postType, string $slug) {
-        $externalId = isset($row['meta']['external_id'][0]) ? (string) $row['meta']['external_id'][0] : '';
-        if ($externalId === '') {
-            return $resolved;
-        }
-
-        $query = new WP_Query([
-            'post_type' => $postType,
-            'post_status' => 'any',
-            'posts_per_page' => 1,
-            'meta_key' => 'external_id',
-            'meta_value' => $externalId,
-            'fields' => 'ids',
-            'no_found_rows' => true,
-        ]);
-
-        if (!empty($query->posts)) {
-            return (int) $query->posts[0];
-        }
-
-        return $resolved;
-    },
-    10,
-    4
-);
-```
-
-#### Example C: Enforce module-level import policies
-
-```php
-use HyperFields\Transfer\Manager;
-
-// Skip selected modules in production.
-add_filter(
-    'hyperfields/transfer_manager/import/module_decision',
-    static function (array $decision, string $moduleKey, $payload, array $context, array $bundle): array {
-        if (wp_get_environment_type() === 'production' && in_array($moduleKey, ['emails', 'content'], true)) {
-            return [
-                'action' => 'skip',
-                'reason' => 'blocked_in_production',
-            ];
-        }
-
-        return $decision;
-    },
-    10,
-    5
-);
-
-// Inject per-module flags consumed by your importer callback.
-add_filter(
-    'hyperfields/transfer_manager/import/module_context',
-    static function (array $context, string $moduleKey, $payload, array $bundle): array {
-        $context['strict_mode'] = ($moduleKey === 'content');
-        return $context;
-    },
-    10,
-    4
-);
-```
-
----
-
-## 5) Extensible Transfer Module Registry
+## 4) Extensible Transfer Module Registry
 
 Class: `HyperFields\Transfer\Manager`
 
@@ -680,15 +503,11 @@ Resulting bundle shape:
 
 ---
 
-## 6) Public Facade + Helper Functions
+## 5) Public Facade + Helper Functions
 
 ### Facade (`HyperFields\HyperFields`)
 
 - `HyperFields::diffOptions(...)`
-- `HyperFields::exportPosts(...)`
-- `HyperFields::snapshotPosts(...)`
-- `HyperFields::importPosts(...)`
-- `HyperFields::diffPosts(...)`
 - `HyperFields::makeTransferManager()`
 
 ### Helpers (`src/helpers.php`)
@@ -698,12 +517,6 @@ Resulting bundle shape:
 - `hf_import_options(string $json, array $allowed = [], string $prefix = '', array $options = []): array`
 - `hf_diff_options(string $json, array $allowed = [], string $prefix = '', array $options = []): array`
 
-**Content:**
-- `hf_export_posts(array $postTypes, array $options = []): string`
-- `hf_snapshot_posts(array $postTypes, array $options = []): array`
-- `hf_import_posts(string $json, array $options = []): array`
-- `hf_diff_posts(string $json, array $options = []): array`
-
 **Schema Validation:**
 - `hf_validate_value(string $fieldName, mixed $value, array $rule): ?string`
 - `hf_validate_schema(array $values, array $schemaMap, string $prefix = ''): array`
@@ -712,20 +525,13 @@ Resulting bundle shape:
 
 ---
 
-## 7) Hooks Reference
+## 6) Hooks Reference
 
 | Hook | Type | Fired by | Parameters |
 |---|---|---|---|
 | `hyperfields/export/after` | Action | `ExportImport::exportOptions()` | `$result, $payload, $optionNames, $prefix, $schemaMap` |
 | `hyperfields/export/node_strategy` | Filter | `ExportImport::exportOptions()` | `$strategy, $optionName, $value` |
 | `hyperfields/import/after` | Action | `ExportImport::importOptions()` | `$result, $decoded, $allowedOptionNames, $prefix, $options` |
-| `hyperfields/content_export/after` | Action | `ContentExportImport::exportPosts()` | `$result, $payload, $postTypes, $options` |
-| `hyperfields/content_export/row_strategy` | Filter | `ContentExportImport::normalizeExportPost()` | `$strategy, $post` |
-| `hyperfields/content_import/normalize_row` | Filter | `ContentExportImport::importPosts()` | `$row, $postType, $slug, $options` |
-| `hyperfields/content_import/normalize_row/profile_{profile}` | Filter | `ContentExportImport::importPosts()` | `$row, $postType, $slug, $options` |
-| `hyperfields/content_import/resolve_existing_post` | Filter | `ContentExportImport::resolveExistingPost()` | `$resolved, $row, $postType, $slug` |
-| `hyperfields/content_import/row_decision` | Filter | `ContentExportImport::importPosts()` | `$decision, $row, $postType, $slug, $options` |
-| `hyperfields/content_import/after` | Action | `ContentExportImport::importPosts()` | `$result, $decoded, $options` |
 | `hyperfields/transfer_manager/export/after` | Action | `Transfer\Manager::export()` | `$result, $selectedModuleKeys, $context` |
 | `hyperfields/transfer_manager/import/module_payload` | Filter | `Transfer\Manager::import()` | `$payload, $moduleKey, $context, $bundle` |
 | `hyperfields/transfer_manager/import/module_decision` | Filter | `Transfer\Manager::import()` | `$decision, $moduleKey, $payload, $context, $bundle` |
@@ -743,7 +549,7 @@ Resulting bundle shape:
 
 ---
 
-## 8) Transfer Audit Logging
+## 7) Transfer Audit Logging
 
 HyperFields now includes built-in transfer audit logging for options, content, and transfer-manager operations.
 
@@ -777,7 +583,7 @@ Notes:
 
 ---
 
-## 9) Extension Guidance
+## 8) Extension Guidance
 
 Recommended pattern for downstream integrations:
 
@@ -787,5 +593,5 @@ Recommended pattern for downstream integrations:
 4. On import, HyperFields validates each value against its `_schema` automatically.
 5. For additional domain-specific validation, use `SchemaValidator::validate()` or `SchemaValidator::validateMap()` in your module's import logic.
 6. Register project-specific transfer modules in your application/plugin layer using `Transfer\Manager`.
-7. Use `diffOptions()` / `diffPosts()` for safe dry-run previews before import.
+7. Use `diffOptions()` for safe dry-run previews before import.
 8. Register custom format validators via the `hyperfields/validation/format` filter.

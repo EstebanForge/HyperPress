@@ -361,7 +361,7 @@ Returns field definitions for a registered block (fluent or JSON).
 ]
 ```
 
-**Permissions**: public (no authentication required).
+**Permissions**: requires `edit_posts` capability. (Previously public; gated to stop an anonymous caller from forcing an uncached block-tree scan via arbitrary `name` values.)
 
 ### `POST /render-preview`
 

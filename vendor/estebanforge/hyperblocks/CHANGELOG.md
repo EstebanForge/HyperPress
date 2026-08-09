@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.5.3] - 2026-08-09
+
+### Security
+- **Block field and preview REST routes are permission-gated.** The JSON block path lookup is now cached and bounded, and the `/block-fields` and preview endpoints verify the caller can edit posts before exposing field or preview data.
+- **Block preview attributes are sanitized correctly.** HTML attributes are preserved rather than stripped, and nested array attributes are recursed, so preview output stays safe without losing markup.
+
+### Fixed
+- **Template rendering cleans up its output buffer on error.** All buffer levels unwind when a template throws, and the engine isolates its internal scope so a block attribute named like an engine variable is preserved.
+- Discovery globs are deduplicated so a file matching both `.hb.php` and `.php` is no longer read twice.
+
 ## [1.5.0] - 2026-08-04
 
 ### Added

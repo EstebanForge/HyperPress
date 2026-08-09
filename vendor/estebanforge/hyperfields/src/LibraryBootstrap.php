@@ -115,9 +115,7 @@ final class LibraryBootstrap
     public static function resolveContentUrl(string $path): string
     {
         $normalize = static function (string $p): string {
-            $p = str_replace('\\', '/', $p);
-
-            return function_exists('wp_normalize_path') ? wp_normalize_path($p) : $p;
+            return function_exists('wp_normalize_path') ? wp_normalize_path($p) : str_replace('\\', '/', $p);
         };
 
         // realpath() so symlinked content roots match a realpath'd script path:

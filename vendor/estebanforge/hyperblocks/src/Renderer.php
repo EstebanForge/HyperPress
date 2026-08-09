@@ -35,7 +35,7 @@ class Renderer
             $finalHtml = $this->parseCustomComponents($initialHtml, $attributes);
 
             return $finalHtml;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // Return error HTML for debugging
             if (defined('WP_DEBUG') && WP_DEBUG) {
                 return '<div class="hyperblocks-error">Rendering Error: ' . esc_html($e->getMessage()) . '</div>';
@@ -110,13 +110,9 @@ class Renderer
         $tempFile = $this->createTempTemplate($templateString);
 
         try {
-            $output = $this->executeInIsolatedScope($tempFile, $attributes);
-            unlink($tempFile); // Clean up temp file
-
-            return $output;
-        } catch (\Exception $e) {
-            unlink($tempFile); // Clean up temp file on error
-            throw $e;
+            return $this->executeInIsolatedScope($tempFile, $attributes);
+        } finally {
+            @unlink($tempFile); // Clean up temp file on any exit
         }
     }
 
@@ -253,14 +249,25 @@ class Renderer
             // Extract attributes as variables for template use
             extract($__attributes, EXTR_SKIP);
 
+            $__ob_level = ob_get_level();
+
             // Start output buffering
             ob_start();
 
-            // Include the template file
-            include $__template_path;
+            try {
+                // Include the template file
+                include $__template_path;
 
-            // Get the output and clean the buffer
-            return ob_get_clean();
+                // Get the output and clean the buffer
+                return ob_get_clean();
+            } catch (\Throwable $e) {
+                // Template threw: unwind all buffer levels opened since the
+                // baseline so nested ob_start calls in the template do not leak.
+                while (ob_get_level() > $__ob_level) {
+                    ob_end_clean();
+                }
+                throw $e;
+            }
         };
 
         // Execute with error handling
@@ -270,16 +277,16 @@ class Renderer
 
         try {
             $output = $executeTemplate($templatePath, $attributes);
-            restore_error_handler();
 
             if ($output === false) {
                 throw new \Exception('Template execution failed');
             }
 
             return $output;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            throw new \Exception('Template execution error: ' . $e->getMessage(), 0, $e);
+        } finally {
             restore_error_handler();
-            throw new \Exception('Template execution error: ' . $e->getMessage());
         }
     }
 

@@ -190,12 +190,11 @@ HyperFields now also ships:
 
 - `ExportImport::diffOptions(...)` for dry-run compare reporting.
 - import mode options for options payloads (`merge` or `replace`).
-- `ContentExportImport` for generic pages/CPT export/import by `post_type + slug`.
 - `Transfer\Manager` for registering pluggable module exporters/importers/differs.
 
 See:
 
-- `docs/transfer-and-content-export-import.md` for full API reference.
+- `docs/transfer-export-import.md` for full API reference.
 
 ## 🚧 Optional: Compact Input for Options Pages
 

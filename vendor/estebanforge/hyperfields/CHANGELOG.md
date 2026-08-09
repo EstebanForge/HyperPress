@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.5.2] - 2026-08-09
+
+### Security
+- **Save handlers now require a verified form-origin nonce.** Legacy user and term meta save paths that accepted a weaker check now verify the nonce against the form origin, rejecting forged save requests.
+- **Posted values are unslashed before validation.** Save handlers now unslash incoming data so sanitization sees the real values, preventing slashed input from slipping past content and length checks.
+- **Multiselect fields can be cleared.** A hidden sentinel now lets a multiselect submit an empty selection so a stored value is actually removed, and submitted values are filtered against the allowed option keys.
+- **Conditional logic evaluates relation groups correctly.** `AND`/`OR` relations are compiled into boolean groups instead of being flattened, and the `IN`/`NOT IN` operators handle array-valued fields via set intersection.
+
+### Changed
+- **Association field queries are bounded.** The primary lookup skips row counting, and the fallback now considers all post statuses so a draft or private association is no longer silently dropped on save.
+- Path normalization in `resolveContentUrl()` prefers the native `wp_normalize_path()`.
+
+### Removed
+- **Legacy content export/import.** The deprecated `ContentExportImport` and `ContentTransferAdapter` classes and their helpers were removed in favor of the transfer workflow.
+
 ## [1.5.1] - 2026-08-03
 
 ### Changed
@@ -324,14 +339,10 @@
 - Transfer Manager envelope customization via `Transfer\SchemaConfig` and `Manager::withSchema(...)`.
 - Automatic transfer-audit hook initialization in `LibraryBootstrap::init()`.
 - Typed-node schema validation for option import/export via `Validation\SchemaValidator`.
-- `ContentExportImport` API for post/content JSON export/import/diff flows.
 - `Transfer\Manager` pluggable module registry for export/import/diff orchestration.
-- New facade and helper methods for content transfer:
-  - `HyperFields::exportPosts()`, `snapshotPosts()`, `importPosts()`, `diffPosts()`, `makeTransferManager()`
-  - `hf_export_posts()`, `hf_snapshot_posts()`, `hf_import_posts()`, `hf_diff_posts()`
 - Strategy support expansion (`__strategy`) for transfer payload behavior control.
 - Expanded transfer/bootstrap docs:
-  - `docs/transfer-and-content-export-import.md`
+  - `docs/transfer-export-import.md`
   - `docs/library-bootstrap.md`
 
 ### Changed
@@ -339,7 +350,7 @@
 - `ExportImport` updated to align with transfer-manager, typed-node, and schema-aware flows.
 - `ExportImportUI` overhauled with richer export selection/filter UX and improved diff/import experience.
 - Export options filter layout and admin styling/scripts refactored (`assets/js/hyperfields-admin.js`, `assets/css/hyperfields-admin.css`).
-- Core docs updated with content transfer and extensible manager guidance.
+- Core docs updated with extensible manager guidance.
 - Composer/library metadata and README refreshed for library-first usage.
 - Packaging cleanup for library distribution:
   - adjusted bootstrap/composer metadata

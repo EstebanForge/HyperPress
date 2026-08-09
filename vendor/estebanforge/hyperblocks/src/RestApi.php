@@ -60,7 +60,9 @@ class RestApi
             [
                 'methods'             => \WP_REST_Server::READABLE,
                 'callback'            => [$this, 'getBlockFields'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => function () {
+                    return current_user_can('edit_posts');
+                },
                 'args'                => [
                     'name' => [
                         'required'          => true,
@@ -305,6 +307,8 @@ class RestApi
             ];
         }
 
+        $attributes = $this->sanitizeJsonBlockAttributes($attributes, $metadata['attributes'] ?? []);
+
         try {
             $renderer = new Renderer();
             $html = $renderer->render('file:' . $renderFile, $attributes);
@@ -313,7 +317,7 @@ class RestApi
                 'success' => true,
                 'html' => $html,
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return [
                 'success' => false,
                 'error' => 'Rendering failed: ' . $e->getMessage(),
@@ -332,6 +336,50 @@ class RestApi
         $registry = Registry::getInstance();
 
         return $registry->findJsonBlockPath($blockName);
+    }
+
+    /**
+     * Sanitize JSON block attributes by their declared block.json types.
+     *
+     * @param array $attributes      Incoming attributes from the REST request.
+     * @param array $declaredAttributes block.json attribute type declarations.
+     * @return array Sanitized attributes.
+     */
+    private function sanitizeJsonBlockAttributes(array $attributes, array $declaredAttributes): array
+    {
+        $sanitized = [];
+
+        foreach ($attributes as $name => $value) {
+            $declaration = $declaredAttributes[$name] ?? [];
+            $type = $declaration['type'] ?? 'string';
+            $source = $declaration['source'] ?? '';
+
+            $sanitized[$name] = match ($type) {
+                'integer', 'number' => is_numeric($value) ? $value + 0 : 0,
+                'boolean' => (bool) $value,
+                'string' => $source === 'html'
+                    ? wp_kses_post((string) $value)
+                    : sanitize_text_field((string) $value),
+                default => $this->sanitizeNestedValue($value),
+            };
+        }
+
+        return $sanitized;
+    }
+
+    /**
+     * Recursively sanitize a nested array or scalar value.
+     *
+     * @param mixed $value The value to sanitize.
+     * @return mixed The sanitized value.
+     */
+    private function sanitizeNestedValue(mixed $value): mixed
+    {
+        if (is_array($value)) {
+            return array_map([$this, 'sanitizeNestedValue'], $value);
+        }
+
+        return sanitize_text_field((string) $value);
     }
 
     /**
