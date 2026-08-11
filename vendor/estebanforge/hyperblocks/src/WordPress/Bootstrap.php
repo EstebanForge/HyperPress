@@ -46,8 +46,6 @@ class Bootstrap
             return;
         }
 
-        define(__NAMESPACE__ . '\\LOADED', __DIR__);
-
         if (Config::isInitialized()) {
             return;
         }
@@ -60,7 +58,11 @@ class Bootstrap
         $plugin_file = $base_dir . 'bootstrap.php';
         $plugin_url = self::resolvePluginUrl($base_dir);
 
+        // G1: markInitialized runs before define(LOADED) (load-bearing invariant;
+        // see HyperFields\LibraryBootstrap::init). Moved so a mid-init abort
+        // cannot claim LOADED while Config stays uninitialized.
         Config::markInitialized();
+        define(__NAMESPACE__ . '\\LOADED', __DIR__);
         Config::$abspath = $base_dir;
         Config::$pluginFile = $plugin_file;
         Config::$pluginUrl = $plugin_url;
@@ -74,8 +76,17 @@ class Bootstrap
             require_once $helpers;
         }
 
-        // Initialize configuration
-        add_action('plugins_loaded', [self::class, 'initializeConfig'], 5);
+        // Initialize configuration. Rule A (Layer 3): if plugins_loaded already
+        // fired (init() was scheduled at after_setup_theme, which runs AFTER
+        // plugins_loaded), run initializeConfig now instead of scheduling onto
+        // a dead hook. This was the live defect: initializeConfig never ran, so
+        // Config::getBlockPaths() stayed empty and the bundled blocks/ dir was
+        // never registered.
+        if (did_action('plugins_loaded') > 0) {
+            self::initializeConfig();
+        } else {
+            add_action('plugins_loaded', [self::class, 'initializeConfig'], 5);
+        }
 
         // Register blocks
         add_action('init', [self::class, 'registerBlocks'], 10);
@@ -88,6 +99,38 @@ class Bootstrap
 
         // Register default block paths
         add_action('init', [self::class, 'registerDefaultPaths'], 5);
+    }
+
+    /**
+     * Late-use safety net: bring HyperBlocks up if a consumer touched
+     * Registry::getInstance() before after_setup_theme fired. Mirrors
+     * HyperFields\LibraryBootstrap::ensureInitialized. Emits _doing_it_wrong()
+     * when the init hook already fired, because block registration that late
+     * will be incomplete.
+     *
+     * @return void
+     */
+    public static function ensureInitialized(): void
+    {
+        if (Config::isInitialized()) {
+            return;
+        }
+
+        if (function_exists('did_action') && did_action('init') > 0) {
+            if (function_exists('_doing_it_wrong')) {
+                _doing_it_wrong(
+                    'HyperBlocks\\WordPress\\Bootstrap::ensureInitialized',
+                    'HyperBlocks initialized after the "init" hook already fired. '
+                    . 'Block registration will be incomplete. '
+                    . 'Ensure the library boots at after_setup_theme, not on first Registry use.',
+                    Config::VERSION
+                );
+            } else {
+                error_log('HyperBlocks: late initialization after init; block registration may be incomplete.');
+            }
+        }
+
+        self::init();
     }
 
     /**

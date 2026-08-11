@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.4] - 2026-08-11
+
+### Fixed
+- **Zero-config subsystem initialization in early-load environments (Bedrock, WP-CLI).** Same hardening as HyperFields 1.5.4 and HyperBlocks 1.5.4. `bootstrap.php`'s scheduling of `Bootstrap::init()` at `after_setup_theme` silently no-op'd when the file ran before `add_action()` existed, leaving Config uninitialized while classes autoloaded. Two windows: HTTP (`wp-config` requires `vendor/autoload` before `application.php` defines `ABSPATH`, so the guard returned before the callback was defined) and WP-CLI (`ABSPATH` pre-defined, but `add_action` absent so the scheduling line was skipped). Fix: the scheduler runs above the `ABSPATH` guard. With `add_action` it uses the normal path (`has_action(...) === false`, not `!has_action` which is always-true for a priority-0 callback). Without `add_action` it writes the registration into `$GLOBALS['wp_filter']` in the preinitialized-hooks format that `WP_Hook::build_preinitialized_hooks` converts on load (WP 4.7+). The `admin_notices` closure is `function_exists`-guarded. As a side effect the runtime now also comes up under WP-CLI, where the scheduling previously never landed.
+- **`!has_action` priority-0 double-registration bug** (now `=== false`).
+- **Unguarded `add_action` in the autoloader-fallback branch** (now `function_exists`-guarded with an `error_log` fallback).
+
+### Changed
+- **G1: election-guard ordering.** `define(__NAMESPACE__ . '\\LOADED')` now runs AFTER `Config::markInitialized()` inside `Bootstrap::init()`. A mid-init abort can no longer leave LOADED claimed with Config uninitialized (which would make any later guard a silent no-op). The `DOING_CRON` / `DOING_AJAX` / `REST_REQUEST` / `XMLRPC_REQUEST` / `WP_CLI` early-return behavior is unchanged; it still runs after `markInitialized()` and the helper/deprecated loads.
+- **Contract freeze (documented).** The bootstrap callback name (`hyperpress_bootstrap_init`) and the `init()` target (`\HyperPress\Bootstrap::init`) are a cross-version contract: a stale copy winning Composer's `autoload.files` race calls into whatever class wins the SPL election, so renaming the method in a future major fatals every request.
+
+### Internal
+- The unreachable `is_array()` false branch in the `wp_filter` preinit write now `error_log`s, so a future regression of that shape cannot fail silent.
+
+> Note: unlike HyperFields and HyperBlocks, HyperPress-Core takes no Layer 2 (`ensureInitialized`) or Layer 3 (register-or-run) guards. Nothing reaches its bootstrap before `after_setup_theme`, and all of its hooks (`init`, `template_redirect`, `wp_head`, `rest_api_init`, enqueues) fire at or after that point. `Config::isInitialized()` is also a false positive under the background/API early-return contexts, so a blanket guard would mislead.
+
 ## [1.5.3] - 2026-08-09
 
 ### Added

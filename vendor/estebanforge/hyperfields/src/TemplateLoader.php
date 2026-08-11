@@ -155,7 +155,7 @@ class TemplateLoader
      */
     public static function enqueueAssets(): void
     {
-        $plugin_url = Config::$pluginUrl !== '' ? Config::$pluginUrl : (defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : '');
+        $plugin_url = LibraryBootstrap::resolveAssetBaseUrl();
         if ($plugin_url === '') {
             return;
         }
@@ -245,7 +245,7 @@ class TemplateLoader
     {
         // Enqueue heavy/type-specific assets after fields have rendered (works for admin and frontend)
         if (isset(self::$rendered_field_types['map'])) {
-            $plugin_url = Config::$pluginUrl !== '' ? Config::$pluginUrl : (defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : '');
+            $plugin_url = LibraryBootstrap::resolveAssetBaseUrl();
             if ($plugin_url === '') {
                 return;
             }

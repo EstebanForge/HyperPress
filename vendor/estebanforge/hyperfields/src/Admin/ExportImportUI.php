@@ -6,6 +6,7 @@ namespace HyperFields\Admin;
 
 use HyperFields\Config;
 use HyperFields\ExportImport;
+use HyperFields\LibraryBootstrap;
 use HyperFields\TemplateLoader;
 
 /**
@@ -158,7 +159,7 @@ class ExportImportUI
     public static function enqueuePageAssets(): void
     {
         TemplateLoader::enqueueAssets();
-        $pluginUrl = Config::$pluginUrl !== '' ? Config::$pluginUrl : (defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : '');
+        $pluginUrl = LibraryBootstrap::resolveAssetBaseUrl();
         $version = Config::VERSION;
 
         if ($pluginUrl !== '') {

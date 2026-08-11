@@ -905,16 +905,7 @@ class OptionsPage
 
         TemplateLoader::enqueueAssets();
 
-        $plugin_url = '';
-        if (Config::$pluginUrl !== '') {
-            $plugin_url = Config::$pluginUrl;
-        } elseif (function_exists('plugins_url')) {
-            $resolved = plugins_url('', dirname(__DIR__) . '/bootstrap.php');
-            if (is_string($resolved) && $resolved !== '') {
-                $plugin_url = trailingslashit($resolved);
-            }
-        }
-
+        $plugin_url = LibraryBootstrap::resolveAssetBaseUrl();
         if ($plugin_url === '') {
             return;
         }
@@ -992,15 +983,7 @@ class OptionsPage
         wp_enqueue_script('wp-i18n');
 
         // Enqueue React app for HyperFields
-        $plugin_url = '';
-        if (Config::$pluginUrl !== '') {
-            $plugin_url = Config::$pluginUrl;
-        } elseif (function_exists('plugins_url')) {
-            $resolved = plugins_url('', dirname(__DIR__) . '/bootstrap.php');
-            if (is_string($resolved) && $resolved !== '') {
-                $plugin_url = trailingslashit($resolved);
-            }
-        }
+        $plugin_url = LibraryBootstrap::resolveAssetBaseUrl();
 
         $react_app_path = $plugin_url !== '' ? $plugin_url . 'assets/js/dist/react-fields.js' : '';
 

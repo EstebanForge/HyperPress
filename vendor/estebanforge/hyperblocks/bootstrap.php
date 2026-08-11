@@ -19,6 +19,63 @@ declare(strict_types=1);
  * @since 1.0.0
  */
 
+// CONTRACT FREEZE: the callback name (hyperblocks_bootstrap_init) and the
+// init() target (\HyperBlocks\WordPress\Bootstrap::init) are part of the
+// cross-version contract. A stale copy of this bootstrap can win Composer's
+// autoload.files race (the first vendor/autoload.php required) and call into
+// whatever class copy wins the SPL election; renaming the method in a future
+// major makes every request fatal with an undefined-method error at
+// after_setup_theme. Keep these names stable across all majors.
+
+// 1. Scheduler. Runs unconditionally and needs nothing from WordPress, so it
+//    sits ABOVE the ABSPATH guard. This covers both bootstrap failure windows:
+//    the WP-CLI window (ABSPATH pre-defined, but plugin.php not yet loaded so
+//    add_action is absent) and the HTTP window (ABSPATH undefined, this file
+//    returns at the guard below, but the registration above already ran).
+//    When add_action is absent we write the registration straight into
+//    $GLOBALS['wp_filter'] in the preinitialized-hooks format; WordPress core
+//    converts that raw array into a real WP_Hook when plugin.php loads
+//    (WP_Hook::build_preinitialized_hooks, since WP 4.7, Trac #38929).
+if (!function_exists('hyperblocks_bootstrap_init')) {
+    /**
+     * Initialize HyperBlocks for this copy at after_setup_theme.
+     *
+     * @return void
+     */
+    function hyperblocks_bootstrap_init(): void
+    {
+        \HyperBlocks\WordPress\Bootstrap::init();
+    }
+}
+
+if (function_exists('add_action')) {
+    // === false, not !has_action: has_action returns the priority int (0 for
+    // this priority-0 callback), which is falsy, so a loose !has_action would
+    // always re-add.
+    if (has_action('after_setup_theme', 'hyperblocks_bootstrap_init') === false) {
+        add_action('after_setup_theme', 'hyperblocks_bootstrap_init', 0);
+    }
+} else {
+    // Pre-plugin-API window. Write the callback into $GLOBALS['wp_filter'] in
+    // the raw array format WP_Hook::build_preinitialized_hooks expects.
+    // is_array is mandatory: WP_Hook implements ArrayAccess, so a ??= on an
+    // already-built WP_Hook would silently discard. accepted_args is read
+    // unconditionally by add_filter, so it must be present (PHP 8 warning).
+    $hooks = $GLOBALS['wp_filter']['after_setup_theme'] ?? [];
+    if (is_array($hooks)) {
+        $hooks[0]['hyperblocks_bootstrap_init'] ??= [
+            'function'      => 'hyperblocks_bootstrap_init',
+            'accepted_args' => 1,
+        ];
+        $GLOBALS['wp_filter']['after_setup_theme'] = $hooks;
+    } else {
+        // Unreachable in standard WP startup (WP_Hook cannot exist before
+        // plugin.php loads), but log so a future regression cannot fail silent.
+        error_log('HyperBlocks: after_setup_theme wp_filter slot is not an array; preinit registration skipped.');
+    }
+}
+
+// 2. Everything below needs WordPress.
 // Exit if accessed directly (but allow test environment to proceed).
 if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
     return;
@@ -33,39 +90,25 @@ $loadedFromVendorTree = str_contains($normalizedDir, '/vendor/');
 if (!$loadedFromVendorTree && file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 } elseif (!$loadedFromVendorTree) {
-    // No autoloader found: surface an admin notice but continue so tests can
-    // register hooks.
-    add_action('admin_notices', static function (): void {
-        echo '<div class="error"><p>' . esc_html__('HyperBlocks: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'hyperblocks') . '</p></div>';
-    });
+    // No autoloader found: surface an admin notice (or error_log before
+    // plugin.php has loaded) but continue so tests can register hooks.
+    if (function_exists('add_action')) {
+        add_action('admin_notices', static function (): void {
+            echo '<div class="error"><p>' . esc_html__('HyperBlocks: Composer autoloader not found. Please run "composer install" inside the plugin folder.', 'hyperblocks') . '</p></div>';
+        });
+    } else {
+        error_log('HyperBlocks: Composer autoloader not found.');
+    }
 }
 
 // Bootstrap the HyperFields dependency. When HyperBlocks runs standalone
 // (not alongside the HyperFields plugin), trigger HyperFields' bootstrap so its
 // after_setup_theme initialization runs. The guard inside HyperFields'
 // bootstrap.php (first-to-boot LOADED) prevents double-initialization.
+// Stays below the ABSPATH guard: HyperFields' bootstrap needs WordPress too.
 if (!$loadedFromVendorTree) {
     $hyperfieldsBootstrap = __DIR__ . '/vendor/estebanforge/hyperfields/bootstrap.php';
     if (file_exists($hyperfieldsBootstrap)) {
         require_once $hyperfieldsBootstrap;
     }
-}
-
-// Schedule initialization at after_setup_theme (priority 0, original timing).
-// Delegates to WordPress\Bootstrap::init(), which carries the prefix-safe
-// first-to-boot guard and sets Config runtime identity.
-if (!function_exists('hyperblocks_bootstrap_init')) {
-    /**
-     * Initialize HyperBlocks for this copy at after_setup_theme.
-     *
-     * @return void
-     */
-    function hyperblocks_bootstrap_init(): void
-    {
-        \HyperBlocks\WordPress\Bootstrap::init();
-    }
-}
-
-if (function_exists('add_action') && !has_action('after_setup_theme', 'hyperblocks_bootstrap_init')) {
-    add_action('after_setup_theme', 'hyperblocks_bootstrap_init', 0);
 }

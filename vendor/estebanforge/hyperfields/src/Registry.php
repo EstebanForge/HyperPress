@@ -26,6 +26,11 @@ class Registry
      */
     public static function getInstance(): self
     {
+        // Layer 2 safety net: if a consumer reached Registry before
+        // after_setup_theme fired, bring the library up now. Recursion-safe
+        // because init() runs Config::markInitialized() before it calls
+        // getInstance() (see the load-bearing invariant in LibraryBootstrap::init).
+        LibraryBootstrap::ensureInitialized();
         if (self::$instance === null) {
             self::$instance = new self();
         }
@@ -280,7 +285,16 @@ class Registry
      */
     public function init(): self
     {
-        add_action('init', [$this, 'registerAll']);
+        // Rule B (Layer 3): if the init hook already fired (this copy was
+        // reached late, e.g. via a Layer 2 ensureInitialized() fallback after
+        // init), run registerAll now instead of scheduling onto a hook that
+        // will never fire. Without this, a late bring-up leaves Registry
+        // registrations silent.
+        if (did_action('init') > 0) {
+            $this->registerAll();
+        } else {
+            add_action('init', [$this, 'registerAll']);
+        }
 
         return $this;
     }

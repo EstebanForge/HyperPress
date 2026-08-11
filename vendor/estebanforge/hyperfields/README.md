@@ -18,13 +18,35 @@ It provides:
 composer require estebanforge/hyperfields
 ```
 
-Load your project Composer autoloader:
+Load your project Composer autoloader, then call the library bootstrap:
 
 ```php
 require_once __DIR__ . '/vendor/autoload.php';
+
+if (class_exists('\HyperFields\LibraryBootstrap')) {
+    \HyperFields\LibraryBootstrap::init([
+        'plugin_file' => __FILE__,
+        'plugin_url'  => plugin_dir_url(__FILE__) . 'vendor/estebanforge/hyperfields/',
+    ]);
+}
 ```
 
-HyperFields bootstrap is registered via Composer `autoload.files`.
+HyperFields self-initializes (zero-config). Its `bootstrap.php` is a Composer
+`autoload.files` entry that schedules `LibraryBootstrap::init()` at
+`after_setup_theme` (priority 0). This works across every WordPress load
+order, including the Bedrock and WP-CLI early-load windows where `add_action()`
+is not yet available: there the bootstrap writes the registration straight
+into `$GLOBALS['wp_filter']` in WordPress' preinitialized-hooks format, which
+core converts into a real hook when `plugin.php` loads
+(`WP_Hook::build_preinitialized_hooks`, since WP 4.7). You do not need to
+call `init()` yourself.
+
+Calling `LibraryBootstrap::init()` explicitly is still supported as an
+optional deterministic override (for example, to pin a specific `plugin_file`
+or `plugin_url`). It is idempotent and safe under the cross-copy election guard.
+See [`docs/library-bootstrap.md`](docs/library-bootstrap.md) for the full
+guide, arguments, the Bedrock dual-copy note, and the explicit-override
+contract.
 
 ## Basic usage
 

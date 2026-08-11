@@ -1,5 +1,46 @@
 # Changelog
 
+## [1.5.4] - 2026-08-11
+
+### Fixed
+- **Zero-config subsystem initialization in early-load environments (Bedrock, WP-CLI).** `bootstrap.php` schedules `init()` at `after_setup_theme`, but that scheduling silently no-op'd when the file ran before WordPress' plugin API was available, leaving `Config` and every subsystem (Registry, Assets, TemplateLoader, AuditLogger, CacheInvalidator) uninitialized while classes still autoloaded and looked healthy. Two confirmed failure windows:
+  - **HTTP window:** in Bedrock, `wp-config.php` requires `vendor/autoload.php` before `application.php` defines `ABSPATH`. The bootstrap's `ABSPATH` guard returned before the callback was even defined (the "poison pill"); the one-shot Composer `autoload.files` slot was consumed and other copies were dedup-skipped.
+  - **WP-CLI window:** WP-CLI pre-defines `ABSPATH`, so the bootstrap passed the guard and defined the callback, but `add_action` was absent (`wp-includes/plugin.php` not loaded yet), so the scheduling line was skipped.
+  Fix: the scheduler now runs ABOVE the `ABSPATH` guard. When `add_action` is available it uses the normal path. When `add_action` is absent it writes the registration directly into `$GLOBALS['wp_filter']['after_setup_theme'][0]` in WordPress' preinitialized-hooks raw-array format; core's `WP_Hook::build_preinitialized_hooks` (since WP 4.7, Trac #38929) converts that into a real `WP_Hook` when `plugin.php` loads. The bug was confirmed live on a Bedrock staging server (subsystems dead) and is closed by this change.
+- **`!has_action` priority-0 double-registration bug.** `has_action()` returns the priority integer, so for this priority-0 callback it returns `0` (falsy); the old `!has_action(...)` guard was always-true. Now `has_action(...) === false`.
+- **Unguarded `add_action` in the autoloader-fallback branch.** The `admin_notices` closure ran unconditionally and would fatal in the early window. Now `function_exists`-guarded with an `error_log` fallback.
+
+### Added
+- **`LibraryBootstrap::ensureInitialized()` safety net (Layer 2).** Brings the library up if a consumer touched an early-reachable facade before `after_setup_theme` fired. Wired into `registerOptionsPage`, `registerWPSettingsCompatibilityPage`, `makeOptionPage`, `makeAdminPage`, the post/term/user-meta container factories (`createPostMetaContainer`, `makePostMeta`, `makeTermMeta`, `makeUserMeta`), and `Registry::getInstance()`. Emits `_doing_it_wrong()` when the `init` hook has already fired, because field/options-page registrations added that late will be incomplete. Recursion-safe via the G1 ordering invariant below. Not applied to the pure option read/write helpers (`getOptions`, `getFieldValue`, `setFieldValue`, `deleteFieldOption`) or the value-object factories, which have no Config/Registry reach.
+- **Regression tests** for the new behavior: `ensureInitialized` bring-up and no-op (isolated processes), and `Registry::init()` Rule B synchronous register-all.
+
+### Changed
+- **G1: election-guard ordering.** `define(__NAMESPACE__ . '\LOADED')` now runs AFTER `Config::markInitialized()` inside `init()`. Previously LOADED was claimed before Config was marked; a mid-init abort would leave LOADED set with Config uninitialized, making every later `ensureInitialized()` a silent no-op. The ordering is load-bearing and documented: `markInitialized()` must precede the internal `Registry::getInstance()` call so the `ensureInitialized()` guard on `getInstance()` cannot recurse.
+- **Layer 3: `Registry::init()` register-or-run (Rule B).** If the `init` hook already fired (late bring-up via `ensureInitialized`), `registerAll` now runs synchronously instead of being scheduled onto a hook that will never fire.
+- **Subsystem ordering.** `Registry::getInstance()->init()` now runs LAST in `LibraryBootstrap::init()`, after Assets/TemplateLoader/AuditLogger/CacheInvalidator are wired, so a synchronous late `registerAll` (which fires `do_action('hyperfields/register')`) sees those subsystems available.
+- **Contract freeze (documented).** The bootstrap callback name (`hyperfields_bootstrap_init`) and the `init()` target (`\HyperFields\LibraryBootstrap::init`) are part of a cross-version contract: a stale copy can win Composer's `autoload.files` race and call into whatever class copy wins the SPL election, so renaming the method in a future major would fatal every request at `after_setup_theme`.
+
+### Internal
+- `ensureInitialized` alarm now guards `did_action` with `function_exists` for consistency with the `_doing_it_wrong` guard (the two live in different core files: `plugin.php` and `functions.php`).
+- The unreachable `is_array()` false branch in the `wp_filter` preinit write now `error_log`s, so a future regression of that shape cannot fail silent.
+- The autoloader-fallback admin-notice closure is now `static` (matches HyperBlocks and HyperPress).
+
+## [1.5.3] - 2026-08-10
+
+### Added
+- **`LibraryBootstrap::resolveAssetBaseUrl()` — the single source of truth for resolving the library's own asset base URL.** Consolidates three previously duplicated resolution shapes that had drifted apart across seven enqueue sites. Resolution order:
+  1. `Config::$pluginUrl` — the normal elected path, set by `LibraryBootstrap::init()`.
+  2. `HYPERPRESS_PLUGIN_URL` — HyperPress-Core owns this constant and resolves it from its own base directory; respected when HyperPress is the active host.
+  3. `LibraryBootstrap::resolveContentUrl(dirname(__DIR__))` — defense-in-depth fallback for when no bootstrap completed (e.g. `bootstrap.php` was pulled in by Composer's `autoload.files` before `add_action()` existed, so its `after_setup_theme` scheduling silently no-op'd — common when an early drop-in or mu-plugin triggers the host autoloader). Resolves from THIS copy's own root, so the assets that match the loaded classes are the ones that enqueue. Returns `''` for non-web-accessible locations (e.g. a Bedrock root `vendor/` outside the document root); callers bail then.
+  - `Config` is **not** mutated: the cross-copy election/bootstrap state stays untouched, so HyperPress-Core's own bootstrap still wins when present. Mirrors the fallback HyperBlocks' editor-asset enqueue already uses against the same gap.
+
+### Changed
+- **Every asset-enqueue site now routes through `resolveAssetBaseUrl()` instead of inlining its own resolution.** Removes the three divergent inline shapes:
+  - `Config::$pluginUrl !== '' ? Config::$pluginUrl : (defined('HYPERPRESS_PLUGIN_URL') ? HYPERPRESS_PLUGIN_URL : '')` — previously in `TemplateLoader::enqueueAssets()`, `TemplateLoader::enqueueDeferredAssets()`, and `Admin\ExportImportUI::enqueuePageAssets()`.
+  - The full `Config::$pluginUrl` / `plugins_url('', ...)` fallback block — previously duplicated verbatim in `AdminPage`, `OptionsPage` (settings assets), and `OptionsPage` (React app enqueue).
+  - The bare `Config::$pluginUrl === ''` early-return in `Assets::enqueueScripts()`, which had no fallback at all.
+  All seven sites now share one method, so the new `resolveContentUrl()` fallback tier applies uniformly and the resolution contract can no longer drift between callers.
+
 ## [1.5.2] - 2026-08-09
 
 ### Security

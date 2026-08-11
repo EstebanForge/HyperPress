@@ -1,7 +1,7 @@
 === HyperPress | Hypermedia for WordPress (HTMX or Datastar) ===
 Contributors: tcattd
 Tags: hypermedia, ajax, htmx, alpinejs, datastar
-Stable tag: 3.5.9
+Stable tag: 3.5.10
 Requires at least: 6.5
 Tested up to: 7.0
 Requires PHP: 8.2
@@ -211,6 +211,10 @@ Please [open an issue](https://github.com/EstebanForge/HyperPress/issues).
 2. About.
 
 == Changelog ==
+
+= 3.5.10 / 2026-08-11 =
+* **Fixed**: Zero-config initialization now works across every WordPress load order (Bedrock, WP-CLI, early drop-ins). The bundled Hyper libraries reliably self-initialize at after_setup_theme even when the Composer autoloader runs before WordPress' plugin API is available. Previously the field, block, and runtime subsystems could stay dead in those environments while the classes still autoloaded.
+* **Bundled libraries**: HyperFields 1.5.4, HyperBlocks 1.5.4, HyperPress-Core 1.5.4 (zero-config bootstrap hardening; HyperBlocks also fixes bundled blocks never registering on a normal boot).
 
 = 3.5.6 / 2026-07-30 =
 * **Fixed**: Re-enabled the Settings > HyperPress options page. The plugin adapter now opts in via the `hyperpress/admin/show_menu` filter, so the page appears when HyperPress is active and stays hidden when HyperPress-Core is consumed as a standalone Composer library.

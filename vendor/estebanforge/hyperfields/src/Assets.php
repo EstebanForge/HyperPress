@@ -27,7 +27,8 @@ class Assets
      */
     public function enqueueScripts(): void
     {
-        if (Config::$pluginUrl === '') {
+        $plugin_url = LibraryBootstrap::resolveAssetBaseUrl();
+        if ($plugin_url === '') {
             return;
         }
 
@@ -41,7 +42,7 @@ class Assets
         if ($pagenow === 'options-general.php' || did_action('hyperfields_enhanced_multiselect')) {
             wp_enqueue_script(
                 'hyperfields-multiselect-enhanced',
-                Config::$pluginUrl . 'assets/js/multiselect-enhanced.js',
+                $plugin_url . 'assets/js/multiselect-enhanced.js',
                 ['jquery'],
                 Config::VERSION,
                 true

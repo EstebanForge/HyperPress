@@ -19,6 +19,53 @@ The guard is built with `__NAMESPACE__`, so it is prefix-safe: unprefixed copies
 
 `bootstrap.php` also triggers HyperFields' bootstrap from the vendored copy when running standalone, so requiring `estebanforge/hyperblocks` is the only step needed; you do not bootstrap HyperFields separately.
 
+### Auto-bootstrap (zero-config)
+
+Step 2 above (scheduling `init()` at `after_setup_theme`) is reliable across
+every WordPress load order. It does not depend on `add_action()` being
+available when `bootstrap.php` runs. When the Composer autoloader is pulled in
+before `wp-includes/plugin.php` loads (a drop-in such as `object-cache.php`, a
+must-use plugin, or `wp-config.php`, common in Bedrock), `bootstrap.php` writes
+the `after_setup_theme` registration straight into `$GLOBALS['wp_filter']` in
+the preinitialized-hooks raw-array format; WordPress core converts that into a
+real `WP_Hook` when `plugin.php` loads (`WP_Hook::build_preinitialized_hooks`,
+since WP 4.7, Trac #38929). The scheduler runs before the `ABSPATH` guard, so
+`init()` is scheduled whether or not `ABSPATH` is defined yet, and the
+`hyperblocks_bootstrap_init` callback fires at `after_setup_theme` priority 0.
+
+The editor-asset enqueue also self-heals when `Config::$pluginUrl` is empty,
+because it resolves its URL from the library's own root via
+`HyperFields\LibraryBootstrap::resolveContentUrl()`. So on a web-reachable
+copy the inserter works even if `init()` were somehow delayed.
+
+### Bedrock dual-copy sites
+
+If a Bedrock project has HyperBlocks in two places at once (a root `vendor/`
+copy pulled transitively, plus a copy bundled inside a plugin under
+`wp-content/`), the **root** copy wins Composer's `autoload.files` race,
+because `wp-config.php` requires the root `vendor/autoload.php` first. Only the
+winning bootstrap's code runs, so an updated bootstrap only takes effect when
+the winning copy contains it. To make the plugin-bundled (web-reachable) copy
+win, remove the root copy with Composer `replace`:
+
+1. Confirm why it is there: `composer why estebanforge/hyperblocks`.
+2. Add to the **root** `composer.json`:
+   `"replace": { "estebanforge/hyperblocks": "*" }`.
+3. `composer update estebanforge/hyperblocks --lock`. Composer removes the
+   directory itself and drops the `autoload.files` and classmap entries.
+
+**Never `rm` the root `vendor/` copy.** Composer's files-loader does a bare
+`require $file` with no `file_exists` guard, so deleting the file while the
+autoload entry survives fatals every request. `replace` plus `update --lock` is
+the only safe removal.
+
+### Explicit override (optional)
+
+Calling `\HyperBlocks\WordPress\Bootstrap::init()` explicitly after your
+autoloader (see *Manually triggering initialization* below) is still supported
+as an optional deterministic override. It is idempotent, election-guarded, and
+bypasses the auto-bootstrap entirely. It is no longer required for correctness.
+
 Runtime identity lives on `HyperBlocks\Config` (prefix-safe), not global constants:
 
 - `Config::VERSION` - semantic version (mirrors `composer.json`)
@@ -105,7 +152,7 @@ class Bootstrap
 
 ## Monorepo / Bedrock / symlinked plugins
 
-In setups where the plugins directory is outside the standard `wp-content/plugins` path, or where plugin directories are symlinks, asset URLs resolve against the web-accessible WordPress content roots (plugins, mu-plugins, content, active theme dirs). `Bootstrap::init()` always runs regardless of reachability — it does not gate boot on the URL. When a copy sits outside every content root (e.g. a Bedrock root composer vendor outside the document root), `Config::$pluginUrl` is empty and the editor-asset enqueue bails gracefully: it logs the "not reachable from any web-accessible WordPress content root" notice and returns, so fluent blocks still render on the front end but will not appear in the inserter. The `bootstrap.php` ABSPATH guard also prevents a root-vendor copy from scheduling `init()` ahead of a plugin-bundled copy in Bedrock's load order. For the inserter to work, load HyperBlocks from a web-reachable copy bundled inside a plugin under `wp-content/`.
+In setups where the plugins directory is outside the standard `wp-content/plugins` path, or where plugin directories are symlinks, asset URLs resolve against the web-accessible WordPress content roots (plugins, mu-plugins, content, active theme dirs). `Bootstrap::init()` always runs regardless of reachability — it does not gate boot on the URL. When a copy sits outside every content root (e.g. a Bedrock root composer vendor outside the document root), `Config::$pluginUrl` is empty and the editor-asset enqueue bails gracefully: it logs the "not reachable from any web-accessible WordPress content root" notice and returns, so fluent blocks still render on the front end but will not appear in the inserter. The bootstrap scheduler runs before the `ABSPATH` guard and handles the early window (see *Auto-bootstrap (zero-config)*), so a root-vendor copy initializes reliably. But on a dual-copy Bedrock site the root copy wins the `autoload.files` race, so remove it via Composer `replace` (never `rm`) if you want the plugin-bundled copy's bootstrap to win. For the inserter to work, load HyperBlocks from a web-reachable copy bundled inside a plugin under `wp-content/`.
 
 ```
 web/app/plugins/my-plugin/     <- WP registration (may be a symlink)

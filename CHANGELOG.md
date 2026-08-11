@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.5.10] - 2026-08-11
+
+### Fixed
+- **Zero-config subsystem initialization in early-load environments (Bedrock, WP-CLI).** The bundled Hyper libraries now reliably self-initialize at `after_setup_theme` across every WordPress load order. Previously, when the Composer autoloader was pulled in before `wp-includes/plugin.php` loaded (a Bedrock `wp-config.php`, an early drop-in such as `object-cache.php`, or a must-use plugin), the bootstrap scheduling silently no-op'd and the field, block, and runtime subsystems stayed dead while the classes themselves still autoloaded. The libraries now write the `after_setup_theme` registration straight into `$GLOBALS['wp_filter']` in WordPress' preinitialized-hooks format when `add_action()` is not yet available, so initialization lands regardless of load order. Confirmed live on a Bedrock staging server.
+
+### Bundled libraries
+- HyperFields 1.5.4 (zero-config bootstrap hardened: Layer 1 `wp_filter` preinit, G1 LOADED ordering, `ensureInitialized` safety net, Registry register-or-run; regression tests added).
+- HyperBlocks 1.5.4 (same hardening, plus fixes dead `initializeConfig`: the bundled `blocks/` directory was never registered on a normal boot because `plugins_loaded` had already fired by the time `init()` tried to schedule onto it).
+- HyperPress-Core 1.5.4 (same Layer 1 + G1 hardening; the runtime now also comes up under WP-CLI, where the scheduling previously never landed).
+
 ## [3.5.9] - 2026-08-09
 
 ### Added

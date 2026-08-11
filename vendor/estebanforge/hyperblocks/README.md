@@ -21,13 +21,32 @@ It provides:
 composer require estebanforge/hyperblocks
 ```
 
-Load your project Composer autoloader:
+Load your project Composer autoloader, then call the library bootstrap:
 
 ```php
 require_once __DIR__ . '/vendor/autoload.php';
+
+if (class_exists('\HyperBlocks\WordPress\Bootstrap')) {
+    \HyperBlocks\WordPress\Bootstrap::init();
+}
 ```
 
-HyperBlocks bootstrap is registered via Composer `autoload.files`. HyperFields is bootstrapped automatically, no extra configuration needed.
+HyperBlocks self-initializes (zero-config). Its `bootstrap.php` is a Composer
+`autoload.files` entry that schedules `WordPress\Bootstrap::init()` at
+`after_setup_theme` (priority 0), and chains into the bundled HyperFields
+bootstrap so both libraries come up together. This works across every WordPress
+load order, including the Bedrock and WP-CLI early-load windows where
+`add_action()` is not yet available: there the bootstrap writes the registration
+straight into `$GLOBALS['wp_filter']` in WordPress' preinitialized-hooks format,
+which core converts into a real hook when `plugin.php` loads
+(`WP_Hook::build_preinitialized_hooks`, since WP 4.7). You do not need to call
+`init()` yourself.
+
+Calling `WordPress\Bootstrap::init()` explicitly is still supported as an
+optional deterministic override. It is idempotent and safe under the cross-copy
+election guard. See [`docs/library-bootstrap.md`](docs/library-bootstrap.md)
+for the full guide, the Bedrock dual-copy note, and the explicit-override
+contract.
 
 ## Quick start
 

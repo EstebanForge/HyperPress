@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7a7ff6683e3d58f9caab1802207e0729",
+    "content-hash": "644e945862b44c443246249a79e1c594",
     "packages": [
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.5.3",
+            "version": "1.5.4",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "6a5827df3264d9d4b45687c631ce52e10d4b43d1"
+                "reference": "d02bbe64091eb7c3a54f154faac4f3175c532ac3"
             },
             "require": {
                 "estebanforge/hyperfields": "^1",
@@ -103,11 +103,11 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.5.2",
+            "version": "1.5.4",
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "de47dc439da08525aea0537352eab498d1a4182e"
+                "reference": "6d8b92a219597d56170d3dce26fd2160430becf4"
             },
             "require": {
                 "php": ">=8.2"

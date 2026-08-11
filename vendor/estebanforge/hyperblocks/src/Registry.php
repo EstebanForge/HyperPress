@@ -11,6 +11,7 @@ namespace HyperBlocks;
 use HyperBlocks\Block\Block;
 use HyperBlocks\Block\Field;
 use HyperBlocks\Block\FieldGroup;
+use HyperBlocks\WordPress\Bootstrap;
 use HyperFields\BlockFieldAdapter;
 
 // Prevent direct file access.
@@ -107,6 +108,11 @@ final class Registry
      */
     public static function getInstance(): self
     {
+        // Layer 2 safety net: if a consumer reached Registry before
+        // after_setup_theme fired, bring HyperBlocks up now. Recursion-safe
+        // because init() runs Config::markInitialized() before any internal
+        // getInstance() call (load-bearing invariant in Bootstrap::init).
+        Bootstrap::ensureInitialized();
         if (null === self::$instance) {
             self::$instance = new self();
         }

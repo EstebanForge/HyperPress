@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.5.4] - 2026-08-11
+
+### Fixed
+- **Bundled blocks were never registered on a normal boot (`initializeConfig` was dead code).** `WordPress\Bootstrap::init()` registered `initializeConfig()` onto `plugins_loaded` (priority 5), but `init()` itself is scheduled at `after_setup_theme`, which fires AFTER `plugins_loaded`. So the registration always landed on a hook that had already fired: `initializeConfig()` never ran, `Config::getBlockPaths()` stayed empty, and the library's own bundled `blocks/` directory was never discovered. Now register-or-run: if `plugins_loaded` already fired, `initializeConfig()` runs synchronously; otherwise it is scheduled as before.
+- **Zero-config subsystem initialization in early-load environments (Bedrock, WP-CLI).** Same hardening as HyperFields 1.5.4. `bootstrap.php`'s scheduling of `init()` at `after_setup_theme` silently no-op'd when the file ran before `add_action()` existed, leaving Config and every subsystem uninitialized while classes autoloaded. Two windows: HTTP (`wp-config` requires `vendor/autoload` before `application.php` defines `ABSPATH`, so the guard returned before the callback was defined) and WP-CLI (`ABSPATH` pre-defined, but `add_action` absent so the scheduling line was skipped). Fix: the scheduler runs above the `ABSPATH` guard. With `add_action` it uses the normal path (`has_action(...) === false`, not `!has_action` which is always-true for a priority-0 callback). Without `add_action` it writes the registration into `$GLOBALS['wp_filter']` in the preinitialized-hooks format that `WP_Hook::build_preinitialized_hooks` converts on load (WP 4.7+). The `admin_notices` closure is `function_exists`-guarded.
+- **`!has_action` priority-0 double-registration bug** (now `=== false`).
+
+### Added
+- **`WordPress\Bootstrap::ensureInitialized()` safety net (Layer 2).** Brings HyperBlocks up if a consumer touched `Registry::getInstance()` before `after_setup_theme` fired, with a `_doing_it_wrong()` alarm when `init` already fired. Recursion-safe via the G1 invariant below. Mirrors `HyperFields\LibraryBootstrap::ensureInitialized()`.
+
+### Changed
+- **G1: election-guard ordering.** `define(__NAMESPACE__ . '\\LOADED')` now runs AFTER `Config::markInitialized()` inside `init()`. A mid-init abort can no longer leave LOADED claimed with Config uninitialized (which would make every later `ensureInitialized()` a silent no-op). The ordering is load-bearing: `markInitialized()` must precede any internal `Registry::getInstance()` call so the `ensureInitialized()` guard on `getInstance()` cannot recurse.
+- **Contract freeze (documented).** The bootstrap callback name (`hyperblocks_bootstrap_init`) and the `init()` target (`\HyperBlocks\WordPress\Bootstrap::init`) are a cross-version contract: a stale copy winning Composer's `autoload.files` race calls into whatever class wins the SPL election, so renaming the method in a future major fatals every request.
+- README and `docs/library-bootstrap.md` document that auto-bootstrap is best-effort and that an explicit `Bootstrap::init()` call is the supported deterministic contract for the subsystems that do not self-heal.
+
+### Internal
+- `ensureInitialized` alarm guards `did_action` with `function_exists` for consistency with the `_doing_it_wrong` guard.
+- The unreachable `is_array()` false branch in the `wp_filter` preinit write now `error_log`s, so a future regression of that shape cannot fail silent.
+
 ## [1.5.3] - 2026-08-09
 
 ### Security

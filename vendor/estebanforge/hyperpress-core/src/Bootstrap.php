@@ -55,7 +55,6 @@ final class Bootstrap
         if (defined(__NAMESPACE__ . '\\LOADED')) {
             return;
         }
-        define(__NAMESPACE__ . '\\LOADED', __DIR__);
 
         if (Config::isInitialized()) {
             return;
@@ -83,7 +82,11 @@ final class Bootstrap
                 : plugin_dir_url($plugin_file);
         }
 
+        // G1: markInitialized runs before define(LOADED) (load-bearing invariant;
+        // see HyperFields\LibraryBootstrap::init). Moved so a mid-init abort
+        // cannot claim LOADED while Config stays uninitialized.
         Config::markInitialized();
+        define(__NAMESPACE__ . '\\LOADED', __DIR__);
         Config::$abspath = trailingslashit($base_dir);
         Config::$pluginFile = $plugin_file;
         Config::$pluginUrl = $plugin_url !== '' ? trailingslashit($plugin_url) : '';

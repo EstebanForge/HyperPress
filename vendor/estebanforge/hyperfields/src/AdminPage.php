@@ -310,16 +310,7 @@ class AdminPage
 
         TemplateLoader::enqueueAssets();
 
-        $plugin_url = '';
-        if (Config::$pluginUrl !== '') {
-            $plugin_url = Config::$pluginUrl;
-        } elseif (function_exists('plugins_url')) {
-            $resolved = plugins_url('', dirname(__DIR__) . '/bootstrap.php');
-            if (is_string($resolved) && $resolved !== '') {
-                $plugin_url = trailingslashit($resolved);
-            }
-        }
-
+        $plugin_url = LibraryBootstrap::resolveAssetBaseUrl();
         if ($plugin_url === '') {
             return;
         }
