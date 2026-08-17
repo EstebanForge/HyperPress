@@ -392,6 +392,8 @@ add_action('admin_menu', function (): void {
 
 The `admin_enqueue_scripts` hook fires before page output begins, which is the correct time to call `wp_enqueue_style` / `wp_enqueue_script`. Calling `enqueuePageAssets()` inside the render callback would be too late.
 
+**Bundled assets (no CDN).** The import diff preview (`diff` + `diff2html` + a highlight.js theme) and the export JSON viewer (`@textea/json-viewer`) ship inside the library under `assets/{js,css}/vendor/` and are enqueued locally by `enqueuePageAssets()`. No third-party script is fetched at runtime. When the library is not web-reachable (Bedrock root-vendor installs, where `Config::$pluginUrl` is empty), the scripts are not enqueued and the UI degrades safely: the diff preview falls back to a plain side-by-side JSON view and the export viewer to an escaped `<pre>` block. The confirm-import flow is unaffected.
+
 ### Programmatic API (no UI)
 
 Use these when you need to export/import from code, e.g. in a WP-CLI command or a migration script.

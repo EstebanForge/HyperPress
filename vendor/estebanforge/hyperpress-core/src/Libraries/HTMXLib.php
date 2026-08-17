@@ -58,7 +58,7 @@ class HTMXLib
             'client-side-templates' => esc_html__('Support for client side template processing of JSON/XML responses', 'api-for-htmx'),
             'debug'                 => esc_html__('An extension for debugging of a particular element using htmx', 'api-for-htmx'),
             'event-header'          => esc_html__('Includes a JSON serialized version of the triggering event, if any', 'api-for-htmx'),
-            'include-vals'          => esc_html__('Allows you to include additional values in a request', 'api-for-htmx'),
+            'include-vals'          => esc_html__('Allows you to include additional values in a request. Caution: evaluates the include-vals attribute content as JavaScript (upstream extension design); never use it with user-influenced attribute values, and keep it disabled on sites you do not fully control', 'api-for-htmx'),
             'disable-element'       => esc_html__('Allows you to disable elements during requests', 'api-for-htmx'),
             'method-override'       => esc_html__('Supports method override via hidden input or header', 'api-for-htmx'),
             'multi-swap'            => esc_html__('Allows you to swap multiple elements with different swap strategies', 'api-for-htmx'),

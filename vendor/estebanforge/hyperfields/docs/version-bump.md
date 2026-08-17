@@ -34,7 +34,7 @@ When you run `composer version-bump`, the following files are updated:
 
 1. **Detects current version** from `composer.json`
 2. **Prompts for new version** (semantic versioning: X.Y.Z)
-3. **Validates input** (format checking, must be different from current)
+3. **Validates input** (format checking; same version is allowed and re-stamps every file, repairing any file a previous bump missed)
 4. **Updates all files** using cross-platform `sed` command
 5. **Displays confirmation** with checklist of updated files
 

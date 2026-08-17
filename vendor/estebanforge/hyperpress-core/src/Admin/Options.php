@@ -125,6 +125,37 @@ class Options
             'sections' => $sections,
             'footer_content' => $this->getFooterContent(),
         ]);
+
+        // L3: run imported option values through the same Field sanitizers
+        // the options page uses. The Data Tools import validates against a
+        // self-attested schema in the upload; this filter is the field-level
+        // backstop for HyperPress's own option group.
+        add_filter('hyperfields/import/sanitize_fields', function (array $fields, string $optionName) use ($all_sections): array {
+            if ($optionName !== $this->option_name) {
+                return $fields;
+            }
+
+            foreach ($all_sections as $section) {
+                foreach ($section['fields'] ?? [] as $field) {
+                    if (!is_array($field)) {
+                        continue;
+                    }
+                    $type = $field['type'] ?? null;
+                    $name = $field['name'] ?? null;
+                    if (!is_string($type) || !is_string($name) || $name === '') {
+                        continue;
+                    }
+                    try {
+                        $fields[$name] = \HyperFields\Field::make($type, $name, is_string($field['label'] ?? null) ? $field['label'] : $name);
+                    } catch (\InvalidArgumentException $e) {
+                        // Unknown field type in a section config: leave that
+                        // key unsanitized rather than breaking the import.
+                    }
+                }
+            }
+
+            return $fields;
+        }, 10, 2);
     }
 
     private function buildGeneralTabConfig(): array

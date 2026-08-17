@@ -87,8 +87,14 @@ class Log
         }
 
         $date_suffix = date('Y-m-d');
-        $file_hash = wp_hash($source);
-        $filename = "{$source}-{$date_suffix}-{$file_hash}.log";
+        // WooCommerce 8.9+ filename-hash algorithm (Logging FileV2\File::generate_hash):
+        // HMAC-MD5 over the file id (source + date), keyed by AUTH_SALT. Hashing
+        // the file id instead of the bare source rotates the unguessable suffix
+        // with each daily file. Fallback key covers writes before WP loads salts.
+        $file_id = "{$source}-{$date_suffix}";
+        $hash_key = defined('AUTH_SALT') ? AUTH_SALT : 'hyperpress-logs';
+        $file_hash = hash_hmac('md5', $file_id, (string) $hash_key);
+        $filename = "{$file_id}-{$file_hash}.log";
         $log_file_path = self::$logBaseDir . $filename;
 
         $timestamp = date('Y-m-d\TH:i:s\Z'); // ISO 8601 UTC

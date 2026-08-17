@@ -188,6 +188,10 @@ if (!function_exists('wp_verify_nonce')) {
      * tests/Unit/Admin/OptionsTest.php).
      */
     function wp_verify_nonce($nonce, $action = -1) {
+        $valid_actions = $GLOBALS['__hp_test_nonce_valid_actions'] ?? null;
+        if (is_array($valid_actions)) {
+            return in_array($action, $valid_actions, true) ? 1 : false;
+        }
         $override = $GLOBALS['__hp_test_nonce_valid'] ?? null;
 
         return is_bool($override) ? $override : true;

@@ -103,6 +103,7 @@ class ExportImportUI
             previewer: $previewer,
             importer: $importer,
             exportFormExtras: $exportFormExtras,
+            capability: $capability,
         );
 
         // Determine the hook suffix WordPress will assign to this page
@@ -147,6 +148,7 @@ class ExportImportUI
             previewer: $config->previewer,
             importer: $config->importer,
             exportFormExtras: $config->exportFormExtras,
+            capability: $config->capability,
         );
     }
 
@@ -169,6 +171,42 @@ class ExportImportUI
                 [],
                 $version,
                 false
+            );
+
+            // Bundled diff-viewer assets for the import preview. Kept local so
+            // no third-party CDN script ever executes in the admin origin.
+            wp_enqueue_script(
+                'hf-diff',
+                $pluginUrl . 'assets/js/vendor/diff.min.js',
+                [],
+                $version,
+                true
+            );
+            wp_enqueue_script(
+                'hf-diff2html-ui',
+                $pluginUrl . 'assets/js/vendor/diff2html-ui.min.js',
+                ['hf-diff'],
+                $version,
+                true
+            );
+            wp_enqueue_style(
+                'hf-diff2html',
+                $pluginUrl . 'assets/css/vendor/diff2html.min.css',
+                [],
+                $version
+            );
+            wp_enqueue_style(
+                'hf-hljs-github-dark',
+                $pluginUrl . 'assets/css/vendor/hljs-github-dark.min.css',
+                [],
+                $version
+            );
+            wp_enqueue_script(
+                'hf-json-viewer',
+                $pluginUrl . 'assets/js/vendor/json-viewer.min.js',
+                [],
+                $version,
+                true
             );
         }
 
@@ -223,7 +261,19 @@ class ExportImportUI
         ?callable $previewer = null,
         ?callable $importer = null,
         ?string $exportFormExtras = null,
+        string $capability = 'manage_options',
     ): string {
+        // L4: in-handler capability check. The submenu registration enforces
+        // the capability when registerPage() is used, but render() is public
+        // and documented for manual embedding; a host that wires it to a
+        // low-capability context must not get export/import behind a nonce
+        // alone. Fails closed: no capability, no page, and no POST handling.
+        if (!current_user_can($capability)) {
+            return '<div class="error"><p>'
+                . esc_html__('You do not have permission to access this page.', 'hyperfields')
+                . '</p></div>';
+        }
+
         if (TransferLogsUI::isEnabled() && TransferLogsUI::isLogsViewRequest()) {
             return TransferLogsUI::renderPage();
         }
@@ -983,55 +1033,57 @@ class ExportImportUI
                 var noChange = '<p style="padding:16px;"><strong><?php echo esc_js(__('No differences found. The uploaded file matches the current settings.', 'hyperfields')); ?></strong></p>';
                 var errMsg   = '<p style="padding:16px;"><?php echo esc_js(__('Could not load or render diff. Please check the browser console for details.', 'hyperfields')); ?></p>';
 
-                hfDiffLoadScript(
-                    'https://cdn.jsdelivr.net/npm/diff@7/dist/diff.min.js',
-                    'hf-diff-js',
-                    container,
-                    function () {
-                        hfDiffLoadScript(
-                            'https://cdn.jsdelivr.net/npm/diff2html@3.4.56/bundles/js/diff2html-ui.min.js',
-                            'hf-diff2html-ui-js',
-                            container,
-                            function () {
-                                try {
-                                    var leftStr  = JSON.stringify(current,  null, 2);
-                                    var rightStr = JSON.stringify(incoming, null, 2);
+                // The diff libraries are enqueued server-side from bundled
+                // copies (see enqueuePageAssets). When they are missing the
+                // library is not web-reachable (e.g. Bedrock root-vendor), so
+                // degrade to a plain, safely-built JSON comparison instead.
+                if (typeof Diff === 'undefined' || typeof Diff2HtmlUI === 'undefined') {
+                    container.innerHTML = '';
+                    ['current', 'incoming'].forEach(function (label) {
+                        var data = label === 'current' ? current : incoming;
+                        var heading = document.createElement('h3');
+                        heading.textContent = label;
+                        var pre = document.createElement('pre');
+                        pre.style.overflow = 'auto';
+                        pre.textContent = JSON.stringify(data, null, 2);
+                        container.appendChild(heading);
+                        container.appendChild(pre);
+                    });
+                    return;
+                }
 
-                                    var unifiedDiff = Diff.createTwoFilesPatch(
-                                        'current', 'incoming',
-                                        leftStr, rightStr,
-                                        '', '',
-                                        { context: 4 }
-                                    );
+                try {
+                    var leftStr  = JSON.stringify(current,  null, 2);
+                    var rightStr = JSON.stringify(incoming, null, 2);
 
-                                    if (unifiedDiff.split('\n').slice(2).every(function (l) { return l[0] !== '+' && l[0] !== '-'; })) {
-                                        container.innerHTML = noChange;
-                                        return;
-                                    }
+                    var unifiedDiff = Diff.createTwoFilesPatch(
+                        'current', 'incoming',
+                        leftStr, rightStr,
+                        '', '',
+                        { context: 4 }
+                    );
 
-                                    hfDiffLoadCss('https://cdn.jsdelivr.net/npm/diff2html@3.4.56/bundles/css/diff2html.min.css', 'hf-diff2html-css');
-                                    hfDiffLoadCss('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css', 'hf-hljs-css');
-
-                                    var ui = new Diff2HtmlUI(container, unifiedDiff, {
-                                        drawFileList:       false,
-                                        matching:           'lines',
-                                        outputFormat:       'side-by-side',
-                                        diffStyle:          'char',
-                                        colorScheme:        'dark',
-                                        synchronisedScroll: true,
-                                        highlight:          true,
-                                    });
-                                    ui.draw();
-                                    ui.highlightCode();
-                                    ui.synchronisedScroll();
-                                } catch (e) {
-                                    container.innerHTML = errMsg;
-                                    console.error('hf-diff error', e);
-                                }
-                            }
-                        );
+                    if (unifiedDiff.split('\n').slice(2).every(function (l) { return l[0] !== '+' && l[0] !== '-'; })) {
+                        container.innerHTML = noChange;
+                        return;
                     }
-                );
+
+                    var ui = new Diff2HtmlUI(container, unifiedDiff, {
+                        drawFileList:       false,
+                        matching:           'lines',
+                        outputFormat:       'side-by-side',
+                        diffStyle:          'char',
+                        colorScheme:        'dark',
+                        synchronisedScroll: true,
+                        highlight:          true,
+                    });
+                    ui.draw();
+                    ui.highlightCode();
+                    ui.synchronisedScroll();
+                } catch (e) {
+                    container.innerHTML = errMsg;
+                    console.error('hf-diff error', e);
+                }
             })();
             </script>
 

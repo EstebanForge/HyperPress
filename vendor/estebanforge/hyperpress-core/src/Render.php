@@ -109,6 +109,14 @@ class Render
             return;
         }
 
+        // Opt-in strict mode: only explicitly registered templates may render.
+        // Off by default so existing sites keep the open-by-design behavior.
+        if ($this->isStrictMode() && !$this->isTemplateAllowed((string) $template_name)) {
+            $this->showDeveloperInfoPage('template-not-registered', (string) $template_name);
+
+            return;
+        }
+
         // Get our template file and vars
         $template_path = $this->getTemplateFile($template_name);
 
@@ -180,7 +188,7 @@ class Render
          * @param string $template_path Resolved template path (if any).
          * @param array $context Context for building a response.
          */
-        if (in_array($error_type, ['missing-template-name', 'invalid-route', 'template-not-found'], true)) {
+        if (in_array($error_type, ['missing-template-name', 'invalid-route', 'template-not-found', 'template-not-registered'], true)) {
             $custom_output = apply_filters('hyperpress/render/invalid_route_output', null, $error_type, $template_name, $template_path, [
                 'current_endpoint' => $current_endpoint,
                 'endpoint_version' => $endpoint_version,
@@ -323,6 +331,13 @@ class Render
                     <div class="error-box">
                         <strong>Invalid Route</strong><br>
                         Template '<code><?php echo esc_html($template_name); ?></code>' could not be resolved to a valid file path.
+                    </div>
+
+                <?php elseif ($error_type === 'template-not-registered'): ?>
+                    <div class="error-box">
+                        <strong>Template Not Registered</strong><br>
+                        Template '<code><?php echo esc_html($template_name); ?></code>' is not registered, and strict template mode is enabled.<br>
+                        <small>Register it via the <code>hyperpress/render/registered_templates</code> filter (or use a namespace registered through <code>hyperpress/render/register_template_path</code>), or disable <code>hyperpress/render/strict_mode</code>.</small>
                     </div>
 
                 <?php elseif ($error_type === 'template-not-found'): ?>
@@ -538,6 +553,110 @@ class Render
         }
 
         return true;
+    }
+
+    /**
+     * Whether strict template mode is enabled.
+     *
+     * Strict mode is opt-in via the 'hyperpress/render/strict_mode' filter
+     * (default false). When enabled, only explicitly registered templates
+     * are rendered; unregistered requests are refused. Default mode keeps
+     * the open-by-design behavior: any template shipped in the registered
+     * template directories is loadable.
+     *
+     * @since 3.5.11
+     * @return bool
+     */
+    protected function isStrictMode(): bool
+    {
+        return (bool) apply_filters('hyperpress/render/strict_mode', false);
+    }
+
+    /**
+     * Static namespaced-template parse.
+     *
+     * Static so the pure matcher (templateMatchesRegistration) and the
+     * instance paths (sanitizePath, getTemplateFile) share ONE parser and
+     * cannot drift apart. The instance callers go through
+     * parseNamespacedTemplate(); this is the single implementation.
+     *
+     * @since 3.5.11
+     * @param string $template_name
+     * @return array{namespace: string, template: string}|false
+     */
+    private static function parseNamespacedTemplateStatic(string $template_name)
+    {
+        if (str_contains($template_name, ':')) {
+            $parts = explode(':', $template_name, 2);
+            if (count($parts) === 2 && !empty($parts[0]) && !empty($parts[1])) {
+                return [
+                    'namespace' => $parts[0],
+                    'template'  => $parts[1],
+                ];
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether a (sanitized) template name may render in strict mode.
+     *
+     * Registration rules:
+     *  - Namespaced templates ("ns:name") are allowed when their namespace
+     *    is registered via 'hyperpress/render/register_template_path'
+     *    (registering the namespace is the explicit opt-in).
+     *  - Non-namespaced theme-relative templates must be listed in the
+     *    'hyperpress/render/registered_templates' filter allowlist.
+     *
+     * @since 3.5.11
+     * @param string $template_name Sanitized template name from the request.
+     * @return bool True when the template is explicitly registered.
+     */
+    protected function isTemplateAllowed(string $template_name): bool
+    {
+        $namespaced_paths = apply_filters('hyperpress/render/register_template_path', []);
+        $namespaced_paths = apply_filters_deprecated(
+            'hmapi/register_template_path',
+            [$namespaced_paths],
+            '2.1.0',
+            'hyperpress/render/register_template_path',
+            'Use hyperpress/render/register_template_path instead.'
+        );
+        $registered = apply_filters('hyperpress/render/registered_templates', []);
+
+        return self::templateMatchesRegistration($template_name, (array) $namespaced_paths, (array) $registered);
+    }
+
+    /**
+     * Pure registration-matching decision for strict mode.
+     *
+     * Split out from isTemplateAllowed() because the test bootstrap defines
+     * apply_filters() as a passthrough before Brain Monkey loads, so filter
+     * interception is not possible; the decision logic is tested directly.
+     *
+     * @since 3.5.11
+     * @param string $template_name     Sanitized template name from the request.
+     * @param array  $namespaced_paths  Namespace => base path map from 'hyperpress/render/register_template_path'.
+     * @param array  $registered_templates Allowlisted non-namespaced template names from 'hyperpress/render/registered_templates'.
+     * @return bool True when the template is explicitly registered.
+     */
+    public static function templateMatchesRegistration(string $template_name, array $namespaced_paths, array $registered_templates): bool
+    {
+        if ($template_name === '') {
+            return false;
+        }
+
+        $parsed_template_data = self::parseNamespacedTemplateStatic($template_name);
+
+        if ($parsed_template_data !== false) {
+            // isset() (not array_key_exists) to mirror getTemplateFile()'s
+            // resolver check: a namespace registered with a null/falsy path
+            // fails resolution downstream, so the gate must not allow it.
+            return isset($namespaced_paths[$parsed_template_data['namespace']]);
+        }
+
+        return in_array($template_name, $registered_templates, true);
     }
 
     /**
@@ -915,17 +1034,7 @@ class Render
      */
     protected function parseNamespacedTemplate($templateName)
     {
-        if (str_contains((string) $templateName, ':')) {
-            $parts = explode(':', (string) $templateName, 2);
-            if (count($parts) === 2 && !empty($parts[0]) && !empty($parts[1])) {
-                return [
-                    'namespace' => $parts[0],
-                    'template'  => $parts[1],
-                ];
-            }
-        }
-
-        return false; // No valid colon separator found, or parts were empty.
+        return self::parseNamespacedTemplateStatic((string) $templateName);
     }
 
     /**

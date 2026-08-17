@@ -75,6 +75,34 @@ Filters `hyperpress/sanitize_param_key` and `hyperpress/sanitize_param_value` ar
 
 Do your due diligence and ensure you are not returning unsanitized data back to the user or using it in a way that could pose a security issue for your site. Hypermedia requires that you validate and sanitize any data you receive from the user. Don't forget that.
 
+## Strict Template Mode
+
+By design, the `wp-html` endpoint renders any template shipped in the registered template directories — no registration step, for easy adoption. Template-level authorization stays your responsibility (`hp_validate_request()`, capability checks inside the template).
+
+For stricter deployments, HyperPress offers opt-in **strict mode**: templates must be explicitly registered before the endpoint will load them. Unregistered requests get a "Template Not Registered" page instead of rendered content. Strict mode is OFF by default; existing sites are unaffected.
+
+```php
+// Enable strict mode (e.g. in your theme's functions.php or your plugin)
+add_filter('hyperpress/render/strict_mode', '__return_true');
+
+// Allowlist non-namespaced, theme-relative templates (exact names as requested)
+add_filter('hyperpress/render/registered_templates', function (array $templates): array {
+    $templates[] = 'demo/swap';        // loads hypermedia/demo/swap.hp.php
+    $templates[] = 'noswap/header-update';
+    return $templates;
+});
+```
+
+Namespaced templates (`namespace:template`) need no extra registration: a namespace registered via `hyperpress/render/register_template_path` is already an explicit opt-in, so all templates under it remain loadable in strict mode. Note what that means: **strict mode gates namespaces, not individual files inside them** — every file under a registered namespace's base directory stays reachable, exactly as in default mode. If you need per-file control inside a namespace, do not register that namespace and list the templates theme-relative instead.
+
+Rules:
+
+- Allowlist entries match exactly, not by prefix. Listing `demo/swap` does not unlock `demo/other`.
+- Matching is case-sensitive on the filename segment. Directory segments are normalized to lowercase by the endpoint's path sanitization, but the filename keeps its case — enter the filename exactly as the file is named (`Demo/swap.hp.php` → allowlist entry `Demo/swap`). A case mismatch refuses the template (no bypass), but it is the most likely reason an entry silently never fires.
+- Enabling strict mode without registering anything refuses everything — safe default direction. Register first, then enable.
+- Strict mode composes with, and does not replace, nonce and capability checks. It controls which templates can load, not what they may do.
+- The refusal response is customizable via the `hyperpress/render/invalid_route_output` filter (error type `template-not-registered`).
+
 ## Reporting a Vulnerability
 
 Please, contact me at any of the following email addresses:

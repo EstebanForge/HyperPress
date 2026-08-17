@@ -28,6 +28,7 @@ final class ExportImportPageConfig
         public readonly mixed $previewer = null,
         public readonly mixed $importer = null,
         public readonly ?string $exportFormExtras = null,
+        public readonly string $capability = 'manage_options',
     ) {}
 
     /**

@@ -251,6 +251,13 @@ class ExportImport
 
             $nextValue = self::buildNextOptionValue($hasExisting ? $existing : null, $incoming, $effectiveMode);
 
+            // Field-level sanitization for imported values (audit L3). The
+            // schema embedded in the upload is self-attested, so values that
+            // never pass a registered Field sanitizer must not reach the DB.
+            // Fields are provided per option via filter; default is no fields
+            // (unchanged behavior for consumers without field definitions).
+            $nextValue = self::sanitizeImportedValue($nextValue, $optionName);
+
             $updated = update_option($optionName, $nextValue);
             if ($updated || $existing === $nextValue) {
                 $importedCount++;
@@ -526,6 +533,43 @@ class ExportImport
             is_array($existing) ? $existing : [],
             $incoming
         );
+    }
+
+    /**
+     * Sanitize imported option values through registered Field sanitizers.
+     *
+     * Import validates against the _schema embedded in the upload, but that
+     * schema is self-attested: nothing ties it to the fields the site actually
+     * registered. This seam lets a host provide, per option name, a map of
+     * field name => HyperFields\Field; matching top-level keys are run through
+     * Field::sanitizeValue() before storage. Keys without a matching field and
+     * non-array option values pass through unchanged, as do all values when no
+     * fields are provided (the default).
+     *
+     * @param mixed  $value      Fully merged value about to be stored.
+     * @param string $optionName Option name being imported.
+     * @return mixed Sanitized value.
+     */
+    private static function sanitizeImportedValue(mixed $value, string $optionName): mixed
+    {
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        /** @var array<string, Field> $fields */
+        $fields = apply_filters('hyperfields/import/sanitize_fields', [], $optionName);
+        if (!is_array($fields) || $fields === []) {
+            return $value;
+        }
+
+        foreach ($value as $key => $item) {
+            $field = $fields[$key] ?? null;
+            if ($field instanceof Field) {
+                $value[$key] = $field->sanitizeValue($item);
+            }
+        }
+
+        return $value;
     }
 
     // ──────────────────────────────────────────────────────────────────

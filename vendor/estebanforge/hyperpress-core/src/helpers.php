@@ -195,10 +195,27 @@ if (!function_exists('hp_validate_request')) {
 
         // Check if nonce is valid (try both new and old nonce names for compatibility).
         $is_valid_new = wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hyperpress_nonce');
-        $is_valid_legacy = wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hxwp_nonce');
+        $is_valid_legacy = !$is_valid_new && wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'hxwp_nonce');
 
         if (!$is_valid_new && !$is_valid_legacy) {
             return false;
+        }
+
+        // L8: the legacy nonce action is accepted only for old clients and
+        // will be removed in a future release. Surface the deprecation on
+        // every legacy-verified request so developers migrate to
+        // hyperpress_nonce. Filterable for hosts that want to log it their
+        // own way instead.
+        if ($is_valid_legacy) {
+            $deprecate_legacy = apply_filters('hyperpress/nonce/legacy_deprecated_notice', true);
+            if ($deprecate_legacy && function_exists('_doing_it_wrong')) {
+                _doing_it_wrong(
+                    'hp_validate_request',
+                    'The "hxwp_nonce" legacy nonce action is deprecated and will be removed in a future release. Migrate to the "hyperpress_nonce" action.',
+                    '3.5.5'
+                );
+            }
+            do_action('hyperpress/nonce/legacy_verified', $nonce);
         }
 
         // Check if action is set and matches the expected action (if provided)
@@ -458,6 +475,13 @@ if (!function_exists('hp_ds_send_html')) {
  * Provides configurable rate limiting to prevent abuse and protect server
  * resources. Uses WordPress transients for persistence.
  * This helper has no side effects: it does not send headers or SSE responses.
+ *
+ * BEST-EFFORT COUNTER: WordPress has no built-in atomic read-modify-write
+ * over transients, so concurrent requests can under-count (several requests
+ * read the same count before any writes its increment). Treat the limit as
+ * approximate abuse protection, not a hard guarantee against a concurrent
+ * attacker. A hard limit needs an atomic store (e.g. Redis INCR via an
+ * object-cache drop-in), which is outside this helper's scope.
  *
  * @since 3.2.6
  * @param array $options {

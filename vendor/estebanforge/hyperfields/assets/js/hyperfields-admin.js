@@ -575,28 +575,6 @@
 
     window.setCopyButtonState = setCopyButtonState;
 
-    window.hfDiffLoadScript = function (src, id, container, cb) {
-        if (document.getElementById(id)) { cb(); return; }
-        var s    = document.createElement('script');
-        s.id     = id;
-        s.src    = src;
-        s.onload = cb;
-        s.onerror = function () {
-            container.innerHTML = '<p style="padding:16px;">Could not load diff library. Please check your network connection.</p>';
-            console.error('hf-diff: failed to load ' + src);
-        };
-        document.head.appendChild(s);
-    };
-
-    window.hfDiffLoadCss = function (href, id) {
-        if (document.getElementById(id)) { return; }
-        var l  = document.createElement('link');
-        l.id   = id;
-        l.rel  = 'stylesheet';
-        l.href = href;
-        document.head.appendChild(l);
-    };
-
     window.hfJsonViewerInit = function (rawEl, viewerEl) {
         function render() {
             try {
@@ -614,17 +592,15 @@
             }
         }
 
-        if (typeof JsonViewer !== 'undefined') {
-            render();
-        } else {
-            var s     = document.createElement('script');
-            s.src     = 'https://cdn.jsdelivr.net/npm/@textea/json-viewer@3';
-            s.onload  = render;
-            s.onerror = function () {
-                viewerEl.innerHTML = '<pre style="color:#e5e7eb;margin:0;">' + rawEl.value.replace(/</g, '&lt;') + '</pre>';
-            };
-            document.head.appendChild(s);
+        // JsonViewer is enqueued server-side from a bundled copy (see
+        // ExportImportUI::enqueuePageAssets). When it is missing (library not
+        // web-reachable), fall back to the escaped <pre> below.
+        if (typeof JsonViewer === 'undefined') {
+            viewerEl.innerHTML = '<pre style="color:#e5e7eb;margin:0;">' + rawEl.value.replace(/</g, '&lt;') + '</pre>';
+            return;
         }
+
+        render();
     };
 
     // ---------------------------------------------------------------------

@@ -65,7 +65,7 @@ if [[ -z "$NEW_VERSION" && -z "$BUMP_LEVEL" ]]; then
     read -rp "  Enter new version (X.Y.Z): " NEW_VERSION
     if [[ -z "$NEW_VERSION" ]]; then echo "  ✗ Version cannot be empty"; continue; fi
     if [[ ! "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "  ✗ Invalid format. Use X.Y.Z (e.g., 1.2.3)"; continue; fi
-    if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then echo "  ✗ New version must be different from current version"; continue; fi
+    if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then echo "  ⚠ Same as current: re-stamping all files to catch missed bumps"; fi
     break
   done
 elif [[ -n "$BUMP_LEVEL" ]]; then
@@ -73,7 +73,7 @@ elif [[ -n "$BUMP_LEVEL" ]]; then
   echo "  Computed ($BUMP_LEVEL): $CURRENT_VERSION -> $NEW_VERSION"
 else
   if [[ ! "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "  ✗ Invalid format. Use X.Y.Z (e.g., 1.2.3)" >&2; exit 1; fi
-  if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then echo "  ✗ New version must be different from current version" >&2; exit 1; fi
+  if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then echo "  ⚠ Same as current: re-stamping all files to catch missed bumps" >&2; fi
 fi
 
 sedi() {

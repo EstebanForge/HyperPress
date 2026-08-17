@@ -63,7 +63,7 @@ if [[ -z "$NEW_VERSION" && -z "$BUMP_LEVEL" ]]; then
     read -rp "  Enter new version (X.Y.Z): " NEW_VERSION
     if [[ -z "$NEW_VERSION" ]]; then echo "  ✗ Version cannot be empty"; continue; fi
     if [[ ! "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "  ✗ Invalid format. Use X.Y.Z (e.g., 1.2.3)"; continue; fi
-    if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then echo "  ✗ New version must be different from current version"; continue; fi
+    if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then echo "  ⚠ Same as current: re-stamping all files to catch missed bumps"; fi
     break
   done
 elif [[ -n "$BUMP_LEVEL" ]]; then
@@ -71,7 +71,7 @@ elif [[ -n "$BUMP_LEVEL" ]]; then
   echo "  Computed ($BUMP_LEVEL): $CURRENT_VERSION -> $NEW_VERSION"
 else
   if [[ ! "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "  ✗ Invalid format. Use X.Y.Z (e.g., 1.2.3)" >&2; exit 1; fi
-  if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then echo "  ✗ New version must be different from current version" >&2; exit 1; fi
+  if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then echo "  ⚠ Same as current: re-stamping all files to catch missed bumps" >&2; fi
 fi
 
 sedi() {
@@ -86,18 +86,26 @@ echo ""
 echo "  Bumping: $CURRENT_VERSION -> $NEW_VERSION"
 echo ""
 
-# Update composer.json version field
-sedi "s/\"version\": \"$CURRENT_VERSION\"/\"version\": \"$NEW_VERSION\"/" "$PROJECT_DIR/composer.json"
+# Update composer.json version field (pattern-based: also repairs a stale value)
+sedi "s/\"version\": \"[^\"]*\"/\"version\": \"$NEW_VERSION\"/" "$PROJECT_DIR/composer.json"
 echo "  ✓ composer.json"
 
-# Scan ALL PHP files under src/ for old-version literals. This is the single
-# mechanism for the PHP side: it catches `Config::VERSION = '...'` (the
-# canonical source) and any other literal stamp. Idempotent: files already
-# bumped have no match. Mirrors HyperFields.
+# Scan ALL PHP files under src/ for version stamps. This is the single
+# mechanism for the PHP side. Two rules:
+#   1. `const VERSION = '...'` is re-stamped to the target version whatever it
+#      currently says, so a file missed by an earlier bump gets repaired.
+#   2. Any other literal '$CURRENT_VERSION' stamp is replaced as before.
+# Idempotent: files already at the target version stay byte-identical, and
+# only files that actually change are reported. Mirrors HyperFields.
 while IFS= read -r -d '' src_file; do
-    if grep -q "'$CURRENT_VERSION'" "$src_file" 2>/dev/null; then
-        sedi "s/'$CURRENT_VERSION'/'$NEW_VERSION'/g" "$src_file"
-        echo "  ✓ ${src_file#$PROJECT_DIR/} (src/ version literal)"
+    if grep -Eq "const VERSION[[:space:]]*=[[:space:]]*'[0-9]+\.[0-9]+\.[0-9]+'|'$CURRENT_VERSION'" "$src_file" 2>/dev/null; then
+        tmp_file="$(mktemp)"
+        cp "$src_file" "$tmp_file"
+        sedi -E -e "s/(const VERSION[[:space:]]*=[[:space:]]*')[0-9]+\.[0-9]+\.[0-9]+(')/\1$NEW_VERSION\2/" -e "s/'$CURRENT_VERSION'/'$NEW_VERSION'/g" "$src_file"
+        if ! cmp -s "$tmp_file" "$src_file"; then
+            echo "  ✓ ${src_file#$PROJECT_DIR/} (src/ version stamp)"
+        fi
+        rm -f "$tmp_file"
     fi
 done < <(find "$PROJECT_DIR/src" -type f -name '*.php' -print0 2>/dev/null)
 
