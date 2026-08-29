@@ -1,9 +1,16 @@
 # Changelog
 
-## [1.5.5] - 2026-08-17
+## [1.6.0] - 2026-08-29
+
+### Fixed
+- **Zero-config subsystem initialization in early-load environments (Bedrock, WP-CLI).** Same hardening as HyperFields 1.5.4 and HyperPress-Core 1.5.4. `bootstrap.php`'s scheduling of `Bootstrap::init()` at `after_setup_theme` silently no-op'd when the file ran before `add_action()` existed, leaving Config and every subsystem uninitialized while classes autoloaded. Two windows: HTTP (`wp-config` requires `vendor/autoload` before `application.php` defines `ABSPATH`, so the guard returned before the callback was defined) and WP-CLI (`ABSPATH` pre-defined, but `add_action` absent so the scheduling line was skipped). Fix: the scheduler runs above the `ABSPATH` guard; without `add_action` it writes the registration into `$GLOBALS['wp_filter']` in the preinitialized-hooks format that `WP_Hook::build_preinitialized_hooks` converts on load (WP 4.7+). Confirmed live on a Bedrock staging server.
+- **`initializeConfig()` registered onto an already-fired hook.** It was hung on `plugins_loaded` (priority 5) from inside `init()`, which is scheduled at `after_setup_theme` — always after `plugins_loaded` fired — so `Config::getBlockPaths()` stayed empty and the library's own bundled blocks directory was never discovered. Now register-or-run: if `plugins_loaded` already fired, `initializeConfig()` runs synchronously.
+- **Election-guard ordering.** `define(LOADED)` moves to after `Config::markInitialized()`, so a mid-init abort can no longer leave LOADED claimed with Config uninitialized (making every later guard a silent no-op). `Bootstrap::ensureInitialized()` now also brings the library up if a consumer touches `Registry::getInstance()` before `after_setup_theme`, with a `_doing_it_wrong` alarm.
 
 ### Changed
-- Dependencies updated.
+- Dependencies updated; bootstrap docs reframed around the zero-config contract with accurate Bedrock guidance.
+
+## [1.5.5] - 2026-08-17
 
 ## [1.5.4] - 2026-08-11
 

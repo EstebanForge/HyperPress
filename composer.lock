@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bcbb708e1cee40e3645f91ab47b0d9dd",
+    "content-hash": "15d7cebf9a939a3144718107a3c51fb9",
     "packages": [
         {
             "name": "composer/installers",
@@ -154,7 +154,7 @@
         },
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.5.5",
+            "version": "1.6.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
@@ -250,11 +250,11 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.5.5",
+            "version": "1.6.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "cd53a36335e1c35a8f1e2c964eb324861fad20c4"
+                "reference": "6f3caedcc2011fb83b8feaac155c0518bc43c6be"
             },
             "require": {
                 "php": ">=8.2"
@@ -351,11 +351,11 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.5.5",
+            "version": "1.6.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "ebb965d3632ae5037e31751db7348eb7447c970c"
+                "reference": "10ab3cdd2ebf7f0bc8cfcf17313b60819d08a6a6"
             },
             "require": {
                 "estebanforge/hyperblocks": "^1",
