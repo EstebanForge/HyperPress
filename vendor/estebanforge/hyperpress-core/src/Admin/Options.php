@@ -375,6 +375,13 @@ class Options
                         'default' => false,
                         'help' => __('Enable Datastar functionality within the WordPress admin area.', 'api-for-htmx'),
                     ],
+                    [
+                        'type' => 'checkbox',
+                        'name' => 'datastar_csp',
+                        'label' => __('Content Security Policy (CSP) mode', 'api-for-htmx'),
+                        'default' => false,
+                        'help' => __('Requires Datastar 1.0.3+. Adds a per-request nonce to the <html> tag, to every WordPress-enqueued script, and sends a strict script-src Content-Security-Policy header, so the browser blocks injected scripts instead of running them. Scripts printed as raw <script> tags outside wp_enqueue_script will be blocked — test your site after enabling. Full-page caches will reuse the nonce across requests; supply a stable one with the hyperpress/datastar/csp_nonce filter.', 'api-for-htmx'),
+                    ],
                 ],
             ],
         ];

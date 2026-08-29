@@ -178,6 +178,7 @@ return array(
     'HyperPress\\Bootstrap' => $vendorDir . '/estebanforge/hyperpress-core/src/Bootstrap.php',
     'HyperPress\\Compatibility' => $vendorDir . '/estebanforge/hyperpress-core/src/Compatibility.php',
     'HyperPress\\Config' => $vendorDir . '/estebanforge/hyperpress-core/src/Config.php',
+    'HyperPress\\DatastarCsp' => $vendorDir . '/estebanforge/hyperpress-core/src/DatastarCsp.php',
     'HyperPress\\Libraries\\AlpineAjaxLib' => $vendorDir . '/estebanforge/hyperpress-core/src/Libraries/AlpineAjaxLib.php',
     'HyperPress\\Libraries\\DatastarLib' => $vendorDir . '/estebanforge/hyperpress-core/src/Libraries/DatastarLib.php',
     'HyperPress\\Libraries\\HTMXLib' => $vendorDir . '/estebanforge/hyperpress-core/src/Libraries/HTMXLib.php',

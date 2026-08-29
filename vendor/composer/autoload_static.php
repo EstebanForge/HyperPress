@@ -225,6 +225,7 @@ class ComposerStaticInit6b38d864c474b78a1bd0d9c47a630b2d
         'HyperPress\\Bootstrap' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Bootstrap.php',
         'HyperPress\\Compatibility' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Compatibility.php',
         'HyperPress\\Config' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Config.php',
+        'HyperPress\\DatastarCsp' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/DatastarCsp.php',
         'HyperPress\\Libraries\\AlpineAjaxLib' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Libraries/AlpineAjaxLib.php',
         'HyperPress\\Libraries\\DatastarLib' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Libraries/DatastarLib.php',
         'HyperPress\\Libraries\\HTMXLib' => __DIR__ . '/..' . '/estebanforge/hyperpress-core/src/Libraries/HTMXLib.php',

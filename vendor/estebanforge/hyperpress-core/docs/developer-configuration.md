@@ -147,6 +147,48 @@ if (hp_get_options()['load_extension_sse'] ?? 0) {
 
 For single-value reads, use `hp_get_option($key, $default = null)` instead — it wraps `hp_get_options()` with `??` semantics so missing or null keys return the default:
 
+### Datastar CSP Mode
+
+Requires Datastar 1.0.3+. When enabled, HyperPress adds a per-request nonce to the `<html>` tag (`data-nonce`), stamps every WordPress-enqueued script tag with the same nonce, and sends a strict `Content-Security-Policy: script-src 'self' 'nonce-...'` header. The browser then blocks any script that does not carry the nonce, which is the point of strict CSP: injected scripts are refused instead of executed. Datastar itself stops needing `unsafe-eval`.
+
+Frontend only. The WP admin is never locked down, and REST/AJAX/cron responses carry no policy. Enable it with the "Content Security Policy (CSP) mode" toggle under Settings → HyperPress → Datastar Settings, or programmatically:
+
+```php
+// Option key, settable through the canonical filter like any other option:
+add_filter('hyperpress/options', function (array $options): array {
+    $options['datastar_csp'] = true;
+    return $options;
+});
+
+// Or force it regardless of the stored option:
+add_filter('hyperpress/datastar/csp_enabled', '__return_true');
+```
+
+Two further filters cover the edge cases:
+
+```php
+// Supply a cache-stable nonce when a full-page cache would otherwise pin
+// one page's nonce across requests:
+add_filter('hyperpress/datastar/csp_nonce', fn (): string => my_nonce_source());
+
+// Replace or extend the policy (e.g. allowlist an analytics host):
+add_filter('hyperpress/datastar/csp_header', function (string $policy, string $nonce): string {
+    return $policy . ' https://www.googletagmanager.com';
+}, 10, 2);
+```
+
+Helpers for code that prints its own scripts under CSP mode:
+
+```php
+if (hp_datastar_csp_enabled()) {
+    $nonce = hp_datastar_csp_nonce(); // 32-char hex, matches <html> and header
+}
+```
+
+Caveats: scripts printed as raw `<script>` tags outside `wp_enqueue_script()` carry no nonce and will be blocked; test the site after enabling. In CDN mode the jsdelivr origin is appended to the policy automatically, and the `hyperpress/datastar/csp_header` filter is the escape hatch for anything else — including hosts you point Datastar at through the `hyperpress/assets/datastar_url` filter, which are not covered by `'self'` or the jsdelivr append.
+
+Two scope limits worth knowing: `wp-login.php`, `wp-signup.php` and `wp-activate.php` load outside the main query loop, so they get the nonce plumbing but never the policy header — they are not enforced. And the policy only ever covers `script-src`; styles, images and frames keep whatever the site's own CSP provides.
+
 ```php
 $active = hp_get_option('active_library', 'datastar');
 $sse_on = (bool) hp_get_option('load_extension_sse', 0);

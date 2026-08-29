@@ -115,6 +115,9 @@ class OptionsMigration
         if (isset($old_options['load_hxlive'])) {
             $sanitized['load_hxlive'] = (bool) $old_options['load_hxlive'];
         }
+        if (isset($old_options['datastar_csp'])) {
+            $sanitized['datastar_csp'] = (bool) $old_options['datastar_csp'];
+        }
 
         return $sanitized;
     }

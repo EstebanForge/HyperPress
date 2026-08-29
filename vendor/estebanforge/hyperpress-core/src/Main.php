@@ -249,8 +249,8 @@ class Main
                 'version' => '0.12.4',
             ],
             'datastar' => [
-                'url' => 'https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.1/bundles/datastar.js',
-                'version' => '1.0.1',
+                'url' => 'https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.3/bundles/datastar.js',
+                'version' => '1.0.3',
             ],
             'htmx_extensions' => [
                 'sse' => [
@@ -444,6 +444,13 @@ class Main
                 }
             }
         }
+
+        // Datastar CSP mode: nonce on <html>, every enqueued script tag,
+        // and a strict script-src header. Called unconditionally so the
+        // csp_enabled filter can force the feature on (e.g. a host plugin
+        // running Datastar itself on an htmx-active site); boot() no-ops
+        // unless isEnabled() passes.
+        (new DatastarCsp())->boot();
 
         add_action('init', [$this->router, 'registerMainRoute']);
         add_action('template_redirect', [$this->render, 'loadTemplate']);

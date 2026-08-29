@@ -308,6 +308,42 @@ if (!function_exists('hp_get_option')) {
 }
 
 /*
+ * Whether Datastar CSP mode is enabled for this request.
+ *
+ * Mirrors DatastarCsp::isEnabled(): the datastar_csp option plus the
+ * `hyperpress/datastar/csp_enabled` filter. Useful for host plugins that
+ * print their own script tags and need to know whether to expect the
+ * strict policy.
+ *
+ * @since 1.6.0
+ * @return bool
+ */
+if (!function_exists('hp_datastar_csp_enabled')) {
+    function hp_datastar_csp_enabled(): bool
+    {
+        return DatastarCsp::isEnabled();
+    }
+}
+
+/*
+ * The request's Datastar CSP nonce.
+ *
+ * The same nonce DatastarCsp puts on the <html> tag, every enqueued script
+ * tag and the Content-Security-Policy header. Host plugins that print their
+ * own inline scripts under CSP mode must pass this nonce via the standard
+ * WP filters or their scripts will be blocked by the browser.
+ *
+ * @since 1.6.0
+ * @return string 32-char hex nonce.
+ */
+if (!function_exists('hp_datastar_csp_nonce')) {
+    function hp_datastar_csp_nonce(): string
+    {
+        return DatastarCsp::nonce();
+    }
+}
+
+/*
  * Gets the ServerSentEventGenerator instance, creating it if it doesn't exist.
  *
  * @since 2.1.0

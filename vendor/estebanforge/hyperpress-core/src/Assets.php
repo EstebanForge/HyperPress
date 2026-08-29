@@ -328,7 +328,12 @@ class Assets
             $url = $load_from_cdn ? $cdn_urls['datastar']['url'] : $asset['local_url'];
             $ver = $load_from_cdn ? $cdn_urls['datastar']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
 
-            // Filter: Allow developers to override Datastar library URL
+            // Filter: Allow developers to override Datastar library URL.
+            // NOTE: under Datastar CSP mode (DatastarCsp) the policy
+            // allowlists 'self' plus cdn.jsdelivr.net (CDN mode only). If
+            // this filter points at a different host, extend
+            // hyperpress/datastar/csp_header with that host or the script
+            // will be blocked by the browser.
             $url = apply_filters('hyperpress/assets/datastar_url', $url, $load_from_cdn, $asset, $is_library_mode);
             $ver = apply_filters('hyperpress/assets/datastar_version', $ver, $load_from_cdn, $asset, $is_library_mode);
 

@@ -82,6 +82,9 @@ class OptionsResolver
             'enable_alpine_ajax' => 0,
             'load_alpinejs_backend' => 0,
             'load_datastar_backend' => 0,
+            // Datastar CSP mode (1.0.3+). Opt-in: a strict script-src nonce
+            // policy blocks any script printed outside wp_enqueue_script.
+            'datastar_csp' => 0,
             'hyperpress_meta_config_content' => '',
         ];
 
