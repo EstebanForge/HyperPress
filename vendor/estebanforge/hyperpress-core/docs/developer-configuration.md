@@ -93,8 +93,10 @@ add_filter('hyperpress/options', function (array $options): array {
     $options['load_from_cdn'] = true;    // `true` to use CDN, `false` for local files
 
     // HTMX Core Settings
-    $options['load_hyperscript'] = true;
-    $options['load_alpinejs_with_htmx'] = false;
+    $options['htmx_version'] = '4';       // '4' (default for new installs) or '2' (existing sites)
+    $options['load_hyperscript'] = true;  // htmx 2.x only
+    $options['load_alpinejs_with_htmx'] = false; // htmx 2.x only
+    $options['load_hxlive'] = true;       // htmx 4.x scripting companion, on by default
     $options['set_htmx_hxboost'] = false;
     $options['load_htmx_backend'] = false;
 
@@ -103,6 +105,7 @@ add_filter('hyperpress/options', function (array $options): array {
 
     // Datastar Settings
     $options['load_datastar_backend'] = false;
+    $options['datastar_csp'] = false;    // strict script-src nonce policy, see "Datastar CSP Mode"
 
     // HTMX Extensions - Enable by setting to `1` (or `true`)
     $options['load_extension_ajax-header'] = 0;

@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.6.0] - 2026-08-29
+
+### Added
+- **Dual htmx 2.x / 4.x support.** htmx 4.0.0 (2026-08-28) is mutually incompatible with the 2.x line, so the library now vendors and serves both: `assets/libs/htmx/2/` (2.0.10, pinned; the legacy top-level copy stays refreshed for old paths) and `assets/libs/htmx/4/` (4.0.0 with 17 auto-registering `dist/ext` files). A new `htmx_version` option selects the line: `'4'` is the default for fresh installs, stored rows that predate the option stay on 2.x via `OptionsResolver::applyHtmxVersionRule()`, and corrupt or non-canonical values (ints from WP-CLI, garbage strings, present-but-null keys) normalize to `'2'` — nothing upgrades a site silently. Everything downstream branches on the resolved line: enqueue paths and CDN map keys, version-scoped extension directories and registries (`HTMXLib::getExtensions()`), the options page (rebuilt version-scoped, with a `hyperpress_nonce`-era migration notice pointing at `htmx-2-compat` and `npx htmx.org@4.0.0 upgrade-check`), the nonce injection (listens on `document` with capture for both event styles, writes `detail.headers` on v2 and `detail.ctx.request.headers` on v4) and body-level `hx-boost:inherited` on 4.x. hx-live ships with 4.x and is on by default (`load_hxlive`); hyperscript and the Alpine pairing stay 2.x-only.
+- **Datastar Content Security Policy mode** (requires the updated Datastar 1.0.3 bundle, also in this release). Opt-in via the `datastar_csp` option (admin toggle under the Datastar tab) or the `hyperpress/datastar/csp_enabled` filter. When enabled, `HyperPress\DatastarCsp` puts a per-request nonce on `<html data-nonce>`, stamps every enqueued and inline script tag with it, and sends a strict `script-src 'self' 'nonce-...'` header so the browser blocks injected scripts and Datastar stops needing `unsafe-eval`. Further filters: `hyperpress/datastar/csp_nonce` (supply a cache-stable nonce; validated, invalid values fall back to the generated one) and `hyperpress/datastar/csp_header` (replace or extend the policy). Helpers: `hp_datastar_csp_enabled()`, `hp_datastar_csp_nonce()`. Frontend only; see docs/developer-configuration.md, "Datastar CSP Mode".
+- **Router self-heal with backoff.** Rewrite rules flushed from WP-CLI lose the `wp-html` endpoints (Bootstrap skips CLI), so the router now rebuilds them once from a web request when missing, gated by a 5-minute transient so a persistently stripped ruleset cannot hammer the DB.
+
+### Fixed
+- **The options-page bundle was never enqueued.** `assets/js/admin-options.js` existed, was hand-maintained, and was dead weight: no `wp_enqueue_script()` call referenced it. It is now enqueued on the options page, and its auto-submit selectors were fixed against the real DOM ids, with the form-submit shadowing worked around.
+- **`Assets::getOptions()` synthesized only the v2 extension defaults**, leaving the v4 toggle keys unsynthesized depending on caller order. It now delegates to `Main::getOptions()` so every caller observes the same fully-resolved array.
+- **`OptionsMigration` strips post-2.1.0 option keys on rewrite.** The fixed-key-list rewrite now preserves `htmx_version`, `load_hxlive` and `datastar_csp` when present, mirroring the defensive pattern already used for extension keys.
+
+### Changed
+- Vendored Datastar updated 1.0.1 → 1.0.3 (2026-08-27): opt-in CSP mode, signals state resent on network-error retries, view-transition document check fix, select `multiple` fix. No breaking changes; the PHP SDK (`starfederation/datastar-php` 1.0.1) is unchanged.
+
 ## [1.5.5] - 2026-08-17
 
 ### Added

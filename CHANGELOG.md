@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.5.12] - 2026-08-29
+
+### Changed
+- **Vendored HyperPress-Core 1.6.0: dual htmx 2.x/4.x support with Datastar CSP mode.** New installs default to htmx 4.x (with hx-live); existing sites stay on 2.x until switched on the HTMX settings tab. Datastar updated to 1.0.3 with an opt-in strict Content-Security-Policy mode (nonce on `<html>` and every enqueued script, `script-src` header, `datastar_csp` option / `hyperpress/datastar/csp_enabled` filter / `hp_datastar_csp_*()` helpers). Fixes the options-page admin bundle never being enqueued, version-scoped extension resolution, option-migration key preservation and router self-heal for CLI-flushed rewrite rules. See HyperPress-Core 1.6.0 for the full list.
+- **Vendored HyperFields 1.5.6: numeric-string select option keys now sanitize correctly.** PHP casts `['2' => …]` to int keys, so the select sanitizer's strict comparison never matched posted strings and any numeric-keyed select silently fell back to its first option on save.
+
 ## [3.5.11] - 2026-08-17
 
 ### Changed
