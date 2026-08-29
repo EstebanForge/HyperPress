@@ -29,7 +29,42 @@ class Options
     {
         $this->main = $main;
         add_action('init', $this->initOptionsPage(...));
+        add_action('admin_enqueue_scripts', $this->enqueueOptionsPageAssets(...));
         add_filter('plugin_action_links', $this->pluginActionLinks(...), 10, 2);
+    }
+
+    /**
+     * Enqueue the options page bundle (auto-submit on library/htmx-version
+     * change, copy-to-clipboard). Built by wp-scripts into assets/js; the
+     * .asset.php sibling carries the dependency list and content hash.
+     *
+     * @param string $hook Current admin page hook suffix.
+     * @return void
+     */
+    public function enqueueOptionsPageAssets(string $hook): void
+    {
+        if (!str_contains($hook, 'hyperpress-options')) {
+            return;
+        }
+
+        // Library mode has no web-reachable URL; its settings page is hidden
+        // anyway, so there is nothing to serve the bundle from.
+        if (Config::$pluginUrl === '' || Config::$abspath === '') {
+            return;
+        }
+
+        $asset_file = Config::$abspath . 'assets/js/admin-options.asset.php';
+        $asset = file_exists($asset_file)
+            ? include $asset_file
+            : ['dependencies' => [], 'version' => Config::VERSION];
+
+        wp_enqueue_script(
+            'hyperpress-admin-options',
+            Config::$pluginUrl . 'assets/js/admin-options.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
     }
 
     /**
@@ -198,29 +233,38 @@ class Options
 
     private function buildHTMXTabConfig(): array
     {
-        $available_extensions = HTMXLib::getExtensions($this->main);
+        // The field list is version-scoped: the 2.x and 4.x lines accept
+        // different companions and different extensions. Changing the version
+        // select re-submits the form (admin-options.js), so this page renders
+        // again with the matching fields.
+        $options = $this->main->getOptions();
+        $htmx_version = (($options['htmx_version'] ?? '2') === '4') ? '4' : '2';
 
         $fields = [
             [
-                'type' => 'checkbox',
-                'name' => 'load_hyperscript',
-                'label' => __('Load Hyperscript with HTMX', 'api-for-htmx'),
-                'default' => true,
-                'help' => __('Automatically load Hyperscript when HTMX is active.', 'api-for-htmx'),
-            ],
-            [
-                'type' => 'checkbox',
-                'name' => 'load_alpinejs_with_htmx',
-                'label' => __('Load Alpine.js with HTMX', 'api-for-htmx'),
-                'default' => false,
-                'help' => __('Load Alpine.js alongside HTMX for enhanced interactivity.', 'api-for-htmx'),
+                'type' => 'select',
+                'name' => 'htmx_version',
+                'label' => __('HTMX Version', 'api-for-htmx'),
+                'options' => [
+                    // '2' first on purpose: the select sanitizer falls back
+                    // to the first key on invalid input, and that fallback
+                    // must never silently upgrade a site to the 4.x line.
+                    '2' => 'htmx 2.x (legacy, stable)',
+                    '4' => 'htmx 4.x (recommended, new default)',
+                ],
+                // Dynamic default: a legacy site (resolved '2') must show
+                // and save '2' even if the stored row lacks the key — a
+                // static '4' default here would silently upgrade it on any
+                // options save.
+                'default' => $htmx_version,
+                'help' => __('htmx 4.x is the default for new installs; existing sites stay on 2.x until switched. Saving reloads this page with the matching options.', 'api-for-htmx'),
             ],
             [
                 'type' => 'checkbox',
                 'name' => 'set_htmx_hxboost',
                 'label' => __('Enable hx-boost on body', 'api-for-htmx'),
                 'default' => false,
-                'help' => __('Automatically add `hx-boost="true"` to the `<body>` tag for progressive enhancement.', 'api-for-htmx'),
+                'help' => __('Automatically add hx-boost to the <body> tag for progressive enhancement.', 'api-for-htmx'),
             ],
             [
                 'type' => 'checkbox',
@@ -231,13 +275,46 @@ class Options
             ],
             [
                 'type' => 'separator',
-                'name' => 'htmx_ext_separator',
+                'name' => 'htmx_companion_separator',
             ],
-            [
+        ];
+
+        if ($htmx_version === '4') {
+            $fields[] = [
+                'type' => 'checkbox',
+                'name' => 'load_hxlive',
+                'label' => __('Load hx-live with HTMX', 'api-for-htmx'),
+                'default' => true,
+                'help' => __('hx-live is the official htmx 4 scripting companion (reactive bindings, hx-on helpers). Included by default; disable only if your theme ships its own scripting solution.', 'api-for-htmx'),
+            ];
+            $fields[] = [
                 'type' => 'html',
-                'name' => 'htmx_ext_heading',
-                'html_content' => '<h2 style="margin-top:1.5em">' . esc_html__('HTMX Extensions', 'api-for-htmx') . '</h2><p>' . esc_html__('Enable specific HTMX extensions for enhanced functionality.', 'api-for-htmx') . '</p>',
-            ],
+                'name' => 'htmx4_migration_notice',
+                'html_content' => '<p>' . esc_html__('Moving an existing site from htmx 2.x? Enable the htmx-2-compat extension below first: it restores 2.x inheritance, event names, and error handling while you migrate templates. Audit your theme with: npx htmx.org@4.0.0 upgrade-check -- ./wp-content/themes/your-theme', 'api-for-htmx') . '</p>',
+            ];
+            $available_extensions = HTMXLib::getExtensions($this->main, '4');
+        } else {
+            $fields[] = [
+                'type' => 'checkbox',
+                'name' => 'load_hyperscript',
+                'label' => __('Load Hyperscript with HTMX', 'api-for-htmx'),
+                'default' => true,
+                'help' => __('Automatically load Hyperscript when HTMX is active.', 'api-for-htmx'),
+            ];
+            $fields[] = [
+                'type' => 'checkbox',
+                'name' => 'load_alpinejs_with_htmx',
+                'label' => __('Load Alpine.js with HTMX', 'api-for-htmx'),
+                'default' => false,
+                'help' => __('Load Alpine.js alongside HTMX for enhanced interactivity.', 'api-for-htmx'),
+            ];
+            $available_extensions = HTMXLib::getExtensions($this->main, '2');
+        }
+
+        $fields[] = [
+            'type' => 'html',
+            'name' => 'htmx_ext_heading',
+            'html_content' => '<h2 style="margin-top:1.5em">' . esc_html__('HTMX Extensions', 'api-for-htmx') . '</h2><p>' . esc_html__('Enable specific HTMX extensions for enhanced functionality. On htmx 4 they auto-register once loaded.', 'api-for-htmx') . '</p>',
         ];
 
         foreach ($available_extensions as $extension_key => $extension_details) {

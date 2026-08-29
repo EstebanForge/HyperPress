@@ -28,17 +28,26 @@ class HTMXLib
      * in the admin interface.
      *
      * @since 2.0.2 Adapted from HyperPress\Admin\Options
+     * @since 2.1.0 Version-aware: htmx 4 extensions ship inside the htmx.org
+     *              package and are incompatible with the htmx 2 extension list.
      *
-     * @param Main $main_instance Main plugin instance for accessing CDN URLs.
+     * @param Main   $main_instance Main plugin instance for accessing CDN URLs.
+     * @param string $version       htmx major line ('2' or '4'). Defaults to
+     *                              '2' so existing call sites keep their list.
      * @return array {
      *     Array of available HTMX extensions with descriptions.
      *
      *     @type string $extension_key Extension description for display in admin interface.
      * }
      */
-    public static function getExtensions(Main $main_instance): array
+    public static function getExtensions(Main $main_instance, string $version = '2'): array
     {
         $cdn_urls = $main_instance->getCdnUrls();
+
+        if ($version === '4') {
+            return self::getV4Extensions($cdn_urls['htmx4_extensions'] ?? []);
+        }
+
         $available_extensions = $cdn_urls['htmx_extensions'] ?? [];
 
         // Extension descriptions - these remain as fallbacks and for better UX
@@ -80,6 +89,53 @@ class HTMXLib
                 'label'       => $label,
                 /* translators: %s: HTMX extension key (for example, "sse" or "preload"). */
                 'description' => $extension_descriptions[$extension_key] ?? sprintf(esc_html__('HTMX %s extension', 'api-for-htmx'), $extension_key),
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Build the htmx 4.x extension registry.
+     *
+     * Descriptions follow the official four.htmx.org extensions index. In
+     * htmx 4 these scripts auto-register on load: no hx-ext attribute needed.
+     * hx-live is excluded: it is controlled by the dedicated load_hxlive
+     * option, not the per-extension toggles.
+     *
+     * @param array $available_extensions Map of slug => url/version from getCdnUrls().
+     * @return array Map of slug => label/description.
+     */
+    private static function getV4Extensions(array $available_extensions): array
+    {
+        $descriptions = [
+            'htmx-2-compat'        => esc_html__('Migration bridge: restores htmx 2.x defaults (implicit attribute inheritance, old event names, old error-response handling). Recommended when moving an existing site from 2.x to 4.x.', 'api-for-htmx'),
+            'hx-sse'               => esc_html__('Stream HTML over Server-Sent Events (rewritten for htmx 4). Basic SSE via hx-sse:connect works without it.', 'api-for-htmx'),
+            'hx-ws'                => esc_html__('Stream HTML and send data over WebSockets (rewritten for htmx 4).', 'api-for-htmx'),
+            'hx-multipart'         => esc_html__('Stream HTML over multipart/mixed responses.', 'api-for-htmx'),
+            'hx-head'              => esc_html__('Merge <head> tag changes from swapped fragments (head-support successor).', 'api-for-htmx'),
+            'hx-pending'           => esc_html__('Show custom content during requests, from loading states to optimistic updates.', 'api-for-htmx'),
+            'hx-browser-indicator' => esc_html__("Show the browser tab's loading spinner during requests.", 'api-for-htmx'),
+            'hx-prompt'            => esc_html__('Restores the hx-prompt attribute: prompts before a request and sends the answer in the HX-Prompt header.', 'api-for-htmx'),
+            'hx-preload'           => esc_html__('Preload content on hover to speed up requests.', 'api-for-htmx'),
+            'hx-ptag'              => esc_html__('Skip unchanged polling swaps via the HX-PTag header.', 'api-for-htmx'),
+            'hx-history-cache'     => esc_html__('Restore back/forward pages from sessionStorage (replaces the removed localStorage history).', 'api-for-htmx'),
+            'hx-download'          => esc_html__("Save responses as file downloads via hx-swap='download'.", 'api-for-htmx'),
+            'hx-alpine-compat'     => esc_html__('Run htmx alongside Alpine.js without conflicts.', 'api-for-htmx'),
+            'hx-targets'           => esc_html__("Swap one response into many elements via hx-targets='selector'.", 'api-for-htmx'),
+            'hx-upsert'            => esc_html__('Update-or-insert swap strategy for dynamic lists.', 'api-for-htmx'),
+            'hx-csp'               => esc_html__('Make htmx work under a strict Content Security Policy (nonce-based).', 'api-for-htmx'),
+        ];
+
+        $result = [];
+        foreach (array_keys($available_extensions) as $extension_key) {
+            if ($extension_key === 'hx-live') {
+                continue;
+            }
+
+            $result[$extension_key] = [
+                'label'       => ucwords(str_replace(['-', '_'], ' ', $extension_key)),
+                'description' => $descriptions[$extension_key] ?? sprintf(esc_html__('htmx %s extension', 'api-for-htmx'), $extension_key),
             ];
         }
 

@@ -13,7 +13,9 @@
  * Examples:
  *   php .ci/download-libraries.php --all
  *   php .ci/download-libraries.php --library=htmx
+ *   php .ci/download-libraries.php --library=htmx4
  *   php .ci/download-libraries.php --library=htmx-extensions
+ *   php .ci/download-libraries.php --library=htmx4-extensions
  */
 
 // Configuration
@@ -122,8 +124,23 @@ function download_core_library($name, $url) {
 
     ensure_dir(ASSETS_DIR);
 
+    // Versioned layout: htmx lines live in per-major directories. The htmx 2
+    // download also refreshes the legacy top-level copy so consumers with
+    // hardcoded legacy paths keep working.
+    if ($name === 'htmx') {
+        ensure_dir(ASSETS_DIR . '/htmx/2');
+        download_file($url, ASSETS_DIR . '/htmx/2/htmx.min.js');
+        copy(ASSETS_DIR . '/htmx/2/htmx.min.js', ASSETS_DIR . '/htmx.min.js');
+        echo "♻️  Refreshed legacy copy: " . ASSETS_DIR . "/htmx.min.js\n";
+        return;
+    }
+    if ($name === 'htmx4') {
+        ensure_dir(ASSETS_DIR . '/htmx/4');
+        download_file($url, ASSETS_DIR . '/htmx/4/htmx.min.js');
+        return;
+    }
+
     $filename_map = [
-        'htmx' => 'htmx.min.js',
         'hyperscript' => '_hyperscript.min.js',
         'alpinejs' => 'alpinejs.min.js',
         'alpine_ajax' => 'alpine-ajax.min.js',
@@ -148,6 +165,21 @@ function download_extension($name, $url) {
     $output_path = EXTENSIONS_DIR . '/' . $filename;
 
     download_file($url, $output_path);
+}
+
+/**
+ * Download an htmx 4 extension (ships inside the htmx.org package).
+ *
+ * Stored under assets/libs/htmx/4/ext/ with the dist filename kept intact
+ * ({slug}.min.js) so it stays recognizable next to the v2 extension layout.
+ */
+function download_htmx4_extension($name, $url) {
+    echo "\n🔌 Downloading htmx 4 extension: $name\n";
+
+    $dir = ASSETS_DIR . '/htmx/4/ext';
+    ensure_dir($dir);
+
+    download_file($url, "$dir/$name.min.js");
 }
 
 /**
@@ -180,17 +212,29 @@ function download_libraries($target_library = null) {
         echo "🔍 Getting CDN URLs...\n";
 
         $cdn_urls = getCdnUrls();
-        $core_count = count($cdn_urls) - (isset($cdn_urls['htmx_extensions']) ? 1 : 0);
-        $extensions_count = isset($cdn_urls['htmx_extensions']) ? count($cdn_urls['htmx_extensions']) : 0;
+        $extension_map_keys = ['htmx_extensions', 'htmx4_extensions'];
+        $core_count = count(array_diff(array_keys($cdn_urls), $extension_map_keys));
+        $extensions_count = 0;
+        foreach ($extension_map_keys as $map_key) {
+            $extensions_count += isset($cdn_urls[$map_key]) ? count($cdn_urls[$map_key]) : 0;
+        }
 
         echo "✅ Found $core_count core libraries and $extensions_count HTMX extensions\n";
 
         if ($target_library === 'htmx-extensions') {
-            // Download all HTMX extensions
-            echo "\n🚀 Downloading all HTMX extensions...\n";
+            // Download all htmx 2 extensions
+            echo "\n🚀 Downloading all htmx 2 extensions...\n";
             if (isset($cdn_urls['htmx_extensions'])) {
                 foreach ($cdn_urls['htmx_extensions'] as $name => $config) {
                     download_extension($name, $config['url']);
+                }
+            }
+        } elseif ($target_library === 'htmx4-extensions') {
+            // Download all htmx 4 extensions
+            echo "\n🚀 Downloading all htmx 4 extensions...\n";
+            if (isset($cdn_urls['htmx4_extensions'])) {
+                foreach ($cdn_urls['htmx4_extensions'] as $name => $config) {
+                    download_htmx4_extension($name, $config['url']);
                 }
             }
         } elseif ($target_library && $target_library !== 'all') {
@@ -204,17 +248,24 @@ function download_libraries($target_library = null) {
             // Download all libraries
             echo "\n🚀 Downloading all libraries...\n";
 
-            // Download core libraries
+            // Download core libraries (both extension maps are not core)
             foreach ($cdn_urls as $name => $config) {
-                if ($name !== 'htmx_extensions') {
+                if (!in_array($name, $extension_map_keys, true)) {
                     download_core_library($name, $config['url']);
                 }
             }
 
-            // Download HTMX extensions
+            // Download htmx 2 extensions
             if (isset($cdn_urls['htmx_extensions'])) {
                 foreach ($cdn_urls['htmx_extensions'] as $name => $config) {
                     download_extension($name, $config['url']);
+                }
+            }
+
+            // Download htmx 4 extensions
+            if (isset($cdn_urls['htmx4_extensions'])) {
+                foreach ($cdn_urls['htmx4_extensions'] as $name => $config) {
+                    download_htmx4_extension($name, $config['url']);
                 }
             }
         }

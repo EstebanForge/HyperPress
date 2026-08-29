@@ -65,8 +65,10 @@ class Assets
     public function getOptions()
     {
         if ($this->options === null) {
-            $htmx_extensions = $this->main->getCdnUrls()['htmx_extensions'] ?? [];
-            $this->options = OptionsResolver::resolve($htmx_extensions);
+            // Delegate to Main so BOTH htmx lines synthesize their
+            // load_extension_* defaults; a v2-only map would leave the v4
+            // toggle keys unsynthesized depending on caller order.
+            $this->options = $this->main->getOptions();
         }
 
         return $this->options;
@@ -172,6 +174,10 @@ class Assets
         $options = $this->getOptions();
         $load_from_cdn = !empty($options['load_from_cdn']);
         $active_library = $options['active_library'] ?? 'datastar';
+        // htmx major line. Strict '4' comparison: a missing or unexpected
+        // value stays on the 2.x line, so no code path can upgrade a site
+        // that did not explicitly choose 4.x.
+        $htmx_version = (($options['htmx_version'] ?? '2') === '4') ? '4' : '2';
 
         $htmx_loaded = false;
         $alpine_core_loaded = false;
@@ -194,8 +200,8 @@ class Assets
         // Asset definitions
         $assets_config = [
             'htmx' => [
-                'local_url' => $plugin_url . 'assets/libs/htmx.min.js',
-                'local_path' => $plugin_path . 'assets/libs/htmx.min.js',
+                'local_url' => $plugin_url . 'assets/libs/htmx/' . $htmx_version . '/htmx.min.js',
+                'local_path' => $plugin_path . 'assets/libs/htmx/' . $htmx_version . '/htmx.min.js',
             ],
             'hyperscript' => [
                 'local_url' => $plugin_url . 'assets/libs/_hyperscript.min.js',
@@ -230,8 +236,10 @@ class Assets
         if ($should_load_htmx) {
             $cdn_urls = $this->main->getCdnUrls();
             $asset = $assets_config['htmx'];
-            $url = $load_from_cdn ? $cdn_urls['htmx']['url'] : $asset['local_url'];
-            $ver = $load_from_cdn ? $cdn_urls['htmx']['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
+            // CDN entries are per htmx line: 'htmx' is 2.x, 'htmx4' is 4.x.
+            $cdn_key = ($htmx_version === '4') ? 'htmx4' : 'htmx';
+            $url = $load_from_cdn ? $cdn_urls[$cdn_key]['url'] : $asset['local_url'];
+            $ver = $load_from_cdn ? $cdn_urls[$cdn_key]['version'] : (file_exists($asset['local_path']) ? filemtime($asset['local_path']) : $plugin_version);
 
             // Filter: Allow developers to override HTMX library URL
             $url = apply_filters('hyperpress/assets/htmx_url', $url, $load_from_cdn, $asset, $is_library_mode);
@@ -241,8 +249,8 @@ class Assets
             $htmx_loaded = true;
         }
 
-        // --- Hyperscript ---
-        if (!empty($options['load_hyperscript']) && ($is_admin ? !empty($options['load_htmx_backend']) : ($active_library === 'htmx'))) { // Load only with HTMX or when backend HTMX is on
+        // --- Hyperscript (htmx 2.x line only; hx-live replaces it on 4.x) ---
+        if ($htmx_version === '2' && !empty($options['load_hyperscript']) && ($is_admin ? !empty($options['load_htmx_backend']) : ($active_library === 'htmx'))) { // Load only with HTMX or when backend HTMX is on
             $cdn_urls = $this->main->getCdnUrls();
             $asset = $assets_config['hyperscript'];
             $url = $load_from_cdn ? $cdn_urls['hyperscript']['url'] : $asset['local_url'];
@@ -263,7 +271,7 @@ class Assets
             if ($active_library === 'alpinejs' && !empty($options['enable_alpinejs_core'])) {
                 $should_load_alpine_core = true;
             }
-            if (!empty($options['load_alpinejs_with_htmx']) && $active_library === 'htmx') { // HTMX companion only when HTMX is active
+            if ($htmx_version === '2' && !empty($options['load_alpinejs_with_htmx']) && $active_library === 'htmx') { // HTMX companion only when HTMX 2.x is active
                 $should_load_alpine_core = true;
             }
         }
@@ -330,8 +338,21 @@ class Assets
 
         // --- HTMX Extensions ---
         if ($htmx_loaded && ($is_admin ? !empty($options['load_htmx_backend']) : $active_library === 'htmx')) {
-            $extensions_dir_local = $plugin_path . 'assets/libs/htmx-extensions/';
-            $extensions_dir_url = $plugin_url . 'assets/libs/htmx-extensions/';
+            // Per-line layout: htmx 2 extensions are separate npm packages in
+            // assets/libs/htmx-extensions/ ({slug}.js); htmx 4 extensions ship
+            // inside the htmx.org package under assets/libs/htmx/4/ext/
+            // ({slug}.min.js, auto-registering - no hx-ext attribute needed).
+            if ($htmx_version === '4') {
+                $extensions_dir_local = $plugin_path . 'assets/libs/htmx/4/ext/';
+                $extensions_dir_url = $plugin_url . 'assets/libs/htmx/4/ext/';
+                $ext_file_suffix = '.min.js';
+                $ext_map_key = 'htmx4_extensions';
+            } else {
+                $extensions_dir_local = $plugin_path . 'assets/libs/htmx-extensions/';
+                $extensions_dir_url = $plugin_url . 'assets/libs/htmx-extensions/';
+                $ext_file_suffix = '.js';
+                $ext_map_key = 'htmx_extensions';
+            }
 
             // Filter: Allow developers to override HTMX extensions directory
             $extensions_dir_url = apply_filters('hyperpress/assets/htmx_extensions_url', $extensions_dir_url, $extensions_dir_local, $plugin_url, $plugin_path, $is_library_mode);
@@ -347,15 +368,15 @@ class Assets
                     $ext_ver = $plugin_version;
 
                     if ($load_from_cdn) {
-                        if (isset($cdn_urls['htmx_extensions'][$ext_slug])) {
-                            $ext_url = $cdn_urls['htmx_extensions'][$ext_slug]['url'];
-                            $ext_ver = $cdn_urls['htmx_extensions'][$ext_slug]['version'];
+                        if (isset($cdn_urls[$ext_map_key][$ext_slug])) {
+                            $ext_url = $cdn_urls[$ext_map_key][$ext_slug]['url'];
+                            $ext_ver = $cdn_urls[$ext_map_key][$ext_slug]['version'];
                         }
                     } else {
                         // Try local files (works for both plugin and library mode now)
-                        $local_file_path = $extensions_dir_local . $ext_slug . '.js';
+                        $local_file_path = $extensions_dir_local . $ext_slug . $ext_file_suffix;
                         if (file_exists($local_file_path)) {
-                            $ext_url = $extensions_dir_url . $ext_slug . '.js';
+                            $ext_url = $extensions_dir_url . $ext_slug . $ext_file_suffix;
                             $ext_ver = filemtime($local_file_path);
                         }
                     }
@@ -368,6 +389,30 @@ class Assets
                         wp_enqueue_script('hyperpress-htmx-ext-' . $ext_slug, $ext_url, ['hyperpress-htmx'], $ext_ver, true);
                     }
                 }
+            }
+        }
+
+        // --- hx-live (htmx 4 only, included by default; opt-out option) ---
+        if ($htmx_version === '4' && $htmx_loaded && ($is_admin ? !empty($options['load_htmx_backend']) : $active_library === 'htmx') && !empty($options['load_hxlive'])) {
+            $cdn_urls = $this->main->getCdnUrls();
+            $hxlive_local_path = $plugin_path . 'assets/libs/htmx/4/ext/hx-live.min.js';
+            $url = '';
+            $ver = $plugin_version;
+
+            if ($load_from_cdn && isset($cdn_urls['htmx4_extensions']['hx-live'])) {
+                $url = $cdn_urls['htmx4_extensions']['hx-live']['url'];
+                $ver = $cdn_urls['htmx4_extensions']['hx-live']['version'];
+            } elseif (file_exists($hxlive_local_path)) {
+                $url = $plugin_url . 'assets/libs/htmx/4/ext/hx-live.min.js';
+                $ver = filemtime($hxlive_local_path);
+            }
+
+            // Filter: Allow developers to override the hx-live library URL
+            $url = apply_filters('hyperpress/assets/hxlive_url', $url, $load_from_cdn, $is_library_mode);
+            $ver = apply_filters('hyperpress/assets/hxlive_version', $ver, $load_from_cdn, $is_library_mode);
+
+            if ($url) {
+                wp_enqueue_script('hyperpress-hxlive', $url, ['hyperpress-htmx'], $ver, true);
             }
         }
 
@@ -525,20 +570,38 @@ class Assets
             $inline_script_parts[] = "
     // HTMX: Auto-configure nonces for all requests
     if (typeof htmx !== 'undefined') {
-        document.body.addEventListener('htmx:configRequest', function(evt) {
+        // htmx 2 fires camelCase events that bubble to document.body; htmx 4
+        // fires colon-renamed events that do not bubble. Capture-phase
+        // listeners on document cover both dispatch styles from one handler:
+        // the capture phase reaches a non-bubbling event before the target.
+        const addNonceHeader = function(evt) {
             const nonce = getHyperPressNonce();
-            if (nonce) {
-                evt.detail.headers['X-WP-Nonce'] = nonce;
+            if (!nonce || !evt.detail) {
+                return;
             }
-        });
+            // htmx 2 keeps request headers at detail.headers; htmx 4 moved
+            // them to detail.ctx.request.headers.
+            const headers = evt.detail.headers
+                || (evt.detail.ctx && evt.detail.ctx.request && evt.detail.ctx.request.headers);
+            if (headers) {
+                headers['X-WP-Nonce'] = nonce;
+            }
+        };
+        document.addEventListener('htmx:configRequest', addNonceHeader, true);
+        document.addEventListener('htmx:config:request', addNonceHeader, true);
     }";
 
             // Add hx-boost configuration if enabled
             if (!$is_admin && !empty($options['set_htmx_hxboost'])) {
+                // htmx 4 does not inherit attributes implicitly: a body-level
+                // hx-boost would boost nothing and never reach descendant
+                // links. The :inherited modifier marks it inheritable on the
+                // 4.x line; the 2.x line keeps the plain attribute.
+                $boost_attr = (($options['htmx_version'] ?? '2') === '4') ? 'hx-boost:inherited' : 'hx-boost';
                 $inline_script_parts[] = "
     // HTMX: Configure hx-boost
     if (typeof htmx !== 'undefined') {
-        document.body.setAttribute('hx-boost', 'true');
+        document.body.setAttribute('{$boost_attr}', 'true');
         const adminBar = document.getElementById('wpadminbar');
         if (adminBar) {
             adminBar.setAttribute('hx-boost', 'false');

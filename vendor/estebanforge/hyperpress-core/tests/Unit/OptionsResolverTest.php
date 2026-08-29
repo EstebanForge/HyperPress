@@ -50,6 +50,16 @@ class OptionsResolverTest extends TestCase
         $this->assertArrayHasKey('hyperpress_meta_config_content', $defaults);
     }
 
+    public function test_defaults_default_to_htmx_4_with_hxlive_on(): void
+    {
+        $defaults = OptionsResolver::defaults();
+
+        // New installs get the htmx 4.x line and hx-live included by
+        // default (opt-out, not opt-in).
+        $this->assertSame('4', $defaults['htmx_version']);
+        $this->assertSame(1, $defaults['load_hxlive']);
+    }
+
     public function test_defaults_synthesizes_load_extension_keys_for_htmx_extensions(): void
     {
         $extensions = [
@@ -77,6 +87,75 @@ class OptionsResolverTest extends TestCase
         $this->assertIsArray($resolved);
         $this->assertSame('datastar', $resolved['active_library']);
         $this->assertArrayHasKey('hyperpress_meta_config_content', $resolved);
+
+        // Empty stored row = fresh install = htmx 4.x line with hx-live on.
+        $this->assertSame('4', $resolved['htmx_version']);
+        $this->assertSame(1, $resolved['load_hxlive']);
+    }
+
+    public function test_htmx_version_rule_keeps_default_for_fresh_install(): void
+    {
+        $merged = ['htmx_version' => '4', 'active_library' => 'htmx'];
+
+        $result = OptionsResolver::applyHtmxVersionRule([], $merged);
+
+        $this->assertSame('4', $result['htmx_version']);
+    }
+
+    public function test_htmx_version_rule_coerces_legacy_row_to_two(): void
+    {
+        // A non-empty stored row without the htmx_version key was written
+        // by an older release: that site predates htmx 4 and must stay on
+        // the 2.x line instead of being silently upgraded.
+        $stored = ['active_library' => 'htmx', 'load_from_cdn' => 0];
+        $merged = ['htmx_version' => '4', 'active_library' => 'htmx', 'load_from_cdn' => 0];
+
+        $result = OptionsResolver::applyHtmxVersionRule($stored, $merged);
+
+        $this->assertSame('2', $result['htmx_version']);
+    }
+
+    public function test_htmx_version_rule_honors_explicit_key(): void
+    {
+        // An explicit stored value is a user decision: never overridden,
+        // in either direction.
+        $storedTwo = ['htmx_version' => '2', 'active_library' => 'htmx'];
+        $resultTwo = OptionsResolver::applyHtmxVersionRule($storedTwo, ['htmx_version' => '2']);
+        $this->assertSame('2', $resultTwo['htmx_version']);
+
+        $storedFour = ['htmx_version' => '4', 'active_library' => 'htmx'];
+        $resultFour = OptionsResolver::applyHtmxVersionRule($storedFour, ['htmx_version' => '4']);
+        $this->assertSame('4', $resultFour['htmx_version']);
+    }
+
+    public function test_htmx_version_rule_normalizes_non_canonical_writes(): void
+    {
+        // WP-CLI and imports can store the value as an int.
+        $intRow = ['htmx_version' => 4, 'active_library' => 'htmx'];
+        $resultInt = OptionsResolver::applyHtmxVersionRule($intRow, ['htmx_version' => 4]);
+        $this->assertSame('4', $resultInt['htmx_version']);
+
+        // A corrupt value must fall back to the 2.x line, never upgrade.
+        $garbageRow = ['htmx_version' => 'nine', 'active_library' => 'htmx'];
+        $resultGarbage = OptionsResolver::applyHtmxVersionRule($garbageRow, ['htmx_version' => 'nine']);
+        $this->assertSame('2', $resultGarbage['htmx_version']);
+    }
+
+    public function test_htmx_version_rule_treats_null_as_legacy(): void
+    {
+        // A key present but explicitly null (importer bug, direct DB edit,
+        // filter returning null) must not resolve to the 4.x default.
+        $stored = ['htmx_version' => null, 'active_library' => 'htmx'];
+        $merged = ['htmx_version' => '4', 'active_library' => 'htmx'];
+
+        $result = OptionsResolver::applyHtmxVersionRule($stored, $merged);
+
+        $this->assertSame('2', $result['htmx_version']);
+    }
+
+    public function test_hp_get_option_returns_htmx_4_default_in_test_env(): void
+    {
+        $this->assertSame('4', hp_get_option('htmx_version'));
     }
 
     public function test_resolve_includes_htmx_extension_defaults(): void

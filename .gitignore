@@ -25,3 +25,4 @@
 # Keep release/runtime dependencies committed for WordPress distribution.
 # Do NOT ignore /vendor/ in this repository.
 
+pest.php

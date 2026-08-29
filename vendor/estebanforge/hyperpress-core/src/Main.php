@@ -125,7 +125,16 @@ class Main
      */
     public function getOptions(): array
     {
-        return OptionsResolver::resolve($this->getCdnUrls()['htmx_extensions'] ?? []);
+        $cdn_urls = $this->getCdnUrls();
+        // Default-synthesize extension toggles from BOTH htmx lines so
+        // load_extension_* keys exist canonically regardless of the selected
+        // htmx_version.
+        $extensions = array_merge(
+            $cdn_urls['htmx_extensions'] ?? [],
+            $cdn_urls['htmx4_extensions'] ?? []
+        );
+
+        return OptionsResolver::resolve($extensions);
     }
 
     /**
@@ -216,8 +225,16 @@ class Main
     {
         return [
             'htmx' => [
-                'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@2/dist/htmx.min.js',
-                'version' => '2.0.6',
+                'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js',
+                'version' => '2.0.10',
+            ],
+            // htmx 4.x line. Pinned exact version: upstream npm keeps 2.x as
+            // `latest` until early 2027, so an unversioned URL would silently
+            // serve the wrong line. Existing 'htmx'/'htmx_extensions' keys
+            // above ARE the 2.x line and stay untouched for consumers.
+            'htmx4' => [
+                'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/htmx.min.js',
+                'version' => '4.0.0',
             ],
             'hyperscript' => [
                 'url' => 'https://cdn.jsdelivr.net/npm/hyperscript.org/dist/hdb.min.js',
@@ -323,6 +340,83 @@ class Main
                 'method-override' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-method-override/dist/method-override.esm.min.js',
                     'version' => '2.0.2',
+                ],
+            ],
+            // htmx 4.x extensions ship INSIDE the htmx.org package
+            // (dist/ext/), not as separate htmx-ext-* packages. They
+            // auto-register on load (no hx-ext attribute). hx-live IS listed
+            // here (single source for CDN + vendoring) but the admin
+            // extension list skips it: it is controlled by the dedicated
+            // load_hxlive option. File names verified against the
+            // htmx.org@4.0.0 npm tarball.
+            'htmx4_extensions' => [
+                'hx-live' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-live.min.js',
+                    'version' => '4.0.0',
+                ],
+                'htmx-2-compat' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/htmx-2-compat.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-sse' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-sse.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-ws' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-ws.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-multipart' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-multipart.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-head' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-head.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-pending' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-pending.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-preload' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-preload.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-prompt' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-prompt.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-csp' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-csp.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-history-cache' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-history-cache.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-download' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-download.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-alpine-compat' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-alpine-compat.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-targets' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-targets.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-upsert' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-upsert.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-ptag' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-ptag.min.js',
+                    'version' => '4.0.0',
+                ],
+                'hx-browser-indicator' => [
+                    'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/ext/hx-browser-indicator.min.js',
+                    'version' => '4.0.0',
                 ],
             ],
         ];

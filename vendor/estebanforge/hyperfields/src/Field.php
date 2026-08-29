@@ -949,9 +949,13 @@ class Field
             return (string) $value;
         }
 
-        $allowed_values = array_keys($this->options);
+        // PHP casts numeric-string array keys to int ('4' => 4). Values
+        // arriving from forms are strings, so a strict in_array against the
+        // raw keys never matches a numeric-keyed select and silently falls
+        // back to the first option. Normalize both sides.
+        $allowed_values = array_map('strval', array_keys($this->options));
 
-        return in_array($value, $allowed_values, true) ? (string) $value : (string) $allowed_values[0];
+        return in_array((string) $value, $allowed_values, true) ? (string) $value : $allowed_values[0];
     }
 
     /**

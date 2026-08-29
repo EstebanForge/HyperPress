@@ -65,7 +65,15 @@ class OptionsResolver
     {
         $defaults = [
             'active_library' => 'datastar',
+            // htmx 4.x is the default for NEW installs. Sites with a stored
+            // options row that predates this option keep htmx 2.x via
+            // applyHtmxVersionRule().
+            'htmx_version' => '4',
             'load_from_cdn' => 0,
+            // hx-live ships with htmx 4 and replaces the Alpine/hyperscript
+            // pairing: on by default when htmx 4 is the selected runtime.
+            // Inert under htmx 2 (Assets.php gates on htmx_version).
+            'load_hxlive' => 1,
             'load_hyperscript' => 0,
             'load_alpinejs_with_htmx' => 0,
             'set_htmx_hxboost' => 0,
@@ -86,6 +94,46 @@ class OptionsResolver
         }
 
         return $defaults;
+    }
+
+    /**
+     * Apply the htmx version legacy rule to a merged options array.
+     *
+     * htmx 4.x is the default for new installs. A stored options row written
+     * before the htmx_version option existed (non-empty row, key absent)
+     * belongs to a site already running the 2.x line and must not be silently
+     * upgraded. An empty row means a fresh install and keeps the '4' default.
+     *
+     * Also normalizes the stored value: non-canonical writes (WP-CLI, imports
+     * and direct DB edits can store int 4) are cast to string, and anything
+     * unexpected falls back to '2' — a corrupt value must never upgrade the
+     * site to the 4.x line.
+     *
+     * Pure function, separated from resolve() so the test bootstrap's
+     * get_option passthrough cannot block coverage of the legacy branch.
+     *
+     * @param array $stored Raw stored hyperpress_options row. Key presence
+     *                      decides; the key's value is irrelevant here.
+     * @param array $merged Merged options (defaults + stored).
+     * @return array Merged options with htmx_version normalized.
+     */
+    public static function applyHtmxVersionRule(array $stored, array $merged): array
+    {
+        $version = isset($merged['htmx_version']) ? (string) $merged['htmx_version'] : '4';
+        $version = in_array($version, ['2', '4'], true) ? $version : '2';
+
+        // A key present but explicitly null (importer bug, direct DB edit,
+        // filter returning null) is as unknown as an absent key: the legacy
+        // rule applies to it too.
+        $has_explicit_version = array_key_exists('htmx_version', $stored) && $stored['htmx_version'] !== null;
+
+        if (!empty($stored) && !$has_explicit_version) {
+            $version = '2';
+        }
+
+        $merged['htmx_version'] = $version;
+
+        return $merged;
     }
 
     /**
@@ -138,7 +186,7 @@ class OptionsResolver
             $stored = [];
         }
 
-        $merged = wp_parse_args($stored, $defaults);
+        $merged = self::applyHtmxVersionRule($stored, wp_parse_args($stored, $defaults));
 
         self::$cache[$cache_key] = apply_filters(self::FILTER, $merged);
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.5.6] - 2026-08-29
+
+### Fixed
+- **Select fields with numeric-string option keys saved the wrong value.** PHP casts numeric-string array keys to int (`['2' => …]` becomes `[2 => …]`), so `Field::sanitizeSelectValue()`'s strict `in_array` against the raw keys never matched the string values a form posts — every numeric-keyed select silently fell back to its first option on save. Both sides are now string-normalized before the strict comparison. Regression test covers numeric-keyed selects (valid value, int input, invalid fallback).
+
 ## [1.5.5] - 2026-08-17
 
 ### Security

@@ -105,6 +105,17 @@ class OptionsMigration
             $sanitized['load_extension_' . $key] = isset($old_options['load_extension_' . $key]) ? (bool) $old_options['load_extension_' . $key] : false;
         }
 
+        // Version-scoped options introduced after this migration. A rewrite
+        // from a fixed key list would silently strip them, and the resolver's
+        // legacy-version rule (missing htmx_version on a stored row) would
+        // then pin the site to the htmx 2.x line against the user's choice.
+        if (isset($old_options['htmx_version'])) {
+            $sanitized['htmx_version'] = in_array($old_options['htmx_version'], ['2', '4'], true) ? $old_options['htmx_version'] : '2';
+        }
+        if (isset($old_options['load_hxlive'])) {
+            $sanitized['load_hxlive'] = (bool) $old_options['load_hxlive'];
+        }
+
         return $sanitized;
     }
 
