@@ -156,7 +156,7 @@
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "bc39e12dec91c036d8e7f2fca3ab9d42e1046563"
+                "reference": "6cbb6d463131d836a0af0eb4cc624241904de23b"
             },
             "require": {
                 "estebanforge/hyperfields": "^1",
@@ -255,7 +255,7 @@
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "6f3caedcc2011fb83b8feaac155c0518bc43c6be"
+                "reference": "4744e8dd1c9932b8f7a28c8e2c99bdd2c7912397"
             },
             "require": {
                 "php": ">=8.2"

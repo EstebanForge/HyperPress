@@ -91,7 +91,11 @@ fi
 
 echo "Pushing latest commit to origin, with tag $PLUGINVERSION"
 git push origin "$MAIN_BRANCH"
-git push origin "refs/tags/$PLUGINVERSION"
+if git ls-remote --exit-code --tags origin "refs/tags/$PLUGINVERSION" >/dev/null 2>&1; then
+    echo "Tag $PLUGINVERSION already exists on origin. Skipping tag push..."
+else
+    git push origin "refs/tags/$PLUGINVERSION"
+fi
 
 echo
 echo "Ensuring we're on the $MAIN_BRANCH branch"
