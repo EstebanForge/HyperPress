@@ -355,7 +355,7 @@
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "10ab3cdd2ebf7f0bc8cfcf17313b60819d08a6a6"
+                "reference": "2df210c1d77e7d41ca27ab492ef4af3dbd2b917a"
             },
             "require": {
                 "estebanforge/hyperblocks": "^1",

@@ -167,6 +167,31 @@ if (!function_exists('rest_url')) {
     }
 }
 
+if (!function_exists('home_url')) {
+    function home_url($path = '') {
+        $base = 'http://localhost';
+        return $path === '' ? $base : rtrim($base, '/') . '/' . ltrim($path, '/');
+    }
+}
+
+// Abilities API capture stubs. Production registration is asserted
+// structurally: calls are recorded in $GLOBALS for AbilityRegistrarTest,
+// mirroring the passthrough philosophy used for get_option above. Defined
+// before Brain Monkey loads, so Brain Monkey cannot redefine them later.
+if (!function_exists('wp_register_ability_category')) {
+    function wp_register_ability_category($slug, $args = []) {
+        $GLOBALS['__hp_registered_ability_categories'][$slug] = $args;
+        return null;
+    }
+}
+
+if (!function_exists('wp_register_ability')) {
+    function wp_register_ability($name, $args = []) {
+        $GLOBALS['__hp_registered_abilities'][$name] = $args;
+        return null;
+    }
+}
+
 if (!function_exists('rest_ensure_response')) {
     function rest_ensure_response($response) {
         return $response;

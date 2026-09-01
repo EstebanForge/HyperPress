@@ -106,6 +106,18 @@ final class Bootstrap
             require_once $deprecated;
         }
 
+        // Abilities registration must run BEFORE the background/API guard
+        // below: the /wp-abilities/v1 controller serves abilities during
+        // REST requests, so a no-op under REST_REQUEST would hide them from
+        // exactly the consumers they exist for.
+        if (class_exists(Abilities\AbilityRegistrar::class)) {
+            Abilities\AbilityRegistrar::init();
+        } elseif (defined('WP_DEBUG') && WP_DEBUG) {
+            // The class ships in this same library, so a miss here means a
+            // stale vendor copy (path repo, symlink:false). Never silent.
+            error_log('HyperPress: Abilities\\AbilityRegistrar not found; refresh the vendored copy with `composer update estebanforge/hyperpress-core`.');
+        }
+
         // Skip the heavy WordPress wiring for background and API contexts;
         // the helpers/constants above are still available for them.
         if ((defined('DOING_CRON') && DOING_CRON === true)
