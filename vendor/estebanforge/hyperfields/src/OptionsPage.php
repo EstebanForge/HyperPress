@@ -449,6 +449,14 @@ class OptionsPage
 
         $this->loadOptions();
 
+        // Re-emit the WP Settings-API save as a semantic HyperFields action so
+        // consumers depend on intent, not WP plumbing. Fires after the option
+        // row is written. Mirrors Carbon Fields' theme_options_container_saved.
+        // Hooked HERE, not in registerSettings(): machine writes (Abilities,
+        // WP-CLI) persist values on requests where admin_init never fires, and
+        // after_save consumers (CacheInvalidator) must run for those too.
+        add_action('update_option_' . $this->option_name, [$this, 'onOptionSaved'], 10, 3);
+
         // Check if we're currently in the admin_menu hook execution
         // If called during admin_menu, register directly; otherwise hook into admin_menu
         if (doing_filter('admin_menu')) {
@@ -514,10 +522,9 @@ class OptionsPage
             'sanitize_callback' => [$this, 'sanitizeOptions'],
         ]);
 
-        // Re-emit the WP Settings-API save as a semantic HyperFields action so
-        // consumers depend on intent, not WP plumbing. Fires after the option
-        // row is written. Mirrors Carbon Fields' theme_options_container_saved.
-        add_action('update_option_' . $this->option_name, [$this, 'onOptionSaved'], 10, 3);
+        // (The update_option_{name} -> onOptionSaved wiring lives in
+        // register(): it must fire on every context, not just admin form
+        // saves.)
 
         // Register fields for all sections/tabs, but only register settings fields for the active tab
         $active_tab = $this->getActiveTab();

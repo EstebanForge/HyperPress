@@ -1126,9 +1126,12 @@ class Field
         $enum_keys = [];
 
         if (in_array($this->type, ['select', 'radio', 'radio_image'], true)) {
-            $enum_keys = array_keys($this->options);
+            // strval matches sanitizeSelectValue(): PHP coerces numeric-string
+            // option keys ('2' => x) to ints, and the enum must describe the
+            // stored strings, not PHP's array-key view of them.
+            $enum_keys = array_map('strval', array_keys($this->options));
         } elseif (in_array($this->type, ['multiselect', 'set'], true)) {
-            $enum_keys = array_keys($this->options);
+            $enum_keys = array_map('strval', array_keys($this->options));
         }
 
         switch ($this->type) {
@@ -1156,6 +1159,15 @@ class Field
                 break;
             case 'checkbox':
                 $schema = ['type' => 'boolean'];
+                break;
+            case 'image':
+                // sanitizeValue stores absint(): 0 means "none set".
+                $schema = ['type' => 'integer'];
+                break;
+            case 'color':
+                // sanitize_hex_color() returns null for invalid input, and
+                // that null is stored.
+                $schema = ['type' => ['string', 'null']];
                 break;
             case 'multiselect':
             case 'set':

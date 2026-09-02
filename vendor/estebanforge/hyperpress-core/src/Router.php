@@ -37,16 +37,27 @@ class Router
 
         // A ruleset flushed outside a web request (WP-CLI "wp rewrite flush",
         // "wp rewrite structure", CLI-driven activation) is generated while
-        // Bootstrap skips CLI requests entirely, so it lacks our endpoint
+        // this router runs on every request (Bootstrap boots Main in REST/CLI
+        // too, for the Abilities layer), so the ruleset can lack our endpoint
         // rules and /wp-html/v1/ degrades to the info page. Rebuild the
-        // ruleset once from this web request, where the endpoints above ARE
-        // registered. get_option() is cached, so the check is cheap; after
-        // the heal every later request takes the early return.
+        // ruleset once per request window, but never from inbound REST, cron,
+        // or CLI calls: a rewrite flush must be a page-load side effect, not
+        // something a webhook or a cron task triggers. After the heal every
+        // later request takes the early return.
         static $self_heal_checked = false;
         if ($self_heal_checked) {
             return;
         }
         $self_heal_checked = true;
+
+        // Self-heal is a page-load side effect only (see comment above).
+        if (wp_doing_cron()
+            || (defined('REST_REQUEST') && REST_REQUEST === true)
+            || (defined('WP_CLI') && WP_CLI === true)
+            || (defined('DOING_AJAX') && DOING_AJAX === true)
+        ) {
+            return;
+        }
 
         $rules = get_option('rewrite_rules');
         if (!is_array($rules)) {

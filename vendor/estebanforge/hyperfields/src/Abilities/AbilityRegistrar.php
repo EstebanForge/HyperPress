@@ -96,7 +96,7 @@ final class AbilityRegistrar
             self::abilityArgs(
                 [
                     'label'               => __('List Option Pages', 'hyperfields'),
-                    'description'         => __('Lists every registered HyperFields options page with its slug, option group, capability, and field inventory (name, label, type, JSON Schema). Use the page slug with hyperfields/get-option and hyperfields/update-option to read or write individual fields.', 'hyperfields'),
+                    'description'         => __('Lists every registered HyperFields options page with its slug, option group, capability, and field inventory (name, label, type, JSON Schema). Use the page slug with hyperfields/get-option and hyperfields/update-option to read or write individual fields. The inventory reflects the sections registered on this request: pages using conditional sections only expose fields whose conditions match the currently saved values, so re-call this after changing a field that other fields depend on.', 'hyperfields'),
                     'category'            => self::CATEGORY,
                     'output_schema'       => [
                         'type'  => 'array',
@@ -189,7 +189,7 @@ final class AbilityRegistrar
             self::abilityArgs(
                 [
                     'label'               => __('Update Option Field', 'hyperfields'),
-                    'description'         => __('Writes one field value on a registered HyperFields options page. The value is validated by the ability schema, then sanitized through the field\'s own pipeline (wps_sanitize / Field::sanitizeValue / wps_validate / pre_save filter) before storage, so it is identical to a form save of that single field. Repeat writes with the same value have no additional effect.', 'hyperfields'),
+                    'description'         => __('Writes one field value on a registered HyperFields options page. The value is coerced through the field\'s own sanitization pipeline (wps_sanitize / Field::sanitizeValue / wps_validate / pre_save filter) before storage: malformed input is coerced to the field\'s fallback (for example 0 for number fields) rather than rejected, exactly like a form save of that single field. Repeat writes with the same value have no additional effect. The field inventory is request-scoped: after changing a field that other fields depend on, re-call hyperfields/list-option-pages.', 'hyperfields'),
                     'category'            => self::CATEGORY,
                     'input_schema'        => [
                         'type'                 => 'object',

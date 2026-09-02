@@ -116,10 +116,11 @@ class Options
         // last moment (i.e. on `plugins_loaded`, `after_setup_theme`, or
         // any `init` priority strictly less than default 10).
         //
-        // Note: WP-CLI, WP-Cron, REST, XMLRPC, and AJAX requests exit early
-        // in `Bootstrap::init()` (src/Bootstrap.php) before `init` fires,
-        // so this callback is not invoked in those contexts.
-        // Legacy option migration therefore relies on an admin visit to run.
+        // This callback now runs on every context (REST, WP-CLI, cron):
+        // Bootstrap boots Main unconditionally so the options-page metadata
+        // feeds the Abilities layer. The menu itself only renders where
+        // admin_menu fires. Legacy option migration still runs only where
+        // is_admin() + manage_options hold.
         if (!self::isEnabled()) {
             return;
         }
