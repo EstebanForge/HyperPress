@@ -7,6 +7,7 @@ namespace HyperBlocks\Tests\Unit\Abilities;
 use HyperBlocks\Abilities\AbilityRegistrar;
 use HyperBlocks\Block\Block;
 use HyperBlocks\Block\Field;
+use HyperBlocks\Block\FieldGroup;
 use HyperBlocks\BlockOperations;
 use HyperBlocks\Config;
 use HyperBlocks\Registry;
@@ -97,6 +98,47 @@ class AbilityRegistrarTest extends TestCase
         $this->assertSame('Hi', $jsonFields[0]['default']);
 
         $this->assertNull(BlockOperations::getFields('test/unknown'));
+    }
+
+    public function test_get_fields_dedupes_group_and_block_field_collisions(): void
+    {
+        $group = FieldGroup::make('Common', 'common')
+            ->addFields([Field::make('text', 'heading', 'Group Heading')->setDefault('group-default')]);
+        Registry::getInstance()->registerFieldGroup($group);
+
+        $block = Block::make('Collide')
+            ->setName('test/collide')
+            ->addFieldGroup('common')
+            ->addFields([Field::make('text', 'heading', 'Block Heading')->setDefault('block-default')]);
+        Registry::getInstance()->registerFluentBlock($block);
+
+        $fields = BlockOperations::getFields('test/collide');
+
+        // One entry, block definition wins (same rule preview() applies).
+        $this->assertCount(1, $fields);
+        $this->assertSame('Block Heading', $fields[0]['label']);
+        $this->assertSame('block-default', $fields[0]['default']);
+    }
+
+    public function test_register_json_blocks_filter_feeds_lookup_and_inventory(): void
+    {
+        $dir = sys_get_temp_dir() . '/hb-filtered-' . uniqid('', true);
+        mkdir($dir, 0777, true);
+        file_put_contents($dir . '/block.json', (string) json_encode([
+            'name'       => 'test/filtered',
+            'title'      => 'Filtered',
+            'hyperblocks' => true,
+        ]));
+        $this->tmp_dir = $dir; // tearDown cleanup; deliberately NOT a registered block path
+
+        add_filter('hyperblocks/blocks/register_json_blocks', static fn (): array => [$dir]);
+
+        // Lookup (get-block-fields path) and inventory (list-blocks path)
+        // must agree on filter-provided blocks.
+        $this->assertNotNull(Registry::getInstance()->findJsonBlockPath('test/filtered'));
+
+        $names = array_column(BlockOperations::listBlocks(), 'name');
+        $this->assertContains('test/filtered', $names);
     }
 
     public function test_preview_renders_fluent_template(): void

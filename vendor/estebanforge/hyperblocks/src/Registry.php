@@ -539,9 +539,40 @@ final class Registry
             return $this->jsonBlockPathCache[$blockName];
         }
 
-        $scanPaths = [];
+        foreach ($this->jsonBlockCandidateDirs() as $directory) {
+            $blockJsonFile = $directory . '/block.json';
+            if (!file_exists($blockJsonFile)) {
+                continue;
+            }
 
-        // Get scan paths from configuration
+            $metadata = json_decode((string) file_get_contents($blockJsonFile), true);
+            // Only resolve owned blocks: the REST field/preview lookups
+            // must not match foreign block.json files in the same path.
+            if (is_array($metadata) && ($metadata['name'] ?? null) === $blockName && self::isOwnedJsonBlock($metadata)) {
+                $this->jsonBlockPathCache[$metadata['name']] = $directory;
+                return $directory;
+            }
+        }
+
+        if (count($this->jsonBlockPathCache) < 100) {
+            $this->jsonBlockPathCache[$blockName] = null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Candidate JSON block directories, in discovery order: registered scan
+     * paths (block_paths, the library blocks dir, the register_json_paths
+     * filter), then individual dirs from the register_json_blocks filter.
+     * Globbed dirs skip underscore-prefixed entries (matches discovery);
+     * filter-provided dirs are explicit consent, like the fluent header
+     * bypass. Shared by lookup and inventory so the two cannot drift.
+     *
+     * @return list<string>
+     */
+    private function jsonBlockCandidateDirs(): array
+    {
         $scanPaths = Config::get('block_paths', []);
 
         // Add default library path if set (runtime identity, prefix-safe).
@@ -556,6 +587,8 @@ final class Registry
         $additionalPaths = apply_filters('hyperblocks/blocks/register_json_paths', []);
         $scanPaths = array_merge($scanPaths, $additionalPaths);
 
+        $candidates = [];
+
         foreach ($scanPaths as $basePath) {
             if (!is_dir($basePath)) {
                 continue;
@@ -567,24 +600,24 @@ final class Registry
             }
 
             foreach ($blockDirectories as $directory) {
-                $blockJsonFile = $directory . '/block.json';
-                if (file_exists($blockJsonFile)) {
-                    $metadata = json_decode(file_get_contents($blockJsonFile), true);
-                    // Only resolve owned blocks: the REST field/preview lookups
-                    // must not match foreign block.json files in the same path.
-                    if (isset($metadata['name']) && $metadata['name'] === $blockName && self::isOwnedJsonBlock($metadata)) {
-                        $this->jsonBlockPathCache[$metadata['name']] = $directory;
-                        return $directory;
-                    }
+                // Skip underscore-prefixed dirs, matching discovery's
+                // _disabled/ convention.
+                if (str_starts_with(basename($directory), '_')) {
+                    continue;
                 }
+
+                $candidates[] = $directory;
             }
         }
 
-        if (count($this->jsonBlockPathCache) < 100) {
-            $this->jsonBlockPathCache[$blockName] = null;
+        // Individual block dirs via filter: explicit consent.
+        foreach (apply_filters('hyperblocks/blocks/register_json_blocks', []) as $blockPath) {
+            if (is_string($blockPath) && is_dir($blockPath)) {
+                $candidates[] = $blockPath;
+            }
         }
 
-        return null;
+        return $candidates;
     }
 
     /**
@@ -598,49 +631,26 @@ final class Registry
      */
     public function getJsonBlocks(): array
     {
-        $scanPaths = Config::get('block_paths', []);
-
-        if (Config::$abspath !== '') {
-            $pluginBlocksPath = Config::$abspath . 'blocks';
-            if (is_dir($pluginBlocksPath)) {
-                $scanPaths[] = $pluginBlocksPath;
-            }
-        }
-
-        $additionalPaths = apply_filters('hyperblocks/blocks/register_json_paths', []);
-        $scanPaths = array_merge($scanPaths, $additionalPaths);
-
         $found = [];
 
-        foreach ($scanPaths as $basePath) {
-            if (!is_dir($basePath)) {
+        foreach ($this->jsonBlockCandidateDirs() as $directory) {
+            $blockJsonFile = $directory . '/block.json';
+            if (!file_exists($blockJsonFile)) {
                 continue;
             }
 
-            $blockDirectories = glob($basePath . '/*', GLOB_ONLYDIR);
-            if ($blockDirectories === false) {
+            $metadata = json_decode((string) file_get_contents($blockJsonFile), true);
+            if (!is_array($metadata) || empty($metadata['name']) || !self::isOwnedJsonBlock($metadata)) {
                 continue;
             }
 
-            foreach ($blockDirectories as $directory) {
-                $blockJsonFile = $directory . '/block.json';
-                if (!file_exists($blockJsonFile)) {
-                    continue;
-                }
-
-                $metadata = json_decode((string) file_get_contents($blockJsonFile), true);
-                if (!is_array($metadata) || empty($metadata['name']) || !self::isOwnedJsonBlock($metadata)) {
-                    continue;
-                }
-
-                $name = $metadata['name'];
-                if (isset($found[$name])) {
-                    continue;
-                }
-
-                $found[$name] = $directory;
-                $this->jsonBlockPathCache[$name] = $directory;
+            $name = $metadata['name'];
+            if (isset($found[$name])) {
+                continue;
             }
+
+            $found[$name] = $directory;
+            $this->jsonBlockPathCache[$name] = $directory;
         }
 
         return $found;

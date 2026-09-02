@@ -41,18 +41,24 @@ final class BlockOperations
         $block = $registry->getFluentBlock($blockName);
 
         if ($block) {
-            $mergedFields = $block->fields;
-
+            // Merge field group fields with block fields, deduped by name:
+            // block fields take precedence over field group fields (same
+            // rule as preview(), so field lookups and renders agree when
+            // names collide).
+            $mergedFields = [];
             foreach ($block->field_groups as $groupId) {
                 $fieldGroup = $registry->getFieldGroup($groupId);
                 if ($fieldGroup) {
-                    // Merge field group fields with block fields.
-                    // Block fields take precedence over field group fields.
-                    $mergedFields = array_merge($fieldGroup->fields, $mergedFields);
+                    foreach ($fieldGroup->fields as $field) {
+                        $mergedFields[$field->name] ??= $field;
+                    }
                 }
             }
+            foreach ($block->fields as $field) {
+                $mergedFields[$field->name] = $field;
+            }
 
-            return array_map(static fn ($field) => $field->toArray(), $mergedFields);
+            return array_map(static fn ($field) => $field->toArray(), array_values($mergedFields));
         }
 
         return self::getJsonBlockFields($blockName);
@@ -117,7 +123,7 @@ final class BlockOperations
                 $html = $renderer->render($block->render_template, $attributes);
 
                 return ['status' => 'ok', 'html' => $html, 'error' => '', 'rest_status' => 200];
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 return self::result('error', 'Rendering failed: ' . $e->getMessage(), 500);
             }
         }
