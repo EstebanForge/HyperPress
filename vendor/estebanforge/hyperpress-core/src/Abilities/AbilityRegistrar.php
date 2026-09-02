@@ -74,9 +74,9 @@ final class AbilityRegistrar
         add_action('wp_abilities_api_categories_init', [self::class, 'registerCategories']);
         add_action('wp_abilities_api_init', [self::class, 'registerAbilities']);
 
-        // WP_DEBUG-gated execution logging (see LogObserver for the pair the
-        // after-hook cannot cover).
-        LogObserver::init();
+        // Note: LogObserver is NOT wired here on purpose. It is a generic
+        // WP_DEBUG logger for every ability on the site and must survive the
+        // kill switch; Bootstrap wires it independently.
     }
 
     /**

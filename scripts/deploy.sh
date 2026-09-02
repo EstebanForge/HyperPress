@@ -156,6 +156,7 @@ TODO.md
 .git
 .gitignore
 tests
+examples
 vendor/estebanforge/hyperfields/tests
 vendor/estebanforge/hyperpress-core/tests" "$SVNPATH/trunk/"
 

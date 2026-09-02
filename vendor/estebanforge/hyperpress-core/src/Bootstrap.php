@@ -109,13 +109,18 @@ final class Bootstrap
         // Abilities registration must run BEFORE the background/API guard
         // below: the /wp-abilities/v1 controller serves abilities during
         // REST requests, so a no-op under REST_REQUEST would hide them from
-        // exactly the consumers they exist for.
+        // exactly the consumers they exist for. The WP_DEBUG log observer
+        // wires independently of the kill switch: it is a generic logger for
+        // every ability on the site, not part of HyperPress registration.
         if (class_exists(Abilities\AbilityRegistrar::class)) {
             Abilities\AbilityRegistrar::init();
         } elseif (defined('WP_DEBUG') && WP_DEBUG) {
             // The class ships in this same library, so a miss here means a
             // stale vendor copy (path repo, symlink:false). Never silent.
-            error_log('HyperPress: Abilities\\AbilityRegistrar not found; refresh the vendored copy with `composer update estebanforge/hyperpress-core`.');
+            error_log('HyperPress: Abilities\\AbilityRegistrar not found; refresh the vendored copy with `composer reinstall estebanforge/hyperpress-core`.');
+        }
+        if (class_exists(Abilities\LogObserver::class)) {
+            Abilities\LogObserver::init();
         }
 
         // Activation/deactivation hooks only make sense in plugin mode.

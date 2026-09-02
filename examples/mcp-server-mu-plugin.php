@@ -15,14 +15,14 @@
  * - The Hyper libraries register their abilities through the WordPress
  *   Abilities API (core 6.9+). They are registered but NOT exposed: no
  *   meta.mcp.public, no meta.show_in_rest.
- * - This mu-plugin creates a dedicated MCP server listing the read-only
- *   abilities explicitly, which is the documented way to expose abilities
+ * - This mu-plugin creates a dedicated MCP server listing the non-
+ *   destructive abilities explicitly (render-preview renders HTML but
+ *   writes nothing), which is the documented way to expose abilities
  *   through a custom server without flipping meta.mcp.public site-wide.
  * - Write abilities (hyperfields/update-option) are deliberately excluded.
- *   To include writes, add the name to HYPERPRESS_MCP_ABILITIES below and
- *   make sure you understand the two-layer permission model: transport
- *   authentication (application passwords) AND each ability's own
- *   capability check.
+ *   To include writes, add the name to the list below and make sure you
+ *   understand the two-layer permission model: transport authentication
+ *   (application passwords) AND each ability's own capability check.
  *
  * Client configuration (STDIO, local):
  *   wp mcp-adapter serve --user=<admin> --server=hyperpress-mcp-server
@@ -53,7 +53,8 @@ function hyperpress_example_register_mcp_server(): void
         return;
     }
 
-    // Read-only abilities from the three Hyper packages. Filter to adjust.
+    // Non-destructive abilities from the three Hyper packages (render-
+    // preview executes a render but writes nothing). Filter to adjust.
     $abilities = apply_filters('hyperpress/mcp/server/abilities', [
         'hyperpress/get-config',
         'hyperpress/list-endpoints',
@@ -76,12 +77,12 @@ function hyperpress_example_register_mcp_server(): void
         return;
     }
 
-    \WP\MCP\Core\McpAdapter::instance()->create_server(
+    $server = \WP\MCP\Core\McpAdapter::instance()->create_server(
         'hyperpress-mcp-server',              // Unique server identifier.
         'hyperpress-mcp-server',              // REST namespace: /wp-json/hyperpress-mcp-server/mcp
         'mcp',                                // REST route.
         'HyperPress MCP Server',              // Server name shown to clients.
-        'Read-only access to HyperPress site configuration, hypermedia endpoints, blocks, and options fields.',
+        'Non-destructive access to HyperPress site configuration, hypermedia endpoints, blocks, and options fields.',
         '1.0.0',                              // Server version.
         [\WP\MCP\Transport\HttpTransport::class],
         \WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler::class,
@@ -90,4 +91,10 @@ function hyperpress_example_register_mcp_server(): void
         [],                                   // Resources.
         []                                    // Prompts.
     );
+
+    // create_server returns McpAdapter or WP_Error (duplicate id, bad
+    // transport class, ...). Example code integrators copy: surface it.
+    if (is_wp_error($server)) {
+        error_log('HyperPress MCP example server failed to register: ' . $server->get_error_message());
+    }
 }

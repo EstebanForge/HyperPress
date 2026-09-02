@@ -6,10 +6,19 @@ declare(strict_types=1);
  * Log observer for the Abilities layer.
  *
  * When WP_DEBUG is on, every ability execution (ours and core's) lands in
- * the HyperFields debug log: name and input before the permission-checked
- * execution, name and validated result after. wp_after_execute_ability only
- * fires on success, so failed executions are visible through the before-hook
- * alone - pair the two entries when auditing.
+ * the HyperFields debug log: the ability name plus a truncated JSON snapshot
+ * of the input before execution, and of the validated result after.
+ *
+ * Known limits, stated plainly:
+ * - wp_before_execute_ability fires AFTER the permission check, and
+ *   wp_after_execute_ability fires only after output validation passes. A
+ *   permission-denied call reaches NEITHER hook, so denials are invisible
+ *   here. Denial visibility needs wp_ability_permission_result (WP 7.1+).
+ * - HyperFields' log directory protection is .htaccess-based, which nginx
+ *   ignores. On nginx stacks, deny hyperpress-logs/ at the server level or
+ *   relocate the directory before treating these logs as sensitive.
+ * - Payloads are truncated per entry; this is a debugging aid, not an audit
+ *   trail.
  *
  * @since 3.6.0
  */
@@ -27,8 +36,14 @@ if (!defined('ABSPATH') && !defined('HYPERPRESS_TESTING_MODE')) {
 final class LogObserver
 {
     /**
-     * Hook the execution observers. Called from AbilityRegistrar::init()
-     * after the kill switch, only when WP_DEBUG is on.
+     * Maximum characters of serialized payload per log entry.
+     */
+    private const PAYLOAD_LIMIT = 1000;
+
+    /**
+     * Hook the execution observers. Independent of the abilities kill
+     * switch: this is a generic WP_DEBUG logger for every ability on the
+     * site (core's included), not part of HyperPress's registration.
      *
      * @return void
      */
@@ -47,8 +62,8 @@ final class LogObserver
     }
 
     /**
-     * Log the attempt: fires before permission checks, so denials are
-     * visible here even though wp_after_execute_ability will not fire.
+     * Log the attempt. Fires after the permission check passed and before
+     * the execute callback runs; denied calls never reach this.
      *
      * @param string $ability_name Namespaced ability name.
      * @param mixed  $input        Input data.
@@ -57,12 +72,12 @@ final class LogObserver
     public static function logBefore(string $ability_name, $input): void
     {
         \HyperFields\Log::debug(
-            sprintf('Ability %s executing.', $ability_name),
-            [
-                'source'      => 'hyperpress-abilities',
-                'ability'     => $ability_name,
-                'input'       => $input,
-            ]
+            sprintf(
+                'Ability %s executing. Input: %s',
+                $ability_name,
+                self::payload($input)
+            ),
+            ['source' => 'hyperpress-abilities']
         );
     }
 
@@ -77,13 +92,33 @@ final class LogObserver
     public static function logAfter(string $ability_name, $input, $result): void
     {
         \HyperFields\Log::debug(
-            sprintf('Ability %s completed.', $ability_name),
-            [
-                'source'      => 'hyperpress-abilities',
-                'ability'     => $ability_name,
-                'input'       => $input,
-                'result'      => $result,
-            ]
+            sprintf(
+                'Ability %s completed. Result: %s',
+                $ability_name,
+                self::payload($result)
+            ),
+            ['source' => 'hyperpress-abilities']
         );
+    }
+
+    /**
+     * Serialize a payload for the log line, truncated to the entry limit.
+     *
+     * @param mixed $payload Input or result data.
+     * @return string
+     */
+    private static function payload(mixed $payload): string
+    {
+        $json = wp_json_encode($payload);
+
+        if ($json === false || $json === '') {
+            return '(none)';
+        }
+
+        if (strlen($json) > self::PAYLOAD_LIMIT) {
+            return substr($json, 0, self::PAYLOAD_LIMIT) . '...(truncated)';
+        }
+
+        return $json;
     }
 }
