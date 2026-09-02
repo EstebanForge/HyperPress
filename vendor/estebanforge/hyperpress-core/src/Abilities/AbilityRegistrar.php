@@ -73,6 +73,10 @@ final class AbilityRegistrar
 
         add_action('wp_abilities_api_categories_init', [self::class, 'registerCategories']);
         add_action('wp_abilities_api_init', [self::class, 'registerAbilities']);
+
+        // WP_DEBUG-gated execution logging (see LogObserver for the pair the
+        // after-hook cannot cover).
+        LogObserver::init();
     }
 
     /**
