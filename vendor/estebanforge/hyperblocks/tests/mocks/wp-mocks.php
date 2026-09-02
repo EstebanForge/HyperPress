@@ -77,6 +77,85 @@ if (!function_exists('__return_false')) {
     }
 }
 
+if (!function_exists('__')) {
+    /**
+     * Mock translation function — passthrough.
+     */
+    function __(string $text, string $domain = 'default'): string
+    {
+        return $text;
+    }
+}
+
+if (!class_exists('\WP_Error')) {
+    /**
+     * Minimal WP_Error mock.
+     */
+    class WP_Error
+    {
+        /** @var array<string, list<string>> */
+        private array $errors = [];
+
+        /** @var array<string, mixed> */
+        private array $error_data = [];
+
+        public function __construct($code = '', $message = '', $data = null)
+        {
+            if ($code !== '' && $message !== '') {
+                $this->errors[(string) $code][] = (string) $message;
+                if ($data !== null) {
+                    $this->error_data[(string) $code] = $data;
+                }
+            }
+        }
+
+        public function get_error_codes(): array
+        {
+            return array_keys($this->errors);
+        }
+
+        public function get_error_code(): string
+        {
+            $codes = $this->get_error_codes();
+
+            return $codes[0] ?? '';
+        }
+
+        public function get_error_message($code = ''): string
+        {
+            if ($code === '') {
+                $code = $this->get_error_code();
+            }
+
+            return $this->errors[$code][0] ?? '';
+        }
+
+        public function get_error_data($code = ''): mixed
+        {
+            if ($code === '') {
+                $code = $this->get_error_code();
+            }
+
+            return $this->error_data[$code] ?? null;
+        }
+
+        public function add($code, $message, $data = null): bool
+        {
+            $this->errors[(string) $code][] = (string) $message;
+            if ($data !== null) {
+                $this->error_data[(string) $code] = $data;
+            }
+
+            return true;
+        }
+
+        public function has_errors(): bool
+        {
+            return $this->errors !== [];
+        }
+    }
+}
+
 if (!function_exists('esc_html')) {
     /**
      * Mock esc_html function.
@@ -697,5 +776,22 @@ if (!class_exists('\WP_REST_Server')) {
         public const EDITABLE = 'POST, PUT, PATCH';
         public const DELETABLE = 'DELETE';
         public const ALLMETHODS = 'GET, POST, PUT, PATCH, DELETE';
+    }
+}
+
+// Abilities API capture stubs. Production registration is asserted
+// structurally: calls are recorded in $GLOBALS for AbilityRegistrarTest.
+// Defined before Brain Monkey loads, so Brain Monkey cannot redefine them.
+if (!function_exists('wp_register_ability_category')) {
+    function wp_register_ability_category($slug, $args = []) {
+        $GLOBALS['__hb_registered_ability_categories'][$slug] = $args;
+        return null;
+    }
+}
+
+if (!function_exists('wp_register_ability')) {
+    function wp_register_ability($name, $args = []) {
+        $GLOBALS['__hb_registered_abilities'][$name] = $args;
+        return null;
     }
 }

@@ -99,6 +99,17 @@ class Bootstrap
 
         // Register default block paths
         add_action('init', [self::class, 'registerDefaultPaths'], 5);
+
+        // Abilities registration (core 6.9+). Runs on every request: the
+        // /wp-abilities/v1 controller serves abilities during REST requests,
+        // so registration must not be skipped in any context.
+        if (class_exists(\HyperBlocks\Abilities\AbilityRegistrar::class)) {
+            \HyperBlocks\Abilities\AbilityRegistrar::init();
+        } elseif (defined('WP_DEBUG') && WP_DEBUG) {
+            // The class ships in this same library, so a miss here means a
+            // stale vendored copy. Never silent.
+            error_log('HyperBlocks: Abilities\\AbilityRegistrar not found; refresh the vendored copy with `composer reinstall estebanforge/hyperblocks`.');
+        }
     }
 
     /**

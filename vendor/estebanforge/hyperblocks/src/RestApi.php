@@ -8,9 +8,6 @@ declare(strict_types=1);
 
 namespace HyperBlocks;
 
-use HyperBlocks\Block\Field;
-use HyperFields\BlockFieldAdapter;
-
 // Prevent direct file access.
 if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
     return;
@@ -110,82 +107,13 @@ class RestApi
      */
     public function getBlockFields(\WP_REST_Request $request): \WP_REST_Response
     {
-        $blockName = $request->get_param('name');
+        $fields = BlockOperations::getFields((string) $request->get_param('name'));
 
-        $registry = Registry::getInstance();
-
-        // First, try to find the block as a fluent block
-        $block = $registry->getFluentBlock($blockName);
-
-        if ($block) {
-            // Handle fluent blocks
-            $mergedFields = $block->fields;
-
-            // If the block has attached field groups, merge their fields.
-            foreach ($block->field_groups as $groupId) {
-                $fieldGroup = $registry->getFieldGroup($groupId);
-                if ($fieldGroup) {
-                    // Merge field group fields with block fields.
-                    // Block fields take precedence over field group fields.
-                    $mergedFields = array_merge($fieldGroup->fields, $mergedFields);
-                }
-            }
-
-            // Convert Field objects to arrays for JSON response.
-            $fieldDefinitions = [];
-            foreach ($mergedFields as $field) {
-                $fieldDefinitions[] = $field->toArray();
-            }
-
-            return new \WP_REST_Response($fieldDefinitions);
-        }
-
-        // If not a fluent block, check if it's a JSON block
-        $jsonBlockFields = $this->getJsonBlockFields($blockName);
-        if ($jsonBlockFields !== null) {
-            return new \WP_REST_Response($jsonBlockFields);
+        if ($fields !== null) {
+            return new \WP_REST_Response($fields);
         }
 
         return new \WP_REST_Response(['error' => 'Block not found.'], 404);
-    }
-
-    /**
-     * Get field definitions from a JSON block.
-     *
-     * @param string $blockName The name of the JSON block.
-     * @return array|null Array of field definitions or null if not found.
-     */
-    private function getJsonBlockFields(string $blockName): ?array
-    {
-        // Find the block.json file for this block
-        $blockPath = $this->findJsonBlockPath($blockName);
-        if (!$blockPath) {
-            return null;
-        }
-
-        $blockJsonFile = $blockPath . '/block.json';
-        if (!file_exists($blockJsonFile)) {
-            return null;
-        }
-
-        $metadata = json_decode(file_get_contents($blockJsonFile), true);
-        if (!$metadata || !isset($metadata['attributes'])) {
-            return null;
-        }
-
-        // Convert block.json attributes to field definitions
-        $fields = [];
-        foreach ($metadata['attributes'] as $attrName => $attrConfig) {
-            $field = [
-                'name' => $attrName,
-                'label' => $this->generateFieldLabel($attrName),
-                'type' => $this->mapAttributeTypeToFieldType($attrConfig['type'] ?? 'string'),
-                'default' => $attrConfig['default'] ?? '',
-            ];
-            $fields[] = $field;
-        }
-
-        return $fields;
     }
 
     /**
@@ -196,226 +124,29 @@ class RestApi
      */
     public function renderPreview(\WP_REST_Request $request): \WP_REST_Response
     {
-        $blockName = $request->get_param('blockName');
-        $attributes = $request->get_param('attributes');
+        $result = BlockOperations::preview(
+            (string) $request->get_param('blockName'),
+            (array) $request->get_param('attributes')
+        );
 
-        $registry = Registry::getInstance();
-        $block = $registry->getFluentBlock($blockName);
-
-        // Try fluent block first
-        if ($block) {
-            // Check if block has a render template
-            if (empty($block->render_template)) {
-                return new \WP_REST_Response([
-                    'success' => false,
-                    'error'   => 'No render template defined for block: ' . $blockName,
-                ], 400);
-            }
-
-            try {
-                // Sanitize and validate incoming attributes against HyperFields
-                $mergedFields = [];
-                foreach ($block->fields as $f) {
-                    $mergedFields[$f->name] = $f;
-                }
-                foreach ($block->field_groups as $groupId) {
-                    $group = $registry->getFieldGroup($groupId);
-                    if ($group) {
-                        foreach ($group->fields as $gf) {
-                            if (!isset($mergedFields[$gf->name])) {
-                                $mergedFields[$gf->name] = $gf;
-                            }
-                        }
-                    }
-                }
-
-                foreach ($mergedFields as $name => $field) {
-                    $adapter = BlockFieldAdapter::fromField($field->getHyperField(), $attributes);
-                    $incoming = $attributes[$name] ?? null;
-
-                    if ($incoming === null) {
-                        $attributes[$name] = $field->getHyperField()->getDefault();
-                        continue;
-                    }
-
-                    $sanitized = $adapter->sanitizeForBlock($incoming);
-                    if (!$adapter->validateForBlock($sanitized)) {
-                        $attributes[$name] = $field->getHyperField()->getDefault();
-                    } else {
-                        $attributes[$name] = $sanitized;
-                    }
-                }
-
-                // Use the renderer to generate preview HTML
-                $renderer = new Renderer();
-                $html = $renderer->render($block->render_template, $attributes);
-
-                return new \WP_REST_Response([
-                    'success' => true,
-                    'html'    => $html,
-                ]);
-            } catch (\Exception $e) {
-                return new \WP_REST_Response([
-                    'success' => false,
-                    'error'   => 'Rendering failed: ' . $e->getMessage(),
-                ], 500);
-            }
+        if ($result['status'] === 'ok') {
+            return new \WP_REST_Response([
+                'success' => true,
+                'html'    => $result['html'],
+            ]);
         }
 
-        // If not a fluent block, try JSON block
-        $jsonBlockPreview = $this->renderJsonBlockPreview($blockName, $attributes);
-        if ($jsonBlockPreview !== null) {
-            return new \WP_REST_Response($jsonBlockPreview);
+        if ($result['status'] === 'not_found') {
+            return new \WP_REST_Response([
+                'success' => false,
+                'error'   => 'Block not found: ' . $request->get_param('blockName'),
+            ], 404);
         }
 
         return new \WP_REST_Response([
             'success' => false,
-            'error'   => 'Block not found: ' . $blockName,
-        ], 404);
+            'error'   => $result['error'],
+        ], $result['rest_status']);
     }
 
-    /**
-     * Render preview for JSON blocks.
-     *
-     * @param string $blockName  The name of the JSON block.
-     * @param array  $attributes The block attributes.
-     * @return array|null Array with success and html keys, or null if not found.
-     */
-    private function renderJsonBlockPreview(string $blockName, array $attributes): ?array
-    {
-        $blockPath = $this->findJsonBlockPath($blockName);
-        if (!$blockPath) {
-            return null;
-        }
-
-        $blockJsonFile = $blockPath . '/block.json';
-        if (!file_exists($blockJsonFile)) {
-            return null;
-        }
-
-        $metadata = json_decode(file_get_contents($blockJsonFile), true);
-        if (!$metadata) {
-            return null;
-        }
-
-        // Check if there's a render.php file
-        $renderFile = $blockPath . '/render.php';
-        if (!file_exists($renderFile)) {
-            return [
-                'success' => false,
-                'error' => 'No render.php file found for JSON block: ' . $blockName,
-            ];
-        }
-
-        $attributes = $this->sanitizeJsonBlockAttributes($attributes, $metadata['attributes'] ?? []);
-
-        try {
-            $renderer = new Renderer();
-            $html = $renderer->render('file:' . $renderFile, $attributes);
-
-            return [
-                'success' => true,
-                'html' => $html,
-            ];
-        } catch (\Throwable $e) {
-            return [
-                'success' => false,
-                'error' => 'Rendering failed: ' . $e->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * Find the path to a JSON block directory.
-     *
-     * @param string $blockName The name of the block.
-     * @return string|null The path to the block directory or null if not found.
-     */
-    private function findJsonBlockPath(string $blockName): ?string
-    {
-        $registry = Registry::getInstance();
-
-        return $registry->findJsonBlockPath($blockName);
-    }
-
-    /**
-     * Sanitize JSON block attributes by their declared block.json types.
-     *
-     * @param array $attributes      Incoming attributes from the REST request.
-     * @param array $declaredAttributes block.json attribute type declarations.
-     * @return array Sanitized attributes.
-     */
-    private function sanitizeJsonBlockAttributes(array $attributes, array $declaredAttributes): array
-    {
-        $sanitized = [];
-
-        foreach ($attributes as $name => $value) {
-            $declaration = $declaredAttributes[$name] ?? [];
-            $type = $declaration['type'] ?? 'string';
-            $source = $declaration['source'] ?? '';
-
-            $sanitized[$name] = match ($type) {
-                'integer', 'number' => is_numeric($value) ? $value + 0 : 0,
-                'boolean' => (bool) $value,
-                'string' => $source === 'html'
-                    ? wp_kses_post((string) $value)
-                    : sanitize_text_field((string) $value),
-                default => $this->sanitizeNestedValue($value),
-            };
-        }
-
-        return $sanitized;
-    }
-
-    /**
-     * Recursively sanitize a nested array or scalar value.
-     *
-     * @param mixed $value The value to sanitize.
-     * @return mixed The sanitized value.
-     */
-    private function sanitizeNestedValue(mixed $value): mixed
-    {
-        if (is_array($value)) {
-            return array_map([$this, 'sanitizeNestedValue'], $value);
-        }
-
-        return sanitize_text_field((string) $value);
-    }
-
-    /**
-     * Generate a human-readable label from a field name.
-     *
-     * @param string $fieldName The field name.
-     * @return string The formatted label.
-     */
-    private function generateFieldLabel(string $fieldName): string
-    {
-        // Convert snake_case to Title Case
-        return ucwords(str_replace('_', ' ', $fieldName));
-    }
-
-    /**
-     * Map block.json attribute types to field types.
-     *
-     * @param string $attributeType The attribute type from block.json.
-     * @return string The corresponding field type.
-     */
-    private function mapAttributeTypeToFieldType(string $attributeType): string
-    {
-        switch ($attributeType) {
-            case 'string':
-                return 'text';
-            case 'boolean':
-                return 'checkbox';
-            case 'number':
-            case 'integer':
-                return 'number';
-            case 'object':
-                return 'object';
-            case 'array':
-                return 'array';
-            default:
-                return 'text';
-        }
-    }
 }

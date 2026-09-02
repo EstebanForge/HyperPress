@@ -588,6 +588,65 @@ final class Registry
     }
 
     /**
+     * Enumerate every owned JSON block across the scan paths.
+     *
+     * Same sources and ownership gate as findJsonBlockPath(), but resolving
+     * all blocks at once (name => directory) for inventories. Found paths
+     * prime the lookup cache.
+     *
+     * @return array<string, string> Block name => block directory path.
+     */
+    public function getJsonBlocks(): array
+    {
+        $scanPaths = Config::get('block_paths', []);
+
+        if (Config::$abspath !== '') {
+            $pluginBlocksPath = Config::$abspath . 'blocks';
+            if (is_dir($pluginBlocksPath)) {
+                $scanPaths[] = $pluginBlocksPath;
+            }
+        }
+
+        $additionalPaths = apply_filters('hyperblocks/blocks/register_json_paths', []);
+        $scanPaths = array_merge($scanPaths, $additionalPaths);
+
+        $found = [];
+
+        foreach ($scanPaths as $basePath) {
+            if (!is_dir($basePath)) {
+                continue;
+            }
+
+            $blockDirectories = glob($basePath . '/*', GLOB_ONLYDIR);
+            if ($blockDirectories === false) {
+                continue;
+            }
+
+            foreach ($blockDirectories as $directory) {
+                $blockJsonFile = $directory . '/block.json';
+                if (!file_exists($blockJsonFile)) {
+                    continue;
+                }
+
+                $metadata = json_decode((string) file_get_contents($blockJsonFile), true);
+                if (!is_array($metadata) || empty($metadata['name']) || !self::isOwnedJsonBlock($metadata)) {
+                    continue;
+                }
+
+                $name = $metadata['name'];
+                if (isset($found[$name])) {
+                    continue;
+                }
+
+                $found[$name] = $directory;
+                $this->jsonBlockPathCache[$name] = $directory;
+            }
+        }
+
+        return $found;
+    }
+
+    /**
      * Reset the registry (useful for testing).
      *
      * @return void

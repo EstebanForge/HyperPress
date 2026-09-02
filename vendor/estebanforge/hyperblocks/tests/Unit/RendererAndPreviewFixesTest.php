@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use HyperBlocks\BlockOperations;
 use HyperBlocks\Renderer;
-use HyperBlocks\RestApi;
 
 /*
  * Finding 3.1: a template that throws \Error (TypeError, ParseError) escapes
@@ -35,9 +35,8 @@ it('preserves level attribute in template scope without overwriting', function (
  * booleans are cast.
  */
 it('sanitizes JSON block preview attributes by their declared types', function (): void {
-    $api = new RestApi();
-    $method = new \ReflectionMethod($api, 'sanitizeJsonBlockAttributes');
-
+    // Moved to BlockOperations (shared with the Abilities surface); called
+    // directly: single implementation, no reflection shim.
     $declared = [
         'heading' => ['type' => 'string'],
         'content' => ['type' => 'string', 'source' => 'html'],
@@ -47,7 +46,7 @@ it('sanitizes JSON block preview attributes by their declared types', function (
         'nested' => ['type' => 'array'],
     ];
 
-    $result = $method->invoke($api, [
+    $result = BlockOperations::sanitizeJsonBlockAttributes([
         'heading' => '<b>hello</b>',
         'content' => '<p>safe <script>alert(1)</script> text</p>',
         'count' => '42',
