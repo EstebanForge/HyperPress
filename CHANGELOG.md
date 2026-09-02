@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.7.0] - Unreleased
+## [3.7.0]
 
 ### Changed
 - **Vendored HyperPress-Core 1.7.0 / HyperBlocks 1.7.0 / HyperFields 1.7.0: WordPress Abilities API support (core 6.9+).** All three libraries register their capabilities as WordPress Abilities: site configuration and the `/wp-html/v1/` endpoint inventory (`hyperpress/*`), block inventory + field definitions + server-side preview rendering (`hyperblocks/*`), and options-page discovery with per-field JSON Schema plus single-field reads and writes (`hyperfields/*`). Everything is registered but hidden by default: sites opt in per package through kill-switch, REST-exposure, and MCP-public filters (see each library's AGENTS.md). Writes go through the exact form-save sanitization pipeline, are `edit_posts`/`manage_options`/per-page-capability gated, and are idempotent. The runtime now boots in every context (REST, WP-CLI, cron) so the Abilities controller can resolve pages and blocks there too; hooks are inert off-context, and the Router rewrite self-heal stays a page-load side effect.

@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.7.0] - Unreleased
+## [1.7.0]
 
 ### Added
 - **Abilities API module (WordPress 6.9+).** Registers the `hyperpress` category and three read-only abilities so agents and external tools can discover the site's hypermedia surface. `hyperpress/get-config` (active library, htmx line, endpoint slug + URL, template directory and extensions, version; `manage_options`), `hyperpress/list-endpoints` (the `/wp-html/v1/` template inventory across the theme `hypermedia/` directory, the legacy directory, and namespaced paths from `hyperpress/render/register_template_path`; `edit_posts`), and `hyperpress/get-extension-status` (`load_extension_*` map; `edit_posts`). Registration runs in every context so the `/wp-abilities/v1/` controller serves them on REST; on WordPress < 6.9 the module is a silent no-op behind `class_exists`. Exposure is opt-in per site: `hyperpress/abilities/enabled` (kill switch, default on), `hyperpress/abilities/expose_rest` (default off), `hyperpress/abilities/mcp_public` (default off). Annotations are always explicit (`readonly: true, destructive: false, idempotent: true`) because the API defaults `destructive` to true, which maps unannotated abilities to DELETE on REST. `LogObserver` (WP_DEBUG only) writes executing/completed entries with truncated payload snapshots to the `hyperpress-abilities` daily log; the before-hook fires after the permission check, so denied calls never reach it.

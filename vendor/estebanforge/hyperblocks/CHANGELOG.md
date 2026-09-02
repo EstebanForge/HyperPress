@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.7.0] - Unreleased
+## [1.7.0]
 
 ### Added
 - **Abilities API module (WordPress 6.9+).** Mirrors the tested `hyperblocks/v1` REST surface as abilities: `hyperblocks/list-blocks` (fluent + owned JSON inventory with title, source and render-template flag), `hyperblocks/get-block-fields`, and `hyperblocks/render-preview` (annotated `readonly: false, destructive: false, idempotent: true` since it renders HTML but persists nothing). All three are `edit_posts`-gated, exactly like the REST routes. Field lookup, preview rendering, and the inventory live in the new `BlockOperations` service; REST callbacks and ability callbacks both delegate to it, so the two surfaces cannot drift. REST response shapes and status codes are unchanged.

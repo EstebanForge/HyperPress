@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.7.0] - Unreleased
+## [1.7.0]
 
 ### Added
 - **`Field::toJsonSchema()`.** Machine-readable JSON Schema export of any field: `email`/`url`/`date`/`datetime` formats, `enum` from option keys (string-normalized, matching `sanitizeSelectValue()`), `minimum`/`maximum` from number bounds, recursive repeater object shapes from sub-fields, and `boolean` for checkboxes. Structural/UI types (`tabs`, `heading`, `separator`, `custom`, `header_scripts`, `footer_scripts`, `html`, `hidden`, `sidebar`, `association`, `map`, `media_gallery`) and any type with a non-derivable storage shape return `null`; the `hyperfields/field/json_schema` filter is the escape hatch to supply or override a schema. `image` declares `integer` (sanitizeValue stores `absint`), `color` declares `string|null` (`sanitize_hex_color` returns null for invalid input).
