@@ -97,6 +97,18 @@ final class LibraryBootstrap
         if (class_exists(Registry::class)) {
             Registry::getInstance()->init();
         }
+
+        // Abilities registration (core 6.9+). Runs in every context: the
+        // /wp-abilities/v1 controller serves abilities during REST requests
+        // and WP-CLI resolves pages too, so registration must not be
+        // context-gated.
+        if (class_exists(\HyperFields\Abilities\AbilityRegistrar::class)) {
+            \HyperFields\Abilities\AbilityRegistrar::init();
+        } elseif (defined('WP_DEBUG') && WP_DEBUG) {
+            // The class ships in this same library, so a miss here means a
+            // stale vendored copy. Never silent.
+            error_log('HyperFields: Abilities\\AbilityRegistrar not found; refresh the vendored copy.');
+        }
     }
 
     /**

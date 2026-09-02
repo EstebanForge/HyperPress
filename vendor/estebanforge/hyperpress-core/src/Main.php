@@ -104,6 +104,12 @@ class Main
 
         $this->assets_manager = new Assets($this);
 
+        // Initialize new options system in every context: the options-page
+        // metadata (fields, capabilities) feeds the Abilities layer, which
+        // must resolve pages on REST and WP-CLI requests too. The admin menu
+        // itself only renders where admin_menu fires.
+        $this->options = new Options($this);
+
         if (is_admin()) {
             // Handle migration from wp-settings to hyper fields
             $migration = new OptionsMigration($this);
@@ -111,8 +117,6 @@ class Main
                 $migration->migrate();
             }
 
-            // Initialize new options system
-            $this->options = new Options($this);
             new Activation();
         }
     }

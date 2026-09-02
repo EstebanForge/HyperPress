@@ -28,6 +28,14 @@ class OptionsPage
      * @var array<string, string>
      */
     private array $compatibility_field_errors = [];
+
+    /**
+     * Registered pages indexed by menu slug. Feeds machine surfaces (the
+     * Abilities layer) so they can resolve pages without an admin request.
+     *
+     * @var array<string, static>
+     */
+    private static array $registered_pages = [];
     /**
      * @var array<int, array>
      */
@@ -175,6 +183,156 @@ class OptionsPage
     }
 
     /**
+     * Capability required to view and save this page.
+     *
+     * @return string
+     */
+    public function getCapability(): string
+    {
+        return $this->capability;
+    }
+
+    /**
+     * The admin menu slug identifying this page.
+     *
+     * @return string
+     */
+    public function getMenuSlug(): string
+    {
+        return $this->menu_slug;
+    }
+
+    /**
+     * The admin page title.
+     *
+     * @return string
+     */
+    public function getPageTitle(): string
+    {
+        return $this->page_title;
+    }
+
+    /**
+     * Every registered page, keyed by menu slug.
+     *
+     * @return array<string, static>
+     */
+    public static function getRegisteredPages(): array
+    {
+        return self::$registered_pages;
+    }
+
+    /**
+     * Find a field by name across all sections of this page.
+     *
+     * @param string $fieldName Field name (as stored, prefix included).
+     * @return Field|null
+     */
+    public function findField(string $fieldName): ?Field
+    {
+        foreach ($this->allFields() as $field) {
+            if ($field->getName() === $fieldName) {
+                return $field;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Every field on this page: section fields first (the save path's
+     * source of truth), then any page-level legacy fields not already
+     * present. Deduped by name.
+     *
+     * @return array<string, Field>
+     */
+    public function allFields(): array
+    {
+        $fields = [];
+
+        foreach ($this->sections as $section) {
+            foreach ($section->getFields() as $field) {
+                $fields[$field->getName()] ??= $field;
+            }
+        }
+
+        foreach ($this->fields as $field) {
+            $fields[$field->getName()] ??= $field;
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Sanitize and persist a single field value through this page's field
+     * definition: same wps_sanitize / wps_validate / pre_save-filter path
+     * the Settings-API save uses, narrowed to one field.
+     *
+     * @param string $fieldName Field name (as stored, prefix included).
+     * @param mixed  $value     Incoming value.
+     * @return bool False when the field is unknown or fails validation.
+     */
+    public function setFieldValue(string $fieldName, mixed $value): bool
+    {
+        $field = $this->findField($fieldName);
+        if ($field === null) {
+            return false;
+        }
+
+        $field_args = $field->getArgs();
+
+        $sanitized = $value;
+        if (isset($field_args['wps_sanitize']) && is_callable($field_args['wps_sanitize'])) {
+            $sanitized = call_user_func($field_args['wps_sanitize'], $sanitized);
+        } else {
+            $sanitized = $field->sanitizeValue($sanitized);
+        }
+
+        if ($this->validateCompatibilityField($field, $sanitized) !== null) {
+            return false;
+        }
+
+        // Filter seam on the single-field payload: same filter the full-page
+        // save applies, narrowed so consumers can veto or adjust one write.
+        $output = (array) apply_filters('hyperfields/options_page/pre_save', [$fieldName => $sanitized], $this->option_values, $this);
+        if (array_key_exists($fieldName, $output)) {
+            $sanitized = $output[$fieldName];
+        }
+
+        $values = get_option($this->option_name, []);
+        if (!is_array($values)) {
+            $values = [];
+        }
+
+        $option_path = isset($field_args['option_path']) && is_string($field_args['option_path']) && $field_args['option_path'] !== ''
+            ? $field_args['option_path']
+            : null;
+
+        // Idempotent no-op: storing the exact current value must read as
+        // success (the ability advertises idempotent:true), not as the false
+        // update_option() returns for unchanged rows.
+        if ($option_path !== null) {
+            [$old_exists, $old_value] = $this->getValueByPath($values, $option_path);
+            if ($old_exists && $old_value === $sanitized) {
+                return true;
+            }
+
+            $values = $this->setValueByPath($values, $option_path, $sanitized);
+        } else {
+            if (array_key_exists($fieldName, $values) && $values[$fieldName] === $sanitized) {
+                return true;
+            }
+
+            $values[$fieldName] = $sanitized;
+        }
+
+        // update_option fires update_option_{name} -> onOptionSaved -> the
+        // semantic after_save action and cache invalidation, exactly like a
+        // Settings-API form save.
+        return (bool) update_option($this->option_name, $values);
+    }
+
+    /**
      * AddTab.
      *
      * @return self
@@ -284,6 +442,11 @@ class OptionsPage
      */
     public function register(): void
     {
+        // Index the page for machine surfaces before any hook scheduling:
+        // resolution must work on REST/CLI requests where admin hooks never
+        // fire.
+        self::$registered_pages[$this->menu_slug] = $this;
+
         $this->loadOptions();
 
         // Check if we're currently in the admin_menu hook execution

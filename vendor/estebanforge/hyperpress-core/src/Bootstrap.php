@@ -118,22 +118,17 @@ final class Bootstrap
             error_log('HyperPress: Abilities\\AbilityRegistrar not found; refresh the vendored copy with `composer update estebanforge/hyperpress-core`.');
         }
 
-        // Skip the heavy WordPress wiring for background and API contexts;
-        // the helpers/constants above are still available for them.
-        if ((defined('DOING_CRON') && DOING_CRON === true)
-            || (defined('DOING_AJAX') && DOING_AJAX === true)
-            || (defined('REST_REQUEST') && REST_REQUEST === true)
-            || (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST === true)
-            || (defined('WP_CLI') && WP_CLI === true)
-        ) {
-            return;
-        }
-
         // Activation/deactivation hooks only make sense in plugin mode.
         if (!$is_library_mode) {
             register_activation_hook($plugin_file, [Activation::class, 'activate']);
             register_deactivation_hook($plugin_file, [Activation::class, 'deactivate']);
         }
+
+        // Main wiring runs in EVERY context (admin, REST, cron, WP-CLI). The
+        // former early-return here left REST/CLI blind to the options-page
+        // metadata that the Abilities layer resolves pages from; scheduled
+        // hooks (enqueue, menus, template_redirect) simply never fire
+        // off-context, so booting Main everywhere is inert but complete.
 
         if (class_exists(Main::class)) {
             $router = new Router();
