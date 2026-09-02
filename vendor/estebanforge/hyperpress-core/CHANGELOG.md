@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.7.0] - Unreleased
+
+### Added
+- **Abilities API module (WordPress 6.9+).** Registers the `hyperpress` category and three read-only abilities so agents and external tools can discover the site's hypermedia surface. `hyperpress/get-config` (active library, htmx line, endpoint slug + URL, template directory and extensions, version; `manage_options`), `hyperpress/list-endpoints` (the `/wp-html/v1/` template inventory across the theme `hypermedia/` directory, the legacy directory, and namespaced paths from `hyperpress/render/register_template_path`; `edit_posts`), and `hyperpress/get-extension-status` (`load_extension_*` map; `edit_posts`). Registration runs in every context so the `/wp-abilities/v1/` controller serves them on REST; on WordPress < 6.9 the module is a silent no-op behind `class_exists`. Exposure is opt-in per site: `hyperpress/abilities/enabled` (kill switch, default on), `hyperpress/abilities/expose_rest` (default off), `hyperpress/abilities/mcp_public` (default off). Annotations are always explicit (`readonly: true, destructive: false, idempotent: true`) because the API defaults `destructive` to true, which maps unannotated abilities to DELETE on REST. `LogObserver` (WP_DEBUG only) writes executing/completed entries with truncated payload snapshots to the `hyperpress-abilities` daily log; the before-hook fires after the permission check, so denied calls never reach it.
+
+### Changed
+- **Main boots in every context.** The early-return guard for cron/AJAX/REST/XMLRPC/WP-CLI is gone: the options-page metadata (fields, capabilities) feeds the Abilities layer, which must resolve pages on REST and CLI too. Scheduled hooks (enqueue, menus, `template_redirect`) simply never fire off-context, so booting Main everywhere is inert but complete. `Options` construction moved out of the `is_admin()` gate for the same reason (`OptionsMigration` and `Activation` stay admin-only), and the Router rewrite self-heal is now gated to page loads: a rewrite flush must be a page-load side effect, not something an inbound webhook or cron task triggers. `Admin/Options.php` and `Router.php` comments updated to the new reality.
+- **`Router::registerMainRoute()` self-heal context gate.** The missing-rules rebuild no longer runs on REST, CLI, cron, or AJAX requests.
+
 ## [1.6.0] - 2026-08-29
 
 ### Added

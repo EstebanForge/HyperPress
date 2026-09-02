@@ -2,8 +2,8 @@
 Contributors: tcattd
 Tags: hypermedia, ajax, htmx, alpinejs, datastar
 Stable tag: 3.6.0
-Requires at least: 6.5
-Tested up to: 7.0
+Requires at least: 6.9
+Tested up to: 7.1
 Requires PHP: 8.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
@@ -154,6 +154,17 @@ You are never locked in. HyperPress exposes a standard REST namespace, so you ca
 5. Your page is now reactive, with no JavaScript written.
 
 [Check the full feature set on GitHub](https://github.com/EstebanForge/HyperPress).
+
+== AI AGENTS (ABILITIES + MCP) ==
+
+HyperPress registers its capabilities as WordPress Abilities (core 6.9+): site configuration, the /wp-html/v1/ endpoint inventory, block definitions and previews, and options-page fields with JSON Schema. Abilities are registered but private by default; nothing is exposed until you opt in.
+
+Opt-in paths:
+
+* Per-package filters: hyperpress/abilities/expose_rest, hyperpress/abilities/mcp_public (plus the same filter set for hyperblocks and hyperfields), and hyperpress/abilities/enabled to turn registration off entirely.
+* The bundled example server: copy examples/mcp-server-mu-plugin.php to wp-content/mu-plugins/ (requires the official MCP Adapter plugin) to expose only the non-destructive abilities to AI agents over MCP.
+
+Writes are capability-gated per page and run through the same sanitization pipeline as form saves. Requires WordPress 6.9+ for the abilities features; older versions run everything else.
 
 == Installation ==
 

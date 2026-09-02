@@ -74,3 +74,7 @@ When HyperPress-Core is consumed as a Composer library (no `api-for-htmx.php` ac
 ```php
 add_filter('hyperpress/admin/show_menu', '__return_true');
 ```
+
+## Abilities API + MCP (3.7.0+)
+
+The bundled libraries register their capabilities as WordPress Abilities (core 6.9+; silent no-op below). Nothing is exposed by default: sites opt in per package through kill-switch, REST-exposure, and MCP-public filters documented in each library's AGENTS.md. `examples/mcp-server-mu-plugin.php` is the documented opt-in path for MCP: copy to `wp-content/mu-plugins/`, requires the official [MCP Adapter](https://github.com/WordPress/mcp-adapter) plugin. `examples/` is svn-ignored and never ships in the wp.org zip. Requires at least 6.9 is declared in `readme.txt` and the plugin header because of this feature set; older cores run everything except the abilities module.

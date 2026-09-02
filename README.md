@@ -7,6 +7,7 @@ HyperPress equips developers with a powerful toolkit, including:
 * 🚀 A dedicated REST API endpoint (`/wp-html/v1/`) for serving hypermedia template partials.
 * 🧩 HyperFields: a streamlined PHP API for registering custom data fields (metadata) on blocks, posts, users and terms. Also with an API for creating custom Options Pages, with Tabs support.
 * 🧱 HyperBlocks: a simple but powerful PHP API for building dynamic, render-on-the-fly blocks, supporting Gutenberg's RichText and InnerBlocks, with lightning fast rendering in the Block Editor. Adiós React nonsense.
+* 🤖 WordPress Abilities (6.9+): site capabilities registered as machine-readable, permission-gated abilities, with opt-in MCP exposure for AI agents through the official MCP Adapter.
 
 <div align="center">
 
@@ -19,6 +20,19 @@ HyperPress equips developers with a powerful toolkit, including:
 </small>
 
 </div>
+
+---
+
+## AI Agents: WordPress Abilities + MCP
+
+From 3.7.0 (WordPress 6.9+), HyperPress registers its capabilities as [WordPress Abilities](https://developer.wordpress.org/apis/abilities-api/): site configuration, the `/wp-html/v1/` endpoint inventory, block definitions and server-side previews, and options-page fields with per-field JSON Schema.
+
+Registered abilities are private by default. Nothing is exposed until you opt in:
+
+* Filter flips: `hyperpress/abilities/expose_rest` and `hyperpress/abilities/mcp_public` (the same filter set exists for `hyperblocks` and `hyperfields`), plus `hyperpress/abilities/enabled` to turn registration off entirely.
+* The bundled example: `examples/mcp-server-mu-plugin.php` plus the official [MCP Adapter](https://github.com/WordPress/mcp-adapter) plugin exposes only the non-destructive abilities to any MCP client (Claude Desktop, Cursor, VS Code, Claude Code).
+
+Writes are capability-gated per options page and run through the exact same sanitization pipeline as form saves. See `examples/mcp-server-mu-plugin.php` for the full setup.
 
 ---
 

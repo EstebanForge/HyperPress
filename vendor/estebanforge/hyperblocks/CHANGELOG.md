@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.7.0] - Unreleased
+
+### Added
+- **Abilities API module (WordPress 6.9+).** Mirrors the tested `hyperblocks/v1` REST surface as abilities: `hyperblocks/list-blocks` (fluent + owned JSON inventory with title, source and render-template flag), `hyperblocks/get-block-fields`, and `hyperblocks/render-preview` (annotated `readonly: false, destructive: false, idempotent: true` since it renders HTML but persists nothing). All three are `edit_posts`-gated, exactly like the REST routes. Field lookup, preview rendering, and the inventory live in the new `BlockOperations` service; REST callbacks and ability callbacks both delegate to it, so the two surfaces cannot drift. REST response shapes and status codes are unchanged.
+- **`Registry::getJsonBlocks()`.** Enumerates every owned JSON block (name => directory) across the same sources as `findJsonBlockPath()`, and primes the lookup cache.
+
+### Changed
+- **JSON block lookup and inventory share one candidate-dirs source.** `findJsonBlockPath()` and `getJsonBlocks()` both resolve through `jsonBlockCandidateDirs()`, which honors `hyperblocks/blocks/register_json_paths` AND `hyperblocks/blocks/register_json_blocks` (the latter was previously ignored by lookup, so blocks registered through it 404'd on the REST endpoints), and skips underscore-prefixed directories, matching discovery's `_disabled/` convention. Lookup previously resolved `_disabled` blocks; that path is now closed.
+
 ## [1.6.0] - 2026-08-29
 
 ### Fixed
