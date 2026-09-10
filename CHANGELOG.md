@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.6.2] - 2026-09-10
+
+### Security
+- **Vendored HyperPress-Core 1.6.2: the `/wp-html/v1/` developer info page no longer discloses server filesystem paths.** The page anonymous visitors get when hitting the endpoint without a template name printed a "Template File Locations" section with absolute theme, child-theme, and plugin `hypermedia/` directory paths. The section is removed; template locations stay documented in the repositories. The remaining request-info block stays gated to WP_DEBUG or `manage_options`.
+
 ## [3.6.1] - 2026-09-10
 
 ### Changed

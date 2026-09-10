@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1bda0d0172dc642ac5067c1f8ae6bf3f",
+    "content-hash": "793130699c062c00fd452204e29ca9d5",
     "packages": [
         {
             "name": "composer/installers",
@@ -351,11 +351,11 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.6.1",
+            "version": "1.6.2",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "6662b58bae71db0ccb837f7e8f462b506c56882c"
+                "reference": "32a60ec9d29485aa1186feebde26d6c6b348b2d0"
             },
             "require": {
                 "estebanforge/hyperblocks": "^1",

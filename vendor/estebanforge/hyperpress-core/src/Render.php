@@ -366,16 +366,6 @@ class Render
                     </ul>
                 </div>
 
-                <h2>Template File Locations</h2>
-                <div class="info-box">
-                    <p>Template files (<code>.hp.php</code>) should be placed in:</p>
-                    <ul>
-                        <li><strong>Theme:</strong> <code><?php echo esc_html(get_template_directory()); ?>/hypermedia/</code></li>
-                        <li><strong>Child Theme:</strong> <code><?php echo esc_html(get_stylesheet_directory()); ?>/hypermedia/</code></li>
-                        <li><strong>Plugin:</strong> <code><?php echo esc_html(Config::$pluginFile !== '' ? dirname(Config::$pluginFile) : ''); ?>/hypermedia/</code></li>
-                    </ul>
-                </div>
-
                 <h2>Available Helper Functions</h2>
                 <div class="info-box">
                     <ul>

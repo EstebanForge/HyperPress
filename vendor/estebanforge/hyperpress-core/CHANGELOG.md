@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.6.2] - 2026-09-10
+
+### Security
+- **The `/wp-html/v1/` developer info page no longer discloses server filesystem paths.** The page shown to any anonymous visitor hitting the endpoint without a template name printed a "Template File Locations" section with absolute theme, child-theme, and plugin `hypermedia/` directory paths. The section is removed; template locations stay documented in the repository docs. The remaining request-info block stays gated to WP_DEBUG or `manage_options`.
+
 ## [1.6.1] - 2026-09-10
 
 ### Added
