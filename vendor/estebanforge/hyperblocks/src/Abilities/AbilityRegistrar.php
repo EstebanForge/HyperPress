@@ -14,7 +14,7 @@ declare(strict_types=1);
  * nothing by default. show_in_rest stays false and the MCP public flag is
  * never set unless a site opts in through the dedicated filters.
  *
- * @since 1.7.0
+ * @since 1.6.1
  */
 
 namespace HyperBlocks\Abilities;

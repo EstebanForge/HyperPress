@@ -35,12 +35,12 @@ When this library is installed **transitively** into a Bedrock-style project, Co
 
 **Recommended pattern for plugins that bundle HyperPress-Core:** ship it inside the plugin's own committed `vendor/` (e.g. `wp-content/plugins/<your-plugin>/vendor/estebanforge/hyperpress-core/`) and load the plugin's own `vendor/autoload.php`. That copy is web-reachable, so `Config::$pluginUrl` resolves and assets enqueue. Do not rely on a Bedrock root-vendor copy to serve assets; it never can.
 
-## Abilities API module (1.7.0+)
+## Abilities API module (1.6.1+)
 
 `src/Abilities/AbilityRegistrar.php` registers the `hyperpress` category and three read-only WordPress Abilities (core 6.9+; silent no-op behind `class_exists(WP_Ability)` below that): `hyperpress/get-config` (`manage_options`), `hyperpress/list-endpoints` and `hyperpress/get-extension-status` (`edit_posts`). `src/Abilities/LogObserver.php` logs executing/completed entries with truncated payload snapshots to the HyperFields `hyperpress-abilities` daily log when WP_DEBUG is on.
 
 Exposure contract: abilities are always registered, never exposed by default. `hyperpress/abilities/enabled` (kill switch, default on), `hyperpress/abilities/expose_rest` (default off), `hyperpress/abilities/mcp_public` (default off). The LogObserver is wired from `Bootstrap` independently of the kill switch (it logs every ability on the site, core's included) and is WP_DEBUG-gated itself.
 
-Context contract (changed in 1.7.0): `Bootstrap::init()` no longer early-returns on cron/AJAX/REST/XMLRPC/WP-CLI. Main boots everywhere because the options-page metadata feeds the Abilities layer; scheduled hooks are inert off-context. The Router rewrite self-heal is gated to page loads (`wp_doing_cron()`/REST_REQUEST/WP_CLI/DOING_AJAX excluded) so inbound webhooks or cron tasks cannot trigger `flush_rewrite_rules()`.
+Context contract (changed in 1.6.1): `Bootstrap::init()` no longer early-returns on cron/AJAX/REST/XMLRPC/WP-CLI. Main boots everywhere because the options-page metadata feeds the Abilities layer; scheduled hooks are inert off-context. The Router rewrite self-heal is gated to page loads (`wp_doing_cron()`/REST_REQUEST/WP_CLI/DOING_AJAX excluded) so inbound webhooks or cron tasks cannot trigger `flush_rewrite_rules()`.
 
 Known limits: ability-execution logs carry truncated payloads and the log directory protection is `.htaccess`-based (nginx ignores it; deny `uploads/hyperpress-logs/` at the server level). Denied executions reach neither `wp_before_execute_ability` nor `wp_after_execute_ability` (core checks permissions first); denial visibility needs `wp_ability_permission_result` (WP 7.1+).

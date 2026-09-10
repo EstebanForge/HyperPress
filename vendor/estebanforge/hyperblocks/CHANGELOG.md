@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.7.0]
+## [1.6.1] - 2026-09-10
 
 ### Added
 - **Abilities API module (WordPress 6.9+).** Mirrors the tested `hyperblocks/v1` REST surface as abilities: `hyperblocks/list-blocks` (fluent + owned JSON inventory with title, source and render-template flag), `hyperblocks/get-block-fields`, and `hyperblocks/render-preview` (annotated `readonly: false, destructive: false, idempotent: true` since it renders HTML but persists nothing). All three are `edit_posts`-gated, exactly like the REST routes. Field lookup, preview rendering, and the inventory live in the new `BlockOperations` service; REST callbacks and ability callbacks both delegate to it, so the two surfaces cannot drift. REST response shapes and status codes are unchanged.
@@ -8,6 +8,10 @@
 
 ### Changed
 - **JSON block lookup and inventory share one candidate-dirs source.** `findJsonBlockPath()` and `getJsonBlocks()` both resolve through `jsonBlockCandidateDirs()`, which honors `hyperblocks/blocks/register_json_paths` AND `hyperblocks/blocks/register_json_blocks` (the latter was previously ignored by lookup, so blocks registered through it 404'd on the REST endpoints), and skips underscore-prefixed directories, matching discovery's `_disabled/` convention. Lookup previously resolved `_disabled` blocks; that path is now closed.
+
+### Fixed
+- **`file:` block templates 500'd every page load on Windows.** `realpath()` returns backslash separators there, while both containment checks (block registration validation and Renderer template validation) appended a forward slash to the realpath'd base, so `str_starts_with` never matched and every `file:` template failed validation — at registration, on `init`, as an `InvalidArgumentException` on every HTTP request and wp-cli run. The comparison now lives in one shared helper, `hb_path_within_base()`, which normalizes both sides through `wp_normalize_path()` while keeping the trailing-separator anchor, so the sibling-prefix escape (`blocks` vs `blocks-evil`) stays rejected on every platform. macOS and Linux behavior is unchanged.
+- **Disabled JSON blocks could auto-load on Windows.** `glob()` mirrors the pattern's separators, so a Windows-registered base (backslashes from `plugin_dir_path()`) made discovery results come back with backslashes and the fluent-block guard `str_contains($file, '/_')` never matched `\_disabled/` directories. Every scan path is now normalized through `wp_normalize_path()` before `glob()` and every returned entry before the string checks; the JSON discovery and its cache variant shared the fix. POSIX behavior is unchanged.
 
 ## [1.6.0] - 2026-08-29
 

@@ -229,10 +229,20 @@ if (!function_exists('wp_kses_post')) {
 if (!function_exists('wp_normalize_path')) {
     /**
      * Mock wp_normalize_path function.
+     *
+     * Mirrors WP core behavior (backslash conversion, multi-slash collapse,
+     * drive-letter ucfirst) so path tests exercise the same normalization
+     * production gets, not a weaker stand-in.
      */
     function wp_normalize_path(string $path): string
     {
-        return str_replace('\\', '/', $path);
+        $path = str_replace('\\', '/', $path);
+        $path = preg_replace('|(?<=.)/+|', '/', $path);
+        if (substr($path, 1, 1) === ':') {
+            $path = ucfirst($path);
+        }
+
+        return $path;
     }
 }
 

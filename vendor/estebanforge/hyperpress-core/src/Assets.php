@@ -447,15 +447,23 @@ class Assets
      */
     private function getLibraryModeUrl(string $plugin_path): string
     {
-        // Normalize the plugin path
-        $plugin_path = rtrim($plugin_path, '/');
+        // Normalize the plugin path. The literal '/' checks below depend on
+        // it: a Windows __DIR__-derived path is backslash-separated and
+        // would fail every branch here, silently returning '' for asset
+        // URLs (found in Windows peer review).
+        $normalize = static function (string $p): string {
+            return function_exists('wp_normalize_path') ? wp_normalize_path($p) : str_replace('\\', '/', $p);
+        };
+        $plugin_path = rtrim($normalize($plugin_path), '/');
 
         // Get WordPress content directory paths
         $content_dir = defined('WP_CONTENT_DIR') ? WP_CONTENT_DIR : ABSPATH . 'wp-content';
         $content_url = defined('WP_CONTENT_URL') ? WP_CONTENT_URL : get_site_url() . '/wp-content';
 
-        // Normalize content directory path
-        $content_dir = rtrim($content_dir, '/');
+        // Normalize content directory path (same separator reasoning as the
+        // plugin path above: both sides must share separators before the
+        // prefix and substring checks).
+        $content_dir = rtrim($normalize($content_dir), '/');
         $content_url = rtrim($content_url, '/');
 
         // Supported vendor directory names for explicit detection

@@ -294,13 +294,18 @@ final class Registry
                 continue;
             }
 
-            $blockDirectories = glob($basePath . '/*', GLOB_ONLYDIR);
+            // glob() returns paths that mirror the pattern's separators: a
+            // Windows-registered base yields backslash results, which the
+            // downstream string checks below must not have to guess about.
+            // Normalize the base and every returned entry.
+            $blockDirectories = glob(wp_normalize_path($basePath) . '/*', GLOB_ONLYDIR);
 
             if ($blockDirectories === false) {
                 continue;
             }
 
             foreach ($blockDirectories as $blockDirectory) {
+                $blockDirectory = wp_normalize_path($blockDirectory);
                 $blockName = basename($blockDirectory);
 
                 // Skip directories starting with an underscore.
@@ -380,7 +385,7 @@ final class Registry
             $fluentBlockFiles = [];
             $exts = array_map('trim', explode(',', Config::get('template_extensions', '.hb.php,.php')));
             foreach ($exts as $ext) {
-                $files = glob($basePath . '/**/*' . $ext);
+                $files = glob(wp_normalize_path($basePath) . '/**/*' . $ext);
                 if ($files !== false) {
                     $fluentBlockFiles = array_merge($fluentBlockFiles, $files);
                 }
@@ -388,6 +393,8 @@ final class Registry
             $fluentBlockFiles = array_unique($fluentBlockFiles);
 
             foreach ($fluentBlockFiles as $file) {
+                $file = wp_normalize_path($file);
+
                 // Skip files in directories starting with underscore
                 if (str_contains($file, '/_')) {
                     continue;
@@ -594,12 +601,17 @@ final class Registry
                 continue;
             }
 
-            $blockDirectories = glob($basePath . '/*', GLOB_ONLYDIR);
+            // Same separator normalization as the discovery pass above: glob()
+            // mirrors the pattern's separators, and Windows-registered bases
+            // arrive with backslashes.
+            $blockDirectories = glob(wp_normalize_path($basePath) . '/*', GLOB_ONLYDIR);
             if ($blockDirectories === false) {
                 continue;
             }
 
             foreach ($blockDirectories as $directory) {
+                $directory = wp_normalize_path($directory);
+
                 // Skip underscore-prefixed dirs, matching discovery's
                 // _disabled/ convention.
                 if (str_starts_with(basename($directory), '_')) {

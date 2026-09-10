@@ -25,7 +25,7 @@ HyperPress equips developers with a powerful toolkit, including:
 
 ## AI Agents: WordPress Abilities + MCP
 
-From 3.7.0 (WordPress 6.9+), HyperPress registers its capabilities as [WordPress Abilities](https://developer.wordpress.org/apis/abilities-api/): site configuration, the `/wp-html/v1/` endpoint inventory, block definitions and server-side previews, and options-page fields with per-field JSON Schema.
+From 3.6.1 (WordPress 6.9+), HyperPress registers its capabilities as [WordPress Abilities](https://developer.wordpress.org/apis/abilities-api/): site configuration, the `/wp-html/v1/` endpoint inventory, block definitions and server-side previews, and options-page fields with per-field JSON Schema.
 
 Registered abilities are private by default. Nothing is exposed until you opt in:
 

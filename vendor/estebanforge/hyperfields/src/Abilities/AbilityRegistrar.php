@@ -19,7 +19,7 @@ declare(strict_types=1);
  * and the MCP public flag is never set unless a site opts in through the
  * dedicated filters.
  *
- * @since 1.7.0
+ * @since 1.6.1
  */
 
 namespace HyperFields\Abilities;

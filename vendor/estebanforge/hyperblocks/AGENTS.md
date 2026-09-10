@@ -468,7 +468,7 @@ Integration tests live in `tests/Integration/` (currently empty — add WP-loade
 - `<script>` tags in field values are stripped before HyperFields sanitization.
 - All block output must be escaped in templates (`esc_html`, `esc_url`, `esc_attr`, `wp_kses_post`).
 
-## Abilities API module (1.7.0+)
+## Abilities API module (1.6.1+)
 
 `src/Abilities/AbilityRegistrar.php` registers the `hyperblocks` category and three `edit_posts`-gated abilities mirroring the `hyperblocks/v1` REST surface: `hyperblocks/list-blocks` (fluent + owned JSON inventory), `hyperblocks/get-block-fields`, and `hyperblocks/render-preview` (`readonly: false, destructive: false, idempotent: true` — it renders HTML but persists nothing). REST callbacks and ability callbacks both delegate to `src/BlockOperations.php`: one implementation, two surfaces, no drift. `Registry::getJsonBlocks()` enumerates owned JSON blocks (name => directory) and `Registry::jsonBlockCandidateDirs()` is the single source of candidate dirs for both lookup and inventory (honors `hyperblocks/blocks/register_json_paths` and `hyperblocks/blocks/register_json_blocks`, skips `_`-prefixed dirs like discovery).
 

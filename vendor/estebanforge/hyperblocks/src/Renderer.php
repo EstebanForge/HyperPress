@@ -198,8 +198,12 @@ class Renderer
             if (!$realBase) {
                 continue;
             }
-            $baseWithSep = rtrim($realBase, '/') . '/';
-            if ($realPath === $realBase || str_starts_with($realPath, $baseWithSep)) {
+            // hb_path_within_base() normalizes both sides: realpath() returns
+            // backslash separators on Windows, where a raw '/'-suffixed base
+            // never prefix-matched. The trailing-separator anchor inside the
+            // helper still keeps sibling-prefix paths (blocks vs blocks-evil)
+            // from counting as inside the base.
+            if (\hb_path_within_base($realPath, $realBase)) {
                 $isValid = true;
                 break;
             }

@@ -11,7 +11,7 @@ declare(strict_types=1);
  * identical, so both call into this class instead of holding their own copy
  * of the logic.
  *
- * @since 1.7.0
+ * @since 1.6.1
  */
 
 namespace HyperBlocks;

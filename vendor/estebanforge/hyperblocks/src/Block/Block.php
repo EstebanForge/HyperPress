@@ -263,8 +263,10 @@ class Block
             // Without it, str_starts_with('/var/www/blocks-evil/x',
             // '/var/www/blocks') would treat an unregistered sibling directory
             // whose name shares a prefix as "inside" the allowed base.
-            $baseWithSep = rtrim($realBase, '/') . '/';
-            if ($real === $realBase || str_starts_with($real, $baseWithSep)) {
+            // hb_path_within_base() normalizes both sides first: realpath()
+            // returns backslash separators on Windows, where a raw '/'-suffixed
+            // base never prefix-matched and rejected every file: template.
+            if (\hb_path_within_base($real, $realBase)) {
                 $valid = true;
                 break;
             }

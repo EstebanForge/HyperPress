@@ -472,7 +472,11 @@ final class AbilityRegistrar
                 continue;
             }
 
-            $relative = substr($file_info->getPathname(), strlen($base_dir));
+            // On Windows the iterator appends backslash separators even when
+            // $base_dir was passed with forward slashes, so the stripped
+            // remainder can start with a separator and leak it into the
+            // template name. Trim both separators.
+            $relative = ltrim(substr($file_info->getPathname(), strlen($base_dir)), '/\\');
 
             $entries[] = [
                 'name' => str_replace('\\', '/', substr($relative, 0, -strlen($extension))),

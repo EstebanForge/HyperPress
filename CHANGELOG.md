@@ -1,12 +1,15 @@
 # Changelog
 
-## [3.7.0]
+## [3.6.1] - 2026-09-10
 
 ### Changed
-- **Vendored HyperPress-Core 1.7.0 / HyperBlocks 1.7.0 / HyperFields 1.7.0: WordPress Abilities API support (core 6.9+).** All three libraries register their capabilities as WordPress Abilities: site configuration and the `/wp-html/v1/` endpoint inventory (`hyperpress/*`), block inventory + field definitions + server-side preview rendering (`hyperblocks/*`), and options-page discovery with per-field JSON Schema plus single-field reads and writes (`hyperfields/*`). Everything is registered but hidden by default: sites opt in per package through kill-switch, REST-exposure, and MCP-public filters (see each library's AGENTS.md). Writes go through the exact form-save sanitization pipeline, are `edit_posts`/`manage_options`/per-page-capability gated, and are idempotent. The runtime now boots in every context (REST, WP-CLI, cron) so the Abilities controller can resolve pages and blocks there too; hooks are inert off-context, and the Router rewrite self-heal stays a page-load side effect.
+- **Vendored HyperPress-Core 1.6.1 / HyperBlocks 1.6.1 / HyperFields 1.6.1: WordPress Abilities API support (core 6.9+).** All three libraries register their capabilities as WordPress Abilities: site configuration and the `/wp-html/v1/` endpoint inventory (`hyperpress/*`), block inventory + field definitions + server-side preview rendering (`hyperblocks/*`), and options-page discovery with per-field JSON Schema plus single-field reads and writes (`hyperfields/*`). Everything is registered but hidden by default: sites opt in per package through kill-switch, REST-exposure, and MCP-public filters (see each library's AGENTS.md). Writes go through the exact form-save sanitization pipeline, are `edit_posts`/`manage_options`/per-page-capability gated, and are idempotent. The runtime now boots in every context (REST, WP-CLI, cron) so the Abilities controller can resolve pages and blocks there too; hooks are inert off-context, and the Router rewrite self-heal stays a page-load side effect.
 
 ### Added
 - **`examples/mcp-server-mu-plugin.php`.** Documented example registering a custom MCP server (official [MCP Adapter](https://github.com/WordPress/mcp-adapter) plugin required) that exposes only the non-destructive Hyper abilities to AI agents. Not loaded by the plugin; copy to `wp-content/mu-plugins/` and adjust. `examples/` is svn-ignored, so it never ships inside the wp.org zip.
+
+### Fixed
+- **Windows fixes vendored from all three libraries.** `file:` block templates no longer fail containment validation on Windows (previously a fatal at registration on every request), disabled `_disabled/` JSON blocks can no longer auto-load there, library-mode asset URL detection returns a working URL instead of an empty string, and the endpoint inventory no longer surfaces template names with a leading separator. See each library's 1.6.1 changelog for the details.
 
 ## [3.6.0] - 2026-08-29
 
