@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
     "download-libraries": "php .ci/update-libraries.php",
-    "update-libraries": "php .ci/update-libraries.php",
+    "check-libraries": "php .ci/update-libraries.php --check",
+    "update-libraries": "php .ci/update-libraries.php --latest",
     "update-htmx": "npm run update-libraries -- --library=htmx",
     "update-htmx4": "npm run update-libraries -- --library=htmx4",
     "update-htmx-extensions": "npm run update-libraries -- --library=htmx-extensions",
@@ -17,7 +18,7 @@
     "update-alpinejs": "npm run update-libraries -- --library=alpinejs",
     "update-alpine-ajax": "npm run update-libraries -- --library=alpine-ajax",
     "update-datastar": "npm run update-libraries -- --library=datastar",
-    "update-all": "npm run update-libraries -- --all",
+    "update-all": "php .ci/update-libraries.php --update-all",
     "postinstall": "echo '📋 To download all libraries, run: npm run update-all'",
     "build": "wp-scripts build src/js/editor.js src/js/admin-options.js src/js/map-field.js --output-path=assets/js"
   },

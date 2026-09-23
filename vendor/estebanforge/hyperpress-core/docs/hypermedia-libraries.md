@@ -31,4 +31,4 @@ Datastar ships at 1.0.3+. Sites that enforce a strict Content-Security-Policy ca
 The plugin includes local copies of all libraries for privacy and offline development. You can choose to load from:
 
 1. **Local files** (default): Libraries are served from your WordPress installation
-2. **CDN**: Optional CDN loading from jsdelivr.net, pinned to the exact versions vendored by this release (htmx 2.0.10 / 4.0.0, Datastar 1.0.3), so CDN and local modes serve the same code. Upstream npm `latest` tags may lag; HyperPress never auto-tracks them.
+2. **CDN**: Optional CDN loading from jsdelivr.net, pinned to the exact versions vendored by this release (htmx 2.0.11 / 4.0.0, Datastar 1.0.4), so CDN and local modes serve the same code. Upstream npm `latest` tags may lag; HyperPress never auto-tracks them.

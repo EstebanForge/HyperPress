@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.6.3] - 2026-09-23
+
+### Changed
+- Dependencies updated.
+
 ## [3.6.2] - 2026-09-10
 
 ### Security

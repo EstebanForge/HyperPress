@@ -229,8 +229,8 @@ class Main
     {
         return [
             'htmx' => [
-                'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js',
-                'version' => '2.0.10',
+                'url' => 'https://cdn.jsdelivr.net/npm/htmx.org@2.0.11/dist/htmx.min.js',
+                'version' => '2.0.11',
             ],
             // htmx 4.x line. Pinned exact version: upstream npm keeps 2.x as
             // `latest` until early 2027, so an unversioned URL would silently
@@ -241,109 +241,109 @@ class Main
                 'version' => '4.0.0',
             ],
             'hyperscript' => [
-                'url' => 'https://cdn.jsdelivr.net/npm/hyperscript.org/dist/hdb.min.js',
-                'version' => '0.9.14',
+                'url' => 'https://cdn.jsdelivr.net/npm/hyperscript.org@0.9.93/dist/_hyperscript.min.js',
+                'version' => '0.9.93',
             ],
             'alpinejs' => [
-                'url' => 'https://cdn.jsdelivr.net/npm/alpinejs/dist/cdn.min.js',
-                'version' => '3.14.9',
+                'url' => 'https://cdn.jsdelivr.net/npm/alpinejs@3.17.4/dist/cdn.min.js',
+                'version' => '3.17.4',
             ],
             'alpine_ajax' => [
-                'url' => 'https://cdn.jsdelivr.net/npm/@imacrayon/alpine-ajax/dist/cdn.min.js',
-                'version' => '0.12.4',
+                'url' => 'https://cdn.jsdelivr.net/npm/@imacrayon/alpine-ajax@0.12.7/dist/cdn.min.js',
+                'version' => '0.12.7',
             ],
             'datastar' => [
-                'url' => 'https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.3/bundles/datastar.js',
-                'version' => '1.0.3',
+                'url' => 'https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.4/bundles/datastar.js',
+                'version' => '1.0.4',
             ],
             'htmx_extensions' => [
                 'sse' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-sse/sse.min.js',
-                    'version' => '2.2.3',
+                    'version' => '2.2.4',
                 ],
                 'head-support' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-head-support/head-support.min.js',
-                    'version' => '2.0.4',
+                    'version' => '2.0.5',
                 ],
                 'response-targets' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-response-targets/response-targets.min.js',
-                    'version' => '2.0.3',
+                    'version' => '2.0.4',
                 ],
                 'loading-states' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-loading-states/loading-states.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'ws' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-ws/ws.min.js',
-                    'version' => '2.0.3',
+                    'version' => '2.0.4',
                 ],
                 'preload' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-preload/preload.min.js',
-                    'version' => '2.1.1',
+                    'version' => '2.1.2',
                 ],
                 'alpine-morph' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-alpine-morph/alpine-morph.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'json-enc' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-json-enc/json-enc.min.js',
-                    'version' => '2.0.2',
+                    'version' => '2.0.3',
                 ],
                 'remove-me' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-remove-me/remove-me.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'debug' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-debug/debug.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'multi-swap' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-multi-swap/multi-swap.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'class-tools' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-class-tools/class-tools.min.js',
-                    'version' => '2.0.2',
+                    'version' => '2.0.3',
                 ],
                 'disable-element' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-disable-element/disable-element.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'client-side-templates' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-client-side-templates/client-side-templates.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'ajax-header' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-ajax-header/dist/ajax-header.esm.min.js',
-                    'version' => '2.0.2',
+                    'version' => '2.0.3',
                 ],
                 'path-params' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-path-params/dist/path-params.esm.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'event-header' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-event-header/dist/event-header.esm.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'restored' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-restored/dist/restored.esm.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'include-vals' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-include-vals/dist/include-vals.esm.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'path-deps' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-path-deps/path-deps.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'morphdom-swap' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-morphdom-swap/dist/morphdom-swap.esm.min.js',
-                    'version' => '2.0.1',
+                    'version' => '2.0.2',
                 ],
                 'method-override' => [
                     'url' => 'https://cdn.jsdelivr.net/npm/htmx-ext-method-override/dist/method-override.esm.min.js',
-                    'version' => '2.0.2',
+                    'version' => '2.0.3',
                 ],
             ],
             // htmx 4.x extensions ship INSIDE the htmx.org package

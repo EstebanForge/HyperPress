@@ -183,16 +183,255 @@ function download_htmx4_extension($name, $url) {
 }
 
 /**
+ * Fetch and decode JSON from a remote URL.
+ */
+function fetch_json($url) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'HyperPress-Updater');
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $data = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    unset($ch);
+    if ($code !== 200 || !$data) {
+        return null;
+    }
+    return json_decode($data, true);
+}
+
+/**
+ * Query upstream registries for the latest versions of core libraries.
+ */
+function get_upstream_latest_versions() {
+    $upstream = [];
+
+    // htmx 2.x and 4.x from npm
+    $htmx_npm = fetch_json('https://registry.npmjs.org/htmx.org');
+    if ($htmx_npm && !empty($htmx_npm['versions'])) {
+        $versions = array_keys($htmx_npm['versions']);
+        // 2.x line
+        $v2 = array_filter($versions, fn($v) => preg_match('/^2\.[0-9]+\.[0-9]+$/', $v));
+        if ($v2) {
+            usort($v2, 'version_compare');
+            $ver = end($v2);
+            $upstream['htmx'] = [
+                'version' => $ver,
+                'url' => "https://cdn.jsdelivr.net/npm/htmx.org@{$ver}/dist/htmx.min.js",
+            ];
+        }
+        // 4.x line
+        $v4 = array_filter($versions, fn($v) => preg_match('/^4\.[0-9]+\.[0-9]+$/', $v));
+        if ($v4) {
+            usort($v4, 'version_compare');
+            $ver = end($v4);
+            $upstream['htmx4'] = [
+                'version' => $ver,
+                'url' => "https://cdn.jsdelivr.net/npm/htmx.org@{$ver}/dist/htmx.min.js",
+            ];
+        }
+    }
+
+    // Datastar from GitHub releases (production releases are published to GitHub)
+    $gh_releases = fetch_json('https://api.github.com/repos/starfederation/datastar/releases');
+    if (is_array($gh_releases)) {
+        foreach ($gh_releases as $rel) {
+            if (empty($rel['prerelease']) && preg_match('/^v?([0-9]+\.[0-9]+\.[0-9]+)$/', $rel['tag_name'] ?? '', $m)) {
+                $ver = $m[1];
+                $upstream['datastar'] = [
+                    'version' => $ver,
+                    'url' => "https://cdn.jsdelivr.net/gh/starfederation/datastar@v{$ver}/bundles/datastar.js",
+                ];
+                break;
+            }
+        }
+    }
+
+    // Alpine.js from npm
+    $alpine_npm = fetch_json('https://registry.npmjs.org/alpinejs');
+    if ($alpine_npm && !empty($alpine_npm['dist-tags']['latest'])) {
+        $ver = $alpine_npm['dist-tags']['latest'];
+        $upstream['alpinejs'] = [
+            'version' => $ver,
+            'url' => "https://cdn.jsdelivr.net/npm/alpinejs@{$ver}/dist/cdn.min.js",
+        ];
+    }
+
+    // Alpine AJAX from npm
+    $ajax_npm = fetch_json('https://registry.npmjs.org/@imacrayon/alpine-ajax');
+    if ($ajax_npm && !empty($ajax_npm['dist-tags']['latest'])) {
+        $ver = $ajax_npm['dist-tags']['latest'];
+        $upstream['alpine_ajax'] = [
+            'version' => $ver,
+            'url' => "https://cdn.jsdelivr.net/npm/@imacrayon/alpine-ajax@{$ver}/dist/cdn.min.js",
+        ];
+    }
+
+    // Hyperscript from npm
+    $hs_npm = fetch_json('https://registry.npmjs.org/hyperscript.org');
+    if ($hs_npm && !empty($hs_npm['dist-tags']['latest'])) {
+        $ver = $hs_npm['dist-tags']['latest'];
+        $upstream['hyperscript'] = [
+            'version' => $ver,
+            'url' => "https://cdn.jsdelivr.net/npm/hyperscript.org@{$ver}/dist/_hyperscript.min.js",
+        ];
+    }
+
+    return $upstream;
+}
+
+/**
+ * Update pinned version in src/Main.php and docs/hypermedia-libraries.md.
+ */
+function bump_main_php_version($library, $new_version, $new_url) {
+    $main_file = 'src/Main.php';
+    if (!file_exists($main_file)) {
+        return false;
+    }
+
+    $content = file_get_contents($main_file);
+    $pattern = "/('" . preg_quote($library, '/') . "'\s*=>\s*\[\s*'url'\s*=>\s*')[^']+('\s*,\s*'version'\s*=>\s*')[^']+(')/";
+
+    if (preg_match($pattern, $content)) {
+        $replacement = '${1}' . $new_url . '${2}' . $new_version . '${3}';
+        $content = preg_replace($pattern, $replacement, $content, 1);
+        file_put_contents($main_file, $content);
+
+        update_docs_version_reference();
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Update version for a specific htmx 2.x extension in src/Main.php.
+ */
+function bump_main_php_extension_version($ext_name, $new_version) {
+    $main_file = 'src/Main.php';
+    if (!file_exists($main_file)) {
+        return false;
+    }
+
+    $content = file_get_contents($main_file);
+    $pattern = "/('" . preg_quote($ext_name, '/') . "'\s*=>\s*\[\s*'url'\s*=>\s*'[^']+'\s*,\s*'version'\s*=>\s*')[^']+(')/";
+
+    if (preg_match($pattern, $content)) {
+        $replacement = '${1}' . $new_version . '${2}';
+        $content = preg_replace($pattern, $replacement, $content, 1);
+        file_put_contents($main_file, $content);
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Update all htmx 4 extensions in src/Main.php when htmx4 changes.
+ */
+function bump_htmx4_extensions($new_version) {
+    $main_file = 'src/Main.php';
+    if (!file_exists($main_file)) {
+        return false;
+    }
+
+    $content = file_get_contents($main_file);
+
+    // Update URLs in htmx4_extensions block: htmx.org@<old>/dist/ext/ -> htmx.org@<new>/dist/ext/
+    $pattern_url = "/('url'\s*=>\s*'https:\/\/cdn\.jsdelivr\.net\/npm\/htmx\.org@)[^\/]+(\/dist\/ext\/)/";
+    $content = preg_replace($pattern_url, '${1}' . $new_version . '${2}', $content);
+
+    // Update version strings in htmx4_extensions block
+    if (preg_match("/'htmx4_extensions'\s*=>\s*\[(.*?)\]\s*,\s*\];/s", $content, $m)) {
+        $block = $m[1];
+        $updated_block = preg_replace("/('version'\s*=>\s*')[^']+(')/", '${1}' . $new_version . '${2}', $block);
+        $content = str_replace($block, $updated_block, $content);
+    }
+
+    file_put_contents($main_file, $content);
+    return true;
+}
+
+/**
+ * Keep docs/hypermedia-libraries.md aligned with pinned versions in Main.php.
+ */
+function update_docs_version_reference() {
+    $docs_file = 'docs/hypermedia-libraries.md';
+    if (!file_exists($docs_file)) {
+        return;
+    }
+
+    $cdn_urls = getCdnUrls();
+    $htmx_ver = $cdn_urls['htmx']['version'] ?? '2.0.11';
+    $htmx4_ver = $cdn_urls['htmx4']['version'] ?? '4.0.0';
+    $ds_ver = $cdn_urls['datastar']['version'] ?? '1.0.4';
+
+    $content = file_get_contents($docs_file);
+    $pattern = '/\(htmx\s+[0-9\.]+\s*\/\s*[0-9\.]+\s*,\s*Datastar\s+[0-9\.]+\)/';
+    $replacement = "(htmx {$htmx_ver} / {$htmx4_ver}, Datastar {$ds_ver})";
+
+    $updated = preg_replace($pattern, $replacement, $content, 1);
+    if ($updated && $updated !== $content) {
+        file_put_contents($docs_file, $updated);
+    }
+}
+
+/**
+ * Compare pinned CDN URLs with upstream releases and display status.
+ */
+function check_libraries() {
+    echo "🔍 Checking upstream versions against src/Main.php...\n\n";
+
+    $cdn_urls = getCdnUrls();
+    $upstream = get_upstream_latest_versions();
+
+    printf("%-15s %-15s %-15s %s\n", "Library", "Pinned (Main)", "Latest (Upstream)", "Status");
+    echo str_repeat("-", 65) . "\n";
+
+    $has_updates = false;
+
+    foreach ($upstream as $lib => $info) {
+        $pinned = $cdn_urls[$lib]['version'] ?? 'N/A';
+        $latest = $info['version'];
+        $status = '✅ UP-TO-DATE';
+
+        if ($pinned !== 'N/A' && version_compare($pinned, $latest, '<')) {
+            $status = '⚠️  OUTDATED';
+            $has_updates = true;
+        }
+
+        printf("%-15s %-15s %-15s %s\n", $lib, $pinned, $latest, $status);
+    }
+
+    echo "\n";
+    if ($has_updates) {
+        echo "💡 Updates available! Run 'npm run update-all' to bump all pins and download.\n";
+    } else {
+        echo "🎉 All checked libraries are up to date.\n";
+    }
+}
+
+/**
  * Parse command line arguments
  */
 function parse_args($argv) {
     $target_library = null;
+    $action = 'download';
 
     for ($i = 1; $i < count($argv); $i++) {
         $arg = $argv[$i];
 
         if ($arg === '--all') {
             $target_library = 'all';
+        } elseif ($arg === '--update-all') {
+            $target_library = 'all';
+            $action = 'update';
+        } elseif ($arg === '--check') {
+            $action = 'check';
+        } elseif ($arg === '--latest' || $arg === '--update') {
+            $action = 'update';
         } elseif (strpos($arg, '--library=') === 0) {
             $target_library = substr($arg, 10);
         } elseif ($arg === '--library' && isset($argv[$i + 1])) {
@@ -201,7 +440,7 @@ function parse_args($argv) {
         }
     }
 
-    return $target_library;
+    return [$target_library, $action];
 }
 
 /**
@@ -280,10 +519,75 @@ function download_libraries($target_library = null) {
 
 // Main execution
 if (php_sapi_name() === 'cli') {
-    echo "🔽 HTMX API WordPress Plugin - Library Downloader (PHP)\n";
+    echo "🔽 HTMX API WordPress Plugin - Library Manager (PHP)\n";
     echo "====================================================\n\n";
 
-    $target_library = parse_args($argv);
+    [$target_library, $action] = parse_args($argv);
+
+    if ($action === 'check') {
+        check_libraries();
+        exit(0);
+    }
+
+    if ($action === 'update') {
+        echo "🔄 Checking and updating library versions from upstream...\n";
+        $upstream = get_upstream_latest_versions();
+        $cdn_urls = getCdnUrls();
+
+        $libs_to_check = ($target_library && $target_library !== 'all')
+            ? [$target_library]
+            : array_keys($upstream);
+
+        $bumped = 0;
+        foreach ($libs_to_check as $lib) {
+            if (isset($upstream[$lib])) {
+                $current_ver = $cdn_urls[$lib]['version'] ?? null;
+                $new_ver = $upstream[$lib]['version'];
+                $new_url = $upstream[$lib]['url'];
+
+                if ($current_ver === null || version_compare($current_ver, $new_ver, '<')) {
+                    echo "⬆️  Bumping $lib: $current_ver -> $new_ver\n";
+                    if (bump_main_php_version($lib, $new_ver, $new_url)) {
+                        $bumped++;
+                        if ($lib === 'htmx4') {
+                            bump_htmx4_extensions($new_ver);
+                            echo "🔌 Kept htmx4 extensions synced to $new_ver\n";
+                        }
+                    }
+                } else {
+                    echo "✅ $lib is already at latest ($current_ver)\n";
+                }
+            }
+        }
+
+        // When updating all, also check and bump htmx 2.x extensions
+        if ($target_library === 'all' && isset($cdn_urls['htmx_extensions'])) {
+            echo "\n🔌 Checking htmx 2.x extensions on npm...\n";
+            $ext_bumped = 0;
+            foreach ($cdn_urls['htmx_extensions'] as $ext_name => $config) {
+                $pkg = "htmx-ext-{$ext_name}";
+                $pkg_data = fetch_json("https://registry.npmjs.org/{$pkg}");
+                if ($pkg_data && !empty($pkg_data['dist-tags']['latest'])) {
+                    $latest_ext_ver = $pkg_data['dist-tags']['latest'];
+                    $current_ext_ver = $config['version'] ?? '0.0.0';
+                    if (version_compare($current_ext_ver, $latest_ext_ver, '<')) {
+                        echo "⬆️  Bumping extension $ext_name: $current_ext_ver -> $latest_ext_ver\n";
+                        if (bump_main_php_extension_version($ext_name, $latest_ext_ver)) {
+                            $ext_bumped++;
+                            $bumped++;
+                        }
+                    }
+                }
+            }
+            if ($ext_bumped === 0) {
+                echo "✅ All htmx 2.x extensions are already at latest\n";
+            }
+        }
+
+        if ($bumped > 0) {
+            echo "\n📝 Updated $bumped library/extension version(s) in src/Main.php\n";
+        }
+    }
 
     if ($target_library) {
         echo "🎯 Target: " . ($target_library === 'all' ? 'All libraries' : $target_library) . "\n";
