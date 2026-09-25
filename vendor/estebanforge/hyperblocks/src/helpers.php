@@ -157,13 +157,14 @@ if (!function_exists('hb_render')) {
      *
      * @param string $template   The template path or string.
      * @param array  $attributes The block attributes.
+     * @param string $content    Inner-blocks markup injected at the <InnerBlocks /> marker.
      * @return string The rendered HTML.
      */
-    function hb_render(string $template, array $attributes = []): string
+    function hb_render(string $template, array $attributes = [], string $content = ''): string
     {
         $renderer = new Renderer();
 
-        return $renderer->render($template, $attributes);
+        return $renderer->render($template, $attributes, $content);
     }
 }
 

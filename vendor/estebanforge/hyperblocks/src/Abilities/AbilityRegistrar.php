@@ -178,6 +178,10 @@ final class AbilityRegistrar
                                 'type'        => 'object',
                                 'description' => __('Block attributes keyed by field name.', 'hyperblocks'),
                             ],
+                            'content'    => [
+                                'type'        => 'string',
+                                'description' => __('Optional inner-blocks markup injected at the <InnerBlocks /> marker.', 'hyperblocks'),
+                            ],
                         ],
                         'required'             => ['blockName', 'attributes'],
                         'additionalProperties' => false,
@@ -289,15 +293,16 @@ final class AbilityRegistrar
     /**
      * Execute callback: hyperblocks/render-preview.
      *
-     * @param mixed $input {blockName: string, attributes: object}.
+     * @param mixed $input {blockName: string, attributes: object, content?: string}.
      * @return array|WP_Error {success, html?, error?}, or error when unknown.
      */
     public static function executeRenderPreview($input = null)
     {
         $blockName = is_array($input) ? (string) ($input['blockName'] ?? '') : '';
         $attributes = is_array($input) && is_array($input['attributes'] ?? null) ? $input['attributes'] : [];
+        $content = is_array($input) && is_string($input['content'] ?? null) ? $input['content'] : '';
 
-        $result = BlockOperations::preview($blockName, $attributes);
+        $result = BlockOperations::preview($blockName, $attributes, $content);
 
         if ($result['status'] === 'not_found') {
             return new \WP_Error(

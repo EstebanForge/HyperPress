@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.7.0] - 2026-09-25
+
+### Added
+- **Native InnerBlocks support for fluent blocks (opt-in).** `Block::innerBlocks(?array $config)` accepts `allowedBlocks` (string list), `template` (Gutenberg template array) and `templateLock` (`'all'|'insert'|false`); without the call, behavior is byte-identical to 1.6.1. Three coordinated pieces:
+  - **Server:** `Bootstrap::renderBlock()` forwards the render callback's `$content` into `Renderer::render()`, and `<InnerBlocks />` markers in templates — self-closing, paired, attributed, and bare open forms, case-insensitive, quoted `>` inside attribute values tolerated — resolve to the real inner markup through `preg_replace_callback` (never `preg_replace`, whose `$1`/`\\` replacement semantics would corrupt markup containing those sequences). With no inner markup available the renderer emits the inert `<!--hyperblocks:innerblocks-->` sentinel. `allowedBlocks` bridges natively through the `allowed_blocks` registration argument (WP core distributes it to the editor's block definition); `template` and `templateLock` have no native argument and ride `window.hyperBlocksConfig`.
+  - **Editor:** slotted blocks fetch the server shell from core `/wp/v2/block-renderer` (350 ms debounce on attribute churn, like core ServerSideRender) and swap the sentinel comment node in place for a persistent slot element hosting the live `useInnerBlocksProps()` area, so nested blocks sit exactly where the template placed the marker. The imperative mount (`createContextualFragment` + `TreeWalker`) keeps the slot's React state across preview rebuilds, and fetch failures keep the last good shell.
+  - **Serialization:** slotted blocks `save()` return `InnerBlocks.Content`; empty inner blocks still serialize as the self-closing block comment, so opting in never changes stored markup for childless instances. Plain blocks keep `ServerSideRender` + `save(){return null}` exactly.
+  - **Both preview surfaces:** `/wp-json/hyperblocks/v1/render-preview` and the `hyperblocks/render-preview` ability accept an optional `content` string, sanitized through `wp_kses_post()` inside `BlockOperations::preview()` — the single implementation behind both surfaces — so neither surface can return markup the other would have filtered (the REST route additionally sanitizes at the argument layer). `hb_render()` gains the same third `$content` parameter; as the trusted PHP-author path it does not sanitize.
+- **Editor guard for markerless slotted templates.** A block that opts in via `innerBlocks()` but whose template lacks the `<InnerBlocks />` marker mounts a live nested-blocks area in the editor while the front end silently drops every saved child. The editor console now warns once per block when the rendered shell contains no marker, while the author can still act on it.
+
+### Changed
+- **Templates containing `<InnerBlocks />` now resolve it.** 1.6.1 replaced the tag with the literal `wp:innerblocks` comment, which no WordPress core version defines — it rendered nothing. Marker resolution is the only behavior change for existing templates carrying the tag; templates without it are untouched.
+- **JSON-path blocks are unaffected** (own `editorScript`/`render` handle InnerBlocks natively), and the `/render-preview` JSON branch forwards preview `content` to the block's `render.php` the same way the fluent branch does.
+- **Editor script dependencies** gained `wp-api-fetch` for slotted previews.
+- **Marker replacement degrades safely.** When PCRE fails (e.g. the backtrack limit on a pathological template) both replacement passes keep the original HTML instead of letting `null` collapse the block output.
+- **Caveats worth knowing before adopting:** `templateLock` and `allowedBlocks` are editor-side constraints — WP core enforces neither during server-side persistence or rendering; use exactly one marker per template (the editor mounts its slot at the first marker, the front end injects the same content at every marker); removing `innerBlocks()` from a block that already has stored inner blocks, or switching plain↔slotted, is a content migration (existing children trip editor block-validation). Documentation in README, `docs/hyperblocks.md`, `docs/hyperblocks-examples.md` and AGENTS.md covers the feature with examples and corrects the old "WordPress inner-blocks placeholder" wording.
+
 ## [1.6.1] - 2026-09-10
 
 ### Added

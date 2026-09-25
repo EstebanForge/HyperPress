@@ -92,6 +92,13 @@ class Block
     public ?string $style = null;
 
     /**
+     * Inner-blocks configuration. Null = the block has no inner-blocks area.
+     *
+     * @var array{allowedBlocks?: string[], template?: array<mixed>, templateLock?: string|false}|null
+     */
+    public ?array $inner_blocks = null;
+
+    /**
      * Constructor.
      *
      * @param string $title The block title.
@@ -351,6 +358,29 @@ class Block
     }
 
     /**
+     * Enable the inner-blocks area for this block.
+     *
+     * Marks the block as accepting nested blocks: <InnerBlocks /> markers in
+     * the render template resolve to the block's saved inner markup, the
+     * editor renders a live inner-blocks area inside the server preview, and
+     * save() serializes inner content between the block delimiters.
+     *
+     * @param array{allowedBlocks?: string[], template?: array<mixed>, templateLock?: string|false}|null $config
+     *        allowedBlocks: block names insertable as children; also bridged to
+     *        the client through the native allowed_blocks registration argument.
+     *        template: Gutenberg block-template array prefilled on insert.
+     *        templateLock: 'all' | 'insert' | false.
+     *        Null config = defaults: all blocks allowed, empty template, no lock.
+     * @return self
+     */
+    public function innerBlocks(?array $config = null): self
+    {
+        $this->inner_blocks = $config ?? [];
+
+        return $this;
+    }
+
+    /**
      * Get the underlying HyperFields adapter for the block's fields.
      *
      * @return array Array of BlockFieldAdapter instances
@@ -383,6 +413,7 @@ class Block
             'description' => $this->description,
             'keywords' => $this->keywords,
             'style' => $this->style,
+            'inner_blocks' => $this->inner_blocks,
         ];
     }
 }

@@ -1,7 +1,7 @@
 === HyperPress | Hypermedia for WordPress (HTMX or Datastar) ===
 Contributors: tcattd
 Tags: hypermedia, ajax, htmx, alpinejs, datastar
-Stable tag: 3.6.3
+Stable tag: 3.6.4
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.2

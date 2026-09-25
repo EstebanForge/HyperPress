@@ -115,6 +115,7 @@ Registry::getInstance()->registerFluentBlock($block);
 | `->addFieldGroup(string $groupId)` | Attach a pre-registered FieldGroup. Chainable. |
 | `->setRenderTemplate(string $template)` | Inline PHP string template or `file:relative/path.hb.php`. |
 | `->setRenderTemplateFile(string $path)` | Shorthand for `setRenderTemplate('file:' . $path)`. |
+| `->innerBlocks(?array $config = null)` | Opt in to nested blocks. Config keys: `allowedBlocks` (string list), `template` (Gutenberg template array), `templateLock` (`'all'\|'insert'\|false`). Null config = defaults; property stays `null` (feature off) until called. |
 | `->getFieldAdapters()` | Returns `['fieldName' => BlockFieldAdapter, ...]` for all block fields. |
 | `->toArray()` | Serialize to array (name, title, icon, fields, field_groups, render_template). |
 
@@ -314,11 +315,25 @@ $html = $renderer->render($block->render_template, $attributes);
 <RichText attribute="heading" tag="h1" placeholder="Enter heading" />
 <RichText attribute="body" tag="p" style="color: #333;" />
 
-<!-- InnerBlocks: replaced with WordPress inner-block placeholder -->
+<!-- InnerBlocks: resolves to the block's real inner-blocks markup (the
+     $content WordPress passes to the render callback). Self-closing, paired,
+     attributed, and bare tag forms are accepted, case-insensitively;
+     attribute values may contain quoted '>'. With no inner markup available
+     the renderer emits the <!--hyperblocks:innerblocks--> sentinel instead. -->
 <InnerBlocks />
 ```
 
 Errors in `WP_DEBUG` mode return an inline `<div class="hyperblocks-error">` — never on production.
+
+### InnerBlocks support (fluent blocks)
+
+Opt in per block with `->innerBlocks($config)`. Without it, behavior is byte-identical to 1.6.1. Three coordinated pieces: the server replaces `<InnerBlocks />` markers with real inner markup, the editor renders the server preview split around a live inner-blocks area, and `save()` serializes inner content.
+
+Server: `renderBlock()` forwards `$content` (the second argument every dynamic render callback receives, `class-wp-block.php`) into `Renderer::render()`. Marker replacement uses `preg_replace_callback` — never `preg_replace` with `$content` as the replacement, which would corrupt markup containing `$1`/`\\` sequences. When no inner markup exists (editor preview, childless instances), the renderer emits the `<!--hyperblocks:innerblocks-->` sentinel: inert HTML on the front end, the client's split marker in the canvas. `allowedBlocks` bridges natively through the `allowed_blocks` registration argument (WP core maps it to the client `allowedBlocks` block definition); `template` and `templateLock` have no native argument and ride `window.hyperBlocksConfig.innerBlocks`.
+
+Editor: slotted blocks fetch the server shell from the core `/wp/v2/block-renderer` endpoint (350 ms debounce on attribute churn, like core ServerSideRender) and mount it imperatively: the sentinel comment node is swapped in place for a persistent slot element, so the live `useInnerBlocksProps` area sits exactly where the template placed the marker, inside whatever container tags wrap it. `save()` returns `InnerBlocks.Content` for slotted blocks only; empty inner blocks still serialize as a self-closing comment, so opting in never changes stored markup for childless instances. Plain blocks keep ServerSideRender + `save(){return null}` exactly. `assets/js/editor.js` mirrors the sentinel value (comment node text `hyperblocks:innerblocks`) — keep `INNER_BLOCKS_SENTINEL` in sync on both sides.
+
+Limits and caveats: `templateLock` and `allowedBlocks` are editor-only constraints; WP core enforces neither during server-side post persistence or rendering. Use exactly one `<InnerBlocks />` marker per template: the editor mounts its slot at the first marker, while the front end injects the same content at every marker. Removing `innerBlocks()` from a block that already has stored inner blocks triggers editor block-validation errors on existing posts (saved children no longer fit the definition) — treat plain-to-slotted switches and back as a content migration. Scalar field values still come from server defaults (no field-edit UI). JSON-path blocks (`"hyperblocks": true` marker) are native WP blocks handling InnerBlocks through their own `editorScript`/`render`; nothing here applies to them. A slotted template without the `<InnerBlocks />` marker still mounts the editor slot but drops nested content on the front end — the editor console warns once per block. `/render-preview` accepts an optional `content` string on both surfaces, injected at the marker; content is sanitized through `wp_kses_post` inside `BlockOperations::preview()` — the single implementation behind both surfaces — so the ability surface cannot return markup the REST route would filter (REST additionally sanitizes at the argument layer). `hb_render()` takes the same third argument but is the trusted PHP-author path and does not sanitize.
 
 ---
 
@@ -398,7 +413,7 @@ hb_registry(): Registry
 hb_register_path(string $path): void
 hb_register_template_path(string $path): void
 hb_config(string $key, mixed $default = null): mixed
-hb_render(string $template, array $attributes = []): string
+hb_render(string $template, array $attributes = [], string $content = ''): string
 hb_has_block(string $blockName): bool
 hb_get_block(string $blockName): ?Block
 ```

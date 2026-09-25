@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.6.4] - 2026-09-25
+
+### Changed
+- **Dependency update: `estebanforge/hyperblocks` now resolves to 1.7.0 (native InnerBlocks support for fluent blocks).** The `^1` constraint already admits the new release, so 1.6.4 carries no Core code changes — it exists to give consumers a tagged point that ships HyperBlocks 1.7.0. Updating sites get opt-in `->innerBlocks()` support with real `<InnerBlocks />` marker resolution (1.6.1's placeholder comment rendered nothing), the hybrid server-preview editor, the native `allowed_blocks` bridge, and `wp_kses_post`-sanitized preview `content` on both the REST and Abilities surfaces. See HyperBlocks 1.7.0 for the full list and adoption caveats.
+
+## [1.6.3] - 2026-09-23
+
+### Added
+- **Upstream library update automation.** `.ci/update-libraries.php` now discovers the latest stable releases from npm and GitHub, bumps the pinned CDN configurations in `src/Main.php` and the docs, and downloads the updated bundles; `package.json` gains `check-libraries` and `update-all` scripts for one-step synchronization.
+
+### Changed
+- **Vendored library pins bumped.** htmx 2.0.10 → 2.0.11, Datastar 1.0.3 → 1.0.4, Alpine.js 3.14.9 → 3.17.4, Alpine AJAX 0.12.4 → 0.12.7, hyperscript 0.9.14 → 0.9.93, and all 22 htmx 2.x extensions to their latest npm releases.
+
 ## [1.6.2] - 2026-09-10
 
 ### Security

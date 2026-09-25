@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "793130699c062c00fd452204e29ca9d5",
+    "content-hash": "757029c72a983016a5e5f3027ccac009",
     "packages": [
         {
             "name": "composer/installers",
@@ -154,11 +154,11 @@
         },
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.6.1",
+            "version": "1.7.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "40df162cab55d94f0da49c677dfcebfce718b5a8"
+                "reference": "80090bf8962f4cf7643f357b23c30df6c4c4e573"
             },
             "require": {
                 "estebanforge/hyperfields": "^1",
@@ -351,11 +351,11 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.6.3",
+            "version": "1.6.4",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "aad490900cea8250b7407e029ba310d1de40d3bb"
+                "reference": "ba2bb7691606ae17790afbd26e2c7f1f7c1632c4"
             },
             "require": {
                 "estebanforge/hyperblocks": "^1",
@@ -845,16 +845,16 @@
         },
         {
             "name": "composer/semver",
-            "version": "3.4.4",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "198166618906cb2de69b95d7d47e5fa8aa1b2b95"
+                "reference": "f7a296f4c4cf8cb8bb83e35d6951a406bb11afa5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/198166618906cb2de69b95d7d47e5fa8aa1b2b95",
-                "reference": "198166618906cb2de69b95d7d47e5fa8aa1b2b95",
+                "url": "https://api.github.com/repos/composer/semver/zipball/f7a296f4c4cf8cb8bb83e35d6951a406bb11afa5",
+                "reference": "f7a296f4c4cf8cb8bb83e35d6951a406bb11afa5",
                 "shasum": ""
             },
             "require": {
@@ -896,7 +896,7 @@
                     "homepage": "http://robbast.nl"
                 }
             ],
-            "description": "Semver library that offers utilities, version constraint parsing and validation.",
+            "description": "Version comparison library that offers utilities, version constraint parsing and validation.",
             "keywords": [
                 "semantic",
                 "semver",
@@ -906,7 +906,7 @@
             "support": {
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.4.4"
+                "source": "https://github.com/composer/semver/tree/3.5.0"
             },
             "funding": [
                 {
@@ -918,7 +918,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-20T19:15:30+00:00"
+            "time": "2026-09-24T14:38:51+00:00"
         },
         {
             "name": "composer/xdebug-handler",

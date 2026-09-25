@@ -114,13 +114,17 @@ echo "Exporting the HEAD of $MAIN_BRANCH from git to the trunk of SVN"
 find "$SVNPATH/trunk" -maxdepth 1 -mindepth 1 -not -name ".svn" -exec rm -rf {} +
 git checkout-index -a -f --prefix="$SVNPATH/trunk/" || exit 1
 
-echo "Removing dev dependencies from nested vendors..."
-rm -rf "$SVNPATH/trunk/vendor/estebanforge/hyperpress-core/tests"
-rm -rf "$SVNPATH/trunk/vendor/estebanforge/hyperpress-core/coverage-html"
-rm -rf "$SVNPATH/trunk/vendor/estebanforge/hyperpress-core/.ci"
-rm -rf "$SVNPATH/trunk/vendor/estebanforge/hyperpress-core/scripts"
-rm -rf "$SVNPATH/trunk/vendor/estebanforge/hyperfields/tests"
-rm -rf "$SVNPATH/trunk/vendor/estebanforge/hyperblocks/tests"
+# Strip library dev files from the shipped vendor tree: tests, examples,
+# build tooling, and agent docs. docs/ stays — reference value for devs.
+# GEMINI.md is an AGENTS.md symlink in the libs: stripping AGENTS.md alone
+# would leave a dangling symlink in the zip. datastar-php rides along for
+# its examples/ (missing dirs are rm no-ops).
+for pkg in hyperfields hyperpress-core hyperblocks starfederation/datastar-php; do
+    base="$SVNPATH/trunk/vendor/$pkg"
+    for dev in tests examples .ci scripts coverage-html AGENTS.md CLAUDE.md GEMINI.md; do
+        rm -rf "$base/$dev"
+    done
+done
 
 # Stub nested vendor/ dirs — classes are already registered by the top-level autoloader.
 # Keeps the autoload.php path valid while eliminating duplicate/redundant packages.
@@ -155,10 +159,10 @@ TODO.md
 .editorconfig
 .git
 .gitignore
+scripts
+GEMINI.md
 tests
-examples
-vendor/estebanforge/hyperfields/tests
-vendor/estebanforge/hyperpress-core/tests" "$SVNPATH/trunk/"
+examples" "$SVNPATH/trunk/"
 
 echo "Moving .wp-org-assets"
 mkdir -p "$SVNPATH/assets/"
@@ -168,15 +172,14 @@ if [ -d "$SVNPATH/trunk/.wp-org-assets" ]; then
     svn delete --force "$SVNPATH/trunk/.wp-org-assets"
 fi
 
-# Remove deployment script if it exists (it shouldn't due to svn:ignore)
-if [ -f "$SVNPATH/trunk/deploy.sh" ]; then
-    svn delete --force "$SVNPATH/trunk/deploy.sh"
-fi
+# Dev scripts ship in the zip otherwise; svn:ignore keeps them off new
+# adds and the svn-status-delete flow drops previously versioned ones.
+rm -rf "$SVNPATH/trunk/scripts"
 
 echo "Changing directory to SVN and committing to trunk"
 cd "$SVNPATH/trunk/"
 # Delete missing files
-svn status | grep "^\!" | awk '{print $2}' | xargs -r svn delete || true
+svn status | grep '^!' | awk '{print $2}' | xargs -r svn delete || true
 # Add all new files that are not set to be ignored
 svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs -r svn add || true
 echo "committing to trunk"

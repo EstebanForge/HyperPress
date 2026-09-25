@@ -9,13 +9,12 @@ use HyperBlocks\Block\Field;
 use HyperBlocks\Config;
 use HyperBlocks\Registry;
 use HyperBlocks\WordPress\Bootstrap;
-use PHPUnit\Framework\TestCase;
-
-/**
+use HyperBlocks_Testing_Registry;
+/*
  * Global test-capture helper defined in tests/mocks/wp-mocks.php.
  * Lives in the global namespace; the use-statement imports it unqualified.
  */
-use HyperBlocks_Testing_Registry;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests for the editor-script enqueue path.
@@ -84,7 +83,7 @@ class EditorScriptTest extends TestCase
             $registration['src']
         );
         $this->assertSame(
-            ['wp-blocks', 'wp-element', 'wp-components', 'wp-dom-ready', 'wp-block-editor', 'wp-server-side-render'],
+            ['wp-blocks', 'wp-element', 'wp-components', 'wp-dom-ready', 'wp-block-editor', 'wp-server-side-render', 'wp-api-fetch'],
             $registration['deps']
         );
         $this->assertTrue($registration['in_footer']);

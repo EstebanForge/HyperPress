@@ -19,20 +19,32 @@ if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
 class Renderer
 {
     /**
+     * Sentinel emitted where <InnerBlocks /> appears but no inner-blocks
+     * content is available (editor preview). The editor client splits the
+     * preview HTML on this marker and injects the live InnerBlocks area
+     * between the two halves. An inert HTML comment on the front end.
+     */
+    public const INNER_BLOCKS_SENTINEL = '<!--hyperblocks:innerblocks-->';
+
+    /**
      * Render a block using its template and attributes.
      *
      * @param string $template   The template string or file path.
      * @param array  $attributes The block attributes.
+     * @param string $content    Inner-blocks markup for the block (the second
+     *                           argument WordPress passes to every dynamic
+     *                           block render callback). Replaces <InnerBlocks />
+     *                           markers in the template output.
      * @return string The rendered HTML.
      */
-    public function render(string $template, array $attributes): string
+    public function render(string $template, array $attributes = [], string $content = ''): string
     {
         try {
             // Execute the template to get initial HTML
             $initialHtml = $this->executeTemplate($template, $attributes);
 
             // Parse and replace custom components
-            $finalHtml = $this->parseCustomComponents($initialHtml, $attributes);
+            $finalHtml = $this->parseCustomComponents($initialHtml, $attributes, $content);
 
             return $finalHtml;
         } catch (\Throwable $e) {
@@ -299,17 +311,19 @@ class Renderer
      *
      * @param string $html        The HTML to parse.
      * @param array  $attributes The block attributes.
+     * @param string $content    Inner-blocks markup for <InnerBlocks /> markers.
      * @return string The HTML with custom components replaced.
      */
-    private function parseCustomComponents(string $html, array $attributes): string
+    private function parseCustomComponents(string $html, array $attributes, string $content = ''): string
     {
         try {
             // First, try simple string replacement for RichText components
             $html = $this->parseRichTextWithRegex($html, $attributes);
 
-            // Then handle InnerBlocks with DOM parsing if needed
-            if (strpos($html, '<InnerBlocks') !== false) {
-                $html = $this->parseInnerBlocksWithRegex($html);
+            // Then handle InnerBlocks markers. Case-insensitive so lowercase
+            // or mixed-case author tags are caught too.
+            if (stripos($html, '<InnerBlocks') !== false) {
+                $html = $this->parseInnerBlocksWithRegex($html, $content);
             }
 
             return $html;
@@ -375,14 +389,42 @@ class Renderer
     }
 
     /**
-     * Parse InnerBlocks components using regex.
+     * Replace InnerBlocks markers with the block's inner-blocks markup.
      *
-     * @param string $html The HTML to parse.
-     * @return string The HTML with InnerBlocks components replaced.
+     * Uses preg_replace_callback (never preg_replace with $content as the
+     * replacement) so $ and \ sequences inside real block markup are never
+     * interpreted as PCRE backreferences. Attribute sections tolerate quoted
+     * values containing '>' and both bare and self-closing tag forms.
+     *
+     * @param string $html    The HTML to parse.
+     * @param string $content The inner-blocks markup, or '' when unavailable.
+     * @return string The HTML with InnerBlocks markers replaced by the markup,
+     *                or by the editor split sentinel when no markup exists.
      */
-    private function parseInnerBlocksWithRegex(string $html): string
+    private function parseInnerBlocksWithRegex(string $html, string $content = ''): string
     {
-        // Replace InnerBlocks with a placeholder for WordPress to handle
-        return preg_replace('/<InnerBlocks\s*(?:\s*\/?>|><\/InnerBlocks>)/i', '<!-- wp:innerblocks /-->', $html);
+        $replacement = $content !== '' ? $content : self::INNER_BLOCKS_SENTINEL;
+
+        // Attribute section shared by both passes: quoted values may contain '>'.
+        // preg_replace_callback returns null on PCRE failure (e.g. the backtrack
+        // limit hit by a pathological template); fall back to the original HTML
+        // rather than collapsing the block output to null.
+        // Paired form first (<InnerBlocks>junk</InnerBlocks>), so stray author
+        // markup between the tags is consumed. The lookbehind keeps self-closing
+        // tags (<InnerBlocks />) for the second pass so mixed usage never
+        // collapses two markers into one replacement.
+        $parsed = preg_replace_callback(
+            '/<InnerBlocks\b(?:[^>"\']|"[^"]*"|\'[^\']*\')*(?<!\/)>.*?<\/InnerBlocks>/is',
+            static fn (): string => $replacement,
+            $html
+        );
+        $html = $parsed ?? $html;
+
+        // Then self-closing and bare open tags (slash optional).
+        return preg_replace_callback(
+            '/<InnerBlocks\b(?:[^>"\']|"[^"]*"|\'[^\']*\')*\/?>/i',
+            static fn (): string => $replacement,
+            $html
+        ) ?? $html;
     }
 }

@@ -372,11 +372,23 @@ Attributes:
 - `placeholder` — shown when the attribute is empty.
 - `style` — inline style on the wrapper element.
 
-**`<InnerBlocks>`** — inserts a WordPress inner-blocks placeholder so nested blocks work.
+**`<InnerBlocks>`** — resolves to the block's inner-blocks markup: the content an editor nests inside the block, which WordPress passes to the render callback as `$content`.
 
 ```html
 <InnerBlocks />
 ```
+
+Support is opt in per fluent block through the `innerBlocks()` fluent method:
+
+```php
+$block->innerBlocks([
+    'allowedBlocks' => ['core/paragraph', 'core/list'], // omit the key: all blocks allowed
+    'template'      => [['core/paragraph', []]],        // omit: empty starting set
+    'templateLock'  => false,                           // 'all' | 'insert' | false
+]);
+```
+
+Forms accepted: self-closing, paired (`<InnerBlocks>junk</InnerBlocks>`), attributed, and bare open tags, case-insensitively; quoted `>` inside attribute values is tolerated. Use exactly one marker per template: the editor mounts its slot at the first marker and the front end injects content at every marker. A slotted template with no marker at all drops nested content on the front end; the editor console warns once per block. When a block has no inner markup available (preview requests, childless instances) the marker resolves to the inert `<!--hyperblocks:innerblocks-->` sentinel instead. Full behavior and caveats: see "InnerBlocks support (fluent blocks)" under the Renderer section.
 
 ### Error handling
 
@@ -499,9 +511,12 @@ Server-side renders a block with the supplied attributes. Attributes are sanitiz
     "heading": "Hello World",
     "bg_image": 42,
     "show_cta": true
-  }
+  },
+  "content": "<p>Optional inner-blocks markup injected at the <InnerBlocks /> marker</p>"
 }
 ```
+
+The optional `content` string is sanitized through `wp_kses_post` (which preserves nested block comments) before rendering.
 
 **Success response**:
 
@@ -555,8 +570,10 @@ hb_config(string $key, mixed $default = null): mixed
 ### Render helper
 
 ```php
-hb_render(string $template, array $attributes = []): string
+hb_render(string $template, array $attributes = [], string $content = ''): string
 ```
+
+The optional `$content` is inner-blocks markup injected at the template's `<InnerBlocks />` marker.
 
 ---
 
@@ -605,7 +622,7 @@ When HyperBlocks runs standalone (no standalone HyperFields plugin active), `boo
 
 - Template paths are validated at **both** definition time (`Block::validateTemplatePath`) and render time (`Renderer::validateTemplatePath`). Path traversal (`..`) and absolute paths outside allowed directories are rejected with `\InvalidArgumentException`.
 - `<script>` tags in incoming attribute values are stripped before HyperFields sanitization runs.
-- The `render-preview` endpoint requires `edit_posts`; `block-fields` is public but returns only metadata, no stored values.
+- The `render-preview` and `block-fields` endpoints require `edit_posts`; `block-fields` returns only field metadata, no stored values.
 - All template output must be escaped. Always use `esc_html()`, `esc_url()`, `esc_attr()`, or `wp_kses_post()` in `.hb.php` templates.
 
 ---

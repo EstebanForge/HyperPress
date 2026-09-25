@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.6.4] - 2026-09-25
+
+### Changed
+- **Vendored HyperBlocks 1.7.0 (through HyperPress-Core 1.6.4): native InnerBlocks support for fluent blocks.** Blocks opt in per block with `->innerBlocks(['allowedBlocks' => …, 'template' => …, 'templateLock' => …])`; templates then resolve `<InnerBlocks />` markers into real nested-block markup — 1.6.1 replaced the tag with an inert placeholder comment that rendered nothing. The editor renders the server template with a live nested-blocks area mounted exactly at the marker, `allowedBlocks` bridges natively into WordPress block definitions, and both preview surfaces (the `hyperblocks/v1` REST route and the `hyperblocks/render-preview` ability) accept an optional `content` string sanitized through `wp_kses_post`. Blocks that never call `->innerBlocks()` are byte-identical to before. HyperPress-Core 1.6.4 itself is a dependency-only re-stamp. See HyperBlocks 1.7.0 and HyperPress-Core 1.6.4 for the full details and adoption caveats (one marker per template; `templateLock`/`allowedBlocks` are editor-side constraints only).
+
 ## [3.6.3] - 2026-09-23
 
 ### Changed

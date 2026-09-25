@@ -94,6 +94,13 @@ class RestApi
                             return is_array($param);
                         },
                     ],
+                    'content' => [
+                        'required'          => false,
+                        'validate_callback' => function ($param) {
+                            return is_string($param);
+                        },
+                        'sanitize_callback' => 'wp_kses_post',
+                    ],
                 ],
             ]
         );
@@ -126,7 +133,8 @@ class RestApi
     {
         $result = BlockOperations::preview(
             (string) $request->get_param('blockName'),
-            (array) $request->get_param('attributes')
+            (array) $request->get_param('attributes'),
+            (string) $request->get_param('content')
         );
 
         if ($result['status'] === 'ok') {
@@ -148,5 +156,4 @@ class RestApi
             'error'   => $result['error'],
         ], $result['rest_status']);
     }
-
 }

@@ -311,6 +311,11 @@ class Bootstrap
         if ($block->style !== null) {
             $args['style'] = $block->style;
         }
+        if ($block->inner_blocks !== null && isset($block->inner_blocks['allowedBlocks']) && is_array($block->inner_blocks['allowedBlocks'])) {
+            // Native client bridge: WP core's block-editor server settings map
+            // allowed_blocks to the client-side allowedBlocks definition.
+            $args['allowed_blocks'] = array_values(array_map('strval', $block->inner_blocks['allowedBlocks']));
+        }
 
         register_block_type($block->name, $args);
     }
@@ -319,7 +324,7 @@ class Bootstrap
      * Render callback for blocks.
      *
      * @param array      $attributes The block attributes.
-     * @param string     $content    The block content.
+     * @param string     $content    The block content (inner-blocks markup).
      * @param \WP_Block  $block      The block instance.
      * @return string The rendered HTML.
      */
@@ -343,10 +348,11 @@ class Bootstrap
         // Sanitize and validate attributes
         $attributes = self::sanitizeAttributes($blockDef, $attributes);
 
-        // Render
+        // Render; $content carries the inner-blocks markup WordPress parsed
+        // from post_content and is injected at <InnerBlocks /> markers.
         $renderer = new \HyperBlocks\Renderer();
 
-        return $renderer->render($blockDef->render_template, $attributes);
+        return $renderer->render($blockDef->render_template, $attributes, $content);
     }
 
     /**
@@ -457,7 +463,7 @@ class Bootstrap
         wp_register_script(
             $scriptHandle,
             $scriptUrl,
-            ['wp-blocks', 'wp-element', 'wp-components', 'wp-dom-ready', 'wp-block-editor', 'wp-server-side-render'],
+            ['wp-blocks', 'wp-element', 'wp-components', 'wp-dom-ready', 'wp-block-editor', 'wp-server-side-render', 'wp-api-fetch'],
             (string) filemtime($scriptPath),
             true
         );
@@ -476,12 +482,27 @@ class Bootstrap
 
         $blockConfigs = [];
         foreach ($blocks as $block) {
-            $blockConfigs[] = [
+            $config = [
                 'name'       => $block->name,
                 'title'      => $block->title,
                 'icon'       => $block->icon,
                 'apiVersion' => $apiVersion,
             ];
+            if ($block->inner_blocks !== null) {
+                // Editor-only settings with no native registration argument:
+                // the InnerBlocks template and templateLock. allowedBlocks is
+                // bridged natively via allowed_blocks but is duplicated here
+                // so the client can pass it as the InnerBlocks prop directly.
+                // Non-array allowedBlocks/template are dropped (never forwarded
+                // raw to the client) so malformed config cannot throw in the
+                // editor.
+                $config['innerBlocks'] = array_filter([
+                    'allowedBlocks' => is_array($block->inner_blocks['allowedBlocks'] ?? null) ? $block->inner_blocks['allowedBlocks'] : null,
+                    'template'      => is_array($block->inner_blocks['template'] ?? null) ? $block->inner_blocks['template'] : null,
+                    'templateLock'  => $block->inner_blocks['templateLock'] ?? null,
+                ], static fn ($v) => $v !== null);
+            }
+            $blockConfigs[] = $config;
         }
 
         wp_add_inline_script(

@@ -363,6 +363,10 @@ Registry::getInstance()->registerFluentBlock(
             Field::make('text', 'card_title', 'Card Title'),
             Field::make('rich_text', 'intro', 'Introduction'),
         ])
+        ->innerBlocks([
+            // Restrict what editors may nest here (omit the key for all blocks)
+            'allowedBlocks' => ['core/paragraph', 'core/list', 'core/quote'],
+        ])
         ->setRenderTemplateFile('blocks/rich-content-card.hb.php')
 );
 ```
@@ -390,7 +394,9 @@ Registry::getInstance()->registerFluentBlock(
 </div>
 ```
 
-The `<RichText>` component supports `tag`, `placeholder`, and `style` attributes. `<InnerBlocks />` is replaced with the standard WordPress `<!-- wp:innerblocks /-->` comment.
+The `<RichText>` component supports `tag`, `placeholder`, and `style` attributes.
+
+`<InnerBlocks />` resolves to the markup editors nest inside the block — but only because the definition opts in with `->innerBlocks()`. In the editor, the nested area renders live inside the card shell (paragraphs, lists, and quotes here); on the front end, the nested markup replaces the marker. Without the opt-in, the marker would render as an inert `<!--hyperblocks:innerblocks-->` comment.
 
 ---
 

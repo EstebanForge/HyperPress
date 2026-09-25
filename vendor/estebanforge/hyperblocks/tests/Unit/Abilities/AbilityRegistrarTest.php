@@ -247,6 +247,27 @@ class AbilityRegistrarTest extends TestCase
         $this->assertInstanceOf(\WP_Error::class, $preview);
     }
 
+    public function test_render_preview_accepts_and_forwards_content(): void
+    {
+        Registry::getInstance()->registerFluentBlock(
+            Block::make('Slotted')
+                ->setName('test/slotted-content')
+                ->setRenderTemplate('<main><InnerBlocks /></main>')
+        );
+
+        $preview = AbilityRegistrar::executeRenderPreview([
+            'blockName'  => 'test/slotted-content',
+            'attributes' => [],
+            'content'    => '<p>inner-ok</p>',
+        ]);
+
+        $this->assertNotInstanceOf(\WP_Error::class, $preview);
+        $this->assertIsArray($preview);
+        $this->assertTrue($preview['success']);
+        $this->assertStringContainsString('<p>inner-ok</p>', $preview['html']);
+        $this->assertStringNotContainsString('hyperblocks:innerblocks', $preview['html']);
+    }
+
     public function test_init_is_a_noop_without_the_abilities_api(): void
     {
         if (class_exists(\WP_Ability::class)) {
