@@ -29,9 +29,9 @@ if (!empty($assets)) {
     foreach ($assets as $asset) {
         if (is_string($asset)) {
             if (pathinfo($asset, PATHINFO_EXTENSION) === 'css') {
-                wp_enqueue_style('hyperpress-custom-' . sanitize_key(basename($asset, '.css')), $asset);
+                wp_enqueue_style('hyperfields-custom-' . sanitize_key(basename($asset, '.css')), $asset);
             } elseif (pathinfo($asset, PATHINFO_EXTENSION) === 'js') {
-                wp_enqueue_script('hyperpress-custom-' . sanitize_key(basename($asset, '.js')), $asset, ['jquery'], null, true);
+                wp_enqueue_script('hyperfields-custom-' . sanitize_key(basename($asset, '.js')), $asset, ['jquery'], null, true);
             }
         }
     }
@@ -43,15 +43,15 @@ if (!empty($render_callback) && is_callable($render_callback)) {
 } else {
     // Fallback to basic input
     ?>
-    <div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
-        <div class="hyperpress-field-row">
-            <div class="hyperpress-field-label">
+    <div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+        <div class="hf-field-row hyperpress-field-row">
+            <div class="hf-field-label hyperpress-field-label">
                 <label for="<?php echo esc_attr($name); ?>">
                     <?php echo esc_html($label); ?>
                     <?php if ($required): ?><span class="required">*</span><?php endif; ?>
                 </label>
             </div>
-            <div class="hyperpress-field-input-wrapper">
+            <div class="hf-field-input-wrapper hyperpress-field-input-wrapper">
                        <input type="text"
                        id="<?php echo esc_attr($name); ?>"
                        name="<?php echo esc_attr($name_attr); ?>"

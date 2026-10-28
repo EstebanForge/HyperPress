@@ -332,7 +332,7 @@ final class AbilityRegistrar
             return self::notFoundError($page === null ? 'page' : 'field', $input);
         }
 
-        $values = get_option($page->getOptionName(), []);
+        $values = \HyperFields\HyperFields::getOptions($page->getOptionName(), []);
         $value = is_array($values) && array_key_exists($field->getName(), $values)
             ? $values[$field->getName()]
             : $field->getDefault();

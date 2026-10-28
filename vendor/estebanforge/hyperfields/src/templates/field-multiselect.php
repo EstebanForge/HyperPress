@@ -30,13 +30,13 @@ $enhanced_enabled = isset($field_data['enhanced']) ? (bool) $field_data['enhance
 $value = is_array($value) ? $value : [$value];
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label <?php echo esc_attr($label_class); ?>">
+<div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label for="<?php echo esc_attr($name); ?>" class="hf-field-label hyperpress-field-label <?php echo esc_attr($label_class); ?>">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hyperpress-field-input">
+    <div class="hf-field-input hyperpress-field-input">
         <!-- Hidden input to ensure the field is always sent in POST data even when none selected -->
         <input type="hidden" name="<?php echo esc_attr($name_attr); ?>[]" value="__hm_empty__">
         <?php if ($enhanced_enabled): ?>
@@ -95,7 +95,7 @@ $value = is_array($value) ? $value : [$value];
                 name="<?php echo esc_attr($name_attr); ?>[]"
                 multiple
                 <?php echo $required ? 'required' : ''; ?>
-                class="regular-text hyperpress-multiselect <?php echo esc_attr($input_class); ?>"
+                class="regular-text hf-multiselect hyperpress-multiselect <?php echo esc_attr($input_class); ?>"
                 size="5">
             <?php foreach ($options as $option_value => $option_label): ?>
                 <option value="<?php echo esc_attr($option_value); ?>" <?php selected(in_array($option_value, $value)); ?>>

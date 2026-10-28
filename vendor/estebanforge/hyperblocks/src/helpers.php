@@ -325,15 +325,6 @@ if (!function_exists('hb_path_within_base')) {
      */
     function hb_path_within_base(string $realPath, string $realBase): bool
     {
-        $normalize = static function (string $p): string {
-            $p = str_replace('\\', '/', $p);
-
-            return function_exists('wp_normalize_path') ? wp_normalize_path($p) : $p;
-        };
-
-        $normalizedPath = $normalize($realPath);
-        $normalizedBase = rtrim($normalize($realBase), '/');
-
-        return $normalizedPath === $normalizedBase || str_starts_with($normalizedPath, $normalizedBase . '/');
+        return \HyperBlocks\Path::withinBase($realPath, $realBase);
     }
 }

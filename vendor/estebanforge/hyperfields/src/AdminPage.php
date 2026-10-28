@@ -206,10 +206,10 @@ class AdminPage
     {
         $active_tab = $this->getActiveTab();
         ?>
-        <div class="wrap hyperpress hyperpress-options-wrap" id="hyperpress-options-page">
-            <div class="hyperpress-layout__header" data-hyperpress-sticky-header>
-                <div class="hyperpress-layout__header-wrapper">
-                    <h1 class="hyperpress-layout__header-heading"><?php echo esc_html($this->page_title); ?></h1>
+        <div class="wrap hf hf-options-wrap hyperpress hyperpress-options-wrap" id="hyperfields-options-page">
+            <div class="hf-layout__header hyperpress-layout__header" data-hf-sticky-header data-hyperpress-sticky-header>
+                <div class="hf-layout__header-wrapper hyperpress-layout__header-wrapper">
+                    <h1 class="hf-layout__header-heading hyperpress-layout__header-heading"><?php echo esc_html($this->page_title); ?></h1>
                 </div>
             </div>
             <?php $this->renderTabs(); ?>
@@ -226,18 +226,18 @@ class AdminPage
             // the notice stays invisible. OptionsPage gets this isolation for
             // free from its <form>; AdminPage has no form, so we add an
             // explicit wrapper.
-            echo '<div class="hyperpress-notice-region">';
-            echo '<div class="wp-header-end hyperpress-notice-catcher" id="hyperpress-layout__notice-catcher"></div>';
+            echo '<div class="hf-notice-region hyperpress-notice-region">';
+            echo '<div class="wp-header-end hf-notice-catcher hyperpress-notice-catcher" id="hyperpress-layout__notice-catcher"></div>';
             echo '</div>';
 
             if (isset($this->tabs[$active_tab]) && is_callable($this->tabs[$active_tab]['render'])) {
-                echo '<div class="hyperpress-page-content">';
+                echo '<div class="hf-page-content hyperpress-page-content">';
                 ($this->tabs[$active_tab]['render'])();
                 echo '</div>';
             }
 
             if ($this->footer_content !== null && $this->footer_content !== '') {
-                echo '<div class="hyperpress-options-footer">';
+                echo '<div class="hf-options-footer hyperpress-options-footer">';
                 echo wp_kses_post($this->footer_content);
                 echo '</div>';
             }
@@ -276,9 +276,9 @@ class AdminPage
         }
 
         $active_tab = $this->getActiveTab();
-        echo '<nav class="nav-tab-wrapper hyperpress-nav-tab-wrapper" aria-label="' . esc_attr__('Page sections', 'api-for-htmx') . '">';
+        echo '<nav class="nav-tab-wrapper hf-nav-tab-wrapper hyperpress-nav-tab-wrapper" aria-label="' . esc_attr__('Page sections', 'api-for-htmx') . '">';
         foreach ($this->tabs as $tab_id => $tab) {
-            $class = 'nav-tab hyperpress-nav-tab';
+            $class = 'nav-tab hf-nav-tab hyperpress-nav-tab';
             if ($active_tab === $tab_id) {
                 $class .= ' nav-tab-active';
             }
@@ -343,6 +343,10 @@ class AdminPage
             '.wrap > .update-nag',
             '.wrap > .updated',
             '.wrap > .error',
+            '.wrap.hf-options-wrap > .notice',
+            '.wrap.hf-options-wrap > .update-nag',
+            '.wrap.hf-options-wrap > .updated',
+            '.wrap.hf-options-wrap > .error',
             '.wrap.hyperpress-options-wrap > .notice',
             '.wrap.hyperpress-options-wrap > .update-nag',
             '.wrap.hyperpress-options-wrap > .updated',

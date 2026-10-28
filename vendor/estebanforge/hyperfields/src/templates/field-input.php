@@ -58,15 +58,15 @@ if ($conditional_logic) {
 }
 ?>
 
-<div class="hyperpress-field-wrapper" <?php echo $conditional_attr; ?>>
-    <div class="hyperpress-field-row">
-        <div class="hyperpress-field-label">
+<div class="hf-field-wrapper hyperpress-field-wrapper" <?php echo $conditional_attr; ?>>
+    <div class="hf-field-row hyperpress-field-row">
+        <div class="hf-field-label hyperpress-field-label">
             <label for="<?php echo esc_attr($name); ?>" class="<?php echo esc_attr($label_class); ?>">
                 <?php echo esc_html($label); ?>
                 <?php if ($required): ?><span class="required">*</span><?php endif; ?>
             </label>
         </div>
-        <div class="hyperpress-field-input-wrapper">
+        <div class="hf-field-input-wrapper hyperpress-field-input-wrapper">
             <?php switch ($type):
                 case 'text': ?>
                     <input type="<?php echo esc_attr($input_type); ?>"
@@ -125,7 +125,7 @@ if ($conditional_logic) {
                         value="<?php echo esc_attr($value); ?>"
                         <?php echo $required ? 'required' : ''; ?>
                         <?php echo $render_attributes($attributes); ?>
-                        class="hyperpress-color-picker <?php echo esc_attr($input_class); ?>">
+                        class="hf-color-picker hyperpress-color-picker <?php echo esc_attr($input_class); ?>">
                 <?php break;
                 case 'date': ?>
                     <input type="date"
@@ -220,7 +220,7 @@ if ($conditional_logic) {
                         value="<?php echo esc_attr($value); ?>">
                 <?php break;
                 case 'html': ?>
-                    <div class="hyperpress-html-field">
+                    <div class="hf-html-field hyperpress-html-field">
                         <?php echo wp_kses_post($field_data['html_content'] ?? ''); ?>
                     </div>
                 <?php break;
@@ -239,35 +239,35 @@ if ($conditional_logic) {
                     ?>
                 <?php break;
                 case 'image': ?>
-                    <div class="hyperpress-image-field">
+                    <div class="hf-image-field hyperpress-image-field">
                         <input type="hidden" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name_attr); ?>" value="<?php echo esc_attr($value); ?>">
-                        <button type="button" class="button hyperpress-upload-button" data-field="<?php echo esc_attr($name); ?>" data-type="image">
+                        <button type="button" class="button hf-upload-button hyperpress-upload-button" data-field="<?php echo esc_attr($name); ?>" data-type="image">
                             <?php _e('Select Image', 'api-for-htmx'); ?>
                         </button>
-                        <div class="hyperpress-image-preview<?php echo esc_attr($value ? '' : ' is-empty'); ?>">
+                        <div class="hf-image-preview hyperpress-image-preview<?php echo esc_attr($value ? '' : ' is-empty'); ?>">
                             <?php if ($value): ?>
                                 <img src="<?php echo esc_url(wp_get_attachment_url($value)); ?>" alt="" style="max-width: 150px; max-height: 150px;">
                             <?php else: ?>
-                                <span class="hyperpress-image-placeholder"><?php _e('No image selected', 'api-for-htmx'); ?></span>
+                                <span class="hf-image-placeholder hyperpress-image-placeholder"><?php _e('No image selected', 'api-for-htmx'); ?></span>
                             <?php endif; ?>
                         </div>
                     </div>
                 <?php break;
                 case 'file': ?>
-                    <div class="hyperpress-file-field">
+                    <div class="hf-file-field hyperpress-file-field">
                         <input type="url" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name_attr); ?>"
                             value="<?php echo esc_attr($value); ?>"
                             placeholder="<?php echo esc_attr($placeholder); ?>"
                             <?php echo $required ? 'required' : ''; ?>
                             <?php echo $render_attributes($attributes); ?>
                             class="regular-text <?php echo esc_attr($input_class); ?>">
-                        <button type="button" class="button hyperpress-upload-button" data-field="<?php echo esc_attr($name); ?>" data-type="file">
+                        <button type="button" class="button hf-upload-button hyperpress-upload-button" data-field="<?php echo esc_attr($name); ?>" data-type="file">
                             <?php _e('Select File', 'api-for-htmx'); ?>
                         </button>
                     </div>
                 <?php break;
                 case 'set': ?>
-                    <div class="hyperpress-set-field">
+                    <div class="hf-set-field hyperpress-set-field">
                         <!-- Hidden input to ensure the field is always sent in POST data even when none selected -->
                         <input type="hidden" name="<?php echo esc_attr($name_attr); ?>[]" value="__hm_empty__">
                         <?php foreach ($options as $option_value => $option_label): ?>

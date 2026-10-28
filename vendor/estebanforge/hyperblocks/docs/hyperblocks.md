@@ -68,6 +68,10 @@ Attach a pre-registered `FieldGroup` by its ID. Fields from the group are merged
 $block->addFieldGroup('common-settings');
 ```
 
+### `->setEditorSidebar(bool $enabled = true): self`
+
+Opts the block into the schema-driven editor sidebar (1.8.0+). The block's field definitions ride the inline `window.hyperBlocksConfig` payload to the editor, which renders them as inspector controls: tabs and sections from the HyperFields `tab`/`section` schema, per-type controls, conditional visibility, and live badges. Blocks without this call keep their pre-1.8 editor behavior. See [Editor sidebar](#editor-sidebar).
+
 ### `->setRenderTemplate(string $template): self`
 
 Set the template used to render the block on the frontend.
@@ -159,6 +163,10 @@ $field = Field::make('select', 'layout', 'Layout');
 | `->setRequired(bool $required = true)` | Mark field as required. |
 | `->setHelp(string $text)` | Help text shown below the editor input. |
 | `->setOptions(array $options)` | Key → label pairs for `select`, `multiselect`, `radio`. |
+| `->setTab(string $tab)` | Editor sidebar tab the control renders in (sidebar-registered blocks only). |
+| `->setSection(string $section)` | Section within the sidebar tab. |
+| `->setLive(bool $live = true)` | Badges the control as one whose changes re-render the block preview. |
+| `->setConditionalLogic(array $logic)` | Visibility rules; input is canonicalized to the `{relation, conditions, groups}` shape. |
 | `->setValidation(array $rules)` | Validation rules array passed to HyperFields. |
 
 ### Lower-level methods
@@ -494,6 +502,8 @@ Returns field definitions for a registered block (fluent or `block.json`).
 ]
 ```
 
+**Fields that carry editor schema include the extra keys `tab`, `section`, `live`, and `conditional_logic` (the canonical `{relation, conditions, groups}` shape), and option-carrying types serialize `options` as `[{value, label}]` so stored values survive JSON transport.**
+
 **404** when the block is not registered.
 
 ### `POST /wp-json/hyperblocks/v1/render-preview`
@@ -518,6 +528,8 @@ Server-side renders a block with the supplied attributes. Attributes are sanitiz
 
 The optional `content` string is sanitized through `wp_kses_post` (which preserves nested block comments) before rendering.
 
+The optional boolean `sample` argument (default `false`) renders the template with `$hb_sample === true` so the editor can preview placeholder data. The flag is assigned after attribute extraction, so a `sample` attribute in `attributes` cannot spoof it, and the route stays `edit_posts`-gated.
+
 **Success response**:
 
 ```json
@@ -529,6 +541,28 @@ The optional `content` string is sanitized through `wp_kses_post` (which preserv
 ```json
 { "success": false, "error": "No render template defined for block: my-theme/hero-banner" }
 ```
+
+---
+
+## Editor sidebar
+
+Blocks registered through the fluent API render their fields as real Gutenberg inspector controls when the block calls `->setEditorSidebar()`. The sidebar is schema-driven: HyperFields owns the field definitions, and the editor renders tabs (`Field::setTab`), sections (`Field::setSection`), and controls from that schema — no parallel React field system, and no per-block REST fetch because the schema rides the inline `window.hyperBlocksConfig` payload (HTML-hex encoded for the inline `<script>` context).
+
+Control mapping covers text/email/url/time, textarea, number, select, multiselect, checkbox (toggle), radio, color palette, date/datetime picker, image/file media frames, and static separator/heading elements. Fields flagged with `Field::setLive` carry a badge marking their changes as preview-re-rendering. Unsupported types are skipped with a one-time console notice, and `wp.hooks.addFilter('hyperblocks.sidebarControl', …)` is the extension point for custom controls — it receives the field config and runs before the built-in map.
+
+Conditional visibility uses the canonical HyperFields shape `{relation, conditions, groups}`: conditions are AND-ed within a group, groups are OR-ed, empty logic means always visible, and unknown operators fail closed (field hidden). HyperFields canonicalizes whatever shape PHP code passes, so the editor always receives one structure.
+
+Sidebar blocks gain a trailing "Preview data" panel with a sample-data toggle. When on, the canvas re-renders through `POST /hyperblocks/v1/render-preview` with `sample: true` and templates receive `$hb_sample === true`. The renderer assigns `$hb_sample` after extracting attributes, so an attribute can never spoof it, and because the flag is never an attribute nothing sample-derived persists in post content. Templates opt in by branching on it:
+
+```php
+<?php if (!empty($hb_sample)) : ?>
+    <p class="hb-sample-note">Sample employers render here.</p>
+<?php else : ?>
+    <p><?php echo esc_html($attributes['heading'] ?? ''); ?></p>
+<?php endif; ?>
+```
+
+Blocks whose templates ignore `$hb_sample` render identically in both modes. The toggle exists in the editor only; front-end rendering never receives the flag.
 
 ---
 
@@ -624,6 +658,8 @@ When HyperBlocks runs standalone (no standalone HyperFields plugin active), `boo
 - `<script>` tags in incoming attribute values are stripped before HyperFields sanitization runs.
 - The `render-preview` and `block-fields` endpoints require `edit_posts`; `block-fields` returns only field metadata, no stored values.
 - All template output must be escaped. Always use `esc_html()`, `esc_url()`, `esc_attr()`, or `wp_kses_post()` in `.hb.php` templates.
+- Undeclared attribute keys are dropped before rendering, so request data with no matching field declaration never reaches template scope through `extract()`.
+- The sample flag is not spoofable: `$hb_sample` is assigned after the `EXTR_SKIP` attribute extraction and cannot be overridden by a block attribute or REST payload.
 
 ---
 

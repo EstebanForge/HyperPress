@@ -112,6 +112,7 @@ return array(
     'HyperBlocks\\Block\\Field' => $vendorDir . '/estebanforge/hyperblocks/src/Block/Field.php',
     'HyperBlocks\\Block\\FieldGroup' => $vendorDir . '/estebanforge/hyperblocks/src/Block/FieldGroup.php',
     'HyperBlocks\\Config' => $vendorDir . '/estebanforge/hyperblocks/src/Config.php',
+    'HyperBlocks\\Path' => $vendorDir . '/estebanforge/hyperblocks/src/Path.php',
     'HyperBlocks\\Registry' => $vendorDir . '/estebanforge/hyperblocks/src/Registry.php',
     'HyperBlocks\\Renderer' => $vendorDir . '/estebanforge/hyperblocks/src/Renderer.php',
     'HyperBlocks\\RestApi' => $vendorDir . '/estebanforge/hyperblocks/src/RestApi.php',

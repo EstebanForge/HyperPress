@@ -29,30 +29,30 @@ foreach ($value as $attachment_id) {
 }
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
+<div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label for="<?php echo esc_attr($name); ?>" class="hf-field-label hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hyperpress-field-input">
-        <div class="hyperpress-media-gallery-field">
+    <div class="hf-field-input hyperpress-field-input">
+        <div class="hf-media-gallery-field hyperpress-media-gallery-field">
             <input type="hidden" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name_attr); ?>" value="<?php echo esc_attr(implode(',', $value)); ?>">
 
-            <button type="button" class="button hyperpress-gallery-button" data-field="<?php echo esc_attr($name); ?>" data-multiple="<?php echo $multiple ? 'true' : 'false'; ?>">
+            <button type="button" class="button hf-gallery-button hyperpress-gallery-button" data-field="<?php echo esc_attr($name); ?>" data-multiple="<?php echo $multiple ? 'true' : 'false'; ?>">
                 <?php _e('Add Images', 'api-for-htmx'); ?>
             </button>
 
-            <button type="button" class="button hyperpress-clear-gallery-button" data-field="<?php echo esc_attr($name); ?>" style="display: <?php echo !empty($attachments) ? 'inline-block' : 'none'; ?>">
+            <button type="button" class="button hf-clear-gallery-button hyperpress-clear-gallery-button" data-field="<?php echo esc_attr($name); ?>" style="display: <?php echo !empty($attachments) ? 'inline-block' : 'none'; ?>">
                 <?php _e('Clear Gallery', 'api-for-htmx'); ?>
             </button>
 
-            <div class="hyperpress-gallery-preview" style="margin-top: 10px;">
+            <div class="hf-gallery-preview hyperpress-gallery-preview" style="margin-top: 10px;">
                 <?php if (!empty($attachments)): ?>
                     <?php foreach ($attachments as $attachment): ?>
-                        <div class="hyperpress-gallery-item" data-id="<?php echo esc_attr($attachment->ID); ?>" style="display: inline-block; margin: 0 10px 10px 0;">
+                        <div class="hf-gallery-item hyperpress-gallery-item" data-id="<?php echo esc_attr($attachment->ID); ?>" style="display: inline-block; margin: 0 10px 10px 0;">
                             <?php echo wp_get_attachment_image($attachment->ID, 'thumbnail', false, ['style' => 'max-width: 100px; max-height: 100px;']); ?>
-                            <button type="button" class="hyperpress-remove-image" data-id="<?php echo esc_attr($attachment->ID); ?>" style="display: block; margin-top: 5px;">
+                            <button type="button" class="hf-remove-image hyperpress-remove-image" data-id="<?php echo esc_attr($attachment->ID); ?>" style="display: block; margin-top: 5px;">
                                 <?php _e('Remove', 'api-for-htmx'); ?>
                             </button>
                         </div>

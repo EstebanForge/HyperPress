@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.8.1] - 2026-10-28
+
+### Added
+- **Shorthand `.hb-*` CSS classes and component aliases.** Aliased `.hb-*` selectors alongside `.hyperblocks-*` in editor CSS (`editor.css`), UI components (`Sidebar.js`, `InnerBlocksPlaceholder.js`, `PreviewDataPanel.js`), and PHP error templates while retaining full backward compatibility.
+
+### Changed
+- **HyperFields constraint.** Required `estebanforge/hyperfields` with `*` constraint.
+
+## [1.8.0] - 2026-10-26
+
+### Added
+- **Schema-driven editor sidebar for fluent blocks (opt-in).** `Block::setEditorSidebar()` delivers the block's field definitions to the editor through the existing `window.hyperBlocksConfig` inline channel (no per-block REST fetch), and the editor script renders them as inspector controls: **tabs and sections** come from the HyperFields `tab`/`section` schema (fields without tabs keep a flat section layout), **controls** map per field type (text/email/url/time, textarea, number, select, multiselect, checkbox as toggle, radio, color palette, date/datetime picker, image/file media frames, separator/heading statics), and **conditional logic** mirrors `HyperFields\ConditionalLogic::evaluate()` (groups OR, conditions AND, unknown operators fail closed). Unsupported types are skipped with a one-time console notice; `window.wp.hooks.applyFilters('hyperblocks.sidebarControl', …)` is the extension point for custom controls. Fields marked `live` carry a badge. Blocks without the opt-in keep their 1.7.0 edit path; the only shared-surface change is the inline payload encoding below.
+- **Sample-data preview.** Sidebar blocks gain a "Preview data" panel whose toggle re-renders the canvas through the `/render-preview` route with a fetch-time `sample` flag: `BlockOperations::preview()` accepts it, `Renderer::render()` delivers it to templates as `$hb_sample` (set after attribute extraction, so an attribute can never spoof it), and because the flag is never an attribute nothing sample-derived persists in post content. The REST argument and the ability surface stay `edit_posts`-gated as before.
+
+### Changed
+- The inline block-config payload now encodes with `JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP`, hardening the inline `<script>` context now that field labels, help text, and options flow through it.
+- Sidebar blocks ship only the schema keys the sidebar reads (`name`, `type`, `label`, `help`, `default`, `placeholder`, `options`, `required`, `live`, `tab`, `section`, `conditional_logic`); internal field metadata stays server-side.
+- Attribute keys with no matching field declaration are dropped before rendering, so undeclared data never reaches the template scope through `extract()`.
+
+### Fixed
+- **`file:` block templates could fatal with an undefined function when a stale copy of the library booted alongside a newer one.** When a consumer ships the library both at the site-root vendor and inside a plugin's own vendor, Composer's files-autoload dedup can run the older copy's `bootstrap.php` (same identifier hash in both `autoload_files.php` files) while the newer copy's classes win the SPL election (Composer registers with `register(true)`, so the later-registered plugin autoloader is prepended). With `hb_path_within_base()` defined only inside `Bootstrap::init()` after its guard clauses, a stale root bootstrap predating the pre-`ABSPATH` scheduler left nothing scheduled at `after_setup_theme`, the procedural helper never loaded, and the first `file:` template validation on `init` threw `Call to undefined function hb_path_within_base()` on every request. The containment check now lives on the new `Path` class (`Path::withinBase()`); `Block` and `Renderer` call the class method directly, so whatever copy wins the class election is self-consistent and class autoloading makes scheduling and guard order irrelevant. `hb_path_within_base()` remains as a thin back-compat wrapper delegating to the class.
+- **Composer now requires HyperFields `^1.7`.** The sidebar schema methods (`setTab`, `setSection`, `setLive`) and the multiselect array typing exist only in HyperFields 1.7.0; the previous `^1` constraint allowed a pairing that would fatal on first sidebar use.
+
 ## [1.7.0] - 2026-09-25
 
 ### Added

@@ -19,15 +19,15 @@ $html_content = $field_data['html_content'] ?? $value;
 $help = $field_data['help'] ?? '';
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+<div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
     <?php if ($label): ?>
-        <div class="hyperpress-field-label">
+        <div class="hf-field-label hyperpress-field-label">
             <strong><?php echo esc_html($label); ?></strong>
         </div>
     <?php endif; ?>
 
-    <div class="hyperpress-field-input">
-        <div class="hyperpress-html-content">
+    <div class="hf-field-input hyperpress-field-input">
+        <div class="hf-html-content hyperpress-html-content">
             <?php
             // For HTML fields, we allow unescaped content since it's intended to be raw HTML
             // This is safe because HTML fields are only used by developers who control the content

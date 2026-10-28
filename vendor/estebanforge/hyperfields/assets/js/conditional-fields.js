@@ -294,10 +294,10 @@
   toggleField(element, show) {
     if (show) {
       element.style.display = "";
-      element.classList.remove("hyperpress-field-hidden");
+      element.classList.remove("hf-field-hidden", "hyperpress-field-hidden");
     } else {
       element.style.display = "none";
-      element.classList.add("hyperpress-field-hidden");
+      element.classList.add("hf-field-hidden", "hyperpress-field-hidden");
     }
   }
   }

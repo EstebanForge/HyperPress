@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.6.5] - 2026-10-28
+
+### Changed
+- **Vendored HyperPress-Core 1.6.5, HyperBlocks 1.8.1, and HyperFields 1.7.1:**
+  - **HyperPress-Core 1.6.5**: Added `.hp-*` shorthand CSS class aliases alongside `.hyperpress-*` in admin stylesheet and demo templates (`.hp-options-wrap`, `.hp-api-endpoint-box`, `.hp-fields-group`, etc.). Dual nonce validation in demo templates (`hyperpress_nonce` and `api-for-htmx_nonce`).
+  - **HyperBlocks 1.8.1**: Added `.hb-*` shorthand CSS class aliases alongside `.hyperblocks-*` for block wrappers, containers, and UI components.
+  - **HyperFields 1.7.1**: Added `.hf-*` shorthand CSS class aliases alongside `.hyperpress-*` / `.hyperfields-*`, aliased custom CSS property `--hf-*`, and added `hyperfields_*` nonce verification aliases.
+- **Internal library dependencies**: Configured `estebanforge/hyperpress-core` with `*` constraint to allow seamless updates across sibling libraries.
+
 ## [3.6.4] - 2026-09-25
 
 ### Changed

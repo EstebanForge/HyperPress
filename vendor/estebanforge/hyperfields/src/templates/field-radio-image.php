@@ -21,19 +21,19 @@ $help = $field_data['help'] ?? '';
 $options = $field_data['options'] ?? [];
 $layout = $field_data['layout'] ?? 'horizontal';
 
-$layout_class = 'hyperpress-radio-image-' . $layout;
+$layout_class = 'hf-radio-image-' . $layout . ' hyperpress-radio-image-' . $layout;
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label class="hyperpress-field-label">
+<div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label class="hf-field-label hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hyperpress-field-input">
+    <div class="hf-field-input hyperpress-field-input">
         <div class="<?php echo esc_attr($layout_class); ?>">
             <?php foreach ($options as $option_value => $option_image): ?>
-                <label class="hyperpress-radio-image-label">
+                <label class="hf-radio-image-label hyperpress-radio-image-label">
                     <input type="radio" 
                            name="<?php echo esc_attr($name_attr); ?>" 
                            value="<?php echo esc_attr($option_value); ?>" 
@@ -41,7 +41,7 @@ $layout_class = 'hyperpress-radio-image-' . $layout;
                            <?php echo $required ? 'required' : ''; ?>>
                     <img src="<?php echo esc_url($option_image); ?>" 
                          alt="<?php echo esc_attr($option_value); ?>" 
-                         class="hyperpress-radio-image"
+                         class="hf-radio-image hyperpress-radio-image"
                          style="max-width: 100px; max-height: 100px; cursor: pointer;">
                 </label>
             <?php endforeach; ?>

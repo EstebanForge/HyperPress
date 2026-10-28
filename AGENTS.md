@@ -78,3 +78,51 @@ add_filter('hyperpress/admin/show_menu', '__return_true');
 ## Abilities API + MCP (3.6.1+)
 
 The bundled libraries register their capabilities as WordPress Abilities (core 6.9+; silent no-op below). Nothing is exposed by default: sites opt in per package through kill-switch, REST-exposure, and MCP-public filters documented in each library's AGENTS.md. `examples/mcp-server-mu-plugin.php` is the documented opt-in path for MCP: copy to `wp-content/mu-plugins/`, requires the official [MCP Adapter](https://github.com/WordPress/mcp-adapter) plugin. `examples/` is svn-ignored and never ships in the wp.org zip. Requires at least 6.9 is declared in `readme.txt` and the plugin header because of this feature set; older cores run everything except the abilities module.
+
+## Release Protocol (`api-for-htmx` Plugin)
+
+Follow this sequence when releasing a new version of the HyperPress plugin:
+
+1. **Prerequisite**: Ensure underlying libraries (`HyperFields`, `HyperBlocks`, `HyperPress-Core`) are already released, tagged, pushed, and visible on Packagist.
+2. **Update dependency requirement**:
+   In `composer.json`, ensure `"estebanforge/hyperpress-core": "*"` is set.
+3. **Update vendored libraries & lockfile**:
+   ```bash
+   composer update estebanforge/hyperpress-core estebanforge/hyperfields estebanforge/hyperblocks
+   ```
+4. **Run test suite**:
+   ```bash
+   composer test
+   ```
+5. **Bump plugin version**:
+   ```bash
+   bash scripts/version-bump.sh --patch   # or --minor / --major / --version X.Y.Z
+   ```
+   Synchronizes `composer.json`, `api-for-htmx.php`, `README.txt`, and `SECURITY.md`.
+6. **Update `CHANGELOG.md`**:
+   Add `## [X.Y.Z] - YYYY-MM-DD` section detailing changes and updated vendored package versions.
+7. **Synchronize lock file & strip dev dependencies**:
+   ```bash
+   composer update --lock
+   composer run production   # runs @php composer install --no-dev --optimize-autoloader
+   ```
+8. **Sanity Check**:
+   Bring up the Docker dev environment and verify site and admin operation:
+   ```bash
+   ./devenv start
+   ```
+   Verify:
+   - Site loads via HTTPS (restart webserver container if needed: `docker restart hypermedia_local_webserver_1`)
+   - Login to WP Admin (`esteban` / `cuevas`)
+   - Navigate to **Settings > HyperPress** (`options-general.php?page=hyperpress-options`)
+   - Verify UI rendering, `.hp-*` / `.hf-*` CSS classes, modify a setting, submit form, verify settings update and persist in DB (`./wp option get hyperpress_options --format=json`).
+9. **Commit, Tag & Push**:
+   ```bash
+   git add CHANGELOG.md README.txt SECURITY.md api-for-htmx.php composer.json composer.lock vendor/
+   # Commit via Conventional Commits:
+   chore(release): X.Y.Z
+   git push origin main
+   git tag -a X.Y.Z -m "Release X.Y.Z"
+   git push origin X.Y.Z
+   ```
+

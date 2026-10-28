@@ -46,13 +46,13 @@ if ($editor_settings_overrides !== []) {
 $editor_settings = apply_filters('hyperfields/rich_text_editor_settings', $editor_settings, $name);
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
+<div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label for="<?php echo esc_attr($name); ?>" class="hf-field-label hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hyperpress-field-input">
+    <div class="hf-field-input hyperpress-field-input">
         <?php wp_editor($value, $name, $editor_settings); ?>
 
         <?php if ($help): ?>

@@ -144,6 +144,58 @@ class Field
     }
 
     /**
+     * Set the editor sidebar tab for the field.
+     *
+     * @param string $tab The tab label.
+     * @return self
+     */
+    public function setTab(string $tab): self
+    {
+        $this->hyperField->setTab($tab);
+
+        return $this;
+    }
+
+    /**
+     * Set the editor sidebar section within the tab for the field.
+     *
+     * @param string $section The section label.
+     * @return self
+     */
+    public function setSection(string $section): self
+    {
+        $this->hyperField->setSection($section);
+
+        return $this;
+    }
+
+    /**
+     * Mark the field as live (changes trigger server-side re-render).
+     *
+     * @param bool $live Whether the field is live.
+     * @return self
+     */
+    public function setLive(bool $live = true): self
+    {
+        $this->hyperField->setLive($live);
+
+        return $this;
+    }
+
+    /**
+     * Set conditional logic for the field.
+     *
+     * @param array $conditional_logic The conditional logic definition.
+     * @return self
+     */
+    public function setConditionalLogic(array $conditional_logic): self
+    {
+        $this->hyperField->setConditionalLogic($conditional_logic);
+
+        return $this;
+    }
+
+    /**
      * Set field options (for select, radio, etc.).
      *
      * @param array $options The options array.

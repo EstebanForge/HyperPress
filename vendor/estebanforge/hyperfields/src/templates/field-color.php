@@ -21,22 +21,22 @@ if ($conditional_logic) {
 }
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
-    <div class="hyperpress-field-row">
-        <div class="hyperpress-field-label">
+<div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <div class="hf-field-row hyperpress-field-row">
+        <div class="hf-field-label hyperpress-field-label">
             <label for="<?php echo esc_attr($name); ?>">
                 <?php echo esc_html($label); ?>
                 <?php if ($required): ?><span class="required">*</span><?php endif; ?>
             </label>
         </div>
-        <div class="hyperpress-field-input-wrapper">
+        <div class="hf-field-input-wrapper hyperpress-field-input-wrapper">
             <input type="color" 
                    id="<?php echo esc_attr($name); ?>" 
                    name="<?php echo esc_attr($name_attr); ?>" 
                    value="<?php echo esc_attr($value); ?>" 
                    placeholder="<?php echo esc_attr($placeholder); ?>" 
                    <?php echo $required ? 'required' : ''; ?>
-                   class="hyperpress-color-picker">
+                   class="hf-color-picker hyperpress-color-picker">
 
             <?php if ($help): ?>
                 <p class="description"><?php echo esc_html($help); ?></p>

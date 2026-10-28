@@ -18,6 +18,7 @@ it('returns error HTML instead of fataling when a template throws a TypeError', 
     $html = $renderer->render('<?php throw new \TypeError("template boom"); ?>', []);
 
     expect($html)->toContain('hyperblocks-error');
+    expect($html)->toContain('hb-error');
     expect(ob_get_level())->toBe($level);
 });
 

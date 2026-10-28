@@ -95,6 +95,7 @@ class BlockFieldAdapter
             'image' => 'number', // Store as attachment ID
             'file' => 'string', // Store as URL or ID
             'select' => 'string',
+            'multiselect' => 'array',
             'checkbox' => 'boolean',
             'radio' => 'string',
             'wysiwyg' => 'string',

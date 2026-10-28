@@ -22,16 +22,16 @@ if ($conditional_logic) {
 }
 
 $value = is_array($value) ? $value : [$value];
-$layout_class = 'hyperpress-set-' . $layout;
+$layout_class = 'hf-set-' . $layout . ' hyperpress-set-' . $layout;
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label class="hyperpress-field-label">
+<div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label class="hf-field-label hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hyperpress-field-input">
+    <div class="hf-field-input hyperpress-field-input">
         <!-- Hidden input to ensure the field is always sent in POST data even when none selected -->
         <input type="hidden" name="<?php echo esc_attr($name_attr); ?>[]" value="__hm_empty__">
         

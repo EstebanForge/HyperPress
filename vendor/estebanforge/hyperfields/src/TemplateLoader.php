@@ -39,9 +39,13 @@ class TemplateLoader
 
         // Store TabsField instances in global variable for template access
         if ($type === 'tabs' && isset($field_data['instance'])) {
+            if (!isset($GLOBALS['hyperfields_tabs_instances'])) {
+                $GLOBALS['hyperfields_tabs_instances'] = [];
+            }
             if (!isset($GLOBALS['hyperpress_tabs_instances'])) {
                 $GLOBALS['hyperpress_tabs_instances'] = [];
             }
+            $GLOBALS['hyperfields_tabs_instances'][$name] = $field_data['instance'];
             $GLOBALS['hyperpress_tabs_instances'][$name] = $field_data['instance'];
         }
 
@@ -125,13 +129,13 @@ class TemplateLoader
         $help = $field_data['help'] ?? '';
         ?>
 
-        <div class="hyperpress-field-wrapper">
-            <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
+        <div class="hf-field-wrapper hyperpress-field-wrapper">
+            <label for="<?php echo esc_attr($name); ?>" class="hf-field-label hyperpress-field-label">
                 <?php echo esc_html($label); ?>
                 <?php if ($required): ?><span class="required">*</span><?php endif; ?>
             </label>
 
-            <div class="hyperpress-field-input">
+            <div class="hf-field-input hyperpress-field-input">
                 <input type="<?php echo esc_attr($type); ?>"
                     id="<?php echo esc_attr($name); ?>"
                     name="<?php echo esc_attr($name); ?>"
@@ -178,9 +182,10 @@ class TemplateLoader
                 true
             );
 
-            wp_localize_script('hyperpress-conditional-fields', 'hyperpressFields', [
+            $fields_data = [
                 'ajaxurl' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('hyperpress_fields_nonce'),
+                'nonce' => wp_create_nonce('hyperfields_fields_nonce'),
+                'legacy_nonce' => wp_create_nonce('hyperpress_fields_nonce'),
                 'l10n' => [
                     'selectImage' => __('Select Image', 'api-for-htmx'),
                     'selectFile' => __('Select File', 'api-for-htmx'),
@@ -190,7 +195,9 @@ class TemplateLoader
                     'clearGallery' => __('Clear Gallery', 'api-for-htmx'),
                     'searchAddress' => __('Search for an address...', 'api-for-htmx'),
                 ],
-            ]);
+            ];
+            wp_localize_script('hyperpress-conditional-fields', 'hyperfieldsFields', $fields_data);
+            wp_localize_script('hyperpress-conditional-fields', 'hyperpressFields', $fields_data);
 
             // Media fields (image, file, media_gallery) use wp.media, which
             // needs the core media scripts and the media-fields.js handler.
@@ -221,9 +228,10 @@ class TemplateLoader
             true
         );
 
-        wp_localize_script('hyperpress-conditional-fields', 'hyperpressFields', [
+        $fields_data = [
             'ajaxurl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('hyperpress_fields_nonce'),
+            'nonce' => wp_create_nonce('hyperfields_fields_nonce'),
+            'legacy_nonce' => wp_create_nonce('hyperpress_fields_nonce'),
             'l10n' => [
                 'selectImage' => __('Select Image', 'api-for-htmx'),
                 'selectFile' => __('Select File', 'api-for-htmx'),
@@ -233,7 +241,9 @@ class TemplateLoader
                 'clearGallery' => __('Clear Gallery', 'api-for-htmx'),
                 'searchAddress' => __('Search for an address...', 'api-for-htmx'),
             ],
-        ]);
+        ];
+        wp_localize_script('hyperpress-conditional-fields', 'hyperfieldsFields', $fields_data);
+        wp_localize_script('hyperpress-conditional-fields', 'hyperpressFields', $fields_data);
     }
 
     /**

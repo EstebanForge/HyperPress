@@ -7,7 +7,7 @@ namespace HyperFields;
 class OptionField extends Field
 {
     private string $option_name;
-    private string $option_group = 'hyperpress_fields';
+    private string $option_group = 'hyperfields_fields';
 
     /**
      * ForOption.

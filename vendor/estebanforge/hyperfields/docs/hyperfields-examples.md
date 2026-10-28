@@ -215,3 +215,36 @@ When enabled, HyperFields will:
 - Expand and sanitize the compacted input server-side in `OptionsPage::sanitize_options()`.
 
 No changes are needed to your field definitions. Existing helpers like `hf_get_field()` and `hf_save_field()` continue to work as before.
+
+## Editor Sidebar Schema (1.7.0)
+
+Fields can declare where they belong in an editor sidebar and whether their changes re-render a live preview. HyperFields only stores and ships the schema; the consuming editor (HyperBlocks) decides the rendering.
+
+```php
+use HyperFields\Field;
+
+$heading = Field::make('text', 'heading', 'Heading')
+    ->setTab('Content')        // sidebar tab
+    ->setSection('Copy')       // section within the tab
+    ->setLive()                // badge: changes re-render the preview
+    ->setDefault('Welcome');
+
+$layout = Field::make('select', 'layout', 'Layout')
+    ->setTab('Content')
+    ->setOptions(['boxed' => 'Boxed', 'full' => 'Full width']);
+
+$perPage = Field::make('number', 'per_page', 'Per page')
+    ->setTab('Content')
+    ->setDefault(6)
+    ->setConditionalLogic([[
+        'field'    => 'layout',
+        'operator' => '=',
+        'value'    => 'boxed',
+    ]]);
+```
+
+Notes:
+
+- `setTab()` / `setSection()` / `setLive()` default to `null` / `null` / `false` and ride `toArray()`, so REST and inline-JSON consumers receive them with no new endpoint.
+- Conditional logic accepts a single condition, a flat list, a `{relation, conditions}` map, or a `{relation, conditions, groups}` structure; all shapes are canonicalized on write to `{relation, conditions, groups}` (AND within a group, OR across groups).
+- Keyed option maps serialize through `toArray()` as `[{value, label}]`. A 0-based sequential integer map is a scalar list in PHP and keeps value = label; use string or non-sequential keys when stored values matter.

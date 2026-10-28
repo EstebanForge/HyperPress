@@ -25,16 +25,16 @@ $input_class = trim((string) ($field_data['input_class'] ?? ''));
 $label_class = trim((string) ($field_data['label_class'] ?? ''));
 $error = isset($field_data['error']) && is_string($field_data['error']) ? $field_data['error'] : '';
 
-$layout_class = 'hyperpress-radio-' . $layout;
+$layout_class = 'hf-radio-' . $layout . ' hyperpress-radio-' . $layout;
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label class="hyperpress-field-label <?php echo esc_attr($label_class); ?>">
+<div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label class="hf-field-label hyperpress-field-label <?php echo esc_attr($label_class); ?>">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hyperpress-field-input">
+    <div class="hf-field-input hyperpress-field-input">
         <div class="<?php echo esc_attr($layout_class); ?>">
             <?php foreach ($options as $option_value => $option_label): ?>
                 <label>

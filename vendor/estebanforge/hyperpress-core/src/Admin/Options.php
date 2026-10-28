@@ -415,7 +415,7 @@ class Options
 
     private function getAboutHtml(): string
     {
-        return '<div class="hyperpress-about-content">'
+        return '<div class="hp-about-content hyperpress-about-content">'
             . '<p>' . __('Designed for developers, HyperPress brings the power and simplicity of hypermedia to your WordPress projects. It seamlessly integrates popular libraries like HTMX, Alpine AJAX, and Datastar, empowering you to create rich, dynamic user interfaces without the complexity of traditional JavaScript frameworks.', 'api-for-htmx') . '</p>'
             . '<p>' . __('Adds a new endpoint /wp-html/v1/ from which you can load any hypermedia template partial.', 'api-for-htmx') . '</p>'
             . '<p>' . __('At its core, hypermedia is an approach that empowers you to build modern, dynamic applications by extending the capabilities of HTML. Libraries like HTMX, Alpine AJAX, and Datastar allow you to harness advanced browser technologies—such as AJAX, WebSockets, and Server-Sent Events, simply by adding special attributes to your HTML, minimizing or eliminating the need for a complex JavaScript layer.', 'api-for-htmx') . '</p>'
@@ -427,7 +427,7 @@ class Options
     {
         $system_info_table = $this->renderSystemInfo($this->getSystemInformation());
 
-        return '<hr style="margin: 1rem 0;"><div class="hyperpress-system-info-section">
+        return '<hr style="margin: 1rem 0;"><div class="hp-system-info-section hyperpress-system-info-section">
             <p>' . __('General information about your WordPress installation and this plugin status:', 'api-for-htmx') . '</p>
             ' . $system_info_table . '
         </div>';
@@ -435,7 +435,7 @@ class Options
 
     private function renderSystemInfo(array $system_info): string
     {
-        $html = '<div class="hyperpress-system-info"><table class="widefat">';
+        $html = '<div class="hp-system-info hyperpress-system-info"><table class="widefat">';
         $html .= '<thead><tr><th>' . __('Setting', 'api-for-htmx') . '</th><th>' . __('Value', 'api-for-htmx') . '</th></tr></thead><tbody>';
 
         foreach ($system_info as $key => $value) {
@@ -535,7 +535,7 @@ class Options
         ob_start();
         $api_url = hp_get_endpoint_url();
         ?>
-<div class="hyperpress-api-endpoint-box">
+<div class="hp-api-endpoint-box hyperpress-api-endpoint-box">
     <h2><?php echo esc_html__('HyperPress API Endpoint', 'api-for-htmx'); ?>
     </h2>
     <div style="display:flex;align-items:center;gap:8px;max-width:100%;">

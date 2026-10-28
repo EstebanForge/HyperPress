@@ -37,11 +37,11 @@ class Renderer
      *                           markers in the template output.
      * @return string The rendered HTML.
      */
-    public function render(string $template, array $attributes = [], string $content = ''): string
+    public function render(string $template, array $attributes = [], string $content = '', array $context = []): string
     {
         try {
             // Execute the template to get initial HTML
-            $initialHtml = $this->executeTemplate($template, $attributes);
+            $initialHtml = $this->executeTemplate($template, $attributes, $context);
 
             // Parse and replace custom components
             $finalHtml = $this->parseCustomComponents($initialHtml, $attributes, $content);
@@ -50,10 +50,10 @@ class Renderer
         } catch (\Throwable $e) {
             // Return error HTML for debugging
             if (defined('WP_DEBUG') && WP_DEBUG) {
-                return '<div class="hyperblocks-error">Rendering Error: ' . esc_html($e->getMessage()) . '</div>';
+                return '<div class="hb-error hyperblocks-error">Rendering Error: ' . esc_html($e->getMessage()) . '</div>';
             }
 
-            return '<div class="hyperblocks-error">Block rendering failed</div>';
+            return '<div class="hb-error hyperblocks-error">Block rendering failed</div>';
         }
     }
 
@@ -65,15 +65,15 @@ class Renderer
      * @return string The executed template output.
      * @throws \Exception If template execution fails.
      */
-    private function executeTemplate(string $template, array $attributes): string
+    private function executeTemplate(string $template, array $attributes, array $context = []): string
     {
         // Check if template is a file path
         if ($this->isFilePath($template)) {
-            return $this->executeFileTemplate($template, $attributes);
+            return $this->executeFileTemplate($template, $attributes, $context);
         }
 
         // Handle string template
-        return $this->executeStringTemplate($template, $attributes);
+        return $this->executeStringTemplate($template, $attributes, $context);
     }
 
     /**
@@ -95,7 +95,7 @@ class Renderer
      * @return string The executed template output.
      * @throws \Exception If file doesn't exist or execution fails.
      */
-    private function executeFileTemplate(string $templatePath, array $attributes): string
+    private function executeFileTemplate(string $templatePath, array $attributes, array $context = []): string
     {
         // Validate file path for security
         $templatePath = $this->validateTemplatePath($templatePath);
@@ -105,7 +105,7 @@ class Renderer
         }
 
         // Execute template in isolated scope
-        return $this->executeInIsolatedScope($templatePath, $attributes);
+        return $this->executeInIsolatedScope($templatePath, $attributes, $context);
     }
 
     /**
@@ -116,13 +116,13 @@ class Renderer
      * @return string The executed template output.
      * @throws \Exception If temp file creation fails.
      */
-    private function executeStringTemplate(string $templateString, array $attributes): string
+    private function executeStringTemplate(string $templateString, array $attributes, array $context = []): string
     {
         // Create temporary file for string template
         $tempFile = $this->createTempTemplate($templateString);
 
         try {
-            return $this->executeInIsolatedScope($tempFile, $attributes);
+            return $this->executeInIsolatedScope($tempFile, $attributes, $context);
         } finally {
             @unlink($tempFile); // Clean up temp file on any exit
         }
@@ -210,12 +210,15 @@ class Renderer
             if (!$realBase) {
                 continue;
             }
-            // hb_path_within_base() normalizes both sides: realpath() returns
+            // Path::withinBase() normalizes both sides: realpath() returns
             // backslash separators on Windows, where a raw '/'-suffixed base
             // never prefix-matched. The trailing-separator anchor inside the
-            // helper still keeps sibling-prefix paths (blocks vs blocks-evil)
-            // from counting as inside the base.
-            if (\hb_path_within_base($realPath, $realBase)) {
+            // check still keeps sibling-prefix paths (blocks vs blocks-evil)
+            // from counting as inside the base. Called on the class (not the
+            // hb_path_within_base() helper) so the check can never hit an
+            // undefined-function fatal when a divergent vendor copy's
+            // procedural helpers did not load.
+            if (\HyperBlocks\Path::withinBase($realPath, $realBase)) {
                 $isValid = true;
                 break;
             }
@@ -258,12 +261,15 @@ class Renderer
      * @return string The executed template output.
      * @throws \Exception If execution fails.
      */
-    private function executeInIsolatedScope(string $templatePath, array $attributes): string
+    private function executeInIsolatedScope(string $templatePath, array $attributes, array $context = []): string
     {
         // Create isolated function scope
-        $executeTemplate = function ($__template_path, $__attributes) {
+        $executeTemplate = function ($__template_path, $__attributes, $__context) {
             // Extract attributes as variables for template use
             extract($__attributes, EXTR_SKIP);
+            // Reserved renderer variable; set after extract so an attribute
+            // can never override it.
+            $hb_sample = !empty($__context['sample']);
 
             $__ob_level = ob_get_level();
 
@@ -292,7 +298,7 @@ class Renderer
         });
 
         try {
-            $output = $executeTemplate($templatePath, $attributes);
+            $output = $executeTemplate($templatePath, $attributes, $context);
 
             if ($output === false) {
                 throw new \Exception('Template execution failed');

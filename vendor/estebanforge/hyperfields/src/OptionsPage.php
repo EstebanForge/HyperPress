@@ -19,7 +19,7 @@ class OptionsPage
     private array $tabs = [];
     private array $sections = [];
     private array $fields = [];
-    private string $option_name = 'hyperpress_options';
+    private string $option_name = 'hyperfields_options';
     private array $option_values = [];
     private array $default_values = [];
     private ?string $footer_content = null;
@@ -299,7 +299,10 @@ class OptionsPage
             $sanitized = $output[$fieldName];
         }
 
-        $values = get_option($this->option_name, []);
+        $values = get_option($this->option_name, null);
+        if ($values === null && $this->option_name === 'hyperfields_options') {
+            $values = get_option('hyperpress_options', []);
+        }
         if (!is_array($values)) {
             $values = [];
         }
@@ -476,7 +479,13 @@ class OptionsPage
      */
     private function loadOptions(): void
     {
-        $saved_options = get_option($this->option_name, []);
+        $saved_options = get_option($this->option_name, null);
+        if ($saved_options === null && $this->option_name === 'hyperfields_options') {
+            $saved_options = get_option('hyperpress_options', []);
+        }
+        if (!is_array($saved_options)) {
+            $saved_options = [];
+        }
         $this->option_values = array_merge($this->default_values, $saved_options);
     }
 
@@ -563,15 +572,17 @@ class OptionsPage
             $this->reactFieldsToRender = $react_fields;
         }
         ?>
-        <div class="wrap hyperpress hyperpress-options-wrap" id="hyperpress-options-page">
-            <div class="hyperpress-layout__header" data-hyperpress-sticky-header>
-                <div class="hyperpress-layout__header-wrapper">
-                    <h1 class="hyperpress-layout__header-heading"><?php echo esc_html($this->page_title); ?></h1>
+        <div class="wrap hf hf-options-wrap hyperpress hyperpress-options-wrap" id="hyperfields-options-page">
+            <div class="hf-layout__header hyperpress-layout__header" data-hf-sticky-header data-hyperpress-sticky-header>
+                <div class="hf-layout__header-wrapper hyperpress-layout__header-wrapper">
+                    <h1 class="hf-layout__header-heading hyperpress-layout__header-heading"><?php echo esc_html($this->page_title); ?></h1>
                 </div>
             </div>
             <?php $this->renderTabs(); ?>
             <form method="post" action="options.php" id="hyperpress-options-form">
+                <input type="hidden" name="hyperfields_active_tab" value="<?php echo esc_attr($active_tab); ?>" />
                 <input type="hidden" name="hyperpress_active_tab" value="<?php echo esc_attr($active_tab); ?>" />
+                <input type="hidden" name="hyperfields_active_section" value="<?php echo esc_attr($this->getActiveSection($active_tab)); ?>" />
                 <input type="hidden" name="hyperpress_active_section" value="<?php echo esc_attr($this->getActiveSection($active_tab)); ?>" />
                 <?php
                         settings_fields($this->option_name);
@@ -586,7 +597,7 @@ class OptionsPage
             echo '<input type="hidden" data-hp-keep-name="1" name="' . esc_attr((string) $this->option_name) . '[_compact]" value="1" />';
         }
         $this->renderSectionMenu($active_tab);
-        echo '<div class="wp-header-end hyperpress-notice-catcher" id="hyperpress-layout__notice-catcher"></div>';
+        echo '<div class="wp-header-end hf-notice-catcher hyperpress-notice-catcher" id="hyperpress-layout__notice-catcher"></div>';
         $renderable_sections = $this->getRenderableSectionIds($active_tab);
         foreach ($renderable_sections as $section_id) {
             if (!isset($this->sections[$section_id])) {
@@ -605,13 +616,13 @@ class OptionsPage
                 }
             }
 
-            echo '<div class="hyperpress-fields-group">';
+            echo '<div class="hf-fields-group hyperpress-fields-group">';
             do_settings_fields($this->option_name, $section_id);
             echo '</div>';
         }
         // React root container - React fields will be rendered here
         if (!empty($react_fields)) {
-            echo '<div id="hyperpress-react-root" data-hyperpress-react></div>';
+            echo '<div id="hyperpress-react-root" class="hf-react-root hyperpress-react-root" data-hf-react data-hyperfields-react data-hyperpress-react></div>';
         }
         submit_button(
             esc_html__('Save Changes', 'api-for-htmx'),
@@ -863,8 +874,9 @@ class OptionsPage
     private function getActiveTab(): string
     {
         // On POST (save), check for hidden field
-        if (!empty($_POST['hyperpress_active_tab']) && isset($this->tabs[$_POST['hyperpress_active_tab']])) {
-            return $_POST['hyperpress_active_tab'];
+        $posted_tab = $_POST['hyperfields_active_tab'] ?? $_POST['hyperpress_active_tab'] ?? null;
+        if (!empty($posted_tab) && is_string($posted_tab) && isset($this->tabs[$posted_tab])) {
+            return $posted_tab;
         }
         // On GET (view), check query param
         $tab = $_GET['tab'] ?? null;
@@ -888,9 +900,9 @@ class OptionsPage
         }
 
         $active_tab = $this->getActiveTab();
-        echo '<nav class="nav-tab-wrapper hyperpress-nav-tab-wrapper" aria-label="' . esc_attr__('Settings sections', 'api-for-htmx') . '">';
+        echo '<nav class="nav-tab-wrapper hf-nav-tab-wrapper hyperpress-nav-tab-wrapper" aria-label="' . esc_attr__('Settings sections', 'api-for-htmx') . '">';
         foreach ($this->tabs as $tab_id => $tab) {
-            $class = 'nav-tab hyperpress-nav-tab';
+            $class = 'nav-tab hf-nav-tab hyperpress-nav-tab';
             if ($active_tab === $tab_id) {
                 $class .= ' nav-tab-active';
             }
@@ -953,8 +965,9 @@ class OptionsPage
      */
     private function getActiveSection(string $tab_id): string
     {
-        if (!empty($_POST['hyperpress_active_section']) && is_string($_POST['hyperpress_active_section'])) {
-            return $_POST['hyperpress_active_section'];
+        $posted_section = $_POST['hyperfields_active_section'] ?? $_POST['hyperpress_active_section'] ?? null;
+        if (!empty($posted_section) && is_string($posted_section)) {
+            return $posted_section;
         }
 
         if (!empty($_GET['section']) && is_string($_GET['section'])) {
@@ -1098,14 +1111,18 @@ class OptionsPage
             true
         );
 
-        wp_localize_script('hyperpress-admin-options', 'hyperpressOptions', [
+        $options_payload = [
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('hyperpress_options'),
+            'nonce' => wp_create_nonce('hyperfields_options'),
+            'legacy_nonce' => wp_create_nonce('hyperpress_options'),
             'compactInput' => defined('HYPERFIELDS_COMPACT_INPUT') ? (bool) HYPERFIELDS_COMPACT_INPUT : false,
             'compactInputKey' => defined('HYPERFIELDS_COMPACT_INPUT_KEY') ? HYPERFIELDS_COMPACT_INPUT_KEY : 'hyperfields_compact_input',
             'optionName' => $this->option_name,
             'activeTab' => $this->getActiveTab(),
-        ]);
+        ];
+
+        wp_localize_script('hyperpress-admin-options', 'hyperfieldsOptions', $options_payload);
+        wp_localize_script('hyperpress-admin-options', 'hyperpressOptions', $options_payload);
 
         // Hide notices before JS relocates them under the sticky header.
         // Keep selector list centralized to avoid JS/PHP drift.
@@ -1118,8 +1135,14 @@ class OptionsPage
             '.wrap > .update-nag',
             '.wrap > .updated',
             '.wrap > .error',
+            '.wrap.hf-options-wrap > .notice',
+            '.wrap.hf-options-wrap > .update-nag',
+            '.wrap.hf-options-wrap > .updated',
+            '.wrap.hf-options-wrap > .error',
             '.wrap.hyperpress-options-wrap > .notice',
             '.wrap.hyperpress-options-wrap > .update-nag',
+            '.wrap.hyperpress-options-wrap > .updated',
+            '.wrap.hyperpress-options-wrap > .error',
             '.wrap.hyperpress-options-wrap > .updated',
             '.wrap.hyperpress-options-wrap > .error',
             '.wrap > .notice:first-child',

@@ -101,6 +101,11 @@ class RestApi
                         },
                         'sanitize_callback' => 'wp_kses_post',
                     ],
+                    'sample' => [
+                        'required'          => false,
+                        'type'              => 'boolean',
+                        'default'           => false,
+                    ],
                 ],
             ]
         );
@@ -134,7 +139,8 @@ class RestApi
         $result = BlockOperations::preview(
             (string) $request->get_param('blockName'),
             (array) $request->get_param('attributes'),
-            (string) $request->get_param('content')
+            (string) $request->get_param('content'),
+            rest_sanitize_boolean($request->get_param('sample'))
         );
 
         if ($result['status'] === 'ok') {

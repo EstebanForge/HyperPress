@@ -4,7 +4,8 @@ class HyperFieldsMedia {
       return window.HyperFieldsMedia;
     }
 
-    this.l10n = (window.hyperpressFields && window.hyperpressFields.l10n) || {};
+    this.l10n = (window.hyperfieldsFields && window.hyperfieldsFields.l10n) ||
+      (window.hyperpressFields && window.hyperpressFields.l10n) || {};
     this.bind();
     window.HyperFieldsMedia = this;
   }
@@ -16,9 +17,11 @@ class HyperFieldsMedia {
   bind() {
     document.addEventListener('click', (event) => {
       const button = event.target.closest(
-        '.hyperpress-upload-button, .hyperpress-remove-button, ' +
-        '.hyperpress-gallery-button, .hyperpress-clear-gallery-button, ' +
-        '.hyperpress-remove-image',
+        '.hf-upload-button, .hyperpress-upload-button, ' +
+        '.hf-remove-button, .hyperpress-remove-button, ' +
+        '.hf-gallery-button, .hyperpress-gallery-button, ' +
+        '.hf-clear-gallery-button, .hyperpress-clear-gallery-button, ' +
+        '.hf-remove-image, .hyperpress-remove-image',
       );
 
       if (!button) {
@@ -27,15 +30,15 @@ class HyperFieldsMedia {
 
       event.preventDefault();
 
-      if (button.classList.contains('hyperpress-upload-button')) {
+      if (button.classList.contains('hf-upload-button') || button.classList.contains('hyperpress-upload-button')) {
         this.openSingleFrame(button);
-      } else if (button.classList.contains('hyperpress-remove-button')) {
+      } else if (button.classList.contains('hf-remove-button') || button.classList.contains('hyperpress-remove-button')) {
         this.clearSingle(button.getAttribute('data-field'));
-      } else if (button.classList.contains('hyperpress-gallery-button')) {
+      } else if (button.classList.contains('hf-gallery-button') || button.classList.contains('hyperpress-gallery-button')) {
         this.openGalleryFrame(button);
-      } else if (button.classList.contains('hyperpress-clear-gallery-button')) {
+      } else if (button.classList.contains('hf-clear-gallery-button') || button.classList.contains('hyperpress-clear-gallery-button')) {
         this.clearGallery(button.getAttribute('data-field'));
-      } else if (button.classList.contains('hyperpress-remove-image')) {
+      } else if (button.classList.contains('hf-remove-image') || button.classList.contains('hyperpress-remove-image')) {
         this.handleRemoveGalleryItem(button);
       }
     });
@@ -82,8 +85,8 @@ class HyperFieldsMedia {
     if (!wrapper) {
       return;
     }
-    const field = wrapper.closest('.hyperpress-image-field, .hyperpress-file-field');
-    const preview = field && field.querySelector('.hyperpress-image-preview, .hyperpress-file-preview');
+    const field = wrapper.closest('.hf-image-field, .hyperpress-image-field, .hf-file-field, .hyperpress-file-field');
+    const preview = field && field.querySelector('.hf-image-preview, .hyperpress-image-preview, .hf-file-preview, .hyperpress-file-preview');
     if (!preview) {
       return;
     }
@@ -95,7 +98,7 @@ class HyperFieldsMedia {
     preview.classList.remove('is-empty');
     preview.innerHTML = type === 'image'
       ? `<img src="${this.escapeAttr(url)}" alt="" style="max-width: 150px; max-height: 150px;">`
-      : `<a href="${this.escapeAttr(url)}" target="_blank" rel="noopener" class="hyperpress-file-url">${this.escapeHtml(attachment.filename || url)}</a>`;
+      : `<a href="${this.escapeAttr(url)}" target="_blank" rel="noopener" class="hf-file-url hyperpress-file-url">${this.escapeHtml(attachment.filename || url)}</a>`;
     preview.style.display = '';
   }
 
@@ -109,8 +112,8 @@ class HyperFieldsMedia {
 
   toggleRemoveButton(fieldId, show) {
     const wrapper = document.getElementById(fieldId);
-    const field = wrapper && wrapper.closest('.hyperpress-image-field, .hyperpress-file-field');
-    const removeBtn = field && field.querySelector('.hyperpress-remove-button');
+    const field = wrapper && wrapper.closest('.hf-image-field, .hyperpress-image-field, .hf-file-field, .hyperpress-file-field');
+    const removeBtn = field && field.querySelector('.hf-remove-button, .hyperpress-remove-button');
     if (removeBtn) {
       removeBtn.style.display = show ? 'inline-block' : 'none';
     }
@@ -122,11 +125,11 @@ class HyperFieldsMedia {
       input.value = '';
     }
     const wrapper = document.getElementById(fieldId);
-    const field = wrapper && wrapper.closest('.hyperpress-image-field, .hyperpress-file-field');
-    const preview = field && field.querySelector('.hyperpress-image-preview, .hyperpress-file-preview');
+    const field = wrapper && wrapper.closest('.hf-image-field, .hyperpress-image-field, .hf-file-field, .hyperpress-file-field');
+    const preview = field && field.querySelector('.hf-image-preview, .hyperpress-image-preview, .hf-file-preview, .hyperpress-file-preview');
     if (preview) {
-      if (preview.classList.contains('hyperpress-image-preview')) {
-        preview.innerHTML = `<span class="hyperpress-image-placeholder">${this.escapeHtml(this.t('noImage', 'No image selected'))}</span>`;
+      if (preview.classList.contains('hf-image-preview') || preview.classList.contains('hyperpress-image-preview')) {
+        preview.innerHTML = `<span class="hf-image-placeholder hyperpress-image-placeholder">${this.escapeHtml(this.t('noImage', 'No image selected'))}</span>`;
         preview.classList.add('is-empty');
         preview.style.display = '';
       } else {
@@ -187,8 +190,8 @@ class HyperFieldsMedia {
     if (!wrapper) {
       return;
     }
-    const field = wrapper.closest('.hyperpress-media-gallery-field');
-    const preview = field && field.querySelector('.hyperpress-gallery-preview');
+    const field = wrapper.closest('.hf-media-gallery-field, .hyperpress-media-gallery-field');
+    const preview = field && field.querySelector('.hf-gallery-preview, .hyperpress-gallery-preview');
     if (!preview) {
       return;
     }
@@ -200,12 +203,12 @@ class HyperFieldsMedia {
 
     ids.forEach((id) => {
       const item = document.createElement('div');
-      item.className = 'hyperpress-gallery-item';
+      item.className = 'hf-gallery-item hyperpress-gallery-item';
       item.setAttribute('data-id', id);
       item.style.cssText = 'display: inline-block; margin: 0 10px 10px 0;';
       item.innerHTML =
         '<img src="" alt="" style="max-width: 100px; max-height: 100px; display:none;">' +
-        `<button type="button" class="hyperpress-remove-image" data-id="${this.escapeAttr(String(id))}" style="display: block; margin-top: 5px;">` +
+        `<button type="button" class="hf-remove-image hyperpress-remove-image" data-id="${this.escapeAttr(String(id))}" style="display: block; margin-top: 5px;">` +
         this.escapeHtml(this.t('remove', 'Remove')) +
         '</button>';
       preview.appendChild(item);
@@ -233,8 +236,8 @@ class HyperFieldsMedia {
 
   toggleClearGallery(fieldId, show) {
     const wrapper = document.getElementById(fieldId);
-    const field = wrapper && wrapper.closest('.hyperpress-media-gallery-field');
-    const clearBtn = field && field.querySelector('.hyperpress-clear-gallery-button');
+    const field = wrapper && wrapper.closest('.hf-media-gallery-field, .hyperpress-media-gallery-field');
+    const clearBtn = field && field.querySelector('.hf-clear-gallery-button, .hyperpress-clear-gallery-button');
     if (clearBtn) {
       clearBtn.style.display = show ? 'inline-block' : 'none';
     }
@@ -250,9 +253,9 @@ class HyperFieldsMedia {
   }
 
   handleRemoveGalleryItem(button) {
-    const item = button.closest('.hyperpress-gallery-item');
+    const item = button.closest('.hf-gallery-item, .hyperpress-gallery-item');
     const idAttr = button.getAttribute('data-id') || (item ? item.getAttribute('data-id') : '');
-    const field = button.closest('.hyperpress-media-gallery-field');
+    const field = button.closest('.hf-media-gallery-field, .hyperpress-media-gallery-field');
     const hidden = field && field.querySelector('input[type="hidden"]');
     if (hidden && hidden.id) {
       this.removeGalleryItem(hidden.id, parseInt(idAttr, 10));

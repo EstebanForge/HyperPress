@@ -21,26 +21,26 @@ $required = $field_data['required'] ?? false;
 $help = $field_data['help'] ?? '';
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
+<div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label for="<?php echo esc_attr($name); ?>" class="hf-field-label hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hyperpress-field-input">
+    <div class="hf-field-input hyperpress-field-input">
         <input type="url"
                id="<?php echo esc_attr($name); ?>"
                name="<?php echo esc_attr($name_attr); ?>"
                value="<?php echo esc_attr($value); ?>"
                placeholder="<?php echo esc_attr($placeholder); ?>"
                <?php echo $required ? 'required' : ''; ?>
-               class="regular-text hyperpress-oembed-input">
+               class="regular-text hf-oembed-input hyperpress-oembed-input">
 
-        <button type="button" class="button hyperpress-embed-preview-button" data-field="<?php echo esc_attr($name); ?>">
+        <button type="button" class="button hf-embed-preview-button hyperpress-embed-preview-button" data-field="<?php echo esc_attr($name); ?>">
             <?php _e('Preview', 'api-for-htmx'); ?>
         </button>
 
-        <div class="hyperpress-embed-preview" style="margin-top: 10px;">
+        <div class="hf-embed-preview hyperpress-embed-preview" style="margin-top: 10px;">
             <?php if ($value): ?>
                 <?php echo wp_oembed_get($value); ?>
             <?php endif; ?>

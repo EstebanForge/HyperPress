@@ -44,3 +44,19 @@ Exposure contract: abilities are always registered, never exposed by default. `h
 Context contract (changed in 1.6.1): `Bootstrap::init()` no longer early-returns on cron/AJAX/REST/XMLRPC/WP-CLI. Main boots everywhere because the options-page metadata feeds the Abilities layer; scheduled hooks are inert off-context. The Router rewrite self-heal is gated to page loads (`wp_doing_cron()`/REST_REQUEST/WP_CLI/DOING_AJAX excluded) so inbound webhooks or cron tasks cannot trigger `flush_rewrite_rules()`.
 
 Known limits: ability-execution logs carry truncated payloads and the log directory protection is `.htaccess`-based (nginx ignores it; deny `uploads/hyperpress-logs/` at the server level). Denied executions reach neither `wp_before_execute_ability` nor `wp_after_execute_ability` (core checks permissions first); denial visibility needs `wp_ability_permission_result` (WP 7.1+).
+
+## Release Protocol
+1. Verify `composer.json` internal requirements:
+   ```json
+   "estebanforge/hyperfields": "*",
+   "estebanforge/hyperblocks": "*"
+   ```
+2. Run tests: `composer test`.
+3. Bump version: `bash scripts/version-bump.sh --patch` (or `--minor`/`--major`). Synchronizes `composer.json` and `src/Config.php`.
+4. Update `CHANGELOG.md` with `## [X.Y.Z] - YYYY-MM-DD`.
+5. Stage and commit:
+   `git add CHANGELOG.md composer.json src/Config.php`
+   `git commit -m "chore(release): bump version to X.Y.Z"`
+6. Push and tag:
+   `git push origin main && git tag -a X.Y.Z -m "Release X.Y.Z" && git push origin X.Y.Z`
+7. Verify on Packagist: `curl -s "https://repo.packagist.org/p2/estebanforge/hyperpress-core.json" | grep -o '"version":"[^"]*"' | head -n 5`

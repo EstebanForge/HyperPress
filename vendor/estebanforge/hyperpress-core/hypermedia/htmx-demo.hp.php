@@ -5,8 +5,11 @@ defined('ABSPATH') || exit('Direct access not allowed.');
 // Secure it.
 $hp_nonce = sanitize_key($_SERVER['HTTP_X_WP_NONCE'] ?? '');
 
-// Check if nonce is valid.
-if (!isset($hp_nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($hp_nonce)), 'api-for-htmx_nonce')) {
+// Check if nonce is valid (supports both canonical hyperpress_nonce and legacy api-for-htmx_nonce).
+$is_valid_nonce = wp_verify_nonce(sanitize_text_field(wp_unslash($hp_nonce)), 'hyperpress_nonce')
+    || wp_verify_nonce(sanitize_text_field(wp_unslash($hp_nonce)), 'api-for-htmx_nonce');
+
+if (!isset($hp_nonce) || !$is_valid_nonce) {
     hp_die('Nonce verification failed.');
 }
 
@@ -37,10 +40,10 @@ switch ($demo_type) {
 }
 ?>
 
-<div class="api-for-htmx-demo-container">
+<div class="hp-demo-container hyperpress-demo-container api-for-htmx-demo-container">
   <h3><?php esc_html_e('Hello HTMX!', 'api-for-htmx'); ?></h3>
 
-  <p><?php esc_html_e('Demo template loaded from', 'api-for-htmx'); ?> <code>plugins/Api-for-htmx/<?php echo esc_html(HYPERPRESS_TEMPLATE_DIR); ?>/htmx-demo.hm.php</code></p>
+  <p><?php esc_html_e('Demo template loaded from', 'api-for-htmx'); ?> <code>plugins/HyperPress-Core/hypermedia/htmx-demo.hp.php</code></p>
 
   <?php if (!empty($processed_message)): ?>
     <div class="notice notice-success">

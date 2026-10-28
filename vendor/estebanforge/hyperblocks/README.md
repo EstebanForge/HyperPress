@@ -13,7 +13,7 @@ It provides:
 
 - PHP 8.2+
 - WordPress latest
-- `estebanforge/hyperfields` ^1.0 (installed automatically)
+- `estebanforge/hyperfields` ^1.7 (installed automatically; 1.7.0+ supplies the editor-sidebar field schema)
 
 ## Installation
 
@@ -80,6 +80,24 @@ hb_register_block(
         ->setRenderTemplateFile('blocks/hero-banner.hb.php')
 );
 ```
+
+Call `->setEditorSidebar()` on a block to render its fields as proper inspector controls — grouped into tabs and sections from the HyperFields schema, with conditional visibility, live badges, and an editor-only sample-data preview:
+
+```php
+$block = Block::make('Hero Banner')
+    ->setName('my-theme/hero-banner')
+    ->setEditorSidebar()
+    ->addFields([
+        Field::make('text', 'heading', 'Heading')->setTab('Content')->setLive(),
+        Field::make('select', 'layout', 'Layout')
+            ->setTab('Content')
+            ->setOptions(['boxed' => 'Boxed', 'full' => 'Full width']),
+        Field::make('checkbox', 'show_border', 'Show border')->setTab('Style'),
+    ])
+    ->setRenderTemplateFile('blocks/hero-banner.hb.php');
+```
+
+Without the opt-in, blocks keep their pre-1.8 editor behavior. See the [editor sidebar](docs/hyperblocks.md#editor-sidebar) for the full feature.
 
 ## Field types
 

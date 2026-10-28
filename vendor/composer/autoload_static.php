@@ -159,6 +159,7 @@ class ComposerStaticInit1d14b047c49e526a0a36904f8ab35fc4
         'HyperBlocks\\Block\\Field' => __DIR__ . '/..' . '/estebanforge/hyperblocks/src/Block/Field.php',
         'HyperBlocks\\Block\\FieldGroup' => __DIR__ . '/..' . '/estebanforge/hyperblocks/src/Block/FieldGroup.php',
         'HyperBlocks\\Config' => __DIR__ . '/..' . '/estebanforge/hyperblocks/src/Config.php',
+        'HyperBlocks\\Path' => __DIR__ . '/..' . '/estebanforge/hyperblocks/src/Path.php',
         'HyperBlocks\\Registry' => __DIR__ . '/..' . '/estebanforge/hyperblocks/src/Registry.php',
         'HyperBlocks\\Renderer' => __DIR__ . '/..' . '/estebanforge/hyperblocks/src/Renderer.php',
         'HyperBlocks\\RestApi' => __DIR__ . '/..' . '/estebanforge/hyperblocks/src/RestApi.php',

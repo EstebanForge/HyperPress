@@ -75,12 +75,15 @@ final class BlockOperations
      *                           surface — so neither surface can return unsanitized
      *                           markup (WP core validates ability input types but
      *                           never sanitizes them).
+     * @param bool   $sample     Editor sample-data flag. Delivered to the template
+     *                           as $hb_sample; never an attribute, so it cannot
+     *                           persist in post content.
      * @return array{status: string, html: string, error: string, rest_status: int}
      *                status: ok | no_template | not_found | error. rest_status
      *                carries the HTTP status the REST layer should map to; the
      *                Abilities layer ignores it.
      */
-    public static function preview(string $blockName, array $attributes, string $content = ''): array
+    public static function preview(string $blockName, array $attributes, string $content = '', bool $sample = false): array
     {
         $content = wp_kses_post($content);
         $registry = Registry::getInstance();
@@ -127,7 +130,7 @@ final class BlockOperations
 
                 // Use the renderer to generate preview HTML
                 $renderer = new Renderer();
-                $html = $renderer->render($block->render_template, $attributes, $content);
+                $html = $renderer->render($block->render_template, $attributes, $content, $sample ? ['sample' => true] : []);
 
                 return ['status' => 'ok', 'html' => $html, 'error' => '', 'rest_status' => 200];
             } catch (\Throwable $e) {

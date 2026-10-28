@@ -116,6 +116,18 @@ $sec   = HyperFields::makeSection('general', 'General');
 
 Refer to the HyperFields classes for the available methods on each object. Keep your implementation simple and PHP-first.
 
+## Field Editor Schema (1.7.0)
+
+Fields carry optional editor-UI schema on top of their storage config. `setTab(string $tab)` and `setSection(string $section)` group the field inside editor sidebars (tab → section → control — the consumer decides the exact rendering; HyperBlocks renders them as Gutenberg inspector tabs and collapsible sections), and `setLive(bool $live = true)` marks a field whose changes re-render a live preview. All three values ride `toArray()`, so any JSON consumer (REST endpoints, inline editor payloads) receives them with no new endpoint. Defaults are `null` / `null` / `false`, which keeps existing serialized output shape-compatible.
+
+### Conditional logic is canonicalized on write
+
+`setConditionalLogic(array $logic)` accepts every shape `ConditionalLogic::factory()` accepts — a single condition, a flat condition list, a `{relation, conditions}` map, or a full `{relation, conditions, groups}` structure — and stores the canonical `{relation, conditions, groups}` shape, where conditions within a group are AND-ed and groups are OR-ed. Input used to be stored verbatim; readers of the stored logic should expect the canonical shape.
+
+### Options serialization in `toArray()`
+
+`toArray()` serializes keyed option maps (string or non-sequential integer keys) as `[{value, label}]` lists, so JSON transports cannot lose stored values. Scalar lists are unchanged and keep value = label semantics; a 0-based sequential integer map is the same PHP value as a scalar list (`array_is_list` returns true for both) and also stays value = label — use string or non-sequential keys when stored values matter.
+
 ## Options Page Features
 
 Recent HyperFields options work added the following capabilities:

@@ -223,7 +223,10 @@ class HyperFields
      */
     public static function getOptions(string $option_name, array $default = []): array
     {
-        $value = get_option($option_name, $default);
+        $value = get_option($option_name, null);
+        if ($value === null && $option_name === 'hyperfields_options') {
+            $value = get_option('hyperpress_options', $default);
+        }
 
         return is_array($value) ? $value : $default;
     }
@@ -238,7 +241,7 @@ class HyperFields
      */
     public static function getFieldValue(string $option_name, string $field_name, mixed $default = null): mixed
     {
-        $options = get_option($option_name, []);
+        $options = self::getOptions($option_name, []);
 
         return $options[$field_name] ?? $default;
     }

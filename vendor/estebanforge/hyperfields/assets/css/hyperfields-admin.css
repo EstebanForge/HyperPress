@@ -71,6 +71,7 @@
    Layout & Containers
    ========================================== */
 
+.hf-options-wrap,
 .hyperpress-options-wrap {
     margin: 0.5rem var(--hf-content-inset-right, 1rem) 0 0;
     /* Bleed matches #wpcontent { padding-left: 20px } in WP admin: the left
@@ -87,6 +88,7 @@
     --hf-content-inset-right: 1rem;
 }
 
+.hf-options-wrap h1,
 .hyperpress-options-wrap h1 {
     margin: 0;
     font-size: 28px;
@@ -94,6 +96,7 @@
     letter-spacing: -0.5px;
 }
 
+.hf-options-wrap .hf-layout__header-heading,
 .hyperpress-options-wrap .hyperpress-layout__header-heading {
     font-size: 1.1rem;
 }
@@ -102,6 +105,7 @@
    Modern Tabs
    ========================================== */
 
+.hf-options-wrap .hf-layout__header,
 .hyperpress-options-wrap .hyperpress-layout__header {
     position: sticky;
     top: 32px;
@@ -112,6 +116,7 @@
     transition: box-shadow var(--hf-transition);
 }
 
+.hf-options-wrap .hf-layout__header::before,
 .hyperpress-options-wrap .hyperpress-layout__header::before {
     content: "";
     position: absolute;
@@ -123,14 +128,17 @@
     background: var(--hf-color-white);
 }
 
+.hf-options-wrap .hf-layout__header.is-scrolled,
 .hyperpress-options-wrap .hyperpress-layout__header.is-scrolled {
     box-shadow: 0 8px 16px 0 var(--hf-color-header-shadow);
 }
 
+.hf-options-wrap .hf-layout__header-wrapper,
 .hyperpress-options-wrap .hyperpress-layout__header-wrapper {
     margin-bottom: 0;
 }
 
+.hf-options-wrap .nav-tab-wrapper.hf-nav-tab-wrapper,
 .hyperpress-options-wrap .nav-tab-wrapper.hyperpress-nav-tab-wrapper {
     position: relative;
     z-index: 1;
@@ -148,6 +156,7 @@
  * -select-region> sibling that carries the same white bleed bar as the
  * desktop nav, with the <select.hyperpress-nav-select> centered inside it.
  * Desktop hides the whole region; the mobile media query reverses both. */
+.hf-options-wrap .hf-nav-select-region,
 .hyperpress-options-wrap .hyperpress-nav-select-region {
     display: none;
     position: relative;
@@ -158,6 +167,7 @@
     border-bottom: 1px solid var(--hf-color-admin-border);
 }
 
+.hf-options-wrap .hf-nav-select-region::before,
 .hyperpress-options-wrap .hyperpress-nav-select-region::before {
     content: "";
     position: absolute;
@@ -169,6 +179,7 @@
     background: var(--hf-color-white);
 }
 
+.hf-options-wrap .hf-nav-select,
 .hyperpress-options-wrap .hyperpress-nav-select {
     display: block;
     width: 100%;
@@ -188,12 +199,14 @@
     background-position: right 10px center;
 }
 
+.hf-options-wrap .hf-nav-select:focus,
 .hyperpress-options-wrap .hyperpress-nav-select:focus {
     outline: none;
     border-color: var(--hf-color-primary);
     box-shadow: 0 0 0 1px var(--hf-color-primary);
 }
 
+.hf-options-wrap .nav-tab-wrapper.hf-nav-tab-wrapper::before,
 .hyperpress-options-wrap .nav-tab-wrapper.hyperpress-nav-tab-wrapper::before {
     content: "";
     position: absolute;
@@ -205,6 +218,7 @@
     background: var(--hf-color-white);
 }
 
+.hf-options-wrap .hf-nav-tab-wrapper .hf-nav-tab.nav-tab,
 .hyperpress-options-wrap .hyperpress-nav-tab-wrapper .hyperpress-nav-tab.nav-tab {
     margin: 0;
     padding: 14px 0 15px;
@@ -220,16 +234,19 @@
     white-space: nowrap;
 }
 
+.hf-options-wrap .hf-nav-tab-wrapper .hf-nav-tab.nav-tab:hover,
 .hyperpress-options-wrap .hyperpress-nav-tab-wrapper .hyperpress-nav-tab.nav-tab:hover {
     color: var(--hf-color-admin-accent);
     background: var(--hf-color-transparent);
 }
 
+.hf-options-wrap .hf-nav-tab-wrapper .hf-nav-tab.nav-tab:focus,
 .hyperpress-options-wrap .hyperpress-nav-tab-wrapper .hyperpress-nav-tab.nav-tab:focus {
     box-shadow: none;
     outline: none;
 }
 
+.hf-options-wrap .hf-nav-tab-wrapper .hf-nav-tab.nav-tab.nav-tab-active,
 .hyperpress-options-wrap .hyperpress-nav-tab-wrapper .hyperpress-nav-tab.nav-tab.nav-tab-active {
     color: var(--hf-color-admin-text);
     border-bottom-color: var(--hf-color-admin-accent);
@@ -241,6 +258,7 @@
  * used by .hyperpress-options-wrap .hyperpress-nav-tab-wrapper for plain
  * TabsField consumers. CSS variables are defined on :root so no scope needed.
  */
+.hf-tabs-wrapper > .nav-tab-wrapper,
 .hyperpress-tabs-wrapper > .nav-tab-wrapper {
     position: relative;
     z-index: 1;
@@ -254,6 +272,7 @@
     align-items: flex-end;
 }
 
+.hf-tabs-wrapper > .nav-tab-wrapper .nav-tab,
 .hyperpress-tabs-wrapper > .nav-tab-wrapper .nav-tab {
     margin: 0;
     padding: 14px 0 15px;
@@ -269,22 +288,26 @@
     white-space: nowrap;
 }
 
+.hf-tabs-wrapper > .nav-tab-wrapper .nav-tab:hover,
 .hyperpress-tabs-wrapper > .nav-tab-wrapper .nav-tab:hover {
     color: var(--hf-color-admin-accent);
     background: var(--hf-color-transparent);
 }
 
+.hf-tabs-wrapper > .nav-tab-wrapper .nav-tab:focus,
 .hyperpress-tabs-wrapper > .nav-tab-wrapper .nav-tab:focus {
     box-shadow: none;
     outline: none;
 }
 
+.hf-tabs-wrapper > .nav-tab-wrapper .nav-tab.nav-tab-active,
 .hyperpress-tabs-wrapper > .nav-tab-wrapper .nav-tab.nav-tab-active {
     color: var(--hf-color-admin-text);
     border-bottom-color: var(--hf-color-admin-accent);
     background: var(--hf-color-transparent);
 }
 
+.hf-options-wrap .subsubsub.hf-subsubsub,
 .hyperpress-options-wrap .subsubsub.hyperpress-subsubsub {
     float: none;
     display: block;
@@ -294,70 +317,93 @@
     border-bottom: 1px solid var(--hf-color-admin-border);
 }
 
+.hf-options-wrap .subsubsub.hf-subsubsub li,
 .hyperpress-options-wrap .subsubsub.hyperpress-subsubsub li {
     margin: 0;
     list-style: none;
 }
 
+.hf-options-wrap .subsubsub.hf-subsubsub a,
 .hyperpress-options-wrap .subsubsub.hyperpress-subsubsub a {
     color: var(--hf-color-admin-accent);
     text-decoration: none;
 }
 
+.hf-options-wrap .subsubsub.hf-subsubsub a:hover,
 .hyperpress-options-wrap .subsubsub.hyperpress-subsubsub a:hover {
     color: var(--hf-color-admin-accent-hover);
     text-decoration: underline;
 }
 
+.hf-options-wrap .subsubsub.hf-subsubsub a.current,
 .hyperpress-options-wrap .subsubsub.hyperpress-subsubsub a.current {
     color: var(--hf-color-admin-text);
     font-weight: 600;
     text-decoration: none;
 }
 
+.hf-options-wrap .hf-notice-catcher,
 .hyperpress-options-wrap .hyperpress-notice-catcher {
     margin: 0;
     padding: 0;
 }
 
+.hf-options-wrap .hf-notice-catcher + .notice,
 .hyperpress-options-wrap .hyperpress-notice-catcher + .notice,
+.hf-options-wrap .hf-notice-catcher + .update-nag,
 .hyperpress-options-wrap .hyperpress-notice-catcher + .update-nag,
+.hf-options-wrap .hf-notice-catcher + .updated,
 .hyperpress-options-wrap .hyperpress-notice-catcher + .updated,
+.hf-options-wrap .hf-notice-catcher + .error,
 .hyperpress-options-wrap .hyperpress-notice-catcher + .error {
     margin-top: 0;
 }
 
 /* Notice relocate/enter transition */
+.hf-options-wrap .notice.hf-notice-relocating,
 .hyperpress-options-wrap .notice.hf-notice-relocating,
+.hf-options-wrap .update-nag.hf-notice-relocating,
 .hyperpress-options-wrap .update-nag.hf-notice-relocating,
+.hf-options-wrap .updated.hf-notice-relocating,
 .hyperpress-options-wrap .updated.hf-notice-relocating,
+.hf-options-wrap .error.hf-notice-relocating,
 .hyperpress-options-wrap .error.hf-notice-relocating {
     transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
         transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: opacity, transform;
 }
 
+.hf-options-wrap .notice.hf-notice-relocating.hf-notice-pending,
 .hyperpress-options-wrap .notice.hf-notice-relocating.hf-notice-pending,
+.hf-options-wrap .update-nag.hf-notice-relocating.hf-notice-pending,
 .hyperpress-options-wrap .update-nag.hf-notice-relocating.hf-notice-pending,
+.hf-options-wrap .updated.hf-notice-relocating.hf-notice-pending,
 .hyperpress-options-wrap .updated.hf-notice-relocating.hf-notice-pending,
+.hf-options-wrap .error.hf-notice-relocating.hf-notice-pending,
 .hyperpress-options-wrap .error.hf-notice-relocating.hf-notice-pending {
     opacity: 0;
     transform: translateY(-8px);
 }
 
+.hf-options-wrap .notice.hf-notice-relocating.hf-notice-enter,
 .hyperpress-options-wrap .notice.hf-notice-relocating.hf-notice-enter,
+.hf-options-wrap .update-nag.hf-notice-relocating.hf-notice-enter,
 .hyperpress-options-wrap .update-nag.hf-notice-relocating.hf-notice-enter,
+.hf-options-wrap .updated.hf-notice-relocating.hf-notice-enter,
 .hyperpress-options-wrap .updated.hf-notice-relocating.hf-notice-enter,
+.hf-options-wrap .error.hf-notice-relocating.hf-notice-enter,
 .hyperpress-options-wrap .error.hf-notice-relocating.hf-notice-enter {
     opacity: 1;
     transform: translateY(0);
 }
 
+.hf-tabs-wrapper,
 .hyperpress-tabs-wrapper {
     display: block;
     margin-bottom: 24px;
 }
 
+.hf-tab,
 .hyperpress-tab {
     padding: 12px 20px;
     background: var(--hf-color-transparent);
@@ -372,16 +418,19 @@
     position: relative;
 }
 
+.hf-tab:hover,
 .hyperpress-tab:hover {
     color: var(--hf-color-text);
     background: var(--hf-color-bg-secondary);
 }
 
+.hf-tab:focus,
 .hyperpress-tab:focus {
     outline: 2px solid var(--hf-color-primary);
     outline-offset: -2px;
 }
 
+.hf-tab.active,
 .hyperpress-tab.active {
     color: var(--hf-color-primary);
     border-bottom-color: var(--hf-color-primary);
@@ -392,6 +441,7 @@
    Card Layout
    ========================================== */
 
+.hf-card,
 .hyperpress-card {
     background: var(--hf-color-bg);
     border-radius: var(--hf-radius);
@@ -401,10 +451,12 @@
     border: 1px solid var(--hf-color-border-light);
 }
 
+.hf-card:last-child,
 .hyperpress-card:last-child {
     margin-bottom: 0;
 }
 
+.hf-fields-group,
 .hyperpress-fields-group {
     margin-top: 20px;
 }
@@ -413,6 +465,7 @@
    Section Headings
    ========================================== */
 
+.hf-options-wrap h2,
 .hyperpress-options-wrap h2 {
     margin: 0 0 16px;
     padding-bottom: 12px;
@@ -422,6 +475,7 @@
     border-bottom: 1px solid var(--hf-color-border-light);
 }
 
+.hf-options-wrap p,
 .hyperpress-options-wrap p {
     margin: 0 0 12px;
     color: var(--hf-color-text-secondary);
@@ -432,11 +486,13 @@
    Field Rows
    ========================================== */
 
+.hf-field-wrapper,
 .hyperpress-field-wrapper {
     padding: 16px 0;
     transition: background-color var(--hf-transition);
 }
 
+.hf-field-row,
 .hyperpress-field-row {
     display: grid;
     grid-template-columns: 220px 1fr;
@@ -444,18 +500,21 @@
     align-items: start;
 }
 
+.hf-field-label,
 .hyperpress-field-label {
     font-weight: 600;
     font-size: 14px;
     padding-top: 4px;
 }
 
+.hf-field-input-wrapper,
 .hyperpress-field-input-wrapper {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
+.hf-field-input-wrapper label,
 .hyperpress-field-input-wrapper label {
     display: inline-flex;
     align-items: center;
@@ -464,7 +523,9 @@
     font-size: 14px;
 }
 
+.hf-field-input-wrapper input[type="checkbox"],
 .hyperpress-field-input-wrapper input[type="checkbox"],
+.hf-field-input-wrapper input[type="radio"],
 .hyperpress-field-input-wrapper input[type="radio"] {
     margin: 0;
     cursor: pointer;
@@ -474,6 +535,7 @@
      * especially on mobile. Let WP core own the checkbox appearance. */
 }
 
+.hf-field-input-wrapper .description,
 .hyperpress-field-input-wrapper .description {
     display: block;
     margin: 0;
@@ -486,13 +548,21 @@
    Input Styling
    ========================================== */
 
+.hf-field-input .regular-text,
 .hyperpress-field-input .regular-text,
+.hf-field-input input[type="text"],
 .hyperpress-field-input input[type="text"],
+.hf-field-input input[type="url"],
 .hyperpress-field-input input[type="url"],
+.hf-field-input input[type="email"],
 .hyperpress-field-input input[type="email"],
+.hf-field-input input[type="number"],
 .hyperpress-field-input input[type="number"],
+.hf-field-input input[type="color"],
 .hyperpress-field-input input[type="color"],
+.hf-field-input select,
 .hyperpress-field-input select,
+.hf-field-input textarea,
 .hyperpress-field-input textarea {
     width: 100%;
     padding: 10px 12px;
@@ -503,23 +573,32 @@
     transition: border-color var(--hf-transition), box-shadow var(--hf-transition);
 }
 
+.hf-field-input .regular-text:focus,
 .hyperpress-field-input .regular-text:focus,
+.hf-field-input input[type="text"]:focus,
 .hyperpress-field-input input[type="text"]:focus,
+.hf-field-input input[type="url"]:focus,
 .hyperpress-field-input input[type="url"]:focus,
+.hf-field-input input[type="email"]:focus,
 .hyperpress-field-input input[type="email"]:focus,
+.hf-field-input input[type="number"]:focus,
 .hyperpress-field-input input[type="number"]:focus,
+.hf-field-input select:focus,
 .hyperpress-field-input select:focus,
+.hf-field-input textarea:focus,
 .hyperpress-field-input textarea:focus {
     outline: none;
     border-color: var(--hf-color-primary);
     box-shadow: 0 0 0 3px var(--hf-color-focus-ring);
 }
 
+.hf-field-input textarea,
 .hyperpress-field-input textarea {
     min-height: 120px;
     resize: vertical;
 }
 
+.hf-field-input select,
 .hyperpress-field-input select {
     cursor: pointer;
     appearance: none;
@@ -533,6 +612,7 @@
    Required Field Indicator
    ========================================== */
 
+.hf-field-wrapper .required,
 .hyperpress-field-wrapper .required {
     color: var(--hf-color-danger);
     margin-left: 4px;
@@ -543,16 +623,19 @@
    Submit Button
    ========================================== */
 
+.hf-options-wrap .submit,
 .hyperpress-options-wrap .submit {
     margin-top: 24px;
     padding: 20px 0;
     border-top: 1px solid var(--hf-color-border-light);
 }
 
+.hf-options-wrap .submit .button-primary,
 .hyperpress-options-wrap .submit .button-primary {
     transition: background-color var(--hf-transition);
 }
 
+.hf-options-wrap .submit .button-primary:hover,
 .hyperpress-options-wrap .submit .button-primary:hover {
 
 }
@@ -561,6 +644,7 @@
    Map Field
    ========================================== */
 
+.hf-map-field .hf-map-canvas,
 .hyperpress-map-field .hyperpress-map-canvas {
     background: var(--hf-color-bg-secondary);
     border-radius: 4px;
@@ -569,14 +653,18 @@
 
 /* ==========================================
    Flat-field alignment (radio, image, select, textarea, etc.)
+   Fields without a .hf-field-row emit the label as a DIRECT,
    Fields without a .hyperpress-field-row emit the label as a DIRECT
+   child of .hf-field-wrapper. Align them label-left/input-right,
    child of .hyperpress-field-wrapper. Align them label-left/input-right
    so they match the grid-row fields (number/text/checkbox) and the
    settings page reads consistently, like a native WP form-table.
    The :has() scope avoids grid-row fields, whose label is nested under
+   .hf-field-row (not a direct child of the wrapper).,
    .hyperpress-field-row (not a direct child of the wrapper).
    ========================================== */
 
+.hf-field-wrapper:has(> .hf-field-label),
 .hyperpress-field-wrapper:has(> .hyperpress-field-label) {
     display: grid;
     grid-template-columns: 220px 1fr;
@@ -584,12 +672,14 @@
     align-items: start;
 }
 
+.hf-field-wrapper:has(> .hf-field-label) > .hf-field-label,
 .hyperpress-field-wrapper:has(> .hyperpress-field-label) > .hyperpress-field-label {
     font-weight: 600;
     font-size: 14px;
     padding-top: 4px;
 }
 
+.hf-field-wrapper:has(> .hf-field-label) > .hf-field-input,
 .hyperpress-field-wrapper:has(> .hyperpress-field-label) > .hyperpress-field-input {
     min-width: 0;
 }
@@ -598,19 +688,23 @@
    Radio & Checkbox Groups
    ========================================== */
 
+.hf-radio-vertical,
 .hyperpress-radio-vertical {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
+.hf-radio-horizontal,
 .hyperpress-radio-horizontal {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
 }
 
+.hf-radio-vertical label,
 .hyperpress-radio-vertical label,
+.hf-radio-horizontal label,
 .hyperpress-radio-horizontal label {
     display: inline-flex;
     align-items: center;
@@ -620,7 +714,9 @@
     cursor: pointer;
 }
 
+.hf-radio-vertical input[type="radio"],
 .hyperpress-radio-vertical input[type="radio"],
+.hf-radio-horizontal input[type="radio"],
 .hyperpress-radio-horizontal input[type="radio"] {
     margin: 0;
 }
@@ -629,8 +725,11 @@
    Image / File / Media Fields
    ========================================== */
 
+.hf-image-field,
 .hyperpress-image-field,
+.hf-file-field,
 .hyperpress-file-field,
+.hf-media-gallery-field,
 .hyperpress-media-gallery-field {
     display: grid;
     grid-template-columns: max-content max-content;
@@ -642,35 +741,50 @@
 
 /* Buttons sit side by side on row 1, each at its natural size. The preview
  * spans both columns on row 2 and shrinks to hug its image. */
+.hf-image-field > .hf-upload-button,
 .hyperpress-image-field > .hyperpress-upload-button,
+.hf-file-field > .hf-upload-button,
 .hyperpress-file-field > .hyperpress-upload-button {
     grid-row: 1;
     grid-column: 1;
 }
 
+.hf-image-field > .hf-remove-button,
 .hyperpress-image-field > .hyperpress-remove-button,
+.hf-file-field > .hf-remove-button,
 .hyperpress-file-field > .hyperpress-remove-button {
     grid-row: 1;
     grid-column: 2;
 }
 
+.hf-image-field > .hf-image-preview,
 .hyperpress-image-field > .hyperpress-image-preview,
+.hf-file-field > .hf-file-preview,
 .hyperpress-file-field > .hyperpress-file-preview,
+.hf-media-gallery-field > .hf-gallery-preview,
 .hyperpress-media-gallery-field > .hyperpress-gallery-preview {
     grid-row: 2;
     grid-column: 1 / -1;
 }
 
+.hf-image-field > .button,
 .hyperpress-image-field > .button,
+.hf-file-field > .button,
 .hyperpress-file-field > .button,
+.hf-gallery-button,
 .hyperpress-gallery-button,
+.hf-clear-gallery-button,
 .hyperpress-clear-gallery-button,
+.hf-geocode-button,
 .hyperpress-geocode-button {
     margin: 0;
 }
 
+.hf-image-preview,
 .hyperpress-image-preview,
+.hf-file-preview,
 .hyperpress-file-preview,
+.hf-gallery-preview,
 .hyperpress-gallery-preview {
     padding: 4px;
     background: var(--hf-color-white);
@@ -684,6 +798,7 @@
 
 /* Empty-state placeholder for image fields without a selection. Keeps the
  * preview box a legible size instead of collapsing to a tiny white square. */
+.hf-image-preview.is-empty,
 .hyperpress-image-preview.is-empty {
     display: inline-flex;
     align-items: center;
@@ -696,6 +811,7 @@
     color: var(--hf-color-admin-text-subtle);
 }
 
+.hf-image-placeholder,
 .hyperpress-image-placeholder {
     font-size: 12px;
     line-height: 1.4;
@@ -703,8 +819,11 @@
     padding: 8px;
 }
 
+.hf-image-preview img,
 .hyperpress-image-preview img,
+.hf-file-preview img,
 .hyperpress-file-preview img,
+.hf-gallery-item img,
 .hyperpress-gallery-item img {
     display: block;
     max-width: 150px;
@@ -713,6 +832,7 @@
     height: auto;
 }
 
+.hf-file-url,
 .hyperpress-file-url {
     margin: 0;
     word-break: break-all;
@@ -724,22 +844,26 @@
    Separator / Heading / HTML fields
    ========================================== */
 
+.hf-separator-wrapper,
 .hyperpress-separator-wrapper {
     margin: 8px 0;
 }
 
+.hf-separator,
 .hyperpress-separator {
     border: none;
     border-top: 1px solid var(--hf-color-admin-border);
     margin: 0;
 }
 
+.hf-heading-wrapper,
 .hyperpress-heading-wrapper {
     margin: 4px 0 16px;
     padding-bottom: 8px;
     border-bottom: 1px solid var(--hf-color-admin-border);
 }
 
+.hf-options-wrap .hf-heading-label,
 .hyperpress-options-wrap .hyperpress-heading-label {
     margin: 0;
     font-size: 15px;
@@ -747,16 +871,19 @@
     color: var(--hf-color-admin-text);
 }
 
+.hf-html-field,
 .hyperpress-html-field {
     margin: 0;
 }
 
+.hf-html-content,
 .hyperpress-html-content {
     font-size: 14px;
     line-height: 1.6;
     color: var(--hf-color-admin-text-muted);
 }
 
+.hf-html-content p,
 .hyperpress-html-content p {
     margin: 0 0 12px;
 }
@@ -1021,6 +1148,7 @@
    ========================================== */
 
 @media (max-width: 782px) {
+    .hf-options-wrap,
     .hyperpress-options-wrap {
         margin: 0;
         padding: 16px 16px 16px 7px;
@@ -1034,47 +1162,56 @@
         --hf-content-inset-right: 16px;
     }
 
+    .hf-options-wrap h1,
     .hyperpress-options-wrap h1 {
         font-size: 24px;
     }
 
+    .hf-options-wrap .hf-layout__header,
     .hyperpress-options-wrap .hyperpress-layout__header {
         top: 46px;
         margin: 0;
         padding: 0 0 1rem 0;
     }
 
+    .hf-field-row,
     .hyperpress-field-row {
         grid-template-columns: 1fr;
         gap: 12px;
     }
 
     /* Flat fields collapse to a single column on mobile too. */
+    .hf-field-wrapper:has(> .hf-field-label),
     .hyperpress-field-wrapper:has(> .hyperpress-field-label) {
         grid-template-columns: 1fr;
         gap: 12px;
     }
 
+    .hf-field-label,
     .hyperpress-field-label {
         padding-top: 0;
     }
 
+    .hf-tabs-wrapper,
     .hyperpress-tabs-wrapper {
         flex-wrap: nowrap;
         overflow-x: auto;
     }
 
     /* Hide the tab bar on mobile; the JS-built dropdown takes over. */
+    .hf-options-wrap .nav-tab-wrapper.hf-nav-tab-wrapper,
     .hyperpress-options-wrap .nav-tab-wrapper.hyperpress-nav-tab-wrapper {
         display: none;
     }
 
     /* Show the dropdown region; its ::before bleeds both sides on mobile so
      * the white bar fills the full width like the header above it. */
+    .hf-options-wrap .hf-nav-select-region,
     .hyperpress-options-wrap .hyperpress-nav-select-region {
         display: block;
     }
 
+    .hf-options-wrap .hf-nav-select-region::before,
     .hyperpress-options-wrap .hyperpress-nav-select-region::before {
         right: calc(-1 * var(--hf-header-bleed-x));
     }
@@ -1084,6 +1221,7 @@
  * used by .hyperpress-options-wrap .hyperpress-nav-tab-wrapper for plain
  * TabsField consumers. CSS variables are defined on :root so no scope needed.
  */
+.hf-tabs-wrapper > .nav-tab-wrapper,
 .hyperpress-tabs-wrapper > .nav-tab-wrapper {
     position: relative;
     z-index: 1;
@@ -1097,6 +1235,7 @@
     align-items: flex-end;
 }
 
+.hf-tabs-wrapper > .nav-tab-wrapper .nav-tab,
 .hyperpress-tabs-wrapper > .nav-tab-wrapper .nav-tab {
     margin: 0;
     padding: 14px 0 15px;
@@ -1112,22 +1251,26 @@
     white-space: nowrap;
 }
 
+.hf-tabs-wrapper > .nav-tab-wrapper .nav-tab:hover,
 .hyperpress-tabs-wrapper > .nav-tab-wrapper .nav-tab:hover {
     color: var(--hf-color-admin-accent);
     background: var(--hf-color-transparent);
 }
 
+.hf-tabs-wrapper > .nav-tab-wrapper .nav-tab:focus,
 .hyperpress-tabs-wrapper > .nav-tab-wrapper .nav-tab:focus {
     box-shadow: none;
     outline: none;
 }
 
+.hf-tabs-wrapper > .nav-tab-wrapper .nav-tab.nav-tab-active,
 .hyperpress-tabs-wrapper > .nav-tab-wrapper .nav-tab.nav-tab-active {
     color: var(--hf-color-admin-text);
     border-bottom-color: var(--hf-color-admin-accent);
     background: var(--hf-color-transparent);
 }
 
+.hf-options-wrap .subsubsub.hf-subsubsub,
 .hyperpress-options-wrap .subsubsub.hyperpress-subsubsub {
         padding: 12px 0;
         margin-bottom: 20px;

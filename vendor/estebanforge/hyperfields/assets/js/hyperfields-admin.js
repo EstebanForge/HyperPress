@@ -10,6 +10,10 @@
         '.wrap > .update-nag',
         '.wrap > .updated',
         '.wrap > .error',
+        '.wrap.hf-options-wrap > .notice',
+        '.wrap.hf-options-wrap > .update-nag',
+        '.wrap.hf-options-wrap > .updated',
+        '.wrap.hf-options-wrap > .error',
         '.wrap.hyperpress-options-wrap > .notice',
         '.wrap.hyperpress-options-wrap > .update-nag',
         '.wrap.hyperpress-options-wrap > .updated',
@@ -444,8 +448,8 @@
     }
 
     function initStickyHeader() {
-        var header = document.querySelector('[data-hyperpress-sticky-header]') ||
-            document.querySelector('.hyperpress-options-wrap .hyperpress-layout__header');
+        var header = document.querySelector('[data-hf-sticky-header], [data-hyperpress-sticky-header]') ||
+            document.querySelector('.hf-options-wrap .hf-layout__header, .hyperpress-options-wrap .hyperpress-layout__header');
         if (!header) {
             return;
         }
@@ -487,7 +491,8 @@
     }
 
     function relocateAdminNotices() {
-        var noticeCatcher = document.getElementById('hyperpress-layout__notice-catcher');
+        var noticeCatcher = document.getElementById('hyperfields-layout__notice-catcher') ||
+            document.getElementById('hyperpress-layout__notice-catcher');
         if (!noticeCatcher || !noticeCatcher.parentNode) {
             return;
         }
@@ -612,14 +617,19 @@
     // ---------------------------------------------------------------------
 
     function initNavTabSelect() {
-        var navs = document.querySelectorAll('.hyperpress-options-wrap .hyperpress-nav-tab-wrapper');
+        var navs = document.querySelectorAll(
+            '.hf-options-wrap .hf-nav-tab-wrapper, .hyperpress-options-wrap .hyperpress-nav-tab-wrapper'
+        );
         if (!navs.length) {
             return;
         }
 
         Array.prototype.forEach.call(navs, function (nav) {
             // Idempotent: skip if a previous init already injected a wrapper.
-            if (nav.nextElementSibling && nav.nextElementSibling.classList.contains('hyperpress-nav-select-region')) {
+            if (nav.nextElementSibling && (
+                nav.nextElementSibling.classList.contains('hf-nav-select-region') ||
+                nav.nextElementSibling.classList.contains('hyperpress-nav-select-region')
+            )) {
                 return;
             }
 
@@ -632,12 +642,12 @@
             // bar as the desktop nav so the sticky header's full-width look
             // is preserved on mobile.
             var region = document.createElement('div');
-            region.className = 'hyperpress-nav-select-region';
+            region.className = 'hf-nav-select-region hyperpress-nav-select-region';
 
             var select = document.createElement('select');
-            select.id = 'hyperpress-nav-select-' + Math.random().toString(36).slice(2, 9);
-            select.name = 'hyperpress_nav_select';
-            select.className = 'hyperpress-nav-select';
+            select.id = 'hyperfields-nav-select-' + Math.random().toString(36).slice(2, 9);
+            select.name = 'hyperfields_nav_select';
+            select.className = 'hf-nav-select hyperpress-nav-select';
             select.setAttribute('aria-label', nav.getAttribute('aria-label') || '' );
 
             Array.prototype.forEach.call(links, function (link) {

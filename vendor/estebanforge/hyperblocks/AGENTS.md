@@ -48,8 +48,20 @@ composer run test:unit       # Unit tests only
 composer run test:coverage   # HTML coverage report
 composer run cs:fix          # Auto-fix code style (php-cs-fixer)
 composer run cs:check        # Dry-run style check
-composer run version-bump    # Bump version in composer.json + bootstrap
+composer run version-bump    # Bump version in composer.json + Config::VERSION
 ```
+
+### Release Protocol
+1. Verify `composer.json` internal requirement: `"estebanforge/hyperfields": "*"`.
+2. Run tests: `composer run test`.
+3. Bump version: `bash scripts/version-bump.sh --patch` (or `--minor`/`--major`). Synchronizes `composer.json` and `src/Config.php`.
+4. Update `CHANGELOG.md` with `## [X.Y.Z] - YYYY-MM-DD`.
+5. Stage and commit:
+   `git add CHANGELOG.md composer.json src/Config.php`
+   `git commit -m "chore(release): bump version to X.Y.Z"`
+6. Push and tag:
+   `git push origin main && git tag -a X.Y.Z -m "Release X.Y.Z" && git push origin X.Y.Z`
+7. Verify on Packagist: `curl -s "https://repo.packagist.org/p2/estebanforge/hyperblocks.json" | grep -o '"version":"[^"]*"' | head -n 5`
 
 ---
 
@@ -189,6 +201,10 @@ $field = Field::make('select', 'layout', 'Layout')
 | `->setHelp(string $text)` | Help/description text for the editor UI. |
 | `->setOptions(array $options)` | Key-value pairs for `select`, `multiselect`, `radio`. |
 | `->setValidation(array $rules)` | Validation rules array. |
+| `->setTab(string $tab)` | Sidebar tab this field groups under (editor sidebar). |
+| `->setSection(string $section)` | Collapsible section within the sidebar tab. |
+| `->setLive(bool $live = true)` | Marks the sidebar control with a live badge. Default off. |
+| `->setConditionalLogic(array $logic)` | Sidebar visibility rules; canonicalized by HyperFields to `{relation, conditions, groups}`. |
 | `->getHyperField()` | Returns the underlying `HyperFields\Field` instance. |
 | `->getAdapter()` | Returns a `HyperFields\BlockFieldAdapter` for this field. |
 | `->toBlockAttribute()` | Returns `['type' => '...', 'default' => ...]` for `register_block_type`. |
@@ -333,7 +349,15 @@ Server: `renderBlock()` forwards `$content` (the second argument every dynamic r
 
 Editor: slotted blocks fetch the server shell from the core `/wp/v2/block-renderer` endpoint (350 ms debounce on attribute churn, like core ServerSideRender) and mount it imperatively: the sentinel comment node is swapped in place for a persistent slot element, so the live `useInnerBlocksProps` area sits exactly where the template placed the marker, inside whatever container tags wrap it. `save()` returns `InnerBlocks.Content` for slotted blocks only; empty inner blocks still serialize as a self-closing comment, so opting in never changes stored markup for childless instances. Plain blocks keep ServerSideRender + `save(){return null}` exactly. `assets/js/editor.js` mirrors the sentinel value (comment node text `hyperblocks:innerblocks`) — keep `INNER_BLOCKS_SENTINEL` in sync on both sides.
 
-Limits and caveats: `templateLock` and `allowedBlocks` are editor-only constraints; WP core enforces neither during server-side post persistence or rendering. Use exactly one `<InnerBlocks />` marker per template: the editor mounts its slot at the first marker, while the front end injects the same content at every marker. Removing `innerBlocks()` from a block that already has stored inner blocks triggers editor block-validation errors on existing posts (saved children no longer fit the definition) — treat plain-to-slotted switches and back as a content migration. Scalar field values still come from server defaults (no field-edit UI). JSON-path blocks (`"hyperblocks": true` marker) are native WP blocks handling InnerBlocks through their own `editorScript`/`render`; nothing here applies to them. A slotted template without the `<InnerBlocks />` marker still mounts the editor slot but drops nested content on the front end — the editor console warns once per block. `/render-preview` accepts an optional `content` string on both surfaces, injected at the marker; content is sanitized through `wp_kses_post` inside `BlockOperations::preview()` — the single implementation behind both surfaces — so the ability surface cannot return markup the REST route would filter (REST additionally sanitizes at the argument layer). `hb_render()` takes the same third argument but is the trusted PHP-author path and does not sanitize.
+#### Editor sidebar
+
+Blocks that call `->setEditorSidebar()` get a schema-driven inspector instead of the bare canvas preview: the inline `window.hyperBlocksConfig` payload for that block carries `editorSidebar: true` plus a projected field schema (`name`, `type`, `label`, `help`, `default`, `placeholder`, `options`, `required`, `live`, `tab`, `section`, `conditional_logic` — internal field metadata never ships to the client). The sidebar renders `tab -> section -> control` from `Field::setTab()` / `setSection()`; controls map per field type (text/email/url/time, textarea, number, select, multiselect, checkbox, radio, color, date, datetime, image, file, separator, heading), conditional visibility evaluates the same `{relation, conditions, groups}` shape PHP `ConditionalLogic` stores (AND within a group, OR across groups; unknown operators fail closed), and `live` fields show a badge. A field type with no built-in control is skipped with a one-time console notice pointing at the `hyperblocks.sidebarControl` filter — that filter is the extension path for custom controls.
+
+**Preview data toggle**: the sidebar carries a renderer-scoped "Show sample data" toggle. It swaps the canvas to a fetch of `POST /hyperblocks/v1/render-preview` with `sample: true`; the flag is fetch-time only and never a block attribute, so sample output cannot persist in post content. Templates opt into sample output by branching on `$hb_sample`.
+
+**Extension contract (schema-first)**: HyperFields owns the field system — adding a sidebar control for a new field type requires the type to exist in HyperFields, then an entry in `Block\Field::FIELD_TYPES`, an adapter mapping in `HyperFields\BlockFieldAdapter::typeMap()`, and a JS control (or a `hyperblocks.sidebarControl` filter binding). Types without a JS control are skipped in the sidebar (`rich_text`, `html`, `map`, `oembed`, `media_gallery`, `repeater`, `hidden` today); a block using only such fields gains nothing from the sidebar opt-in.
+
+Limits and caveats: `templateLock` and `allowedBlocks` are editor-only constraints; WP core enforces neither during server-side post persistence or rendering. Use exactly one `<InnerBlocks />` marker per template: the editor mounts its slot at the first marker, while the front end injects the same content at every marker. Removing `innerBlocks()` from a block that already has stored inner blocks triggers editor block-validation errors on existing posts (saved children no longer fit the definition) — treat plain-to-slotted switches and back as a content migration. Scalar field values still come from server defaults (no field-edit UI). JSON-path blocks (`"hyperblocks": true` marker) are native WP blocks handling InnerBlocks through their own `editorScript`/`render`; nothing here applies to them. A slotted template without the `<InnerBlocks />` marker still mounts the editor slot but drops nested content on the front end — the editor console warns once per block. `/render-preview` accepts an optional `content` string on both surfaces, injected at the marker; content is sanitized through `wp_kses_post` inside `BlockOperations::preview()` — the single implementation behind both surfaces — so the ability surface cannot return markup the REST route would filter (REST additionally sanitizes at the argument layer). `hb_render()` takes the same third argument but is the trusted PHP-author path and does not sanitize. Sample mode replaces the whole canvas for slotted blocks — the live InnerBlocks area is not shown while sample data is on.
 
 ---
 
@@ -386,9 +410,12 @@ Server-side renders a block with provided attributes. Attributes are sanitized a
 ```json
 {
   "blockName": "namespace/block-slug",
-  "attributes": { "heading": "Hello", "bg_image": 42 }
+  "attributes": { "heading": "Hello", "bg_image": 42 },
+  "sample": false
 }
 ```
+
+`sample: true` renders the block with `$hb_sample === true` in the template scope (fluent PHP templates only). The flag is assigned after attribute extraction, so a `hb_sample` attribute cannot spoof it, and it is never persisted.
 
 **Response**:
 ```json
@@ -441,8 +468,8 @@ HyperBlocks defines no `HYPERBLOCKS_*` constants. HyperFields identity lives on 
 HyperBlocks integrates HyperFields at three levels:
 
 1. **Field definitions** — `HyperBlocks\Block\Field` wraps `HyperFields\Field`. All field config, sanitization, and validation delegates to HyperFields.
-2. **Block attributes** — `HyperFields\BlockFieldAdapter::toBlockAttribute()` maps HyperFields field types to Gutenberg attribute types (`string`, `number`, `boolean`).
-3. **Sanitization pipeline** — on every `renderBlock` and `renderPreview` call, incoming attributes are run through `BlockFieldAdapter::sanitizeForBlock()` and `validateForBlock()` before the template executes. Invalid values fall back to the field's default.
+2. **Block attributes** — `HyperFields\BlockFieldAdapter::toBlockAttribute()` maps HyperFields field types to Gutenberg attribute types (`string`, `number`, `boolean`, `array` for `multiselect`).
+3. **Sanitization pipeline** — on every `renderBlock` and `renderPreview` call, incoming attributes are run through `BlockFieldAdapter::sanitizeForBlock()` and `validateForBlock()` before the template executes. Invalid values fall back to the field's default. Attribute keys with no matching field declaration are dropped before rendering — undeclared data never reaches the template scope.
 
 When HyperBlocks is a Composer dependency (no standalone HyperFields plugin active), `bootstrap.php` triggers HyperFields initialization from the vendored copy. When both are active, HyperFields' own bootstrap guards prevent double-initialization.
 

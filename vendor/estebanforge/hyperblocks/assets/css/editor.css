@@ -1,0 +1,54 @@
+/* HyperBlocks editor sidebar. */
+
+.hb-field-label,
+.hyperblocks-field-label {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.hb-live-badge,
+.hyperblocks-live-badge {
+	display: inline-block;
+	padding: 0 6px;
+	border-radius: 10px;
+	background: #e6f2e6;
+	color: #1d5a1d;
+	font-size: 10px;
+	font-weight: 600;
+	line-height: 16px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	vertical-align: middle;
+}
+
+.hb-sidebar-heading,
+.hyperblocks-sidebar-heading {
+	font-weight: 600;
+	margin: 8px 0 4px;
+}
+
+.hb-sidebar-separator,
+.hyperblocks-sidebar-separator {
+	border: none;
+	border-top: 1px solid #e0e0e0;
+	margin: 12px 0;
+}
+
+.hb-media-control .components-button,
+.hyperblocks-media-control .components-button {
+	margin-right: 8px;
+}
+
+.hb-color-control .components-circular-option-picker,
+.hyperblocks-color-control .components-circular-option-picker {
+	margin-top: 4px;
+}
+
+.hb-datetime-control .hb-field-label,
+.hb-datetime-control .hyperblocks-field-label,
+.hyperblocks-datetime-control .hb-field-label,
+.hyperblocks-datetime-control .hyperblocks-field-label {
+	display: block;
+	margin-bottom: 4px;
+}

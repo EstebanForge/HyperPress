@@ -372,6 +372,7 @@ class Registry
             return;
         }
 
+        wp_nonce_field('hyperfields_post_fields', 'hyperfields_post_fields_nonce');
         wp_nonce_field('hyperpress_post_fields', 'hyperpress_post_fields_nonce');
 
         foreach ($post_fields as $field) {
@@ -465,11 +466,14 @@ class Registry
      */
     public function savePostFields(int $post_id): void
     {
-        if (!isset($_POST['hyperpress_post_fields_nonce'])) {
+        $nonce = $_POST['hyperfields_post_fields_nonce'] ?? $_POST['hyperpress_post_fields_nonce'] ?? null;
+        if (!is_string($nonce)) {
             return;
         }
 
-        if (!wp_verify_nonce(sanitize_key(wp_unslash($_POST['hyperpress_post_fields_nonce'])), 'hyperpress_post_fields')) {
+        $valid = wp_verify_nonce(sanitize_key(wp_unslash($nonce)), 'hyperfields_post_fields')
+            || wp_verify_nonce(sanitize_key(wp_unslash($nonce)), 'hyperpress_post_fields');
+        if (!$valid) {
             return;
         }
 

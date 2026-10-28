@@ -632,6 +632,72 @@ echo $html;
 
 ---
 
+## Example 12 — Schema-driven editor sidebar with sample preview
+
+A block whose fields render as inspector controls grouped into tabs, with a conditional field, a live badge, and a sample-data branch in the template.
+
+```php
+use HyperBlocks\Block\Block;
+use HyperBlocks\Block\Field;
+use HyperBlocks\Registry;
+
+$block = Block::make('Employers')
+    ->setName('acme/employers')
+    ->setIcon('building')
+    ->setEditorSidebar()
+    ->addFields([
+        Field::make('text', 'heading', 'Heading')
+            ->setTab('Content')
+            ->setSection('Copy')
+            ->setLive()
+            ->setDefault('Our Employers'),
+
+        Field::make('select', 'layout', 'Layout')
+            ->setTab('Content')
+            ->setSection('Layout')
+            ->setOptions(['grid' => 'Grid', 'list' => 'List']),
+
+        Field::make('number', 'per_page', 'Employers per page')
+            ->setTab('Content')
+            ->setSection('Layout')
+            ->setDefault(6)
+            ->setConditionalLogic([[
+                'field' => 'layout',
+                'operator' => '=',
+                'value' => 'grid',
+            ]]),
+
+        Field::make('checkbox', 'show_logos', 'Show logos')
+            ->setTab('Style')
+            ->setDefault(true),
+    ])
+    ->setRenderTemplateFile('blocks/employers.hb.php');
+
+Registry::getInstance()->registerFluentBlock($block);
+```
+
+The `per_page` control appears in the sidebar only once `layout` equals `grid` — conditions are AND-ed within a group, groups are OR-ed, and the bare condition list above is canonicalized by HyperFields into the group shape. The heading carries the live badge. `blocks/employers.hb.php` branches on `$hb_sample` so the editor can preview placeholder data without persisting anything:
+
+```php
+<?php /** @var array $attributes */ ?>
+<div class="acme-employers">
+    <h2><?php echo esc_html($attributes['heading'] ?? ''); ?></h2>
+    <?php if (!empty($hb_sample)) : ?>
+        <ul>
+            <?php for ($i = 1; $i <= 3; $i++) : ?>
+                <li><?php echo esc_html('Sample Employer ' . $i); ?></li>
+            <?php endfor; ?>
+        </ul>
+    <?php else : ?>
+        <ul><!-- real employers markup --></ul>
+    <?php endif; ?>
+</div>
+```
+
+In the editor the inspector shows the **Content** tab (Copy and Layout sections), the **Style** tab, and a trailing **Preview data** panel whose toggle re-renders the canvas through the render-preview route with `sample: true`. Nothing the toggle produces is saved to post content.
+
+---
+
 ## Developer tips
 
 - Always `esc_html()` text output, `esc_url()` URLs, `esc_attr()` attribute values, and `wp_kses_post()` for rich text.

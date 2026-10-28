@@ -151,15 +151,15 @@
         },
         {
             "name": "estebanforge/hyperblocks",
-            "version": "1.7.0",
-            "version_normalized": "1.7.0.0",
+            "version": "1.8.1",
+            "version_normalized": "1.8.1.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperBlocks",
-                "reference": "80090bf8962f4cf7643f357b23c30df6c4c4e573"
+                "reference": "53d5a26ac907332a849b5f7b346e74c0caf82ae5"
             },
             "require": {
-                "estebanforge/hyperfields": "^1",
+                "estebanforge/hyperfields": "*",
                 "php": ">=8.2"
             },
             "require-dev": {
@@ -250,12 +250,12 @@
         },
         {
             "name": "estebanforge/hyperfields",
-            "version": "1.6.1",
-            "version_normalized": "1.6.1.0",
+            "version": "1.7.1",
+            "version_normalized": "1.7.1.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperFields",
-                "reference": "89c7b190c35e56ff06bc7b7a54f89d1b58a8db72"
+                "reference": "277a1aff83c146d67a13d3d57e77048631097831"
             },
             "require": {
                 "php": ">=8.2"
@@ -354,16 +354,16 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.6.4",
-            "version_normalized": "1.6.4.0",
+            "version": "1.6.5",
+            "version_normalized": "1.6.5.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "ba2bb7691606ae17790afbd26e2c7f1f7c1632c4"
+                "reference": "d4067d3c50f42ff4d45e02a19a3ed84eac8171c8"
             },
             "require": {
-                "estebanforge/hyperblocks": "^1",
-                "estebanforge/hyperfields": "^1",
+                "estebanforge/hyperblocks": "*",
+                "estebanforge/hyperfields": "*",
                 "php": ">=8.2",
                 "starfederation/datastar-php": "^1"
             },
@@ -451,17 +451,17 @@
         },
         {
             "name": "starfederation/datastar-php",
-            "version": "1.0.1",
-            "version_normalized": "1.0.1.0",
+            "version": "1.0.3",
+            "version_normalized": "1.0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/starfederation/datastar-php.git",
-                "reference": "a02c72956c9ee80fe7ae2ce28d1112cf92c6ffbf"
+                "reference": "20836fa220729c4f032e179e9d6cec418718dec3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/starfederation/datastar-php/zipball/a02c72956c9ee80fe7ae2ce28d1112cf92c6ffbf",
-                "reference": "a02c72956c9ee80fe7ae2ce28d1112cf92c6ffbf",
+                "url": "https://api.github.com/repos/starfederation/datastar-php/zipball/20836fa220729c4f032e179e9d6cec418718dec3",
+                "reference": "20836fa220729c4f032e179e9d6cec418718dec3",
                 "shasum": ""
             },
             "require": {
@@ -472,7 +472,7 @@
                 "craftcms/phpstan": "dev-main",
                 "pestphp/pest": "^3.5"
             },
-            "time": "2026-06-02T18:56:00+00:00",
+            "time": "2026-10-10T12:10:41+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {

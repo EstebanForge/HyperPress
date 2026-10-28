@@ -368,6 +368,10 @@ class Bootstrap
             $registry = Registry::getInstance();
             $mergedFields = $registry->getMergedFields($blockDef);
 
+            // Undeclared keys never reach the template: extract() would hand
+            // them to the render scope unvalidated.
+            $attributes = array_intersect_key($attributes, $mergedFields);
+
             foreach ($mergedFields as $name => $field) {
                 $adapter = $field->getAdapter();
                 $incoming = $attributes[$name] ?? null;
@@ -463,7 +467,7 @@ class Bootstrap
         wp_register_script(
             $scriptHandle,
             $scriptUrl,
-            ['wp-blocks', 'wp-element', 'wp-components', 'wp-dom-ready', 'wp-block-editor', 'wp-server-side-render', 'wp-api-fetch'],
+            ['wp-blocks', 'wp-element', 'wp-components', 'wp-dom-ready', 'wp-block-editor', 'wp-server-side-render', 'wp-api-fetch', 'wp-hooks'],
             (string) filemtime($scriptPath),
             true
         );
@@ -502,14 +506,60 @@ class Bootstrap
                     'templateLock'  => $block->inner_blocks['templateLock'] ?? null,
                 ], static fn ($v) => $v !== null);
             }
+            if ($block->editor_sidebar === true) {
+                // Field schema rides the same inline channel so the sidebar
+                // renders without a per-block REST fetch. Only keys the
+                // sidebar reads are shipped; internal metadata stays server-side.
+                $config['editorSidebar'] = true;
+                $config['fields'] = array_map(
+                    static fn ($field) => self::sidebarFieldSchema($field),
+                    array_values($registry->getMergedFields($block))
+                );
+            }
             $blockConfigs[] = $config;
+        }
+
+        $encoded = wp_json_encode($blockConfigs, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+        if ($encoded === false) {
+            // Without a valid config object no block can register; an empty
+            // assignment would throw in the editor.
+            if (Config::isDebug()) {
+                error_log('HyperBlocks: hyperBlocksConfig JSON encoding failed');
+            }
+            return;
         }
 
         wp_add_inline_script(
             $scriptHandle,
-            'window.hyperBlocksConfig = ' . wp_json_encode($blockConfigs) . ';',
+            'window.hyperBlocksConfig = ' . $encoded . ';',
             'before'
         );
+    }
+
+    /**
+     * Schema projection the editor sidebar needs: identity, control hints,
+     * UI grouping, and conditional logic. Everything else stays server-side.
+     *
+     * @return array
+     */
+    private static function sidebarFieldSchema($field): array
+    {
+        $schema = $field->toArray();
+
+        return array_intersect_key($schema, array_fill_keys([
+            'name',
+            'type',
+            'label',
+            'help',
+            'default',
+            'placeholder',
+            'options',
+            'required',
+            'live',
+            'tab',
+            'section',
+            'conditional_logic',
+        ], true));
     }
 
     /**

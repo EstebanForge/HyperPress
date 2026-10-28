@@ -31,10 +31,10 @@ if (isset($_GET['tab']) && isset($tabs[$_GET['tab']])) {
     $active_tab = sanitize_text_field($_GET['tab']);
 }
 
-$layout_class = 'hyperpress-tabs-' . $layout;
+$layout_class = 'hf-tabs-' . $layout . ' hyperpress-tabs-' . $layout;
 ?>
 
-<div class="hyperpress-tabs-wrapper <?php echo esc_attr($layout_class); ?>">
+<div class="hf-tabs-wrapper hyperpress-tabs-wrapper <?php echo esc_attr($layout_class); ?>">
     <h2 class="nav-tab-wrapper">
         <?php foreach ($tabs as $tab_id => $tab):
             $is_active = $tab_id === $active_tab;
@@ -46,13 +46,13 @@ $layout_class = 'hyperpress-tabs-' . $layout;
         <?php endforeach; ?>
     </h2>
 
-    <div class="hyperpress-tabs-content">
+    <div class="hf-tabs-content hyperpress-tabs-content">
         <?php
         // Render only the active tab's content
         if (isset($tabs[$active_tab])) {
             $active_tab_data = $tabs[$active_tab];
             if (!empty($active_tab_data['fields'])) {
-                echo '<div class="hyperpress-tab-fields-wrapper">';
+                echo '<div class="hf-tab-fields-wrapper hyperpress-tab-fields-wrapper">';
                 foreach ($active_tab_data['fields'] as $field) {
                     if (is_object($field) && method_exists($field, 'render')) {
                         $field->render();

@@ -99,6 +99,14 @@ class Block
     public ?array $inner_blocks = null;
 
     /**
+     * Editor sidebar opt-in. Null/false = the block keeps the plain
+     * ServerSideRender editor; true = fields render as inspector controls.
+     *
+     * @var bool|null
+     */
+    public ?bool $editor_sidebar = null;
+
+    /**
      * Constructor.
      *
      * @param string $title The block title.
@@ -270,10 +278,13 @@ class Block
             // Without it, str_starts_with('/var/www/blocks-evil/x',
             // '/var/www/blocks') would treat an unregistered sibling directory
             // whose name shares a prefix as "inside" the allowed base.
-            // hb_path_within_base() normalizes both sides first: realpath()
+            // Path::withinBase() normalizes both sides first: realpath()
             // returns backslash separators on Windows, where a raw '/'-suffixed
             // base never prefix-matched and rejected every file: template.
-            if (\hb_path_within_base($real, $realBase)) {
+            // Called on the class (not the hb_path_within_base() helper) so
+            // the check can never hit an undefined-function fatal when a
+            // divergent vendor copy's procedural helpers did not load.
+            if (\HyperBlocks\Path::withinBase($real, $realBase)) {
                 $valid = true;
                 break;
             }
@@ -381,6 +392,20 @@ class Block
     }
 
     /**
+     * Opt the block into the fields sidebar: field definitions are delivered
+     * to the editor as inspector controls (tabs/sections from field schema).
+     *
+     * @param bool $enabled Whether the sidebar is enabled.
+     * @return self
+     */
+    public function setEditorSidebar(bool $enabled = true): self
+    {
+        $this->editor_sidebar = $enabled;
+
+        return $this;
+    }
+
+    /**
      * Get the underlying HyperFields adapter for the block's fields.
      *
      * @return array Array of BlockFieldAdapter instances
@@ -414,6 +439,7 @@ class Block
             'keywords' => $this->keywords,
             'style' => $this->style,
             'inner_blocks' => $this->inner_blocks,
+            'editor_sidebar' => $this->editor_sidebar,
         ];
     }
 }

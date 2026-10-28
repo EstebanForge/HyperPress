@@ -211,4 +211,51 @@ class FieldTest extends TestCase
         $this->assertEquals('Placeholder', $array['placeholder']);
         $this->assertTrue($array['required']);
     }
+
+    public function testSetTabDelegates(): void
+    {
+        $field = Field::make('text', 'title', 'Title')->setTab('Content');
+
+        $this->assertSame('Content', $field->toArray()['tab']);
+    }
+
+    public function testSetSectionDelegates(): void
+    {
+        $field = Field::make('text', 'title', 'Title')->setSection('Layout');
+
+        $this->assertSame('Layout', $field->toArray()['section']);
+    }
+
+    public function testSetLiveDelegates(): void
+    {
+        $field = Field::make('text', 'title', 'Title')->setLive();
+
+        $this->assertTrue($field->toArray()['live']);
+    }
+
+    public function testSetConditionalLogicDelegates(): void
+    {
+        $condition = ['field' => 'layout', 'operator' => '=', 'value' => 'boxed'];
+
+        $field = Field::make('text', 'title', 'Title')->setConditionalLogic([
+            'relation' => 'AND',
+            'conditions' => [$condition],
+        ]);
+
+        // HyperFields canonicalizes on write; the wrapper forwards that shape.
+        $this->assertSame([
+            'relation' => 'AND',
+            'conditions' => [$condition],
+            'groups' => [[$condition]],
+        ], $field->toArray()['conditional_logic']);
+    }
+
+    public function testUiMetaDefaultsInToArray(): void
+    {
+        $array = Field::make('text', 'title', 'Title')->toArray();
+
+        $this->assertNull($array['tab']);
+        $this->assertNull($array['section']);
+        $this->assertFalse($array['live']);
+    }
 }

@@ -12,6 +12,6 @@ if ($conditional_logic) {
     $conditional_attr = ' data-hp-conditional-logic=\'' . esc_attr((string) $json) . '\'';
 }
 ?>
-<div class="hyperpress-field-wrapper hyperpress-separator-wrapper">
-    <hr class="hyperpress-separator" />
+<div class="hf-field-wrapper hyperpress-field-wrapper hf-separator-wrapper hyperpress-separator-wrapper">
+    <hr class="hf-separator hyperpress-separator" />
 </div>

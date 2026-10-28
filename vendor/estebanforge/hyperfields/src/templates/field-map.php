@@ -30,26 +30,26 @@ $map_type = $map_options['type'] ?? 'roadmap';
 $api_key = $map_options['api_key'] ?? '';
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
+<div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label for="<?php echo esc_attr($name); ?>" class="hf-field-label hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hyperpress-field-input">
-        <div class="hyperpress-map-field">
+    <div class="hf-field-input hyperpress-field-input">
+        <div class="hf-map-field hyperpress-map-field">
             <input type="text"
                    id="<?php echo esc_attr($name); ?>_address"
                    name="<?php echo esc_attr($name_attr); ?>[address]"
                    value="<?php echo esc_attr($address); ?>"
                    placeholder="<?php _e('Search for an address...', 'api-for-htmx'); ?>"
-                   class="regular-text hyperpress-map-search">
+                   class="regular-text hf-map-search hyperpress-map-search">
 
-            <button type="button" class="button hyperpress-geocode-button" data-field="<?php echo esc_attr($name); ?>">
+            <button type="button" class="button hf-geocode-button hyperpress-geocode-button" data-field="<?php echo esc_attr($name); ?>">
                 <?php _e('Search', 'api-for-htmx'); ?>
             </button>
 
-            <div class="hyperpress-map-canvas"
+            <div class="hf-map-canvas hyperpress-map-canvas"
                  data-field="<?php echo esc_attr($name); ?>"
                  data-lat="<?php echo esc_attr($lat); ?>"
                  data-lng="<?php echo esc_attr($lng); ?>"

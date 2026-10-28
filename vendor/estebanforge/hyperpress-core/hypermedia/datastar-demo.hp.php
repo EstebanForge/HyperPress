@@ -21,7 +21,7 @@ if (!isset($hp_vals['action']) || $hp_vals['action'] != 'datastar_do_something')
 }
 ?>
 
-<div class="hyperpress-demo-container">
+<div class="hp-demo-container hyperpress-demo-container">
   <h3>Hello Datastar!</h3>
 
   <p>Demo template loaded from <code>plugins/HyperPress/<?php echo esc_html(\HyperPress\Config::TEMPLATE_DIR); ?>/datastar-demo.hm.php</code></p>

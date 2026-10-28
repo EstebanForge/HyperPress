@@ -15,9 +15,9 @@ if ($conditional_logic) {
 }
 ?>
 
-<div class="hyperpress-field-wrapper hyperpress-heading-wrapper"<?php echo $conditional_attr; ?>>
+<div class="hf-field-wrapper hyperpress-field-wrapper hf-heading-wrapper hyperpress-heading-wrapper"<?php echo $conditional_attr; ?>>
     <?php if ($label) : ?>
-        <h2 class="hyperpress-heading-label"><?php echo esc_html($label); ?></h2>
+        <h2 class="hf-heading-label hyperpress-heading-label"><?php echo esc_html($label); ?></h2>
     <?php endif; ?>
 
     <?php if ($help) : ?>

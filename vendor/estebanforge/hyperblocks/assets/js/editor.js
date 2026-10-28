@@ -18,6 +18,13 @@
  *   InnerBlocks.Content so nested block markup is stored between the block
  *   delimiters and handed back to renderBlock() as $content on the front end.
  *
+ * Blocks with entry.editorSidebar wrap either mode with a schema-driven
+ * inspector: the field definitions injected server-side (entry.fields) render
+ * as tabs -> sections -> controls, with conditional visibility, live badges,
+ * and a sample-data preview toggle that fetches the render through the
+ * hyperblocks render-preview route with a fetch-time sample flag (never an
+ * attribute, so nothing sample-derived persists in post content).
+ *
  * Block configuration is injected server-side as window.hyperBlocksConfig via
  * wp_add_inline_script() (see Bootstrap::enqueueEditorScript()).
  */
@@ -104,7 +111,7 @@
             }, [attributesKey]);
 
             var innerBlocksProps = blockEditor.useInnerBlocksProps(
-                { className: 'hyperblocks-innerblocks' },
+                { className: 'hb-innerblocks hyperblocks-innerblocks' },
                 {
                     allowedBlocks: entry.innerBlocks.allowedBlocks,
                     template: entry.innerBlocks.template,
@@ -122,6 +129,7 @@
 
                 if (!slotRef.current) {
                     slotRef.current = doc.createElement('div');
+                    slotRef.current.setAttribute('data-hb-slot', '');
                     slotRef.current.setAttribute('data-hyperblocks-slot', '');
                     // display:contents keeps the wrapper out of the layout so
                     // flex/grid children of the template flow unchanged.
@@ -179,6 +187,575 @@
     }
 
     /**
+     * Fields whose schema types have no sidebar control in this version.
+     * Rendered controls exist only for the types the mapper below knows;
+     * consumers can register their own via the wp.hooks filter.
+     */
+    var UNSUPPORTED_CONTROL_TYPES = {};
+
+    function warnUnsupportedType(type) {
+        if (UNSUPPORTED_CONTROL_TYPES[type]) {
+            return;
+        }
+        UNSUPPORTED_CONTROL_TYPES[type] = true;
+        if (window.console && window.console.info) {
+            window.console.info(
+                '[HyperBlocks] no sidebar control for field type "' + type + '"; the field stays server-defined. Custom controls can hook the hyperblocks.sidebarControl filter.'
+            );
+        }
+    }
+
+    function sidebarAvailable() {
+        return !!(
+            window.wp &&
+            window.wp.components &&
+            window.wp.blockEditor &&
+            window.wp.blockEditor.InspectorControls &&
+            window.wp.element &&
+            window.wp.element.Fragment
+        );
+    }
+
+    /**
+     * Mirrors HyperFields\ConditionalLogic::evaluate(). Groups are OR'd;
+     * conditions inside a group are AND'd; no rules means visible. Unknown
+     * operators and malformed rules hide the field (fail closed), matching
+     * the PHP default branch.
+     */
+    function isEmptyValue(value) {
+        return value === null || value === undefined || value === '' || value === false ||
+            value === 0 || value === '0' ||
+            (Array.isArray(value) && value.length === 0);
+    }
+
+    function evaluateCondition(current, operator, expected) {
+        switch (operator) {
+            case '=':
+                return current === expected;
+            case '!=':
+                return current !== expected;
+            case '>':
+                return current > expected;
+            case '<':
+                return current < expected;
+            case '>=':
+                return current >= expected;
+            case '<=':
+                return current <= expected;
+            case 'IN':
+            case 'NOT IN': {
+                var list = Array.isArray(expected) ? expected : [expected];
+                var currentList = Array.isArray(current) ? current : [current];
+                var found = currentList.some(function (item) {
+                    // PHP array_intersect compares loosely as strings.
+                    return list.some(function (candidate) {
+                        return String(candidate) === String(item);
+                    });
+                });
+                return operator === 'IN' ? found : !found;
+            }
+            case 'CONTAINS':
+            case 'NOT CONTAINS': {
+                var haystack = String(current === null || current === undefined ? '' : current);
+                var contains = haystack.indexOf(String(expected)) !== -1;
+                return operator === 'CONTAINS' ? contains : !contains;
+            }
+            case 'EMPTY':
+                return isEmptyValue(current);
+            case 'NOT EMPTY':
+                return !isEmptyValue(current);
+            default:
+                return false;
+        }
+    }
+
+    function evaluateLogic(logic, values) {
+        if (!logic || typeof logic !== 'object') {
+            return true;
+        }
+        var groups = Array.isArray(logic.groups) && logic.groups.length
+            ? logic.groups
+            : (Array.isArray(logic.conditions) && logic.conditions.length ? [logic.conditions] : []);
+        if (!groups.length) {
+            return true;
+        }
+        return groups.some(function (group) {
+            if (!Array.isArray(group)) {
+                return false;
+            }
+            return group.every(function (condition) {
+                if (!condition || typeof condition.field !== 'string') {
+                    return false;
+                }
+                return evaluateCondition(values[condition.field], condition.operator, condition.value);
+            });
+        });
+    }
+
+    /**
+     * Tab identities key off the label, not the position, so a conditionally
+     * hidden tab does not reset the selection of the remaining tabs.
+     */
+    function buildTabDefs(groups) {
+        var seen = {};
+        return groups.map(function (group) {
+            var slug = String(group.label || 'general')
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '') || 'general';
+            var name = slug;
+            var suffix = 2;
+            while (seen[name]) {
+                name = slug + '-' + suffix;
+                suffix += 1;
+            }
+            seen[name] = true;
+            return { name: name, group: group };
+        });
+    }
+
+    /**
+     * Normalize the option shapes HyperFields fields may carry: an object
+     * map ({value: label}), a scalar list, or a [{value,label}] list.
+     */
+    function optionList(options) {
+        if (!options) {
+            return [];
+        }
+        if (Array.isArray(options)) {
+            return options.map(function (option) {
+                if (typeof option === 'string' || typeof option === 'number') {
+                    return { value: String(option), label: String(option) };
+                }
+                if (option && typeof option === 'object') {
+                    var value = option.value !== undefined ? option.value : option.key;
+                    return { value: String(value === undefined ? '' : value), label: String(option.label !== undefined ? option.label : value) };
+                }
+                return { value: '', label: '' };
+            }).filter(function (option) {
+                return option.value !== '' || option.label !== '';
+            });
+        }
+        return Object.keys(options).map(function (key) {
+            return { value: key, label: String(options[key]) };
+        });
+    }
+
+    function groupByTabs(fields) {
+        var useTabs = false;
+        var i;
+        for (i = 0; i < fields.length; i++) {
+            if (fields[i].tab) {
+                useTabs = true;
+                break;
+            }
+        }
+        var tabs = [];
+        for (i = 0; i < fields.length; i++) {
+            var field = fields[i];
+            var tabLabel = useTabs ? (field.tab || 'General') : '';
+            var tab = null;
+            var j;
+            for (j = 0; j < tabs.length; j++) {
+                if (tabs[j].label === tabLabel) {
+                    tab = tabs[j];
+                    break;
+                }
+            }
+            if (!tab) {
+                tab = { label: tabLabel, sections: [] };
+                tabs.push(tab);
+            }
+            var sectionLabel = field.section || '';
+            var section = null;
+            for (j = 0; j < tab.sections.length; j++) {
+                if (tab.sections[j].label === sectionLabel) {
+                    section = tab.sections[j];
+                    break;
+                }
+            }
+            if (!section) {
+                section = { label: sectionLabel, fields: [] };
+                tab.sections.push(section);
+            }
+            section.fields.push(field);
+        }
+        return { useTabs: useTabs, tabs: tabs };
+    }
+
+    /**
+     * Build the control for one field. Returns null for types without a
+     * sidebar control in this version.
+     */
+    function createControl(field, value, onChange) {
+        var el = window.wp.element.createElement;
+        var components = window.wp.components;
+
+        var custom = (window.wp.hooks && typeof window.wp.hooks.applyFilters === 'function')
+            ? window.wp.hooks.applyFilters('hyperblocks.sidebarControl', null, field, value, onChange)
+            : null;
+        if (custom) {
+            return custom;
+        }
+
+        var current = value === undefined || value === null ? (field.default !== undefined ? field.default : value) : value;
+
+        switch (field.type) {
+            case 'text':
+            case 'email':
+            case 'url':
+            case 'time':
+                return el(components.TextControl, {
+                    type: field.type === 'text' ? 'text' : field.type,
+                    label: makeLabel(el, field),
+                    placeholder: field.placeholder || undefined,
+                    help: field.help || undefined,
+                    value: typeof current === 'string' || typeof current === 'number' ? String(current) : '',
+                    onChange: onChange
+                });
+            case 'textarea':
+                return el(components.TextareaControl, {
+                    label: makeLabel(el, field),
+                    placeholder: field.placeholder || undefined,
+                    help: field.help || undefined,
+                    value: typeof current === 'string' ? current : '',
+                    onChange: onChange
+                });
+            case 'number':
+                return el(components.__experimentalNumberControl || components.TextControl, {
+                    label: makeLabel(el, field),
+                    help: field.help || undefined,
+                    value: current === undefined || current === null || current === '' ? '' : String(current),
+                    onChange: function (next) {
+                        if (next === '' || next === null || next === undefined) {
+                            onChange(undefined);
+                            return;
+                        }
+                        var parsed = parseFloat(next);
+                        onChange(isNaN(parsed) ? undefined : parsed);
+                    }
+                });
+            case 'select':
+                return el(components.SelectControl, {
+                    label: makeLabel(el, field),
+                    help: field.help || undefined,
+                    value: current === undefined || current === null ? '' : String(current),
+                    options: [{ value: '', label: '—' }].concat(optionList(field.options)),
+                    onChange: onChange
+                });
+            case 'multiselect':
+                return el(components.SelectControl, {
+                    label: makeLabel(el, field),
+                    help: field.help || undefined,
+                    multiple: true,
+                    value: Array.isArray(current) ? current.map(String) : [],
+                    options: optionList(field.options),
+                    onChange: function (next) {
+                        onChange(Array.isArray(next) ? next : []);
+                    }
+                });
+            case 'checkbox':
+                return el(components.ToggleControl, {
+                    label: makeLabel(el, field),
+                    help: field.help || undefined,
+                    checked: current === true || current === 1 || current === '1',
+                    onChange: onChange
+                });
+            case 'radio':
+                return el(components.RadioControl, {
+                    label: makeLabel(el, field),
+                    help: field.help || undefined,
+                    selected: current === undefined || current === null ? '' : String(current),
+                    options: optionList(field.options),
+                    onChange: onChange
+                });
+            case 'color':
+                return el('div', { className: 'hb-color-control hyperblocks-color-control' },
+                    el(components.BaseControl, {
+                        label: makeLabel(el, field),
+                        help: field.help || undefined
+                    }, el(components.ColorPalette, {
+                        value: typeof current === 'string' ? current : undefined,
+                        onChange: function (next) {
+                            var color = next && typeof next === 'object' ? next.hex : next;
+                            onChange(color || '');
+                        }
+                    }))
+                );
+            case 'date':
+            case 'datetime':
+                return el('div', { className: 'hb-datetime-control hyperblocks-datetime-control' },
+                    el(components.DateTimePicker, {
+                        currentDate: typeof current === 'string' && current ? current : undefined,
+                        onChange: function (next) {
+                            var nextValue = next || '';
+                            onChange(field.type === 'date' ? nextValue.slice(0, 10) : nextValue);
+                        }
+                    }),
+                    el('span', { className: 'hb-field-label hyperblocks-field-label' }, makeLabel(el, field))
+                );
+            case 'image':
+            case 'file':
+                if (!window.wp.blockEditor.MediaUpload || !window.wp.components.Button) {
+                    warnUnsupportedType(field.type);
+                    return null;
+                }
+                return el(window.wp.blockEditor.MediaUpload, {
+                    onSelect: function (media) {
+                        if (!media) {
+                            return;
+                        }
+                        onChange(field.type === 'image' ? (media.id || 0) : (media.url || ''));
+                    },
+                    allowedTypes: field.type === 'image' ? ['image'] : [],
+                    value: field.type === 'image' ? (typeof current === 'number' ? current : 0) : undefined,
+                    render: function (open) {
+                        var hasValue = field.type === 'image' ? !!current : !!current;
+                        return el('div', { className: 'hb-media-control hyperblocks-media-control' },
+                            el('span', { className: 'hb-field-label hyperblocks-field-label' }, makeLabel(el, field)),
+                            el(window.wp.components.Button, {
+                                variant: 'secondary',
+                                onClick: open.open
+                            }, hasValue ? 'Replace' : 'Select'),
+                            hasValue ? el(window.wp.components.Button, {
+                                variant: 'link',
+                                isDestructive: true,
+                                onClick: function () {
+                                    onChange(field.type === 'image' ? 0 : '');
+                                }
+                            }, 'Remove') : null
+                        );
+                    }
+                });
+            case 'separator':
+                return el('hr', { className: 'hb-sidebar-separator hyperblocks-sidebar-separator' });
+            case 'heading':
+                return el('div', { className: 'hb-sidebar-heading hyperblocks-sidebar-heading' }, field.label || '');
+            default:
+                warnUnsupportedType(field.type);
+                return null;
+        }
+    }
+
+    function makeLabel(el, field) {
+        var label = field.label || field.name;
+        if (!field.live) {
+            return label;
+        }
+        return el('span', { className: 'hb-field-label hyperblocks-field-label' },
+            label,
+            el('span', {
+                className: 'hb-live-badge hyperblocks-live-badge',
+                title: 'Changes re-render the block preview.'
+            }, 'live')
+        );
+    }
+
+    /**
+     * Set one attribute through the block's setAttributes. Undefined values
+     * drop the key so the server default applies again.
+     */
+    function attributeSetter(props, fieldName) {
+        return function (value) {
+            var change = {};
+            change[fieldName] = value;
+            props.setAttributes(change);
+        };
+    }
+
+    function renderSections(group, props) {
+        var el = window.wp.element.createElement;
+        var components = window.wp.components;
+        var out = [];
+        group.sections.forEach(function (section, sectionIndex) {
+            var controls = section.fields
+                .map(function (field) {
+                    var control = createControl(field, props.attributes[field.name], attributeSetter(props, field.name));
+                    if (!control) {
+                        return null;
+                    }
+                    return el(window.wp.element.Fragment, { key: field.name }, control);
+                })
+                .filter(Boolean);
+            if (!controls.length) {
+                return;
+            }
+            if (section.label) {
+                out.push(el(components.PanelBody, {
+                    key: 'section-' + sectionIndex + '-' + section.label,
+                    title: section.label,
+                    initialOpen: true
+                }, controls));
+            } else {
+                out.push.apply(out, controls);
+            }
+        });
+        return out;
+    }
+
+    function renderInspector(entry, props, sample, setSample) {
+        var el = window.wp.element.createElement;
+        var components = window.wp.components;
+        var fields = (entry.fields || []).filter(function (field) {
+            return !!(field && field.name) && evaluateLogic(field.conditional_logic, props.attributes);
+        });
+        var grouped = groupByTabs(fields);
+        var children = [];
+
+        if (grouped.useTabs && grouped.tabs.length) {
+            var tabDefs = buildTabDefs(grouped.tabs);
+            children.push(el(components.TabPanel, {
+                className: 'hb-sidebar-tabs hyperblocks-sidebar-tabs',
+                tabs: tabDefs.map(function (tabDef) {
+                    return { name: tabDef.name, title: tabDef.group.label };
+                }),
+                children: function (tab) {
+                    var tabDef = tabDefs.find(function (candidate) {
+                        return candidate.name === tab.name;
+                    });
+                    var group = tabDef ? tabDef.group : { label: '', sections: [] };
+                    return el('div', { className: 'hb-tab-panel hyperblocks-tab-panel' }, renderSections(group, props));
+                }
+            }));
+        } else {
+            grouped.tabs.forEach(function (group) {
+                children.push.apply(children, renderSections(group, props));
+            });
+        }
+
+        children.push(el(components.PanelBody, {
+            title: 'Preview data',
+            initialOpen: false
+        }, el(components.ToggleControl, {
+            label: 'Show sample data',
+            help: 'Preview only. Never saved with the block.',
+            checked: sample,
+            onChange: setSample
+        })));
+
+        return children;
+    }
+
+    /**
+     * Canvas replacement while sample mode is on: fetches the server render
+     * through the hyperblocks render-preview route with the sample flag. The
+     * flag is a fetch-time argument, never an attribute, so nothing sample-
+     * derived can persist in post content.
+     */
+    function createSamplePreview(entry) {
+        return function (props) {
+            var el = window.wp.element.createElement;
+            var useState = window.wp.element.useState;
+            var useEffect = window.wp.element.useEffect;
+            var blockProps = window.wp.blockEditor.useBlockProps();
+
+            var state = useState({ html: '', loading: true });
+            var preview = state[0];
+            var setPreview = state[1];
+
+            var attributesKey = JSON.stringify(props.attributes || {});
+            useEffect(function () {
+                var cancelled = false;
+                var timer = setTimeout(function () {
+                    var request = window.wp.apiFetch
+                        ? window.wp.apiFetch({
+                            path: '/hyperblocks/v1/render-preview',
+                            method: 'POST',
+                            data: {
+                                blockName: entry.name,
+                                attributes: props.attributes || {},
+                                sample: true
+                            }
+                        })
+                        : Promise.reject(new Error('wp.apiFetch unavailable'));
+
+                    request.then(function (response) {
+                        if (!cancelled) {
+                            setPreview({ html: (response && response.html) || '', loading: false });
+                        }
+                    }).catch(function () {
+                        if (!cancelled) {
+                            setPreview(function (current) {
+                                return { html: current.html, loading: false };
+                            });
+                        }
+                    });
+                }, preview.html ? 350 : 0);
+
+                return function () {
+                    cancelled = true;
+                    clearTimeout(timer);
+                };
+            }, [attributesKey]);
+
+            return el('div', blockProps,
+                // Inline styles: under apiVersion 3 the canvas is iframed and
+                // editor.css never reaches it.
+                el('div', {
+                    className: 'hb-sample-preview hyperblocks-sample-preview',
+                    style: {
+                        outline: '2px dashed #9ca3af',
+                        outlineOffset: '-2px',
+                        padding: '8px',
+                    },
+                    dangerouslySetInnerHTML: { __html: preview.html }
+                }));
+        };
+    }
+
+    /**
+     * Wrap a canvas edit component with the schema-driven inspector: tabs,
+     * sections, controls, conditional visibility, live badges, and the
+     * sample-data preview toggle.
+     */
+    function createSidebarEdit(entry, baseEdit) {
+        return function (props) {
+            var el = window.wp.element.createElement;
+            var useState = window.wp.element.useState;
+            var useMemo = window.wp.element.useMemo;
+
+            var sampleState = useState(false);
+            var sample = sampleState[0];
+            var setSample = sampleState[1];
+
+            // Built once per block entry: creating the component inside the
+            // render would change its type each render and remount it,
+            // resetting preview state and defeating the debounce.
+            var SamplePreview = useMemo(function () {
+                return createSamplePreview(entry);
+            }, [entry]);
+
+            var inspector = el(window.wp.blockEditor.InspectorControls, {},
+                renderInspector(entry, props, sample, setSample));
+            var canvas = sample
+                ? el(SamplePreview, props)
+                : el(baseEdit, props);
+
+            return el(window.wp.element.Fragment, {}, inspector, canvas);
+        };
+    }
+
+    /**
+     * Build the edit component for a plain (non-slotted) block: a
+     * ServerSideRender preview inside the block wrapper.
+     */
+    function createPlainEdit() {
+        return function (props) {
+            // useBlockProps wires block selection, focus, and the
+            // supports.* features (align, anchor, customClassName)
+            // the editor applies to the block wrapper. Without it
+            // those features silently fail and, under apiVersion 3,
+            // the block breaks entirely. Core's own dynamic blocks
+            // wrap their ServerSideRender output in useBlockProps.
+            var blockProps = window.wp.blockEditor.useBlockProps();
+            return window.wp.element.createElement('div', blockProps, window.wp.element.createElement(window.wp.serverSideRender, {
+                block: props.name,
+                attributes: props.attributes
+            }));
+        };
+    }
+
+    /**
      * Register every block described in window.hyperBlocksConfig.
      */
     function registerHyperBlocks() {
@@ -199,6 +776,11 @@
 
             var el = window.wp.element.createElement;
             var slotted = entry.innerBlocks && typeof entry.innerBlocks === 'object';
+            var useSidebar = entry.editorSidebar === true &&
+                Array.isArray(entry.fields) &&
+                entry.fields.length > 0 &&
+                sidebarAvailable();
+            var baseEdit = slotted ? createSlottedEdit(entry) : createPlainEdit();
 
             window.wp.blocks.registerBlockType(entry.name, {
                 // Mirrors the server-side api_version (injected per block via
@@ -206,21 +788,9 @@
                 apiVersion: entry.apiVersion || 3,
                 title: entry.title || entry.name,
                 icon: entry.icon || 'block-default',
-                edit: slotted
-                    ? createSlottedEdit(entry)
-                    : function (props) {
-                        // useBlockProps wires block selection, focus, and the
-                        // supports.* features (align, anchor, customClassName)
-                        // the editor applies to the block wrapper. Without it
-                        // those features silently fail and, under apiVersion 3,
-                        // the block breaks entirely. Core's own dynamic blocks
-                        // wrap their ServerSideRender output in useBlockProps.
-                        var blockProps = window.wp.blockEditor.useBlockProps();
-                        return el('div', blockProps, el(window.wp.serverSideRender, {
-                            block: props.name,
-                            attributes: props.attributes
-                        }));
-                    },
+                edit: useSidebar
+                    ? createSidebarEdit(entry, baseEdit)
+                    : baseEdit,
                 // Slotted blocks store nested markup between their delimiters;
                 // empty inner blocks still serialize self-closing, so opting in
                 // changes nothing for instances without children. Plain dynamic

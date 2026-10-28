@@ -24,14 +24,14 @@ if ($conditional_logic) {
 }
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
-    <div class="hyperpress-field-row">
-        <div class="hyperpress-field-label">
+<div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <div class="hf-field-row hyperpress-field-row">
+        <div class="hf-field-label hyperpress-field-label">
             <label for="<?php echo esc_attr($name); ?>" class="<?php echo esc_attr($label_class); ?>">
                 <?php echo esc_html($label); ?>
             </label>
         </div>
-        <div class="hyperpress-field-input-wrapper">
+        <div class="hf-field-input-wrapper hyperpress-field-input-wrapper">
             <!-- Hidden input to ensure the field is always sent in POST data -->
             <input type="hidden" name="<?php echo esc_attr($name_attr); ?>" value="0">
             <label>

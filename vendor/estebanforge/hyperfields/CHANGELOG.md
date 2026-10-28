@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.7.1] - 2026-10-28
+
+### Added
+- **Shorthand `hf-*` CSS classes and variables.** Renamed internal classes and CSS custom properties to `hf-*` while retaining full backward compatibility for `hyperpress-*`.
+- **Aliased nonces and form fields.** Admin form actions and security nonces now support canonical `hyperfields_*` alongside `hyperpress_*` legacy fallbacks.
+
+## [1.7.0] - 2026-10-26
+
+### Added
+- **Field schema options for editor sidebars: `tab`, `section`, `live`.** `Field::setTab()` / `setSection()` group fields inside editor sidebars (tab -> section -> control), and `setLive()` marks fields whose changes re-render the block preview. Values ride the existing `toArray()` output, so REST consumers (such as the HyperBlocks `/block-fields` endpoint) receive them without a new endpoint. Defaults (`null` / `null` / `false`) keep existing serialized output shape-compatible.
+- **Conditional logic is canonicalized on write.** `Field::setConditionalLogic()` now runs its input through `ConditionalLogic::factory()->toArray()`, so every shape the factory accepts (a single condition, a flat condition list, a `{relation, conditions}` map, or a group list) is stored as the same `{relation, conditions, groups}` structure. Raw input was stored verbatim before; consumers reading the raw shape must read the canonical one.
+- **Option maps serialize as `[{value, label}]`.** `toArray()` converts keyed option maps (string or non-sequential integer keys) to a value/label list, so JSON transports cannot lose stored values. Scalar lists are unchanged and keep value=label semantics; a 0-based sequential integer map is indistinguishable from a scalar list in PHP and also stays value=label — use string or non-sequential keys when stored values matter.
+
+### Fixed
+- **Multiselect block attributes are now typed `array`.** The block attribute type map fell through to `string` for `multiselect` fields, so every array value a block editor saved failed attribute validation and silently reverted to the field default. Upgrade note: stored scalar values on existing multiselect fields revert to the field default once this ships, because the attribute type changed from `string` to `array`.
+
 ## [1.6.1] - 2026-09-10
 
 ### Added

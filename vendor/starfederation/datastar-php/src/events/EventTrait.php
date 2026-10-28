@@ -5,6 +5,7 @@
 
 namespace starfederation\datastar\events;
 
+use InvalidArgumentException;
 use starfederation\datastar\Consts;
 use starfederation\datastar\ServerSentEventData;
 
@@ -44,6 +45,10 @@ trait EventTrait
      */
     public function getDataLine(string $datalineLiteral, string|int $value = ''): string
     {
+        if (strpbrk($datalineLiteral . $value, "\r\n") !== false) {
+            throw new InvalidArgumentException('Single-line SSE data must not contain carriage returns or line feeds.');
+        }
+
         return 'data: ' . $datalineLiteral . $value;
     }
 
@@ -52,14 +57,10 @@ trait EventTrait
      */
     public function getMultiDataLines(string $datalineLiteral, string $data): array
     {
-        $dataLines = [];
-        $lines = explode("\n", trim($data));
+        $prefix = $this->getDataLine($datalineLiteral);
+        $data = str_replace(["\r\n", "\r"], "\n", $data);
 
-        foreach ($lines as $line) {
-            $dataLines[] = $this->getDataLine($datalineLiteral, $line);
-        }
-
-        return $dataLines;
+        return explode("\n", $prefix . str_replace("\n", "\n" . $prefix, trim($data)));
     }
 
     /**
@@ -79,20 +80,24 @@ trait EventTrait
             $eventData->$key = $value;
         }
 
-        $output = ['event: ' . $eventData->eventType->value];
+        $output = 'event: ' . $eventData->eventType->value;
 
         if ($eventData->eventId !== null) {
-            $output[] = 'id: ' . $eventData->eventId;
+            if (strpbrk($eventData->eventId, "\r\n\0") !== false) {
+                throw new InvalidArgumentException('SSE event IDs must not contain carriage returns, line feeds, or null bytes.');
+            }
+
+            $output .= "\n" . 'id: ' . $eventData->eventId;
         }
 
         if ($eventData->retryDuration !== Consts::DEFAULT_SSE_RETRY_DURATION) {
-            $output[] = 'retry: ' . $eventData->retryDuration;
+            $output .= "\n" . 'retry: ' . $eventData->retryDuration;
         }
 
-        foreach ($eventData->data as $line) {
-            $output[] = $line;
+        if ($eventData->data !== []) {
+            $output .= "\n" . implode("\n", $eventData->data);
         }
 
-        return implode("\n", $output) . "\n\n";
+        return $output . "\n\n";
     }
 }

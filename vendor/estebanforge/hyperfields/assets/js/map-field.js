@@ -37,7 +37,7 @@
     }
 
     function initMapFields() {
-        var canvases = document.querySelectorAll('.hyperpress-map-canvas');
+        var canvases = document.querySelectorAll('.hf-map-canvas, .hyperpress-map-canvas');
         for (var i = 0; i < canvases.length; i += 1) {
             initMapField(canvases[i]);
         }

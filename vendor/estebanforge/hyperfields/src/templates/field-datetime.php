@@ -21,20 +21,20 @@ if ($conditional_logic) {
 }
 ?>
 
-<div class="hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
-    <label for="<?php echo esc_attr($name); ?>" class="hyperpress-field-label">
+<div class="hf-field-wrapper hyperpress-field-wrapper"<?php echo $conditional_attr; ?>>
+    <label for="<?php echo esc_attr($name); ?>" class="hf-field-label hyperpress-field-label">
         <?php echo esc_html($label); ?>
         <?php if ($required): ?><span class="required">*</span><?php endif; ?>
     </label>
 
-    <div class="hyperpress-field-input">
+    <div class="hf-field-input hyperpress-field-input">
         <input type="datetime-local" 
                id="<?php echo esc_attr($name); ?>" 
                name="<?php echo esc_attr($name_attr); ?>" 
                value="<?php echo esc_attr($value); ?>" 
                placeholder="<?php echo esc_attr($placeholder); ?>" 
                <?php echo $required ? 'required' : ''; ?>
-               class="regular-text hyperpress-datetime-picker">
+               class="regular-text hf-datetime-picker hyperpress-datetime-picker">
 
         <?php if ($help): ?>
             <p class="description"><?php echo esc_html($help); ?></p>
