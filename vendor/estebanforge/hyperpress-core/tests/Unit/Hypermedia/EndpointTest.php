@@ -19,7 +19,7 @@ class EndpointTest extends TestCase
             'rest_ensure_response',
             'wp_remote_get',
             'wp_remote_post',
-            'wp_remote_retrieve_body'
+            'wp_remote_retrieve_body',
         ];
 
         foreach ($restFunctions as $function) {
@@ -36,16 +36,16 @@ class EndpointTest extends TestCase
         $expectedRoutes = [
             '/wp-html/v1/template' => [
                 'methods' => ['GET', 'POST'],
-                'callback' => 'handle_template_request'
+                'callback' => 'handle_template_request',
             ],
             '/wp-html/v1/component' => [
                 'methods' => ['GET', 'POST'],
-                'callback' => 'handle_component_request'
+                'callback' => 'handle_component_request',
             ],
             '/wp-html/v1/data' => [
                 'methods' => ['GET', 'POST'],
-                'callback' => 'handle_data_request'
-            ]
+                'callback' => 'handle_data_request',
+            ],
         ];
 
         foreach ($expectedRoutes as $route => $config) {
@@ -86,7 +86,7 @@ class EndpointTest extends TestCase
             'data-star-signals' => 'string',
             'data-star-on' => 'string',
             'data-star-run' => 'string',
-            'data-star-indicator' => 'string'
+            'data-star-indicator' => 'string',
         ];
 
         foreach ($datastarAttributes as $attr => $type) {
@@ -103,7 +103,7 @@ class EndpointTest extends TestCase
             'hx-post' => 'string',
             'hx-trigger' => 'string',
             'hx-target' => 'string',
-            'hx-swap' => 'string'
+            'hx-swap' => 'string',
         ];
 
         foreach ($htmxAttributes as $attr => $type) {
@@ -126,14 +126,14 @@ class EndpointTest extends TestCase
             'x-show' => true,
             'x-hide' => false,
             'x-if' => true,
-            'x-for' => 'item in items'
+            'x-for' => 'item in items',
         ];
         $expectedTypes = [
             'x-data' => 'object',
             'x-show' => 'boolean',
             'x-hide' => 'boolean',
             'x-if' => 'boolean',
-            'x-for' => 'string'
+            'x-for' => 'string',
         ];
 
         foreach ($expectedTypes as $attr => $type) {
@@ -149,13 +149,13 @@ class EndpointTest extends TestCase
         $templateData = [
             'title' => 'Test Template',
             'content' => 'Test content',
-            'data' => ['key' => 'value']
+            'data' => ['key' => 'value'],
         ];
 
         foreach ($templateExtensions as $ext) {
             $this->assertIsString($ext);
-            $this->assertTrue(str_starts_with($ext, '.'), "Extension should start with dot");
-            $this->assertTrue(str_ends_with($ext, '.php'), "Extension should end with .php");
+            $this->assertTrue(str_starts_with($ext, '.'), 'Extension should start with dot');
+            $this->assertTrue(str_ends_with($ext, '.php'), 'Extension should end with .php');
         }
 
         $this->assertArrayHasKey('title', $templateData);
@@ -170,7 +170,7 @@ class EndpointTest extends TestCase
             'wp_verify_nonce',
             'current_user_can',
             'wp_kses_post',
-            'sanitize_text_field'
+            'sanitize_text_field',
         ];
 
         foreach ($securityFunctions as $function) {
@@ -195,7 +195,7 @@ class EndpointTest extends TestCase
             401 => 'Unauthorized',
             403 => 'Forbidden',
             404 => 'Not Found',
-            500 => 'Internal Server Error'
+            500 => 'Internal Server Error',
         ];
 
         foreach ($errorResponses as $code => $message) {
@@ -217,7 +217,7 @@ class EndpointTest extends TestCase
             'caching' => 'bool',
             'lazy_loading' => 'bool',
             'minification' => 'bool',
-            'compression' => 'bool'
+            'compression' => 'bool',
         ];
 
         foreach ($optimizationFeatures as $feature => $type) {
@@ -234,7 +234,7 @@ class EndpointTest extends TestCase
             'base_url' => rest_url('wp-html/v1/'),
             'version' => \HyperPress\Config::VERSION,
             'timeout' => 30,
-            'max_response_size' => 1024 * 1024 // 1MB
+            'max_response_size' => 1024 * 1024, // 1MB
         ];
 
         $this->assertArrayHasKey('namespace', $config);

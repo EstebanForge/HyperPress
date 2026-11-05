@@ -209,7 +209,7 @@ class RenderStrictModeTest extends TestCase
      */
     public function testStrictRefusalStopsBeforeResolution(): void
     {
-        $render = new class () extends Render {
+        $render = new class extends Render {
             public bool $strict = true;
             public array $allowed = [];
             /** @var array<int, array{0: string, 1: string}> */
@@ -256,7 +256,7 @@ class RenderStrictModeTest extends TestCase
      */
     public function testStrictAllowedProceedsToResolution(): void
     {
-        $render = new class () extends Render {
+        $render = new class extends Render {
             public array $pages = [];
             public bool $resolved = false;
 
@@ -302,7 +302,7 @@ class RenderStrictModeTest extends TestCase
      */
     public function testStrictOffRendersUnregisteredTemplate(): void
     {
-        $render = new class () extends Render {
+        $render = new class extends Render {
             public array $pages = [];
             public bool $resolved = false;
 

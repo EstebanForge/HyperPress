@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * PHPUnit Bootstrap for HyperPress
+ * PHPUnit Bootstrap for HyperPress.
  *
  * Sets up the testing environment and loads necessary dependencies.
  */
@@ -35,141 +35,167 @@ if (!defined('WP_CONTENT_URL')) {
 // Mock critical WordPress functions needed before Brain\Monkey loads
 // These are needed by bootstrap files loaded via composer autoload
 if (!function_exists('get_file_data')) {
-    function get_file_data($file, $default_headers, $context = '') {
+    function get_file_data($file, $default_headers, $context = '')
+    {
         return [];
     }
 }
 
 if (!function_exists('add_action')) {
-    function add_action($hook, $callback, $priority = 10, $args = 1) {
+    function add_action($hook, $callback, $priority = 10, $args = 1)
+    {
         return true;
     }
 }
 
 if (!function_exists('add_filter')) {
-    function add_filter($hook, $callback, $priority = 10, $args = 1) {
+    function add_filter($hook, $callback, $priority = 10, $args = 1)
+    {
         return true;
     }
 }
 
 if (!function_exists('has_action')) {
-    function has_action($hook, $callback = false) {
+    function has_action($hook, $callback = false)
+    {
         return false;
     }
 }
 
 if (!function_exists('trailingslashit')) {
-    function trailingslashit($string) {
+    function trailingslashit($string)
+    {
         return rtrim($string, '/\\') . '/';
     }
 }
 
 if (!function_exists('apply_filters')) {
-    function apply_filters($tag, $value = null, ...$args) {
+    function apply_filters($tag, $value = null, ...$args)
+    {
         return $value;
     }
 }
 
 if (!function_exists('__')) {
-    function __($text, $domain = 'default') {
+    function __($text, $domain = 'default')
+    {
         return $text;
     }
 }
 
 if (!function_exists('esc_html__')) {
-    function esc_html__($text, $domain = 'default') {
+    function esc_html__($text, $domain = 'default')
+    {
         return htmlspecialchars((string) $text, ENT_QUOTES, 'UTF-8');
     }
 }
 
 if (!function_exists('_e')) {
-    function _e($text, $domain = 'default') {
+    function _e($text, $domain = 'default')
+    {
         echo $text;
     }
 }
 
 if (!function_exists('esc_html')) {
-    function esc_html($text) {
+    function esc_html($text)
+    {
         return htmlspecialchars((string) $text, ENT_QUOTES, 'UTF-8');
     }
 }
 
 if (!function_exists('esc_attr')) {
-    function esc_attr($text) {
+    function esc_attr($text)
+    {
         return htmlspecialchars((string) $text, ENT_QUOTES, 'UTF-8');
     }
 }
 
 if (!function_exists('is_admin')) {
-    function is_admin() {
+    function is_admin()
+    {
         return true;
     }
 }
 
 if (!function_exists('get_option')) {
-    function get_option($option, $default = false) {
+    function get_option($option, $default = false)
+    {
         return $default;
     }
 }
 
 if (!function_exists('wp_parse_args')) {
-    function wp_parse_args($args, $defaults = []) {
+    function wp_parse_args($args, $defaults = [])
+    {
         $parsed = is_array($args) ? $args : [];
         $defaults = is_array($defaults) ? $defaults : [];
+
         return array_merge($defaults, $parsed);
     }
 }
 
 if (!function_exists('wp_enqueue_script')) {
-    function wp_enqueue_script($handle) {
+    function wp_enqueue_script($handle)
+    {
         return true;
     }
 }
 
 if (!function_exists('wp_enqueue_style')) {
-    function wp_enqueue_style($handle) {
+    function wp_enqueue_style($handle)
+    {
         return true;
     }
 }
 
 if (!function_exists('wp_register_script')) {
-    function wp_register_script($handle) {
+    function wp_register_script($handle)
+    {
         return true;
     }
 }
 
 if (!function_exists('wp_register_style')) {
-    function wp_register_style($handle) {
+    function wp_register_style($handle)
+    {
         return true;
     }
 }
 
 if (!function_exists('plugins_url')) {
-    function plugins_url($path = '', $plugin = '') {
+    function plugins_url($path = '', $plugin = '')
+    {
         $base = 'http://localhost/wp-content/plugins/HyperPress-Core';
         if ($path === '' || $path === null) {
             return $base;
         }
+
         return rtrim($base, '/') . '/' . ltrim($path, '/');
     }
 }
 
 if (!function_exists('plugin_dir_url')) {
-    function plugin_dir_url($file) {
+    function plugin_dir_url($file)
+    {
         return 'http://localhost/wp-content/plugins/HyperPress-Core/';
     }
 }
 
 if (!function_exists('rest_url')) {
-    function rest_url($path = '') {
+    function rest_url($path = '')
+    {
         $base = 'http://localhost/wp-json/';
+
         return rtrim($base, '/') . '/' . ltrim($path, '/');
     }
 }
 
 if (!function_exists('home_url')) {
-    function home_url($path = '') {
+    function home_url($path = '')
+    {
         $base = 'http://localhost';
+
         return $path === '' ? $base : rtrim($base, '/') . '/' . ltrim($path, '/');
     }
 }
@@ -179,33 +205,40 @@ if (!function_exists('home_url')) {
 // mirroring the passthrough philosophy used for get_option above. Defined
 // before Brain Monkey loads, so Brain Monkey cannot redefine them later.
 if (!function_exists('wp_register_ability_category')) {
-    function wp_register_ability_category($slug, $args = []) {
+    function wp_register_ability_category($slug, $args = [])
+    {
         $GLOBALS['__hp_registered_ability_categories'][$slug] = $args;
+
         return null;
     }
 }
 
 if (!function_exists('wp_register_ability')) {
-    function wp_register_ability($name, $args = []) {
+    function wp_register_ability($name, $args = [])
+    {
         $GLOBALS['__hp_registered_abilities'][$name] = $args;
+
         return null;
     }
 }
 
 if (!function_exists('rest_ensure_response')) {
-    function rest_ensure_response($response) {
+    function rest_ensure_response($response)
+    {
         return $response;
     }
 }
 
 if (!function_exists('is_multisite')) {
-    function is_multisite() {
+    function is_multisite()
+    {
         return false;
     }
 }
 
 if (!function_exists('dbDelta')) {
-    function dbDelta($queries) {
+    function dbDelta($queries)
+    {
         return [];
     }
 }
@@ -218,7 +251,8 @@ if (!function_exists('wp_verify_nonce')) {
      * pre-bootstrap passthrough Patchwork cannot override (see the caveat in
      * tests/Unit/Admin/OptionsTest.php).
      */
-    function wp_verify_nonce($nonce, $action = -1) {
+    function wp_verify_nonce($nonce, $action = -1)
+    {
         $valid_actions = $GLOBALS['__hp_test_nonce_valid_actions'] ?? null;
         if (is_array($valid_actions)) {
             return in_array($action, $valid_actions, true) ? 1 : false;
@@ -230,15 +264,18 @@ if (!function_exists('wp_verify_nonce')) {
 }
 
 if (!function_exists('wp_kses_post')) {
-    function wp_kses_post($content) {
+    function wp_kses_post($content)
+    {
         return $content;
     }
 }
 
 if (!function_exists('sanitize_text_field')) {
-    function sanitize_text_field($text) {
+    function sanitize_text_field($text)
+    {
         $text = preg_replace('#<script[^>]*>.*?</script>#si', '', (string) $text);
         $text = strip_tags($text);
+
         return trim($text);
     }
 }
@@ -258,31 +295,36 @@ Brain\Monkey\setUp();
 
 // Mock plugin helper functions
 if (!function_exists('plugin_dir_path')) {
-    function plugin_dir_path($file) {
+    function plugin_dir_path($file)
+    {
         return dirname($file) . '/';
     }
 }
 
 if (!function_exists('plugin_basename')) {
-    function plugin_basename($file) {
+    function plugin_basename($file)
+    {
         return basename(dirname($file)) . '/' . basename($file);
     }
 }
 
 if (!function_exists('register_activation_hook')) {
-    function register_activation_hook($file, $callback) {
+    function register_activation_hook($file, $callback)
+    {
         return true;
     }
 }
 
 if (!function_exists('register_deactivation_hook')) {
-    function register_deactivation_hook($file, $callback) {
+    function register_deactivation_hook($file, $callback)
+    {
         return true;
     }
 }
 
 if (!function_exists('hyperpress_test_get_plugin_version')) {
-    function hyperpress_test_get_plugin_version(): string {
+    function hyperpress_test_get_plugin_version(): string
+    {
         $pluginFileCandidates = [
             dirname(__DIR__) . '/hyperpress.php',
             dirname(__DIR__) . '/api-for-htmx.php',
@@ -323,11 +365,11 @@ if (!defined('HYPERPRESS_DIR')) {
     define('HYPERPRESS_DIR', dirname(__DIR__));
 }
 
-\HyperPress\Config::markInitialized();
-\HyperPress\Config::$abspath = HYPERPRESS_DIR . '/';
-\HyperPress\Config::$pluginFile = HYPERPRESS_DIR . '/bootstrap.php';
-\HyperPress\Config::$pluginUrl = 'http://localhost/wp-content/plugins/HyperPress-Core/';
-\HyperPress\Config::$basename = 'hyperpress/bootstrap.php';
+HyperPress\Config::markInitialized();
+HyperPress\Config::$abspath = HYPERPRESS_DIR . '/';
+HyperPress\Config::$pluginFile = HYPERPRESS_DIR . '/bootstrap.php';
+HyperPress\Config::$pluginUrl = 'http://localhost/wp-content/plugins/HyperPress-Core/';
+HyperPress\Config::$basename = 'hyperpress/bootstrap.php';
 
 // Load the procedural helper API (mirrors Bootstrap::init(), which unit
 // tests bypass). Loaded here after ABSPATH is set, never via autoload.files.

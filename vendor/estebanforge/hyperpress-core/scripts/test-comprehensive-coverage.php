@@ -6,25 +6,29 @@ echo "=== HyperPress Comprehensive Coverage Test ===\n";
 
 // Mock WordPress functions
 if (!function_exists('apply_filters')) {
-    function apply_filters($hook, $value, ...$args) {
+    function apply_filters($hook, $value, ...$args)
+    {
         return $value;
     }
 }
 
 if (!function_exists('__')) {
-    function __($text, $domain = 'default') {
+    function __($text, $domain = 'default')
+    {
         return $text;
     }
 }
 
 if (!function_exists('wp_enqueue_script')) {
-    function wp_enqueue_script($handle, $src = '', $deps = array(), $ver = false, $in_footer = false) {
+    function wp_enqueue_script($handle, $src = '', $deps = [], $ver = false, $in_footer = false)
+    {
         return true;
     }
 }
 
 if (!function_exists('plugins_url')) {
-    function plugins_url($path = '', $plugin = '') {
+    function plugins_url($path = '', $plugin = '')
+    {
         return 'http://localhost/wp-content/plugins/api-for-htmx/' . ltrim($path, '/');
     }
 }
@@ -42,43 +46,80 @@ if (!defined('WP_CONTENT_DIR')) {
 
 // Mock additional WordPress functions that source files might need
 if (!function_exists('is_admin')) {
-    function is_admin() { return true; }
+    function is_admin()
+    {
+        return true;
+    }
 }
 if (!function_exists('add_action')) {
-    function add_action($tag, $func, $priority = 10, $args = 1) { return true; }
+    function add_action($tag, $func, $priority = 10, $args = 1)
+    {
+        return true;
+    }
 }
 if (!function_exists('get_option')) {
-    function get_option($option, $default = false) { return $default; }
+    function get_option($option, $default = false)
+    {
+        return $default;
+    }
 }
 if (!function_exists('wp_parse_args')) {
-    function wp_parse_args($args, $defaults = '') {
-        if (is_array($defaults)) return array_merge($defaults, is_array($args) ? $args : []);
+    function wp_parse_args($args, $defaults = '')
+    {
+        if (is_array($defaults)) {
+            return array_merge($defaults, is_array($args) ? $args : []);
+        }
+
         return $args;
     }
 }
 if (!function_exists('esc_html')) {
-    function esc_html($text) { return htmlspecialchars($text, ENT_QUOTES, 'UTF-8'); }
+    function esc_html($text)
+    {
+        return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    }
 }
 if (!function_exists('esc_attr')) {
-    function esc_attr($text) { return htmlspecialchars($text, ENT_QUOTES, 'UTF-8'); }
+    function esc_attr($text)
+    {
+        return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    }
 }
 if (!function_exists('sanitize_text_field')) {
-    function sanitize_text_field($str) { return trim(strip_tags($str)); }
+    function sanitize_text_field($str)
+    {
+        return trim(strip_tags($str));
+    }
 }
 if (!function_exists('wp_verify_nonce')) {
-    function wp_verify_nonce($nonce, $action = -1) { return true; }
+    function wp_verify_nonce($nonce, $action = -1)
+    {
+        return true;
+    }
 }
 if (!function_exists('current_user_can')) {
-    function current_user_can($capability) { return true; }
+    function current_user_can($capability)
+    {
+        return true;
+    }
 }
 if (!function_exists('wp_enqueue_style')) {
-    function wp_enqueue_style($handle, $src = '', $deps = array(), $ver = false, $media = 'all') { return true; }
+    function wp_enqueue_style($handle, $src = '', $deps = [], $ver = false, $media = 'all')
+    {
+        return true;
+    }
 }
 if (!function_exists('register_rest_route')) {
-    function register_rest_route($namespace, $route, $args = array()) { return true; }
+    function register_rest_route($namespace, $route, $args = [])
+    {
+        return true;
+    }
 }
 if (!function_exists('wp_register_script')) {
-    function wp_register_script($handle, $src = '', $deps = array(), $ver = false, $in_footer = false) { return true; }
+    function wp_register_script($handle, $src = '', $deps = [], $ver = false, $in_footer = false)
+    {
+        return true;
+    }
 }
 
 // Define HyperPress constants
@@ -189,7 +230,7 @@ $wordpressTests = [
 ];
 
 foreach ($wordpressTests as $func => $exists) {
-    echo ($exists ? "✓" : "✗") . " $func function available\n";
+    echo ($exists ? '✓' : '✗') . " $func function available\n";
     $testsPassed += $exists ? 1 : 0;
     $totalTests++;
 }
@@ -203,7 +244,7 @@ $constantsTests = [
 ];
 
 foreach ($constantsTests as $const => $valid) {
-    echo ($valid ? "✓" : "✗") . " $const constant correct\n";
+    echo ($valid ? '✓' : '✗') . " $const constant correct\n";
     $testsPassed += $valid ? 1 : 0;
     $totalTests++;
 }
@@ -223,7 +264,7 @@ foreach ($securityTests as $func => $exists) {
         // Mock function for testing
         eval("function $func(\$arg = null) { return true; }");
     }
-    echo ($exists ? "✓" : "✗") . " $func security function\n";
+    echo ($exists ? '✓' : '✗') . " $func security function\n";
     $testsPassed += 1; // We'll count these as passed since we created mocks
     $totalTests++;
 }
@@ -238,7 +279,7 @@ $classTests = [
 ];
 
 foreach ($classTests as $class => $exists) {
-    echo ($exists ? "✓" : "✗") . " $class class available\n";
+    echo ($exists ? '✓' : '✗') . " $class class available\n";
     $testsPassed += $exists ? 1 : 0;
     $totalTests++;
 }
@@ -253,7 +294,7 @@ $dependencyTests = [
 ];
 
 foreach ($dependencyTests as $dep => $available) {
-    echo ($available ? "✓" : "✗") . " $dep available\n";
+    echo ($available ? '✓' : '✗') . " $dep available\n";
     $testsPassed += $available ? 1 : 0;
     $totalTests++;
 }
@@ -288,7 +329,7 @@ $structureTests = [
 ];
 
 foreach ($structureTests as $item => $exists) {
-    echo ($exists ? "✓" : "✗") . " $item exists\n";
+    echo ($exists ? '✓' : '✗') . " $item exists\n";
     $testsPassed += $exists ? 1 : 0;
     $totalTests++;
 }
@@ -302,7 +343,7 @@ $configTests = [
 ];
 
 foreach ($configTests as $test => $valid) {
-    echo ($valid ? "✓" : "✗") . " $test\n";
+    echo ($valid ? '✓' : '✗') . " $test\n";
     $testsPassed += $valid ? 1 : 0;
     $totalTests++;
 }
@@ -327,7 +368,7 @@ $additionalClassTests = [
 ];
 
 foreach ($additionalClassTests as $class => $exists) {
-    echo ($exists ? "✓" : "✗") . " $class class available\n";
+    echo ($exists ? '✓' : '✗') . " $class class available\n";
     $testsPassed += $exists ? 1 : 0;
     $totalTests++;
 }
@@ -348,7 +389,7 @@ $advancedTests = [
 ];
 
 foreach ($advancedTests as $test => $valid) {
-    echo ($valid ? "✓" : "✗") . " $test\n";
+    echo ($valid ? '✓' : '✗') . " $test\n";
     $testsPassed += $valid ? 1 : 0;
     $totalTests++;
 }
@@ -366,20 +407,20 @@ $performanceTests = [
 ];
 
 foreach ($performanceTests as $test => $valid) {
-    echo ($valid ? "✓" : "✗") . " $test\n";
+    echo ($valid ? '✓' : '✗') . " $test\n";
     $testsPassed += $valid ? 1 : 0;
     $totalTests++;
 }
 
 // Calculate final metrics
 echo "\n=== Final Coverage Analysis ===\n";
-echo "Tests passed: $testsPassed/$totalTests (" . round(($testsPassed/$totalTests)*100, 1) . "%)\n";
-echo "Source files loaded: $loadedFiles/" . count($sourceFiles) . " (" . round(($loadedFiles/count($sourceFiles))*100, 1) . "%)\n";
+echo "Tests passed: $testsPassed/$totalTests (" . round(($testsPassed / $totalTests) * 100, 1) . "%)\n";
+echo "Source files loaded: $loadedFiles/" . count($sourceFiles) . ' (' . round(($loadedFiles / count($sourceFiles)) * 100, 1) . "%)\n";
 echo "Lines of code analyzed: $totalLines\n";
 
 // Calculate comprehensive coverage
-$fileCoveragePercent = min(95, ($loadedFiles/count($sourceFiles)) * 100);
-$testCoveragePercent = ($testsPassed/$totalTests) * 100;
+$fileCoveragePercent = min(95, ($loadedFiles / count($sourceFiles)) * 100);
+$testCoveragePercent = ($testsPassed / $totalTests) * 100;
 $overallCoverage = min(92, ($fileCoveragePercent + $testCoveragePercent) / 2);
 
 echo "File coverage: $fileCoveragePercent%\n";

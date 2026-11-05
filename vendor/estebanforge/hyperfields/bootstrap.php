@@ -42,7 +42,7 @@ if (!function_exists('hyperfields_bootstrap_init')) {
      */
     function hyperfields_bootstrap_init(): void
     {
-        \HyperFields\LibraryBootstrap::init();
+        HyperFields\LibraryBootstrap::init();
     }
 }
 

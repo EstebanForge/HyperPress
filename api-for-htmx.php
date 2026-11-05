@@ -1,10 +1,10 @@
 <?php
 
-/**
+/*
  * Plugin Name: HyperPress: Modern Hypermedia for WordPress
  * Plugin URI: https://github.com/EstebanForge/HyperPress
  * Description: Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.
- * Version: 3.6.5
+ * Version: 3.6.6
  * Author: Esteban Cuevas
  * Author URI: https://actitud.xyz
  * License: GPLv2 or later

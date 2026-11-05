@@ -557,6 +557,7 @@ final class Registry
             // must not match foreign block.json files in the same path.
             if (is_array($metadata) && ($metadata['name'] ?? null) === $blockName && self::isOwnedJsonBlock($metadata)) {
                 $this->jsonBlockPathCache[$metadata['name']] = $directory;
+
                 return $directory;
             }
         }

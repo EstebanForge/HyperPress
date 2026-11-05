@@ -197,7 +197,7 @@ it('sanitizes content at the shared preview entry point', function (): void {
 
 it('forwards content to JSON block previews as well', function (): void {
     $dir = sys_get_temp_dir() . '/hb-json-innerblocks-' . uniqid('', true);
-    mkdir($dir . '/json-slotted', 0777, true);
+    mkdir($dir . '/json-slotted', 0o777, true);
     file_put_contents($dir . '/json-slotted/block.json', json_encode([
         'name'        => 'test/json-slotted',
         'title'       => 'Json Slotted',

@@ -43,7 +43,7 @@ if (!function_exists('hyperpress_bootstrap_init')) {
      */
     function hyperpress_bootstrap_init(): void
     {
-        \HyperPress\Bootstrap::init();
+        HyperPress\Bootstrap::init();
     }
 }
 
@@ -132,5 +132,3 @@ if (!$loadedFromVendorTree) {
         }
     }
 }
-
-

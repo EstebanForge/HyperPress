@@ -793,15 +793,19 @@ if (!class_exists('\WP_REST_Server')) {
 // structurally: calls are recorded in $GLOBALS for AbilityRegistrarTest.
 // Defined before Brain Monkey loads, so Brain Monkey cannot redefine them.
 if (!function_exists('wp_register_ability_category')) {
-    function wp_register_ability_category($slug, $args = []) {
+    function wp_register_ability_category($slug, $args = [])
+    {
         $GLOBALS['__hb_registered_ability_categories'][$slug] = $args;
+
         return null;
     }
 }
 
 if (!function_exists('wp_register_ability')) {
-    function wp_register_ability($name, $args = []) {
+    function wp_register_ability($name, $args = [])
+    {
         $GLOBALS['__hb_registered_abilities'][$name] = $args;
+
         return null;
     }
 }

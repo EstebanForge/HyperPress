@@ -39,6 +39,7 @@ class Field
     {
         if ($typeOrProxy instanceof HyperBlocksField) {
             $this->proxy = $typeOrProxy;
+
             return;
         }
 
@@ -91,6 +92,7 @@ class Field
     public function setDefault($default): self
     {
         $this->proxy->setDefault($default);
+
         return $this;
     }
 
@@ -103,6 +105,7 @@ class Field
     public function setPlaceholder(string $placeholder): self
     {
         $this->proxy->setPlaceholder($placeholder);
+
         return $this;
     }
 
@@ -115,6 +118,7 @@ class Field
     public function setRequired(bool $required = true): self
     {
         $this->proxy->setRequired($required);
+
         return $this;
     }
 
@@ -127,6 +131,7 @@ class Field
     public function setHelp(string $help): self
     {
         $this->proxy->setHelp($help);
+
         return $this;
     }
 
@@ -139,6 +144,7 @@ class Field
     public function setOptions(array $options): self
     {
         $this->proxy->setOptions($options);
+
         return $this;
     }
 
@@ -151,6 +157,7 @@ class Field
     public function setValidation(array $validation): self
     {
         $this->proxy->setValidation($validation);
+
         return $this;
     }
 

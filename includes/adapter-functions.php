@@ -10,7 +10,6 @@ declare(strict_types=1);
  * can be unit-tested directly: Brain Monkey (used by the wiring tests) does
  * not execute registered closures, so the pure pieces must be callable alone.
  */
-
 if (!function_exists('hyperpress_adapter_insert_library_versions')) {
     /**
      * Splice $libraryVersions into $info immediately after the $afterKey row.

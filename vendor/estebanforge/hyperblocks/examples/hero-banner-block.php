@@ -1,7 +1,7 @@
 <?php
 
 /**
- * HyperBlocks Block: Hero Banner
+ * HyperBlocks Block: Hero Banner.
  *
  * Example: Hero Banner Block.
  *

@@ -51,7 +51,7 @@ class RegistryTest extends TestCase
         $blockData = [
             'name' => 'test-block',
             'title' => 'Test Block',
-            'category' => 'hyperpress'
+            'category' => 'hyperpress',
         ];
 
         $this->assertIsArray($blockData);
@@ -71,8 +71,8 @@ class RegistryTest extends TestCase
             'keywords' => ['sample', 'test', 'block'],
             'supports' => [
                 'align' => true,
-                'multiple' => true
-            ]
+                'multiple' => true,
+            ],
         ];
 
         $this->assertArrayHasKey('name', $validBlockData);
@@ -92,10 +92,10 @@ class RegistryTest extends TestCase
                 'attributes' => [
                     'content' => [
                         'type' => 'string',
-                        'default' => ''
-                    ]
-                ]
-            ]
+                        'default' => '',
+                    ],
+                ],
+            ],
         ];
 
         $this->assertArrayHasKey('hyperpress', $hyperpressCategories);
@@ -106,7 +106,7 @@ class RegistryTest extends TestCase
     public function testBlockValidation()
     {
         $invalidBlock = [
-            'title' => 'Invalid Block'
+            'title' => 'Invalid Block',
             // Missing required 'name' and 'category'
         ];
 
@@ -116,7 +116,7 @@ class RegistryTest extends TestCase
         $validBlock = [
             'name' => 'valid-block',
             'title' => 'Valid Block',
-            'category' => 'hyperpress'
+            'category' => 'hyperpress',
         ];
 
         $this->assertArrayHasKey('name', $validBlock);

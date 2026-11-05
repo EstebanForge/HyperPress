@@ -123,7 +123,7 @@ class AbilityRegistrarTest extends TestCase
     public function test_register_json_blocks_filter_feeds_lookup_and_inventory(): void
     {
         $dir = sys_get_temp_dir() . '/hb-filtered-' . uniqid('', true);
-        mkdir($dir, 0777, true);
+        mkdir($dir, 0o777, true);
         file_put_contents($dir . '/block.json', (string) json_encode([
             'name'       => 'test/filtered',
             'title'      => 'Filtered',
@@ -288,13 +288,13 @@ class AbilityRegistrarTest extends TestCase
     {
         if ($this->tmp_dir === '') {
             $this->tmp_dir = sys_get_temp_dir() . '/hb-abilities-' . uniqid('', true);
-            mkdir($this->tmp_dir, 0777, true);
+            mkdir($this->tmp_dir, 0o777, true);
             Config::registerBlockPath($this->tmp_dir);
         }
 
         $slug = substr(strrchr($name, '/') ?: $name, 1);
         $dir = $this->tmp_dir . '/' . $slug;
-        mkdir($dir, 0777, true);
+        mkdir($dir, 0o777, true);
 
         file_put_contents($dir . '/block.json', (string) json_encode([
             'name'       => $name,

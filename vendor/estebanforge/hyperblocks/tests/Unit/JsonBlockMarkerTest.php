@@ -6,12 +6,11 @@ namespace HyperBlocks\Tests\Unit;
 
 use HyperBlocks\Config;
 use HyperBlocks\Registry;
-use PHPUnit\Framework\TestCase;
-
-/**
+use HyperBlocks_Testing_Registry;
+/*
  * Global test-capture helper defined in tests/mocks/wp-mocks.php.
  */
-use HyperBlocks_Testing_Registry;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Pins the HyperBlocks JSON-block ownership marker.
@@ -35,7 +34,7 @@ class JsonBlockMarkerTest extends TestCase
 
         // Fresh scan root under sys_get_temp_dir().
         $this->scanDir = sys_get_temp_dir() . '/hb-json-marker-' . uniqid('', true);
-        mkdir($this->scanDir, 0777, true);
+        mkdir($this->scanDir, 0o777, true);
 
         parent::setUp();
     }
@@ -145,7 +144,7 @@ class JsonBlockMarkerTest extends TestCase
      */
     private function writeBlockJson(string $dir, array $payload): void
     {
-        mkdir($dir, 0777, true);
+        mkdir($dir, 0o777, true);
         file_put_contents($dir . '/block.json', json_encode($payload, JSON_PRETTY_PRINT) ?: '');
     }
 

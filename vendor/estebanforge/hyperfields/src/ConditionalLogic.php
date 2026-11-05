@@ -330,11 +330,13 @@ class ConditionalLogic
                 if (is_array($fieldValue)) {
                     return array_intersect($fieldValue, (array) $compareValue) !== [];
                 }
+
                 return in_array($fieldValue, (array) $compareValue, true);
             case 'NOT IN':
                 if (is_array($fieldValue)) {
                     return array_intersect($fieldValue, (array) $compareValue) === [];
                 }
+
                 return !in_array($fieldValue, (array) $compareValue, true);
             case 'CONTAINS':
                 return strpos((string) $fieldValue, (string) $compareValue) !== false;

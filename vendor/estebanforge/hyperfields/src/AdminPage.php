@@ -227,22 +227,22 @@ class AdminPage
             // free from its <form>; AdminPage has no form, so we add an
             // explicit wrapper.
             echo '<div class="hf-notice-region hyperpress-notice-region">';
-            echo '<div class="wp-header-end hf-notice-catcher hyperpress-notice-catcher" id="hyperpress-layout__notice-catcher"></div>';
+        echo '<div class="wp-header-end hf-notice-catcher hyperpress-notice-catcher" id="hyperpress-layout__notice-catcher"></div>';
+        echo '</div>';
+
+        if (isset($this->tabs[$active_tab]) && is_callable($this->tabs[$active_tab]['render'])) {
+            echo '<div class="hf-page-content hyperpress-page-content">';
+            ($this->tabs[$active_tab]['render'])();
             echo '</div>';
+        }
 
-            if (isset($this->tabs[$active_tab]) && is_callable($this->tabs[$active_tab]['render'])) {
-                echo '<div class="hf-page-content hyperpress-page-content">';
-                ($this->tabs[$active_tab]['render'])();
-                echo '</div>';
-            }
-
-            if ($this->footer_content !== null && $this->footer_content !== '') {
-                echo '<div class="hf-options-footer hyperpress-options-footer">';
-                echo wp_kses_post($this->footer_content);
-                echo '</div>';
-            }
-
+        if ($this->footer_content !== null && $this->footer_content !== '') {
+            echo '<div class="hf-options-footer hyperpress-options-footer">';
+            echo wp_kses_post($this->footer_content);
             echo '</div>';
+        }
+
+        echo '</div>';
     }
 
     /**

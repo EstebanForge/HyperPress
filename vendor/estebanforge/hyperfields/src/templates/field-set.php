@@ -37,6 +37,13 @@ $layout_class = 'hf-set-' . $layout . ' hyperpress-set-' . $layout;
         
         <div class="<?php echo esc_attr($layout_class); ?>">
             <?php foreach ($options as $option_value => $option_label): ?>
+                <?php
+                // Field::toArray() normalizes assoc options to ['value','label'] lists; support both shapes.
+                if (is_array($option_label)) {
+                    $option_value = $option_label['value'] ?? $option_value;
+                    $option_label = $option_label['label'] ?? '';
+                }
+                ?>
                 <label>
                     <input type="checkbox" 
                            name="<?php echo esc_attr($name_attr); ?>[]" 

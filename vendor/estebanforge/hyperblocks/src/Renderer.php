@@ -218,7 +218,7 @@ class Renderer
             // hb_path_within_base() helper) so the check can never hit an
             // undefined-function fatal when a divergent vendor copy's
             // procedural helpers did not load.
-            if (\HyperBlocks\Path::withinBase($realPath, $realBase)) {
+            if (Path::withinBase($realPath, $realBase)) {
                 $isValid = true;
                 break;
             }

@@ -94,7 +94,7 @@ $rules = [
     'phpdoc_trim' => true,
     'phpdoc_types' => true,
     'phpdoc_var_without_name' => true,
-    'psr_autoloading' => true,
+    'psr_autoloading' => ['dir' => __DIR__ . '/src'],
     'self_accessor' => true,
     'short_scalar_cast' => true,
     'simplified_null_return' => false,

@@ -38,7 +38,7 @@ if (!defined('ABSPATH') && !defined('HYPERPRESS_TESTING_MODE')) {
 if (!function_exists('hp_get_endpoint_url')) {
     function hp_get_endpoint_url($template_path = '')
     {
-        $hyperpress_api_url = home_url(\HyperPress\Config::ENDPOINT . '/' . \HyperPress\Config::ENDPOINT_VERSION);
+        $hyperpress_api_url = home_url(HyperPress\Config::ENDPOINT . '/' . HyperPress\Config::ENDPOINT_VERSION);
 
         if (!empty($template_path)) {
             $hyperpress_api_url .= '/' . ltrim($template_path, '/');
@@ -240,9 +240,9 @@ if (!function_exists('hp_is_library_mode')) {
     function hp_is_library_mode(): bool
     {
         // Check if the plugin is in the active plugins list
-        if (\HyperPress\Config::$basename !== '') {
+        if (HyperPress\Config::$basename !== '') {
             $active_plugins = apply_filters('active_plugins', get_option('active_plugins', []));
-            if (in_array(\HyperPress\Config::$basename, $active_plugins, true)) {
+            if (in_array(HyperPress\Config::$basename, $active_plugins, true)) {
                 return false; // Plugin is active, not in library mode
             }
         }

@@ -44,7 +44,7 @@ if (!function_exists('hyperblocks_bootstrap_init')) {
      */
     function hyperblocks_bootstrap_init(): void
     {
-        \HyperBlocks\WordPress\Bootstrap::init();
+        HyperBlocks\WordPress\Bootstrap::init();
     }
 }
 

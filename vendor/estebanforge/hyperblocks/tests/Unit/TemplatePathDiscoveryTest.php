@@ -52,7 +52,7 @@ class TemplatePathDiscoveryTest extends TestCase
             $this->discDir . '/sub',
             $this->tplDir . '/sub',
         ] as $dir) {
-            mkdir($dir, 0777, true);
+            mkdir($dir, 0o777, true);
         }
 
         // Discovery canary: one subdir deep so the glob WOULD find it.
@@ -223,7 +223,7 @@ class TemplatePathDiscoveryTest extends TestCase
         );
         // lvl2: two levels deep. Must NOT be discovered.
         $lvl2 = $this->discDir . '/sub/deep';
-        mkdir($lvl2, 0777, true);
+        mkdir($lvl2, 0o777, true);
         file_put_contents(
             $lvl2 . '/lvl2.hb.php',
             "<?php\n\$GLOBALS['__hb_disc_canary'] = (\$GLOBALS['__hb_disc_canary'] ?? 0) + 1000;\n"
@@ -272,7 +272,7 @@ class TemplatePathDiscoveryTest extends TestCase
     {
         $real = realpath($this->tmpRoot) . '/real-base';
         $link = realpath($this->tmpRoot) . '/link-base';
-        mkdir($real, 0777, true);
+        mkdir($real, 0o777, true);
         file_put_contents($real . '/via-symlink.hb.php', '<p class="hb">ok</p>');
 
         // Symlink creation may be unavailable (permissions, platform). Skip

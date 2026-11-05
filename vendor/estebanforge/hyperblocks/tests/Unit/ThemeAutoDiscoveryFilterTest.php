@@ -37,7 +37,7 @@ class ThemeAutoDiscoveryFilterTest extends TestCase
         // mock ever changes.
         $this->themeBlocksDir = get_template_directory() . '/blocks';
         $this->rmrf(dirname($this->themeBlocksDir, 3)); // wipe /wp-content leftover
-        mkdir($this->themeBlocksDir, 0777, true);
+        mkdir($this->themeBlocksDir, 0o777, true);
 
         parent::setUp();
     }
@@ -104,7 +104,7 @@ class ThemeAutoDiscoveryFilterTest extends TestCase
     {
         $unrelated = $this->themeBlocksDir . '/../other-blocks';
         $unrelated = dirname($this->themeBlocksDir) . '/other-blocks';
-        mkdir($unrelated, 0777, true);
+        mkdir($unrelated, 0o777, true);
 
         add_filter('hyperblocks/blocks/auto_discover_theme_blocks', '__return_false');
 

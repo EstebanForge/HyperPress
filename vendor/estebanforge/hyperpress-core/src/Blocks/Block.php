@@ -39,12 +39,14 @@ class Block
     {
         if ($nameOrProxy instanceof HyperBlocksBlock) {
             $this->proxy = $nameOrProxy;
+
             return;
         }
 
         $nameOrProxy = (string) $nameOrProxy;
         if (null === $title) {
             $this->proxy = HyperBlocksBlock::make($nameOrProxy);
+
             return;
         }
 
@@ -92,6 +94,7 @@ class Block
     public function setName(string $name): self
     {
         $this->proxy->setName($name);
+
         return $this;
     }
 
@@ -104,6 +107,7 @@ class Block
     public function setIcon(string $iconName): self
     {
         $this->proxy->setIcon($iconName);
+
         return $this;
     }
 
@@ -127,6 +131,7 @@ class Block
         }
 
         $this->proxy->addFields($normalized);
+
         return $this;
     }
 
@@ -139,6 +144,7 @@ class Block
     public function addFieldGroup(string $groupName): self
     {
         $this->proxy->addFieldGroup($groupName);
+
         return $this;
     }
 
@@ -151,6 +157,7 @@ class Block
     public function setRenderTemplate(string $template): self
     {
         $this->proxy->setRenderTemplate($template);
+
         return $this;
     }
 
@@ -163,6 +170,7 @@ class Block
     public function setRenderTemplateFile(string $relativePath): self
     {
         $this->proxy->setRenderTemplateFile($relativePath);
+
         return $this;
     }
 

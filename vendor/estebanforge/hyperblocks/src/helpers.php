@@ -14,8 +14,8 @@ use HyperBlocks\Block\Block;
 use HyperBlocks\Block\Field;
 use HyperBlocks\Block\FieldGroup;
 use HyperBlocks\Config;
-use HyperBlocks\Renderer;
 use HyperBlocks\Registry;
+use HyperBlocks\Renderer;
 
 // Exit if accessed directly (but allow test environment to proceed).
 if (!defined('ABSPATH') && !defined('HYPERBLOCKS_TESTING_MODE')) {
@@ -325,6 +325,6 @@ if (!function_exists('hb_path_within_base')) {
      */
     function hb_path_within_base(string $realPath, string $realBase): bool
     {
-        return \HyperBlocks\Path::withinBase($realPath, $realBase);
+        return HyperBlocks\Path::withinBase($realPath, $realBase);
     }
 }

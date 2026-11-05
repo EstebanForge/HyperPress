@@ -34,7 +34,7 @@ class ActivationTest extends TestCase
         $this->assertTrue(function_exists('register_activation_hook'));
 
         // Mock activation hook registration
-        $this->assertTrue(add_action('init', function() { return true; }));
+        $this->assertTrue(add_action('init', function () { return true; }));
     }
 
     public function testPluginDeactivation()
@@ -57,7 +57,8 @@ class ActivationTest extends TestCase
 
         // If dbDelta is not mocked, create a simple mock
         if (!function_exists('dbDelta')) {
-            function dbDelta($queries) {
+            function dbDelta($queries)
+            {
                 return [];
             }
         }
@@ -72,7 +73,7 @@ class ActivationTest extends TestCase
             'hyperpress_enable_htmx' => true,
             'hyperpress_enable_alpine' => true,
             'hyperpress_enable_datastar' => true,
-            'hyperpress_theme_support' => true
+            'hyperpress_theme_support' => true,
         ];
 
         foreach ($defaultSettings as $key => $expected) {
@@ -91,7 +92,7 @@ class ActivationTest extends TestCase
         $capabilityFunctions = [
             'current_user_can',
             'get_role',
-            'add_role'
+            'add_role',
         ];
 
         foreach ($capabilityFunctions as $function) {

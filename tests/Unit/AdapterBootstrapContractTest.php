@@ -11,7 +11,6 @@ declare(strict_types=1);
  * adapter-owned hooks (Data Tools page, lifecycle, system-info) remain wired
  * with Config-backed version reads.
  */
-
 it('loads the composer autoloader from plugin vendor or monorepo fallback', function (): void {
     $bootstrap = (string) file_get_contents(__DIR__ . '/../../bootstrap.php');
 
@@ -24,12 +23,12 @@ it('guards core presence via prefix-safe class references and drops the removed 
 
     // Presence check + adapter wiring use ::class so a Mozart-prefixed build
     // rewrites them to the prefixed namespace.
-    expect($bootstrap)->toContain('\\HyperPress\\Bootstrap::class')
-        ->and($bootstrap)->toContain('\\HyperFields\\HyperFields::class')
-        ->and($bootstrap)->toContain('\\HyperPress\\Admin\\Activation::class')
-        ->and($bootstrap)->toContain('\\HyperFields\\Config::class')
-        ->and($bootstrap)->toContain('\\HyperBlocks\\Config::class')
-        ->and($bootstrap)->toContain('\\HyperPress\\Config::class');
+    expect($bootstrap)->toContain('HyperPress\\Bootstrap::class')
+        ->and($bootstrap)->toContain('HyperFields\\HyperFields::class')
+        ->and($bootstrap)->toContain('HyperPress\\Admin\\Activation::class')
+        ->and($bootstrap)->toContain('HyperFields\\Config::class')
+        ->and($bootstrap)->toContain('HyperBlocks\\Config::class')
+        ->and($bootstrap)->toContain('HyperPress\\Config::class');
 
     // Removed machinery must stay gone.
     expect($bootstrap)->not->toContain('select_and_load_latest')

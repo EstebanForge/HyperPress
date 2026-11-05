@@ -406,7 +406,10 @@ class Bootstrap
     public static function registerRestApi(): void
     {
         $restApi = new RestApi();
-        $restApi->init();
+        // Synchronous, not via RestApi::init(): WP_Hook snapshots each
+        // priority's callbacks, so an add_action() issued while rest_api_init
+        // is running never fires in that pass.
+        $restApi->registerRoutes();
     }
 
     /**
@@ -526,6 +529,7 @@ class Bootstrap
             if (Config::isDebug()) {
                 error_log('HyperBlocks: hyperBlocksConfig JSON encoding failed');
             }
+
             return;
         }
 

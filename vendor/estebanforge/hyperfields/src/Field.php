@@ -1187,7 +1187,7 @@ class Field
     {
         $schema = $this->buildJsonSchema();
 
-        /**
+        /*
          * Override or supply a field's JSON Schema.
          *
          * @param array<string, mixed>|null $schema Null when the type has no derivable schema.

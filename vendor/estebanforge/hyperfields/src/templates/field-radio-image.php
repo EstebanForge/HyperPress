@@ -33,6 +33,14 @@ $layout_class = 'hf-radio-image-' . $layout . ' hyperpress-radio-image-' . $layo
     <div class="hf-field-input hyperpress-field-input">
         <div class="<?php echo esc_attr($layout_class); ?>">
             <?php foreach ($options as $option_value => $option_image): ?>
+                <?php
+                // Field::toArray() normalizes assoc options to ['value','label'] lists; support both shapes.
+                // For radio_image the "label" carries the image URL.
+                if (is_array($option_image)) {
+                    $option_value = $option_image['value'] ?? $option_value;
+                    $option_image = $option_image['label'] ?? '';
+                }
+                ?>
                 <label class="hf-radio-image-label hyperpress-radio-image-label">
                     <input type="radio" 
                            name="<?php echo esc_attr($name_attr); ?>" 

@@ -127,7 +127,7 @@ class Options
 
         $this->maybeMigrateLegacyOptions();
 
-        $options = HyperFields::getOptions($this->option_name, []);
+        $options = $this->main->getOptions();
 
         $all_sections = array_merge(
             $this->buildGeneralTabConfig(),

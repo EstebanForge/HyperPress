@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace HyperPress\Blocks;
 
-use HyperBlocks\Block\FieldGroup as HyperBlocksFieldGroup;
 use HyperBlocks\Block\Field as HyperBlocksField;
+use HyperBlocks\Block\FieldGroup as HyperBlocksFieldGroup;
 
 // Prevent direct file access.
 if (!defined('ABSPATH') && !defined('HYPERPRESS_TESTING_MODE')) {
@@ -38,6 +38,7 @@ class FieldGroup
     {
         if ($nameOrProxy instanceof HyperBlocksFieldGroup) {
             $this->proxy = $nameOrProxy;
+
             return;
         }
 
@@ -99,6 +100,7 @@ class FieldGroup
         }
 
         $this->proxy->addFields($normalized);
+
         return $this;
     }
 

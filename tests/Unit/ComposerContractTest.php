@@ -25,4 +25,3 @@ it('defines required adapter scripts', function (): void {
         'version-bump',
     ]);
 });
-

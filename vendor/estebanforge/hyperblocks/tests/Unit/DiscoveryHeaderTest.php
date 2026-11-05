@@ -53,7 +53,7 @@ class DiscoveryHeaderTest extends TestCase
     {
         // Theme-style /blocks/welcome/{block.json,render.php}.
         $welcome = $this->tmpRoot . '/blocks/welcome';
-        mkdir($welcome, 0777, true);
+        mkdir($welcome, 0o777, true);
         file_put_contents($welcome . '/block.json', '{"name":"test/welcome"}');
         // render.php echoes immediately AND reads $block — the exact
         // theme-style footgun (echo + undefined-variable access).
@@ -81,7 +81,7 @@ class DiscoveryHeaderTest extends TestCase
     public function testHeaderedFileIsLoaded(): void
     {
         $dir = $this->tmpRoot . '/blocks/real';
-        mkdir($dir, 0777, true);
+        mkdir($dir, 0o777, true);
         file_put_contents(
             $dir . '/block.php',
             "<?php\n/**\n * HyperBlocks Block: Real\n */\n\$GLOBALS['__hb_header_block_loaded'] = true;\n"
@@ -103,7 +103,7 @@ class DiscoveryHeaderTest extends TestCase
     public function testMixedDirectoryLoadsOnlyHeaderedFiles(): void
     {
         $dir = $this->tmpRoot . '/blocks/mixed';
-        mkdir($dir, 0777, true);
+        mkdir($dir, 0o777, true);
         // HB definition (headered).
         file_put_contents(
             $dir . '/definition.php',
@@ -142,7 +142,7 @@ class DiscoveryHeaderTest extends TestCase
     public function testHeaderParsedFromDocblock(): void
     {
         $dir = $this->tmpRoot . '/blocks/docblock';
-        mkdir($dir, 0777, true);
+        mkdir($dir, 0o777, true);
         file_put_contents(
             $dir . '/block.php',
             "<?php\n/**\n * Plugin Name: Not This\n * HyperBlocks Block: Docblock Title\n * Description: other\n */\n\$GLOBALS['__hb_header_block_loaded'] = true;\n"
@@ -168,7 +168,7 @@ class DiscoveryHeaderTest extends TestCase
         // Headerless file living OUTSIDE any registered block path, so it is
         // reachable ONLY through the filter (not via the path glob).
         $external = $this->tmpRoot . '/external/headerless.php';
-        mkdir(dirname($external), 0777, true);
+        mkdir(dirname($external), 0o777, true);
         file_put_contents(
             $external,
             "<?php\n// No HyperBlocks Block header here.\n\$GLOBALS['__hb_header_block_loaded'] = true;\n"
@@ -177,7 +177,7 @@ class DiscoveryHeaderTest extends TestCase
         // Register an EMPTY block path so the glob loop runs but finds nothing;
         // the file comes in exclusively via the filter.
         $emptyPath = $this->tmpRoot . '/empty';
-        mkdir($emptyPath, 0777, true);
+        mkdir($emptyPath, 0o777, true);
         Config::registerBlockPath($emptyPath);
 
         add_filter('hyperblocks/blocks/register_fluent_blocks', static function () use ($external): array {

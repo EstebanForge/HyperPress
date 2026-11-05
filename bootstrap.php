@@ -21,7 +21,6 @@ declare(strict_types=1);
  * prefixed namespace; the previous string literals ('HyperFields\\HyperFields')
  * would have been missed by the prefixer and silently failed.
  */
-
 if (!defined('ABSPATH') && !defined('HYPERPRESS_TESTING_MODE')) {
     return;
 }
@@ -73,7 +72,7 @@ foreach ($autoload_candidates as $autoload) {
 }
 
 // Bail with an admin notice if HyperPress-Core is not autoloadable.
-if (!class_exists(\HyperPress\Bootstrap::class)) {
+if (!class_exists(HyperPress\Bootstrap::class)) {
     if (function_exists('add_action')) {
         add_action('admin_notices', static function (): void {
             echo '<div class="error"><p>' . esc_html__('HyperPress: HyperPress Core not found. Please run "composer install" inside the plugin folder.', 'api-for-htmx') . '</p></div>';
@@ -84,9 +83,9 @@ if (!class_exists(\HyperPress\Bootstrap::class)) {
 }
 
 // Register HyperFields Export/Import UI under Tools.
-if (class_exists(\HyperFields\HyperFields::class) && function_exists('add_action')) {
+if (class_exists(HyperFields\HyperFields::class) && function_exists('add_action')) {
     add_action('admin_menu', static function (): void {
-        \HyperFields\HyperFields::registerDataToolsPage(
+        HyperFields\HyperFields::registerDataToolsPage(
             parentSlug: 'tools.php',
             pageSlug: 'hyperpress-data-tools',
             options: [
@@ -102,12 +101,12 @@ if (class_exists(\HyperFields\HyperFields::class) && function_exists('add_action
 
 // Plugin lifecycle hooks remain in the adapter layer.
 if (
-    class_exists(\HyperPress\Admin\Activation::class)
+    class_exists(HyperPress\Admin\Activation::class)
     && function_exists('register_activation_hook')
     && function_exists('register_deactivation_hook')
 ) {
-    register_activation_hook($adapter_main_file, [\HyperPress\Admin\Activation::class, 'activate']);
-    register_deactivation_hook($adapter_main_file, [\HyperPress\Admin\Activation::class, 'deactivate']);
+    register_activation_hook($adapter_main_file, [HyperPress\Admin\Activation::class, 'activate']);
+    register_deactivation_hook($adapter_main_file, [HyperPress\Admin\Activation::class, 'deactivate']);
 }
 
 // Enrich the About page system-info table with vendored library versions,
@@ -116,14 +115,14 @@ if (function_exists('add_filter')) {
     add_filter('hyperpress/about/system_info', static function (array $info): array {
         $library_versions = [];
 
-        if (class_exists(\HyperFields\Config::class)) {
-            $library_versions[__('HyperFields Library', 'api-for-htmx')] = \HyperFields\Config::VERSION;
+        if (class_exists(HyperFields\Config::class)) {
+            $library_versions[__('HyperFields Library', 'api-for-htmx')] = HyperFields\Config::VERSION;
         }
-        if (class_exists(\HyperBlocks\Config::class)) {
-            $library_versions[__('HyperBlocks Library', 'api-for-htmx')] = \HyperBlocks\Config::VERSION;
+        if (class_exists(HyperBlocks\Config::class)) {
+            $library_versions[__('HyperBlocks Library', 'api-for-htmx')] = HyperBlocks\Config::VERSION;
         }
-        if (class_exists(\HyperPress\Config::class)) {
-            $library_versions[__('HyperPress Core', 'api-for-htmx')] = \HyperPress\Config::VERSION;
+        if (class_exists(HyperPress\Config::class)) {
+            $library_versions[__('HyperPress Core', 'api-for-htmx')] = HyperPress\Config::VERSION;
         }
 
         return hyperpress_adapter_insert_library_versions(

@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace HyperPress\Blocks;
 
-use HyperBlocks\Config;
-use HyperBlocks\Registry as HyperBlocksRegistry;
 use HyperBlocks\Block\Block as HyperBlocksBlock;
 use HyperBlocks\Block\FieldGroup as HyperBlocksFieldGroup;
+use HyperBlocks\Config;
+use HyperBlocks\Registry as HyperBlocksRegistry;
 
 // Prevent direct file access.
 if (!defined('ABSPATH') && !defined('HYPERPRESS_TESTING_MODE')) {
@@ -85,6 +85,7 @@ final class Registry
     {
         if ($block instanceof Block) {
             $this->proxy->registerFluentBlock($block->getProxy());
+
             return;
         }
 
@@ -146,6 +147,7 @@ final class Registry
     {
         if ($group instanceof FieldGroup) {
             $this->proxy->registerFieldGroup($group->getProxy());
+
             return;
         }
 

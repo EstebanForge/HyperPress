@@ -77,7 +77,7 @@ final class DatastarCsp
         $enabled = ($options['active_library'] ?? 'datastar') === 'datastar'
             && !empty($options['datastar_csp']);
 
-        /**
+        /*
          * Force or veto CSP mode programmatically.
          *
          * @param bool $enabled Resolved from the datastar_csp option.
@@ -157,7 +157,7 @@ final class DatastarCsp
             $policy .= ' https://cdn.jsdelivr.net';
         }
 
-        /**
+        /*
          * Replace or extend the policy string.
          *
          * @param string $policy Built policy (script-src only).

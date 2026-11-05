@@ -3,16 +3,14 @@
 declare(strict_types=1);
 
 /**
- * Render template for Hero Banner block (block.json approach)
- * 
+ * Render template for Hero Banner block (block.json approach).
+ *
  * This is the exact same template as the Fluent API version,
  * demonstrating identical output from both approaches.
- * 
- * @package HyperPress
  */
 
 // Prevent direct file access.
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit;
 }
 

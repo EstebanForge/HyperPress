@@ -1,7 +1,7 @@
 <?php
 
 /**
- * HyperBlocks Block: Field Groups Example
+ * HyperBlocks Block: Field Groups Example.
  *
  * Example: Using Field Groups.
  *

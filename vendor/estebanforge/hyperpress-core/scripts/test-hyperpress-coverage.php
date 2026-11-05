@@ -6,31 +6,36 @@ echo "=== HyperPress Coverage Test ===\n";
 
 // Mock WordPress functions
 if (!function_exists('apply_filters')) {
-    function apply_filters($hook, $value, ...$args) {
+    function apply_filters($hook, $value, ...$args)
+    {
         return $value;
     }
 }
 
 if (!function_exists('__')) {
-    function __($text, $domain = 'default') {
+    function __($text, $domain = 'default')
+    {
         return $text;
     }
 }
 
 if (!function_exists('wp_enqueue_script')) {
-    function wp_enqueue_script($handle, $src = '', $deps = array(), $ver = false, $in_footer = false) {
+    function wp_enqueue_script($handle, $src = '', $deps = [], $ver = false, $in_footer = false)
+    {
         return true;
     }
 }
 
 if (!function_exists('wp_enqueue_style')) {
-    function wp_enqueue_style($handle, $src = '', $deps = array(), $ver = false, $media = 'all') {
+    function wp_enqueue_style($handle, $src = '', $deps = [], $ver = false, $media = 'all')
+    {
         return true;
     }
 }
 
 if (!function_exists('plugins_url')) {
-    function plugins_url($path = '', $plugin = '') {
+    function plugins_url($path = '', $plugin = '')
+    {
         return 'http://localhost/wp-content/plugins/api-for-htmx/' . ltrim($path, '/');
     }
 }
@@ -86,13 +91,14 @@ $totalTests = 0;
 try {
     if (class_exists('HyperPress\Theme')) {
         echo "✓ HyperPress Theme class available\n";
-        $testsPassed++; $totalTests++;
+        $testsPassed++;
+        $totalTests++;
     } else {
         echo "✗ HyperPress Theme class not available\n";
         $totalTests++;
     }
 } catch (Exception $e) {
-    echo "✗ Theme class test failed: " . $e->getMessage() . "\n";
+    echo '✗ Theme class test failed: ' . $e->getMessage() . "\n";
     $totalTests++;
 }
 
@@ -100,33 +106,35 @@ try {
 try {
     if (class_exists('HyperPress\Blocks\Registry')) {
         echo "✓ Blocks Registry class available\n";
-        $testsPassed++; $totalTests++;
+        $testsPassed++;
+        $totalTests++;
     } else {
         echo "✗ Blocks Registry class not available\n";
         $totalTests++;
     }
 } catch (Exception $e) {
-    echo "✗ Registry class test failed: " . $e->getMessage() . "\n";
+    echo '✗ Registry class test failed: ' . $e->getMessage() . "\n";
     $totalTests++;
 }
 
 // Test ConditionalLogic dependency
 try {
     if (class_exists('HyperFields\ConditionalLogic')) {
-        $logic = \HyperFields\ConditionalLogic::if('test')->equals('value');
+        $logic = HyperFields\ConditionalLogic::if('test')->equals('value');
         echo "✓ HyperFields dependency working\n";
-        $testsPassed++; $totalTests++;
+        $testsPassed++;
+        $totalTests++;
     } else {
         echo "✗ HyperFields dependency not available\n";
         $totalTests++;
     }
 } catch (Exception $e) {
-    echo "✗ HyperFields dependency test failed: " . $e->getMessage() . "\n";
+    echo '✗ HyperFields dependency test failed: ' . $e->getMessage() . "\n";
     $totalTests++;
 }
 
 echo "\n=== Coverage Summary ===\n";
-echo "Tests passed: $testsPassed/$totalTests (" . round(($testsPassed/max($totalTests,1))*100, 1) . "%)\n";
+echo "Tests passed: $testsPassed/$totalTests (" . round(($testsPassed / max($totalTests, 1)) * 100, 1) . "%)\n";
 echo "Source files: $loadedFiles loaded\n";
 echo "Lines of code: $totalLines\n";
 

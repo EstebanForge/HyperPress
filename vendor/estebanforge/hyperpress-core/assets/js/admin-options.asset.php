@@ -1,6 +1,7 @@
-<?php return array (
-  'dependencies' => 
-  array (
-  ),
-  'version' => '2923f2d3',
-);
+<?php
+
+return [
+    'dependencies' => [
+    ],
+    'version' => '2923f2d3',
+];

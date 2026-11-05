@@ -164,6 +164,13 @@ if ($conditional_logic) {
                         <?php echo $render_attributes($attributes); ?>
                         class="regular-text <?php echo esc_attr($input_class); ?>">
                         <?php foreach ($options as $option_value => $option_label): ?>
+                            <?php
+                            // Field::toArray() normalizes assoc options to ['value','label'] lists; support both shapes.
+                            if (is_array($option_label)) {
+                                $option_value = $option_label['value'] ?? $option_value;
+                                $option_label = $option_label['label'] ?? '';
+                            }
+                            ?>
                             <option value="<?php echo esc_attr($option_value); ?>" <?php selected($value, $option_value); ?>>
                                 <?php echo esc_html($option_label); ?>
                             </option>
@@ -180,6 +187,13 @@ if ($conditional_logic) {
                         <?php echo $render_attributes($attributes); ?>
                         class="regular-text <?php echo esc_attr($input_class); ?>">
                         <?php foreach ($options as $option_value => $option_label): ?>
+                            <?php
+                            // Field::toArray() normalizes assoc options to ['value','label'] lists; support both shapes.
+                            if (is_array($option_label)) {
+                                $option_value = $option_label['value'] ?? $option_value;
+                                $option_label = $option_label['label'] ?? '';
+                            }
+                            ?>
                             <option value="<?php echo esc_attr($option_value); ?>" <?php selected(is_array($value) && in_array($option_value, $value)); ?>>
                                 <?php echo esc_html($option_label); ?>
                             </option>
@@ -202,6 +216,13 @@ if ($conditional_logic) {
                 <?php break;
                 case 'radio': ?>
                     <?php foreach ($options as $option_value => $option_label): ?>
+                        <?php
+                        // Field::toArray() normalizes assoc options to ['value','label'] lists; support both shapes.
+                        if (is_array($option_label)) {
+                            $option_value = $option_label['value'] ?? $option_value;
+                            $option_label = $option_label['label'] ?? '';
+                        }
+                        ?>
                         <label>
                             <input type="radio"
                                 name="<?php echo esc_attr($name_attr); ?>"
@@ -271,6 +292,13 @@ if ($conditional_logic) {
                         <!-- Hidden input to ensure the field is always sent in POST data even when none selected -->
                         <input type="hidden" name="<?php echo esc_attr($name_attr); ?>[]" value="__hm_empty__">
                         <?php foreach ($options as $option_value => $option_label): ?>
+                            <?php
+                            // Field::toArray() normalizes assoc options to ['value','label'] lists; support both shapes.
+                            if (is_array($option_label)) {
+                                $option_value = $option_label['value'] ?? $option_value;
+                                $option_label = $option_label['label'] ?? '';
+                            }
+                            ?>
                             <label>
                                 <input type="checkbox"
                                     name="<?php echo esc_attr($name_attr); ?>[]"

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Plugin Name: HyperPress MCP Server (example)
  * Description: Registers a custom MCP server exposing the read-only Hyper
  *              abilities (HyperPress, HyperBlocks, HyperFields) to AI agents.
@@ -29,8 +29,6 @@
  *
  * Client configuration (HTTP, remote): point @automattic/mcp-wordpress-remote
  * at /wp-json/hyperpress-mcp-server/mcp with an application password.
- *
- * @package hyperpress
  */
 
 declare(strict_types=1);
@@ -49,7 +47,7 @@ add_action('mcp_adapter_init', 'hyperpress_example_register_mcp_server');
  */
 function hyperpress_example_register_mcp_server(): void
 {
-    if (!class_exists(\WP\MCP\Core\McpAdapter::class)) {
+    if (!class_exists(WP\MCP\Core\McpAdapter::class)) {
         return;
     }
 
@@ -77,16 +75,16 @@ function hyperpress_example_register_mcp_server(): void
         return;
     }
 
-    $server = \WP\MCP\Core\McpAdapter::instance()->create_server(
+    $server = WP\MCP\Core\McpAdapter::instance()->create_server(
         'hyperpress-mcp-server',              // Unique server identifier.
         'hyperpress-mcp-server',              // REST namespace: /wp-json/hyperpress-mcp-server/mcp
         'mcp',                                // REST route.
         'HyperPress MCP Server',              // Server name shown to clients.
         'Non-destructive access to HyperPress site configuration, hypermedia endpoints, blocks, and options fields.',
         '1.0.0',                              // Server version.
-        [\WP\MCP\Transport\HttpTransport::class],
-        \WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler::class,
-        \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class,
+        [WP\MCP\Transport\HttpTransport::class],
+        WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler::class,
+        WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class,
         $abilities,                           // Abilities exposed as tools.
         [],                                   // Resources.
         []                                    // Prompts.

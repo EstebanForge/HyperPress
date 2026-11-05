@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.7.4] - 2026-11-04
+
+### Fixed
+- **Select, multiselect, radio, radio image, and set fields now render normalized option lists correctly.** `Field::toArray()` converts associative option maps to `{value, label}` lists, but their templates treated each normalized option as a raw label and displayed `Array`. The templates now support both normalized lists and raw associative maps, preserving option values and labels while keeping `Field::toArray()` as the single normalization point.
+
+## [1.7.3] - 2026-10-29
+
+### Fixed
+- **Single-section options pages no longer render a one-item tab nav.** `OptionsPage::renderTabs()` skipped the nav only when zero tabs were registered, so a page with one section got a nav tab linking to the page it is already on. The nav now renders only when two or more titled tabs exist; the section heading below already names a lone section. Matches WordPress core, where settings pages with a single group show no nav.
+
+## [1.7.2] - 2026-10-28
+
+### Fixed
+- **Page-level fields on section-less options pages now render.** `OptionsPage::addField()` without any `addSection()` call stored the field but the render, Settings-API registration, and sanitize loops only iterated sections, so the form printed hidden inputs and a submit button and nothing else. Fields added directly to a page now fold into an implicit default section at `register()` time (same pattern as the WordPress core General/Writing/Reading pages: no section heading, no tab nav), and their defaults seed `option_values` like section fields do.
+- **Mixed usage warns instead of silently dropping.** When a page has both explicit sections and page-level fields, those page-level fields stay unrendered (historical behavior) and each one now triggers `_doing_it_wrong()` pointing at `addSection()` / `addSectionToTab()`.
+
 ## [1.7.1] - 2026-10-28
 
 ### Added

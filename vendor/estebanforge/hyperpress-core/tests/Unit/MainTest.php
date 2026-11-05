@@ -113,8 +113,8 @@ class MainTest extends TestCase
     public function testPluginHooks()
     {
         // Test WordPress hook functions are mocked and working
-        $this->assertTrue(add_action('init', function() { return true; }));
-        $this->assertTrue(add_filter('the_content', function($content) { return $content; }));
+        $this->assertTrue(add_action('init', function () { return true; }));
+        $this->assertTrue(add_filter('the_content', function ($content) { return $content; }));
 
         // Test filter functionality
         $this->assertEquals('test', apply_filters('test_filter', 'test'));
@@ -143,7 +143,7 @@ class MainTest extends TestCase
         $expectedLibs = [
             'htmx' => 'htmx.min.js',
             'alpine' => 'alpinejs.min.js',
-            'datastar' => 'datastar.min.js'
+            'datastar' => 'datastar.min.js',
         ];
         foreach ($expectedLibs as $lib => $file) {
             $libPath = $assetsDir . $file;

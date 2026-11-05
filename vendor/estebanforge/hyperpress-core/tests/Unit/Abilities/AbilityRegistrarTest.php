@@ -66,8 +66,8 @@ class AbilityRegistrarTest extends TestCase
     public function test_endpoints_payload_scans_theme_and_legacy_dirs(): void
     {
         $theme_dir = sys_get_temp_dir() . '/hp-abilities-' . uniqid('', true);
-        mkdir($theme_dir . '/hypermedia/parts', 0777, true);
-        mkdir($theme_dir . '/htmx-templates', 0777, true);
+        mkdir($theme_dir . '/hypermedia/parts', 0o777, true);
+        mkdir($theme_dir . '/htmx-templates', 0o777, true);
         file_put_contents($theme_dir . '/hypermedia/list.hp.php', '<?php // template');
         file_put_contents($theme_dir . '/hypermedia/parts/header.hp.php', '<?php // template');
         file_put_contents($theme_dir . '/hypermedia/notes.txt', 'ignored');

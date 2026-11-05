@@ -33,7 +33,7 @@ class JsonBlockPathCacheTest extends TestCase
         unset($GLOBALS['__hb_test_current_user_can']);
 
         $this->scanDir = sys_get_temp_dir() . '/hb-json-cache-' . uniqid('', true);
-        mkdir($this->scanDir, 0777, true);
+        mkdir($this->scanDir, 0o777, true);
 
         $this->ownedDir = $this->scanDir . '/owned';
         $this->writeBlockJson($this->ownedDir, [
@@ -131,7 +131,7 @@ class JsonBlockPathCacheTest extends TestCase
 
     private function writeBlockJson(string $dir, array $payload): void
     {
-        mkdir($dir, 0777, true);
+        mkdir($dir, 0o777, true);
         file_put_contents($dir . '/block.json', json_encode($payload, JSON_PRETTY_PRINT) ?: '');
     }
 

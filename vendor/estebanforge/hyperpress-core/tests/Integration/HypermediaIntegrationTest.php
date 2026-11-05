@@ -18,18 +18,18 @@ class HypermediaIntegrationTest extends TestCase
             'htmx' => [
                 'version' => '1.9.0',
                 'cdn' => 'https://unpkg.com/htmx.org',
-                'file' => 'htmx.min.js'
+                'file' => 'htmx.min.js',
             ],
             'alpine' => [
                 'version' => '3.13.0',
                 'cdn' => 'https://unpkg.com/alpinejs',
-                'file' => 'alpine.min.js'
+                'file' => 'alpine.min.js',
             ],
             'datastar' => [
                 'version' => '1.0.0-RC.4',
                 'cdn' => 'https://unpkg.com/@starfederation/datastar',
-                'file' => 'datastar-bundle.js'
-            ]
+                'file' => 'datastar-bundle.js',
+            ],
         ];
 
         foreach ($hypermediaLibraries as $library => $config) {
@@ -52,7 +52,7 @@ class HypermediaIntegrationTest extends TestCase
             'hx-target' => '#result',
             'hx-trigger' => 'click',
             'hx-swap' => 'innerHTML',
-            'hx-indicator' => '#loading'
+            'hx-indicator' => '#loading',
         ];
 
         foreach ($htmxAttributes as $attr => $value) {
@@ -78,7 +78,7 @@ class HypermediaIntegrationTest extends TestCase
             'x-for' => 'item in items',
             'x-if' => 'showContent',
             'x-text' => 'title',
-            'x-html' => 'content'
+            'x-html' => 'content',
         ];
 
         foreach ($alpineDirectives as $directive => $value) {
@@ -100,7 +100,7 @@ class HypermediaIntegrationTest extends TestCase
             'data-star-signals' => '{ count: 0, text: "Hello" }',
             'data-star-on' => 'click increment(1)',
             'data-star-run' => '$count > 5 showNotification()',
-            'data-star-indicator' => '#loading-indicator'
+            'data-star-indicator' => '#loading-indicator',
         ];
 
         foreach ($datastarSignals as $signal => $value) {
@@ -113,7 +113,7 @@ class HypermediaIntegrationTest extends TestCase
             '$count > 5',
             'text === "Hello"',
             'items.length > 0',
-            'user.isLoggedIn'
+            'user.isLoggedIn',
         ];
 
         foreach ($validExpressions as $expr) {
@@ -129,23 +129,23 @@ class HypermediaIntegrationTest extends TestCase
             'header' => [
                 'htmx' => 'hx-get="/api/header"',
                 'alpine' => 'x-data="{ mobile: false }"',
-                'datastar' => 'data-star-signals="{ user: null }"'
+                'datastar' => 'data-star-signals="{ user: null }"',
             ],
             'navigation' => [
                 'htmx' => 'hx-target="#content"',
                 'alpine' => 'x-show="!mobile"',
-                'datastar' => 'data-star-on="load setupNavigation()"'
+                'datastar' => 'data-star-on="load setupNavigation()"',
             ],
             'content' => [
                 'htmx' => 'hx-swap="innerHTML"',
                 'alpine' => 'x-transition',
-                'datastar' => 'data-star-run="$loading showLoader()"'
+                'datastar' => 'data-star-run="$loading showLoader()"',
             ],
             'footer' => [
                 'htmx' => 'hx-trigger="load"',
                 'alpine' => 'x-data="{ year: new Date().getFullYear() }"',
-                'datastar' => 'data-star-signals="{ copyright: "© 2024" }"'
-            ]
+                'datastar' => 'data-star-signals="{ copyright: "© 2024" }"',
+            ],
         ];
 
         foreach ($templateStructure as $section => $attributes) {
@@ -162,23 +162,23 @@ class HypermediaIntegrationTest extends TestCase
             '/wp-html/v1/template/header' => [
                 'method' => 'GET',
                 'response' => 'html',
-                'cache' => 300
+                'cache' => 300,
             ],
             '/wp-html/v1/template/navigation' => [
                 'method' => 'GET',
                 'response' => 'html',
-                'cache' => 600
+                'cache' => 600,
             ],
             '/wp-html/v1/data/user' => [
                 'method' => 'GET',
                 'response' => 'json',
-                'cache' => 60
+                'cache' => 60,
             ],
             '/wp-html/v1/form/submit' => [
                 'method' => 'POST',
                 'response' => 'json',
-                'cache' => 0
-            ]
+                'cache' => 0,
+            ],
         ];
 
         foreach ($endpoints as $endpoint => $config) {
@@ -198,23 +198,23 @@ class HypermediaIntegrationTest extends TestCase
             'htmx' => [
                 'load' => 'header',
                 'async' => false,
-                'dependencies' => []
+                'dependencies' => [],
             ],
             'alpine' => [
                 'load' => 'footer',
                 'async' => true,
-                'dependencies' => []
+                'dependencies' => [],
             ],
             'datastar' => [
                 'load' => 'header',
                 'async' => false,
-                'dependencies' => ['htmx']
+                'dependencies' => ['htmx'],
             ],
             'hyperpress' => [
                 'load' => 'footer',
                 'async' => true,
-                'dependencies' => ['htmx', 'alpine', 'datastar']
-            ]
+                'dependencies' => ['htmx', 'alpine', 'datastar'],
+            ],
         ];
 
         foreach ($assetConfig as $asset => $config) {
@@ -234,18 +234,18 @@ class HypermediaIntegrationTest extends TestCase
             'template_cache' => [
                 'duration' => 3600,
                 'type' => 'file',
-                'key_pattern' => 'template_{name}_{user_role}'
+                'key_pattern' => 'template_{name}_{user_role}',
             ],
             'api_cache' => [
                 'duration' => 300,
                 'type' => 'transient',
-                'key_pattern' => 'api_{endpoint}_{params_hash}'
+                'key_pattern' => 'api_{endpoint}_{params_hash}',
             ],
             'asset_cache' => [
                 'duration' => 86400,
                 'type' => 'browser',
-                'key_pattern' => 'asset_{filename}_{version}'
-            ]
+                'key_pattern' => 'asset_{filename}_{version}',
+            ],
         ];
 
         foreach ($cacheStrategies as $strategy => $config) {
@@ -264,19 +264,19 @@ class HypermediaIntegrationTest extends TestCase
         $securityConfig = [
             'nonce_verification' => [
                 'endpoints' => ['POST', 'PUT', 'DELETE'],
-                'action' => 'hyperpress_ajax'
+                'action' => 'hyperpress_ajax',
             ],
             'capability_checks' => [
                 'admin_endpoints' => 'manage_options',
                 'user_endpoints' => 'read',
-                'public_endpoints' => null
+                'public_endpoints' => null,
             ],
             'sanitization' => [
                 'html' => 'wp_kses_post',
                 'text' => 'sanitize_text_field',
                 'int' => 'intval',
-                'float' => 'floatval'
-            ]
+                'float' => 'floatval',
+            ],
         ];
 
         foreach ($securityConfig as $feature => $config) {
@@ -295,18 +295,18 @@ class HypermediaIntegrationTest extends TestCase
             'lazy_loading' => [
                 'images' => true,
                 'components' => true,
-                'data' => false
+                'data' => false,
             ],
             'minification' => [
                 'html' => true,
                 'css' => true,
-                'js' => true
+                'js' => true,
             ],
             'compression' => [
                 'gzip' => true,
                 'brotli' => false,
-                'level' => 6
-            ]
+                'level' => 6,
+            ],
         ];
 
         foreach ($optimization as $feature => $config) {

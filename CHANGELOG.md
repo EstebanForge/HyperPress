@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.6.6] - 2026-11-04
+
+### Fixed
+- **Default Datastar settings tab.** Vendored HyperPress-Core 1.6.7 resolves tab visibility against the canonical active library, so fresh or previously unsaved sites show the Datastar tab without requiring a settings save.
+
+### Changed
+- **Vendored HyperPress-Core 1.6.7, HyperBlocks 1.8.4, HyperFields 1.7.4, and Datastar PHP 1.0.3.** Updates the bundled runtime and development dependencies without changing the plugin adapter API.
+- **HyperFields 1.7.4.** Select, multiselect, radio, radio image, and set fields now render normalized and raw associative option lists correctly. Also includes alias handling fixes and PHP 8.5 compatibility.
+- **HyperBlocks 1.8.4.** Includes conditional field alias hardening, stricter block template path containment, and `manage_options` permission checks for Abilities registration.
+- **Plugin quality checks.** Applied the current configured formatter rules and updated the structural class-reference assertions. No runtime behavior changes in the adapter.
+
 ## [3.6.5] - 2026-10-28
 
 ### Changed

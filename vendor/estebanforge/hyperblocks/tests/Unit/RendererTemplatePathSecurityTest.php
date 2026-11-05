@@ -26,7 +26,7 @@ class RendererTemplatePathSecurityTest extends TestCase
     {
         Config::reset();
         $this->tmpRoot = rtrim(sys_get_temp_dir(), '/\\') . '/hb-render-sec-' . uniqid('', true);
-        mkdir($this->tmpRoot, 0777, true);
+        mkdir($this->tmpRoot, 0o777, true);
         parent::setUp();
     }
 
@@ -52,8 +52,8 @@ class RendererTemplatePathSecurityTest extends TestCase
     {
         $secure = realpath($this->tmpRoot) . '/secure';
         $evil = realpath($this->tmpRoot) . '/secure-evil';
-        mkdir($secure, 0777, true);
-        mkdir($evil, 0777, true);
+        mkdir($secure, 0o777, true);
+        mkdir($evil, 0o777, true);
 
         // Legit base is the "secure" directory.
         Config::registerBlockPath($secure);
@@ -84,7 +84,7 @@ class RendererTemplatePathSecurityTest extends TestCase
     public function testLegitimateRelativeTemplateStillRenders(): void
     {
         $secure = realpath($this->tmpRoot) . '/secure';
-        mkdir($secure, 0777, true);
+        mkdir($secure, 0o777, true);
         Config::registerBlockPath($secure);
 
         file_put_contents($secure . '/ok.hb.php', '<p class="hb"><?= esc_html($heading ?? "") ?></p>');

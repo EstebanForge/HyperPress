@@ -445,6 +445,11 @@ class OptionsPage
      */
     public function register(): void
     {
+        // Fields added directly to the page (no explicit section) render only
+        // when the page has no sections at all: they fold into an implicit
+        // default section. Mixed usage is a dev error, warned not guessed.
+        $this->normalizePageLevelFields();
+
         // Index the page for machine surfaces before any hook scheduling:
         // resolution must work on REST/CLI requests where admin hooks never
         // fire.
@@ -470,6 +475,50 @@ class OptionsPage
 
         add_action('admin_init', $this->registerSettings(...));
         add_action('admin_enqueue_scripts', $this->enqueueAssets(...));
+    }
+
+    /**
+     * Fold page-level fields into an implicit default section.
+     *
+     * Only runs when the page has fields but no sections. Pages mixing
+     * page-level fields with explicit sections keep the historical drop
+     * behavior and trigger _doing_it_wrong per orphan field.
+     *
+     * @return void
+     */
+    private function normalizePageLevelFields(): void
+    {
+        if ($this->fields === []) {
+            return;
+        }
+
+        if ($this->sections !== []) {
+            foreach (array_keys($this->fields) as $field_name) {
+                _doing_it_wrong(
+                    __METHOD__,
+                    sprintf(
+                        /* translators: %s: field name. */
+                        esc_html__('OptionsPage field "%s" was added directly to a page that already has sections and will not be rendered. Add it to a section via addSection() or addSectionToTab() instead.', 'hyperfields'),
+                        $field_name
+                    ),
+                    '1.7.4'
+                );
+            }
+
+            return;
+        }
+
+        $section = new OptionsSection('_hf_default', '', '');
+        foreach ($this->fields as $field) {
+            $section->addField($field);
+            $this->default_values[$field->getName()] = $field->getDefault();
+        }
+        $this->fields = [];
+        $this->sections['_hf_default'] = $section;
+        $this->tabs['_hf_default'] = [
+            'title' => '',
+            'sections' => ['_hf_default'],
+        ];
     }
 
     /**
@@ -895,13 +944,16 @@ class OptionsPage
      */
     private function renderTabs(): void
     {
-        if (empty($this->tabs)) {
+        $visible_tabs = array_filter($this->tabs, static fn (array $tab): bool => $tab['title'] !== '');
+        // A single visible tab is a self-link: the section heading below already
+        // names it, so the nav (and its mobile select morph) would add nothing.
+        if (count($visible_tabs) <= 1) {
             return;
         }
 
         $active_tab = $this->getActiveTab();
         echo '<nav class="nav-tab-wrapper hf-nav-tab-wrapper hyperpress-nav-tab-wrapper" aria-label="' . esc_attr__('Settings sections', 'api-for-htmx') . '">';
-        foreach ($this->tabs as $tab_id => $tab) {
+        foreach ($visible_tabs as $tab_id => $tab) {
             $class = 'nav-tab hf-nav-tab hyperpress-nav-tab';
             if ($active_tab === $tab_id) {
                 $class .= ' nav-tab-active';

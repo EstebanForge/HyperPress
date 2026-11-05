@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.6.7] - 2026-11-04
+
+### Fixed
+- **Default Datastar settings tab.** Tab visibility now uses canonical resolved options instead of raw database storage. Fresh or previously unsaved sites correctly show the Datastar tab when Datastar is the default active library; saving settings is no longer required to reveal it.
+
+## [1.6.6] - 2026-11-04
+
+### Changed
+- **Composer dependencies updated.** HyperFields 1.6.1 to 1.7.4, HyperBlocks 1.6.1 to 1.8.4, and Datastar PHP 1.0.1 to 1.0.3. This carries the current field and block fixes, including normalized option rendering, PHP 8.5 compatibility, block path hardening, and Abilities registration security. See the HyperFields and HyperBlocks changelogs for their complete release notes. Core retains the `*` constraints and has no API changes.
+- **Development dependencies updated.** Applied the current configured PHP CS Fixer rules without runtime behavior changes.
+
 ## [1.6.5] - 2026-10-28
 
 ### Added

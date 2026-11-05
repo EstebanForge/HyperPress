@@ -64,7 +64,7 @@ class ThemeTest extends TestCase
         $this->assertStringContainsString('HyperPress-Core', plugins_url());
         $this->assertStringEndsWith('test', plugins_url('test'));
         $this->assertTrue(is_admin());
-        $this->assertTrue(add_action('init', function() { return true; }));
+        $this->assertTrue(add_action('init', function () { return true; }));
         $this->assertFalse(get_option('nonexistent_option'));
     }
 

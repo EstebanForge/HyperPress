@@ -20,7 +20,7 @@ class ConfigTest extends TestCase
         Config::reset();
         $this->tmpRoot = rtrim(sys_get_temp_dir(), '/\\') . '/hyperblocks-tests';
         if (!is_dir($this->tmpRoot)) {
-            mkdir($this->tmpRoot, 0777, true);
+            mkdir($this->tmpRoot, 0o777, true);
         }
         parent::setUp();
     }
@@ -29,7 +29,7 @@ class ConfigTest extends TestCase
     {
         $path = $this->tmpRoot . '/' . ltrim($name, '/');
         if (!is_dir($path)) {
-            mkdir($path, 0777, true);
+            mkdir($path, 0o777, true);
         }
 
         return $path;

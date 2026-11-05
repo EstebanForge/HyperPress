@@ -65,6 +65,8 @@ $page->addField(
 $page->register();
 ```
 
+Fields added directly to the page fold into an implicit default section, so the example above renders without any explicit `addSection()` call. Once a page has explicit sections, page-level fields are no longer rendered: `addSection()` / `addSectionToTab()` them instead (HyperFields triggers `_doing_it_wrong()` for each orphan field).
+
 $page->register();
 ```
 

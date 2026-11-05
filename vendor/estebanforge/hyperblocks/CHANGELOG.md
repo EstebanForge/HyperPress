@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.8.4] - 2026-11-04
+
+### Changed
+- **HyperFields 1.7.4.** Lockstep release for normalized option-list rendering across select, multiselect, radio, radio image, and set fields. HyperBlocks retains the `estebanforge/hyperfields` `*` constraint and has no block API changes.
+
+## [1.8.3] - 2026-11-03
+
+### Fixed
+- **REST routes now actually register.** `WordPress\Bootstrap::registerRestApi()` deferred registration through `RestApi::init()`, which called `add_action('rest_api_init', …)` at the priority already executing; `WP_Hook` iterates each priority over a callback snapshot, so the deferred callback never ran in that pass and the `hyperblocks/v1` namespace (`block-fields`, `render-preview`) was missing from every web request since 1.7.0. Routes now register synchronously inside the same call. The schema-driven sidebar is unaffected (it ships inline via `window.hyperBlocksConfig`); the sample-data preview canvas regains its data.
+- Regression test: `BootstrapTest::testRegisterRestApiRegistersRoutesSynchronously` pins that `registerRestApi()` produces registered routes in the same call.
+
+## [1.8.2] - 2026-10-28
+
+### Changed
+- **HyperFields 1.7.2.** Lockstep release pinning the `estebanforge/hyperfields` `*` constraint at 1.7.2: page-level fields on section-less options pages now render via an implicit default section, and mixed page-level fields plus explicit sections trigger `_doing_it_wrong()` instead of silently dropping. No HyperBlocks code changes.
+
 ## [1.8.1] - 2026-10-28
 
 ### Added
