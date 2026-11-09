@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.6.7] - 2026-11-09
+
+### Changed
+- **Vendored HyperPress-Core 1.6.8.** Carries the Datastar vendored bundle update 1.0.4 to 1.0.5: upstream bug fixes only (expression parsing in template literals, form controls named `id` interfering with patch targeting, reentrant morph state corruption, empty element IDs during morphing, scoped view-transition selectors, `data-bind` corrupting prefilled date/time inputs, SSE retry and cancellation races, stale effects after large signal updates). No attribute syntax changes; no adapter API changes.
+
 ## [3.6.6] - 2026-11-04
 
 ### Fixed

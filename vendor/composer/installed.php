@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'estebanforge/hyperpress',
-        'pretty_version' => '3.6.6',
-        'version' => '3.6.6.0',
+        'pretty_version' => '3.6.7',
+        'version' => '3.6.7.0',
         'reference' => null,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -38,8 +38,8 @@
             'dev_requirement' => false,
         ),
         'estebanforge/hyperpress' => array(
-            'pretty_version' => '3.6.6',
-            'version' => '3.6.6.0',
+            'pretty_version' => '3.6.7',
+            'version' => '3.6.7.0',
             'reference' => null,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
@@ -47,9 +47,9 @@
             'dev_requirement' => false,
         ),
         'estebanforge/hyperpress-core' => array(
-            'pretty_version' => '1.6.7',
-            'version' => '1.6.7.0',
-            'reference' => 'f7f9a357643edbf668e1d05ba83af7617c439c7e',
+            'pretty_version' => '1.6.8',
+            'version' => '1.6.8.0',
+            'reference' => '1523a64efc8bdb14ea479a78c367ecaa484372a9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../estebanforge/hyperpress-core',
             'aliases' => array(),

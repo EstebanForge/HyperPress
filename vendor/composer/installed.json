@@ -354,12 +354,12 @@
         },
         {
             "name": "estebanforge/hyperpress-core",
-            "version": "1.6.7",
-            "version_normalized": "1.6.7.0",
+            "version": "1.6.8",
+            "version_normalized": "1.6.8.0",
             "dist": {
                 "type": "path",
                 "url": "../HyperPress-Core",
-                "reference": "f7f9a357643edbf668e1d05ba83af7617c439c7e"
+                "reference": "1523a64efc8bdb14ea479a78c367ecaa484372a9"
             },
             "require": {
                 "estebanforge/hyperblocks": "*",

@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.6.8] - 2026-11-09
+
+### Changed
+- **Datastar vendored bundle updated 1.0.4 to 1.0.5.** Local `assets/libs/datastar.min.js` and the optional jsDelivr CDN pin in `src/Main.php` now serve v1.0.5. Upstream ships bug fixes only: expression parsing in template literals, form controls named `id` interfering with patch targeting, reentrant morph state corruption, empty element IDs during morphing, scoped view-transition selectors, `data-bind` corrupting prefilled date/time inputs, SSE retry and cancellation races, and stale effects after large signal updates. No attribute syntax changes; no Core API changes.
+
 ## [1.6.7] - 2026-11-04
 
 ### Fixed
